@@ -36,9 +36,10 @@ class Default(object):
         }
 
     def init_buffer(self, context):
-        self.__vim.command('new')
+        self.__vim.command('new denite')
         options = self.__vim.current.buffer.options
         options['buftype'] = 'nofile'
+        options['filetype'] = 'denite'
 
     def debug(self, expr):
         denite.util.debug(self.__vim, expr)
