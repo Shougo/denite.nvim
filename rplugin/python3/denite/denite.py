@@ -4,7 +4,7 @@
 # License: MIT license
 # ============================================================================
 
-from denite.util import error, globruntime, get_custom
+from denite.util import globruntime, get_custom
 
 import denite.sources
 import denite.filters
@@ -12,7 +12,6 @@ import denite.filters
 import importlib.machinery
 import os.path
 import copy
-import traceback
 
 denite.sources  # silence pyflakes
 denite.filters  # silence pyflakes
@@ -26,28 +25,12 @@ class Denite(object):
         self.__sources = {}
         self.__runtimepath = ''
 
-    def start(self, context):
+    def start(self):
         if self.__vim.options['runtimepath'] != self.__runtimepath:
             # Recache
             self.load_sources()
             self.load_filters()
             self.__runtimepath = self.__vim.options['runtimepath']
-
-        try:
-            # start = time.time()
-            candidates = self.gather_candidates(context)
-            self.__vim.current.buffer.append([x['word'] for x in candidates])
-            # self.error(str(time.time() - start))
-        except Exception:
-            for line in traceback.format_exc().splitlines():
-                error(self.__vim, line)
-            error(self.__vim,
-                  'An error has occurred. Please execute :messages command.')
-            candidates = []
-
-        self.__vim.vars['denite#_context'] = {
-            'candidates': candidates,
-        }
 
     def gather_candidates(self, context):
         sources = self.__sources.items()
