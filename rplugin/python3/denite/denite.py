@@ -6,15 +6,15 @@
 
 from denite.util import globruntime, get_custom
 
-import denite.sources
-import denite.filters
+import denite.source
+import denite.filter
 
 import importlib.machinery
 import os.path
 import copy
 
-denite.sources  # silence pyflakes
-denite.filters  # silence pyflakes
+denite.source  # silence pyflakes
+denite.filter  # silence pyflakes
 
 
 class Denite(object):
@@ -51,13 +51,13 @@ class Denite(object):
     def load_sources(self):
         # Load sources from runtimepath
         for path in globruntime(self.__vim,
-                                'rplugin/python3/denite/sources/base.py'
+                                'rplugin/python3/denite/source/base.py'
                                 ) + globruntime(
                                     self.__vim,
-                                    'rplugin/python3/denite/sources/*.py'):
+                                    'rplugin/python3/denite/source/*.py'):
             name = os.path.basename(path)[: -3]
             module = importlib.machinery.SourceFileLoader(
-                'denite.sources.' + name, path).load_module()
+                'denite.source.' + name, path).load_module()
             if not hasattr(module, 'Source') or name in self.__sources:
                 continue
 
@@ -76,12 +76,12 @@ class Denite(object):
     def load_filters(self):
         # Load filters from runtimepath
         for path in globruntime(self.__vim,
-                                'rplugin/python3/denite/filters/base.py'
+                                'rplugin/python3/denite/filter/base.py'
                                 ) + globruntime(
                                     self.__vim,
-                                    'rplugin/python3/denite/filters/*.py'):
+                                    'rplugin/python3/denite/filter/*.py'):
             name = os.path.basename(path)[: -3]
             filter = importlib.machinery.SourceFileLoader(
-                'denite.filters.' + name, path).load_module()
+                'denite.filter.' + name, path).load_module()
             if hasattr(filter, 'Filter') and name not in self.__filters:
                 self.__filters[name] = filter.Filter(self.__vim)
