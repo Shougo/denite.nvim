@@ -20,5 +20,7 @@ you should read `:help nvim-python`.
 
 ## Future works (not implemented yet)
 
-* All
+* Implement some sources (grep, file_rec, line)
+
+* Can call unite sources
 
