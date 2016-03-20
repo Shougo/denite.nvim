@@ -8,6 +8,7 @@ from denite.util import error
 from .. import denite
 
 import traceback
+import time
 
 
 class Default(object):
@@ -18,12 +19,15 @@ class Default(object):
 
     def start(self, context):
         try:
-            # start = time.time()
+            start = time.time()
             self.init_buffer(context)
             self.__denite.start()
             candidates = self.__denite.gather_candidates(context)
             self.__vim.current.buffer.append([x['word'] for x in candidates])
-            # self.error(str(time.time() - start))
+            del self.__vim.current.buffer[0]
+            del self.__vim.current.buffer[-1]
+            self.__options['modified'] = False
+            self.error(str(time.time() - start))
         except Exception:
             for line in traceback.format_exc().splitlines():
                 error(self.__vim, line)
@@ -37,9 +41,10 @@ class Default(object):
 
     def init_buffer(self, context):
         self.__vim.command('new denite')
-        options = self.__vim.current.buffer.options
-        options['buftype'] = 'nofile'
-        options['filetype'] = 'denite'
+        self.__options = self.__vim.current.buffer.options
+        del self.__vim.current.buffer[:]
+        self.__options['buftype'] = 'nofile'
+        self.__options['filetype'] = 'denite'
 
     def debug(self, expr):
         denite.util.debug(self.__vim, expr)
