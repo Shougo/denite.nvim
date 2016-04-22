@@ -56,6 +56,25 @@ USAGE						*denite-usage*
 ==============================================================================
 INSTALL						*denite-install*
 
+Note: denite requires Neovim(latest is recommended) with Python3 enabled.
+
+1. Extract the files and put them in your Neovim directory
+   (usually `$XDG_CONFIG_HOME/nvim/`).
+2. Execute the |:UpdateRemotePlugins| and restart Neovim.
+
+If ":echo has('python3')" returns `1`, then you're done; otherwise, see below.
+
+You can enable Python3 interface with pip: >
+
+    sudo pip3 install neovim
+
+If you want to read for Neovim-python/python3 interface install documentation,
+you should read |nvim-python| and the Wiki.
+https://github.com/zchee/deoplete-jedi/wiki/Setting-up-Python-for-Neovim
+
+You can check the Python3 installation by nvim-python-doctor.
+https://github.com/tweekmonster/nvim-python-doctor
+
 ==============================================================================
 EXAMPLES					*denite-examples*
 
