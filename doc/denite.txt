@@ -22,18 +22,14 @@ License: MIT license  {{{
     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 }}}
 
-CONTENTS					*denite-contents*
+CONTENTS						*denite-contents*
 
 Introduction		|denite-introduction|
 Usage			|denite-usage|
 Install			|denite-install|
 Configuration Examples	|denite-examples|
 Interface		|denite-interface|
-  Commands		  |denite-commands|
   Variables		  |denite-variables|
-    Sources variables	    |denite-sources-variables|
-    Kind variables	    |denite-kind-variables|
-    Filter variables	    |denite-filter-variables|
   Key mappings		  |denite-key-mappings|
   Functions		  |denite-functions|
   Options		  |denite-options|
@@ -48,13 +44,13 @@ External source		|denite-external-sources|
 FAQ			|denite-faq|
 
 ==============================================================================
-INTRODUCTION					*denite-introduction*
+INTRODUCTION						*denite-introduction*
 
 ==============================================================================
-USAGE						*denite-usage*
+USAGE							*denite-usage*
 
 ==============================================================================
-INSTALL						*denite-install*
+INSTALL							*denite-install*
 
 Note: denite requires Neovim(latest is recommended) with Python3 enabled.
 
@@ -76,56 +72,49 @@ You can check the Python3 installation by nvim-python-doctor.
 https://github.com/tweekmonster/nvim-python-doctor
 
 ==============================================================================
-EXAMPLES					*denite-examples*
+EXAMPLES						*denite-examples*
 
 ==============================================================================
-INTERFACE					*denite-interface*
+INTERFACE						*denite-interface*
 
 ------------------------------------------------------------------------------
-COMMANDS 					*denite-commands*
+VARIABLES 						*denite-variables*
 
 ------------------------------------------------------------------------------
-VARIABLES 					*denite-variables*
-
-KIND VARIABLES					*denite-kind-variables*
-
-FILTER VARIABLES				*denite-filter-variables*
+KEY MAPPINGS 						*denite-key-mappings*
 
 ------------------------------------------------------------------------------
-KEY MAPPINGS 					*denite-key-mappings*
+FUNCTIONS						*denite-functions*
 
 ------------------------------------------------------------------------------
-FUNCTIONS					*denite-functions*
-
-------------------------------------------------------------------------------
-OPTIONS						*denite-options*
+OPTIONS							*denite-options*
 
 ==============================================================================
-SOURCES						*denite-sources*
+SOURCES							*denite-sources*
 
 ==============================================================================
-KINDS						*denite-kinds*
+KINDS							*denite-kinds*
 
 ==============================================================================
-FILTERS						*denite-filters*
+FILTERS							*denite-filters*
 
 ==============================================================================
-ACTIONS						*denite-actions*
+ACTIONS							*denite-actions*
 
 ==============================================================================
-CREATE SOURCE					*denite-create-source*
+CREATE SOURCE						*denite-create-source*
 
 ------------------------------------------------------------------------------
 SOURCE ATTRIBUTES				*denite-source-attributes*
 
 ==============================================================================
-CREATE KIND					*denite-create-kind*
+CREATE KIND						*denite-create-kind*
 
 ------------------------------------------------------------------------------
 KIND ATTRIBUTES					*denite-kind-attributes*
 
 ==============================================================================
-CREATE FILTER					*denite-create-filter*
+CREATE FILTER						*denite-create-filter*
 
 ------------------------------------------------------------------------------
 FILTER ATTRIBUTES				*denite-filter-attributes*
@@ -134,7 +123,7 @@ FILTER ATTRIBUTES				*denite-filter-attributes*
 EXTERNAL SOURCES				*denite-external-sources*
 
 ==============================================================================
-FAQ						*denite-faq*
+FAQ							*denite-faq*
 
 ==============================================================================
 vim:tw=78:ts=8:ft=help:norl:noet:fen:
