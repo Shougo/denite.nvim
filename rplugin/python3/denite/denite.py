@@ -33,9 +33,9 @@ class Denite(object):
             self.__runtimepath = self.__vim.options['runtimepath']
 
     def gather_candidates(self, context):
-        sources = self.__sources.items()
         results = []
-        for source_name, source in sources:
+        for source in [self.__sources[x] for x in context['sources']
+                   if x in self.__sources]:
             cont = copy.deepcopy(context)
 
             cont['candidates'] = source.gather_candidates(context)

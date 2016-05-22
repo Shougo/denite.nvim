@@ -13,15 +13,13 @@ class DeniteHandlers(object):
     def __init__(self, vim):
         self.__vim = vim
 
-    @neovim.function('_denite', sync=True)
+    @neovim.function('_denite_init', sync=True)
     def init_python(self, args):
         self.__ui = Default(self.__vim)
         self.__vim.vars['denite#_channel_id'] = self.__vim.channel_id
         pass
 
-    @neovim.command('Denite', sync=True, nargs='*')
+    @neovim.function('_denite_start', sync=True)
     def start(self, args):
         self.__ui = Default(self.__vim)
-        self.__vim.vars['denite#_channel_id'] = self.__vim.channel_id
-        self.__vim.vars['denite#args'] = args
-        self.__ui.start({})
+        self.__ui.start(args[0], args[1])

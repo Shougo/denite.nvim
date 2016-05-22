@@ -17,9 +17,10 @@ class Default(object):
         self.__vim = vim
         self.__denite = denite.Denite(vim)
 
-    def start(self, context):
+    def start(self, sources, context):
         try:
             start = time.time()
+            context['sources'] = sources
             self.init_buffer(context)
             self.__denite.start()
             candidates = self.__denite.gather_candidates(context)

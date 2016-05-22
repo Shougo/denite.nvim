@@ -86,6 +86,23 @@ KEY MAPPINGS 						*denite-key-mappings*
 ------------------------------------------------------------------------------
 FUNCTIONS						*denite-functions*
 
+							*denite#initialize()*
+denite#initialize()
+		Initialize denite and sources.
+
+							*denite#start()*
+denite#start({sources}[, {context}])
+		Creates a new Denite buffer.
+
+		{sources} is a list of elements which  are formatted as
+		{source-name}.
+
+		Refer to |denite-notation-{context}| about {context}.  If you
+		skip a value, it uses the default value.
+>
+		call denite#start(['rec'])
+<
+
 ------------------------------------------------------------------------------
 OPTIONS							*denite-options*
 
