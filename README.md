@@ -16,7 +16,7 @@ You can enable Python3 interface with pip:
     pip3 install neovim
 
 If you want to read the Neovim-python/python3 interface install documentation,
-you should read `:help nvim-python`.
+you should read `:help provider-python`.
 
 ## Future works (not implemented yet)
 
