@@ -35,7 +35,7 @@ class Denite(object):
     def gather_candidates(self, context):
         results = []
         for source in [self.__sources[x] for x in context['sources']
-                   if x in self.__sources]:
+                       if x in self.__sources]:
             cont = copy.deepcopy(context)
 
             cont['candidates'] = source.gather_candidates(context)

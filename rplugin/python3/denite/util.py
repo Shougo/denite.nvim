@@ -21,6 +21,12 @@ def globruntime(vim, path):
     return vim.funcs.globpath(vim.options['runtimepath'], path, 1, 1)
 
 
+def echo(vim, color, string):
+    vim.command('echohl ' + color)
+    vim.command('echon \'' + string + '\'')
+    vim.command('echohl NONE')
+
+
 def debug(vim, expr):
     try:
         json_data = json.dumps(str(expr).strip())
