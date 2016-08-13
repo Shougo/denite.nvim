@@ -24,6 +24,7 @@ class Default(object):
             context['sources'] = sources
             context['input'] = ''
             context['ignorecase'] = 1
+            context['is_async'] = 0
             self.init_buffer(context)
             self.__denite.start()
             self.__denite.gather_candidates(context)
@@ -77,7 +78,8 @@ class Default(object):
             echo(self.__vim, cursor_color, input_cursor)
             echo(self.__vim, 'Normal', input_after)
 
-            nr = self.__vim.funcs.getchar(0)
+            nr = self.__vim.funcs.getchar(0) if context[
+                'is_async'] else self.__vim.funcs.getchar()
             char = nr if isinstance(nr, str) else chr(nr)
             if nr >= 0x20:
                 # Normal input string
@@ -89,7 +91,9 @@ class Default(object):
                 break
             elif char == bs or char == ctrlh:
                 input_before = re.sub('.$', '', input_before)
-            else:
+                context['input'] = input_before + input_cursor + input_after
+                self.update_buffer(context)
+            elif context['is_async']:
                 time.sleep(0.05)
 
     def debug(self, expr):
