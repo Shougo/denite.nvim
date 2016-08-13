@@ -6,6 +6,12 @@ Denite.nvim is a dark powered Neovim unite all interfaces.
 
 Note: This is the my next vaporware!
 
+
+## Test method
+
+    call denite#start(['rec'])
+
+
 ## Requirements
 
 denite requires Neovim with if\_python3.
@@ -18,9 +24,10 @@ You can enable Python3 interface with pip:
 If you want to read the Neovim-python/python3 interface install documentation,
 you should read `:help provider-python`.
 
+
 ## Future works (not implemented yet)
 
-* Implement some sources (grep, file_rec, line)
+* Implement some sources (grep, line)
 
 * Can call unite sources
 
