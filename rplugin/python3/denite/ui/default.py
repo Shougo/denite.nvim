@@ -22,13 +22,12 @@ class Default(object):
         try:
             start = time.time()
             context['sources'] = sources
+            context['input'] = ''
+            context['ignorecase'] = 1
             self.init_buffer(context)
             self.__denite.start()
-            candidates = self.__denite.gather_candidates(context)
-            self.__vim.current.buffer.append([x['word'] for x in candidates])
-            del self.__vim.current.buffer[0]
-            del self.__vim.current.buffer[-1]
-            self.__options['modified'] = False
+            self.__denite.gather_candidates(context)
+            self.update_buffer(context)
             self.error(str(time.time() - start))
 
             self.input(context)
@@ -38,11 +37,6 @@ class Default(object):
                 error(self.__vim, line)
             error(self.__vim,
                   'An error has occurred. Please execute :messages command.')
-            candidates = []
-
-        self.__vim.vars['denite#_context'] = {
-            'candidates': candidates,
-        }
 
     def init_buffer(self, context):
         self.__vim.command('new denite')
@@ -50,6 +44,18 @@ class Default(object):
         del self.__vim.current.buffer[:]
         self.__options['buftype'] = 'nofile'
         self.__options['filetype'] = 'denite'
+
+    def update_buffer(self, context):
+        candidates = self.__denite.filter_candidates(context)
+        del self.__vim.current.buffer[:]
+        self.__vim.current.buffer.append([x['word'] for x in candidates])
+        del self.__vim.current.buffer[0]
+        del self.__vim.current.buffer[-1]
+        self.__options['modified'] = False
+
+    def quit_buffer(self, context):
+        self.__vim.command('redraw | echo')
+        self.__vim.command('close!')
 
     def input(self, context):
         prompt_color = context.get('prompt_color', 'Statement')
@@ -76,12 +82,15 @@ class Default(object):
             if nr >= 0x20:
                 # Normal input string
                 input_before += char
+                context['input'] = input_before + input_cursor + input_after
+                self.update_buffer(context)
             elif char == esc:
+                self.quit_buffer(context)
                 break
             elif char == bs or char == ctrlh:
                 input_before = re.sub('.$', '', input_before)
             else:
-                time.sleep(0.1)
+                time.sleep(0.05)
 
     def debug(self, expr):
         denite.util.debug(self.__vim, expr)

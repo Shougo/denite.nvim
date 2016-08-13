@@ -13,9 +13,10 @@ class Base(object):
     def __init__(self, vim):
         self.vim = vim
         self.name = 'base'
-        self.matchers = []
+        self.matchers = ['matcher_fuzzy']
         self.sorters = []
         self.converters = []
+        self.context = {}
         self.rank = 100
 
     @abstractmethod
