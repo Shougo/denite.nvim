@@ -33,4 +33,8 @@ function! denite#util#redir(cmd) abort "{{{
   return res
 endfunction"}}}
 
+function! denite#util#execute_path(command, path) abort "{{{
+  execute a:command fnameescape(a:path)
+endfunction"}}}
+
 " vim: foldmethod=marker

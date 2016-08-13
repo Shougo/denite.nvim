@@ -69,6 +69,7 @@ class Default(object):
 
         esc = self.__vim.eval('"\<Esc>"')
         bs = self.__vim.eval('"\<BS>"')
+        cr = self.__vim.eval('"\<CR>"')
         ctrlh = self.__vim.eval('"\<C-h>"')
 
         while True:
@@ -93,8 +94,17 @@ class Default(object):
                 input_before = re.sub('.$', '', input_before)
                 context['input'] = input_before + input_cursor + input_after
                 self.update_buffer(context)
+            elif char == cr:
+                self.quit_buffer(context)
+                self.do_action(context)
+                break
             elif context['is_async']:
                 time.sleep(0.05)
+
+    def do_action(self, context):
+        candidates = self.__denite.filter_candidates(context)
+        self.__vim.call('denite#util#execute_path', 'edit',
+                        candidates[0]['action__path'])
 
     def debug(self, expr):
         denite.util.debug(self.__vim, expr)
