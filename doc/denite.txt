@@ -29,6 +29,7 @@ Usage			|denite-usage|
 Install			|denite-install|
 Configuration Examples	|denite-examples|
 Interface		|denite-interface|
+  Commands		  |denite-commands|
   Variables		  |denite-variables|
   Key mappings		  |denite-key-mappings|
   Functions		  |denite-functions|
@@ -79,6 +80,12 @@ EXAMPLES						*denite-examples*
 INTERFACE						*denite-interface*
 
 ------------------------------------------------------------------------------
+COMMANDS 						*denite-commands*
+
+:Denite [{options}] {sources}				*:Denite*
+		Creates a new Denite buffer.
+
+------------------------------------------------------------------------------
 VARIABLES 						*denite-variables*
 
 ------------------------------------------------------------------------------
@@ -95,8 +102,8 @@ denite#initialize()
 denite#start({sources}[, {context}])
 		Creates a new Denite buffer.
 
-		{sources} is a list of elements which  are formatted as
-		{source-name}.
+		{sources} is a list of elements which are formatted as
+		"{'name': {source-name}, 'args': {source-args}}".
 
 		Refer to |denite-notation-{context}| about {context}.  If you
 		skip a value, it uses the default value.

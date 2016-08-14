@@ -9,7 +9,7 @@ Note: This is the my next vaporware!
 
 ## Test method
 
-    call denite#start(['rec'])
+    Denite rec
 
 
 ## Requirements
