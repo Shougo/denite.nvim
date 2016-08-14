@@ -23,9 +23,7 @@ def globruntime(vim, path):
 
 
 def echo(vim, color, string):
-    vim.command('echohl ' + color)
-    vim.command('echon \'' + string + '\'')
-    vim.command('echohl NONE')
+    vim.call('denite#util#echo', color, string)
 
 
 def debug(vim, expr):

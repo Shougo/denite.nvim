@@ -36,5 +36,10 @@ endfunction"}}}
 function! denite#util#execute_path(command, path) abort "{{{
   execute a:command fnameescape(a:path)
 endfunction"}}}
+function! denite#util#echo(color, string) abort "{{{
+  execute 'echohl' a:color
+  echon a:string
+  echohl NONE
+endfunction"}}}
 
 " vim: foldmethod=marker
