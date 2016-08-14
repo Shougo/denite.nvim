@@ -82,7 +82,7 @@ class Default(object):
             nr = self.__vim.funcs.getchar(0) if context[
                 'is_async'] else self.__vim.funcs.getchar()
             char = nr if isinstance(nr, str) else chr(nr)
-            if nr >= 0x20:
+            if not isinstance(nr, str) and nr >= 0x20:
                 # Normal input string
                 input_before += char
                 context['input'] = input_before + input_cursor + input_after
