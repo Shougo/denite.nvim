@@ -65,15 +65,19 @@ class Default(object):
         self.__options['modified'] = False
 
     def move_to_next_line(self, context):
-        if self.__cursor < context['winheight'] - 1:
-            self.__cursor += 1
+        if self.__win_cursor < context['winheight']:
             self.__win_cursor += 1
+        elif self.__cursor < self.__candidates_len - 1:
+            self.__cursor += 1
+        self.update_buffer(context)
         self.cursor_highlight(context)
 
     def move_to_prev_line(self, context):
-        if self.__cursor >= 1:
-            self.__cursor -= 1
+        if self.__win_cursor > 1:
             self.__win_cursor -= 1
+        elif self.__cursor >= 1:
+            self.__cursor -= 1
+        self.update_buffer(context)
         self.cursor_highlight(context)
 
     def cursor_highlight(self, context):
@@ -135,9 +139,12 @@ class Default(object):
                 time.sleep(0.05)
 
     def do_action(self, context):
-        if self.__cursor < self.__candidates_len:
-            self.__vim.call('denite#util#execute_path', 'edit',
-                            self.__candidates[self.__cursor]['action__path'])
+        if self.__cursor >= self.__candidates_len:
+            return
+
+        candidate = self.__candidates[self.__cursor + self.__win_cursor - 1]
+        self.__vim.call('denite#util#execute_path', 'edit',
+                        candidate['action__path'])
 
     def debug(self, expr):
         denite.util.debug(self.__vim, expr)
