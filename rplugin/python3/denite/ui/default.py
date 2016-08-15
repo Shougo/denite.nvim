@@ -56,8 +56,6 @@ class Default(object):
             [x['word'] for x in
              candidates[self.__cursor:
                         self.__cursor + context['winheight']+1]])
-        del self.__vim.current.buffer[0]
-        del self.__vim.current.buffer[-1]
         self.__options['modified'] = False
 
     def quit_buffer(self, context):
@@ -109,8 +107,9 @@ class Default(object):
 
     def do_action(self, context):
         candidates = self.__denite.filter_candidates(context)
-        self.__vim.call('denite#util#execute_path', 'edit',
-                        candidates[0]['action__path'])
+        if len(candidates) >= self.__cursor:
+            self.__vim.call('denite#util#execute_path', 'edit',
+                            candidates[0]['action__path'])
 
     def debug(self, expr):
         denite.util.debug(self.__vim, expr)
