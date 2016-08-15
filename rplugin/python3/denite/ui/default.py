@@ -18,6 +18,9 @@ class Default(object):
         self.__vim = vim
         self.__denite = denite.Denite(vim)
         self.__cursor = 0
+        self.__win_cursor = 1
+        self.__candidates = []
+        self.__candidates_len = 0
 
     def start(self, sources, context):
         try:
@@ -27,6 +30,7 @@ class Default(object):
             context['ignorecase'] = 1
             context['is_async'] = 0
             context['winheight'] = 20
+            context['cursor_highlight'] = 'CursorLine'
             self.init_buffer(context)
             self.__denite.start()
             self.__denite.gather_candidates(context)
@@ -45,18 +49,37 @@ class Default(object):
         self.__vim.command('new denite | resize ' +
                            str(context['winheight']))
         self.__options = self.__vim.current.buffer.options
-        del self.__vim.current.buffer[:]
         self.__options['buftype'] = 'nofile'
         self.__options['filetype'] = 'denite'
+        self.cursor_highlight(context)
 
     def update_buffer(self, context):
-        candidates = self.__denite.filter_candidates(context)
+        self.__candidates = self.__denite.filter_candidates(context)
+        self.__candidates_len = len(self.__candidates)
         del self.__vim.current.buffer[:]
         self.__vim.current.buffer.append(
             [x['word'] for x in
-             candidates[self.__cursor:
-                        self.__cursor + context['winheight']+1]])
+             self.__candidates[self.__cursor:
+                               self.__cursor + context['winheight']]])
+        del self.__vim.current.buffer[0]
         self.__options['modified'] = False
+
+    def move_to_next_line(self, context):
+        if self.__cursor < context['winheight'] - 1:
+            self.__cursor += 1
+            self.__win_cursor += 1
+        self.cursor_highlight(context)
+
+    def move_to_prev_line(self, context):
+        if self.__cursor >= 1:
+            self.__cursor -= 1
+            self.__win_cursor -= 1
+        self.cursor_highlight(context)
+
+    def cursor_highlight(self, context):
+        self.__vim.command('silent! call matchdelete(10)')
+        self.__vim.call('matchaddpos', context['cursor_highlight'],
+                        [self.__win_cursor], 10, 10)
 
     def quit_buffer(self, context):
         self.__vim.command('redraw | echo')
@@ -75,6 +98,8 @@ class Default(object):
         bs = self.__vim.eval('"\<BS>"')
         cr = self.__vim.eval('"\<CR>"')
         ctrlh = self.__vim.eval('"\<C-h>"')
+        ctrln = self.__vim.eval('"\<C-n>"')
+        ctrlp = self.__vim.eval('"\<C-p>"')
 
         while True:
             self.__vim.command('redraw')
@@ -98,6 +123,10 @@ class Default(object):
                 input_before = re.sub('.$', '', input_before)
                 context['input'] = input_before + input_cursor + input_after
                 self.update_buffer(context)
+            elif char == ctrln:
+                self.move_to_next_line(context)
+            elif char == ctrlp:
+                self.move_to_prev_line(context)
             elif char == cr:
                 self.quit_buffer(context)
                 self.do_action(context)
@@ -106,10 +135,9 @@ class Default(object):
                 time.sleep(0.05)
 
     def do_action(self, context):
-        candidates = self.__denite.filter_candidates(context)
-        if len(candidates) >= self.__cursor:
+        if self.__cursor < self.__candidates_len:
             self.__vim.call('denite#util#execute_path', 'edit',
-                            candidates[0]['action__path'])
+                            self.__candidates[self.__cursor]['action__path'])
 
     def debug(self, expr):
         denite.util.debug(self.__vim, expr)
