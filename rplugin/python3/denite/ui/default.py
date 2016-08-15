@@ -17,6 +17,7 @@ class Default(object):
     def __init__(self, vim):
         self.__vim = vim
         self.__denite = denite.Denite(vim)
+        self.__cursor = 0
 
     def start(self, sources, context):
         try:
@@ -25,6 +26,7 @@ class Default(object):
             context['input'] = ''
             context['ignorecase'] = 1
             context['is_async'] = 0
+            context['winheight'] = 20
             self.init_buffer(context)
             self.__denite.start()
             self.__denite.gather_candidates(context)
@@ -40,7 +42,8 @@ class Default(object):
                   'An error has occurred. Please execute :messages command.')
 
     def init_buffer(self, context):
-        self.__vim.command('new denite')
+        self.__vim.command('new denite | resize ' +
+                           str(context['winheight']))
         self.__options = self.__vim.current.buffer.options
         del self.__vim.current.buffer[:]
         self.__options['buftype'] = 'nofile'
@@ -49,7 +52,10 @@ class Default(object):
     def update_buffer(self, context):
         candidates = self.__denite.filter_candidates(context)
         del self.__vim.current.buffer[:]
-        self.__vim.current.buffer.append([x['word'] for x in candidates])
+        self.__vim.current.buffer.append(
+            [x['word'] for x in
+             candidates[self.__cursor:
+                        self.__cursor + context['winheight']+1]])
         del self.__vim.current.buffer[0]
         del self.__vim.current.buffer[-1]
         self.__options['modified'] = False
