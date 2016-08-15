@@ -9,7 +9,7 @@ Note: This is the my next vaporware!
 
 ## Test method
 
-    Denite rec
+    Denite file_rec
 
 
 ## Requirements

@@ -91,7 +91,7 @@ denite#start({sources}[, {context}])
 		Refer to |denite-notation-{context}| about {context}.  If you
 		skip a value, it uses the default value.
 >
-		call denite#start(['rec'])
+		call denite#start({'name': 'file_rec', 'args': []})
 <
 
 ------------------------------------------------------------------------------

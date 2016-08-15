@@ -1,5 +1,5 @@
 # ============================================================================
-# FILE: rec.py
+# FILE: file_rec.py
 # AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
 # License: MIT license
 # ============================================================================
@@ -13,7 +13,7 @@ class Source(Base):
     def __init__(self, vim):
         Base.__init__(self, vim)
 
-        self.name = 'rec'
+        self.name = 'file_rec'
 
     def gather_candidates(self, context):
         args = ['find', '-L', '.', '-path', '*/.git/*', '-prune', '-o',
