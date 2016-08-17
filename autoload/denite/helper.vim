@@ -27,7 +27,6 @@ function! denite#helper#call_denite(command, args, line1, line2) abort "{{{
   let context.lastline = a:line2
   let context.bufnr = bufnr('%')
 
-  echomsg string(args)
   call denite#start(args, context)
 endfunction"}}}
 

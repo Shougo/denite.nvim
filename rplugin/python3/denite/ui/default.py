@@ -32,13 +32,16 @@ class Default(object):
             context['winheight'] = 20
             context['cursor_highlight'] = 'CursorLine'
             self.__mappings = self.__vim.eval('g:denite#_default_mappings')
-            self.init_buffer(context)
+
             self.__denite.start()
+            self.__denite.on_init(context)
+
+            self.init_buffer(context)
             self.__denite.gather_candidates(context)
             self.update_buffer(context)
-            self.error(str(time.time() - start))
 
-            self.input(context)
+            self.error(str(time.time() - start))
+            self.input_loop(context)
 
         except Exception:
             for line in traceback.format_exc().splitlines():
@@ -80,7 +83,7 @@ class Default(object):
         context['input'] += self.__input_after
         self.update_buffer(context)
 
-    def input(self, context):
+    def input_loop(self, context):
         prompt_color = context.get('prompt_color', 'Statement')
         prompt = context.get('prompt', '# ')
         cursor_color = context.get('cursor_color', 'Cursor')

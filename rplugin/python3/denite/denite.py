@@ -53,6 +53,12 @@ class Denite(object):
                 candidates += filter.filter(source.context)
         return candidates
 
+    def on_init(self, context):
+        for source in [self.__sources[x['name']] for x in context['sources']
+                       if x['name'] in self.__sources and
+                       hasattr(self.__sources[x['name']], 'on_init')]:
+            source.on_init(context)
+
     def debug(self, expr):
         denite.util.debug(self.__vim, expr)
 
