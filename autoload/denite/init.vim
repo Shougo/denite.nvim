@@ -46,6 +46,16 @@ function! denite#init#_initialize() abort "{{{
 endfunction"}}}
 
 function! denite#init#_variables() abort "{{{
+  " Default mappings
+  let g:denite#_default_mappings = {
+        \ "\<Esc>": 'quit',
+        \ "\<C-g>": 'quit',
+        \ "\<BS>": 'delete_backward_char',
+        \ "\<C-h>": 'delete_backward_char',
+        \ "\<C-n>": 'move_to_next_line',
+        \ "\<C-p>": 'move_to_prev_line',
+        \ "\<CR>": 'do_action',
+        \}
 endfunction"}}}
 
 " vim: foldmethod=marker

@@ -31,6 +31,7 @@ class Default(object):
             context['is_async'] = 0
             context['winheight'] = 20
             context['cursor_highlight'] = 'CursorLine'
+            self.__mappings = self.__vim.eval('g:denite#_default_mappings')
             self.init_buffer(context)
             self.__denite.start()
             self.__denite.gather_candidates(context)
@@ -64,6 +65,78 @@ class Default(object):
         del self.__vim.current.buffer[0]
         self.__options['modified'] = False
 
+    def cursor_highlight(self, context):
+        self.__vim.command('silent! call matchdelete(10)')
+        self.__vim.call('matchaddpos', context['cursor_highlight'],
+                        [self.__win_cursor], 10, 10)
+
+    def quit_buffer(self, context):
+        self.__vim.command('redraw | echo')
+        self.__vim.command('close!')
+
+    def update_input(self, context):
+        context['input'] = self.__input_before
+        context['input'] += self.__input_cursor
+        context['input'] += self.__input_after
+        self.update_buffer(context)
+
+    def input(self, context):
+        prompt_color = context.get('prompt_color', 'Statement')
+        prompt = context.get('prompt', '# ')
+        cursor_color = context.get('cursor_color', 'Cursor')
+
+        self.__input_before = context.get('input', '')
+        self.__input_cursor = ''
+        self.__input_after = ''
+
+        esc = self.__vim.eval('"\<Esc>"')
+
+        while True:
+            self.__vim.command('redraw')
+            echo(self.__vim, prompt_color, prompt)
+            echo(self.__vim, 'Normal', self.__input_before)
+            echo(self.__vim, cursor_color, self.__input_cursor)
+            echo(self.__vim, 'Normal', self.__input_after)
+
+            nr = self.__vim.funcs.getchar(0) if context[
+                'is_async'] else self.__vim.funcs.getchar()
+            char = nr if isinstance(nr, str) else chr(nr)
+            if not isinstance(nr, str) and nr >= 0x20:
+                # Normal input string
+                self.__input_before += char
+                self.update_input(context)
+                continue
+
+            if char in self.__mappings and hasattr(
+                    self, self.__mappings[char]):
+                func = getattr(self, self.__mappings[char])
+                ret = func(context)
+                if ret:
+                    self.quit_buffer(context)
+                    break
+            elif char == esc:
+                self.quit_buffer(context)
+                break
+
+            if context['is_async']:
+                time.sleep(0.05)
+
+    def quit(self, context):
+        return True
+
+    def do_action(self, context):
+        if self.__cursor >= self.__candidates_len:
+            return
+
+        candidate = self.__candidates[self.__cursor + self.__win_cursor - 1]
+        self.__vim.call('denite#util#execute_path', 'edit',
+                        candidate['action__path'])
+        return True
+
+    def delete_backward_char(self, context):
+        self.__input_before = re.sub('.$', '', self.__input_before)
+        self.update_input(context)
+
     def move_to_next_line(self, context):
         if self.__win_cursor < context['winheight']:
             self.__win_cursor += 1
@@ -79,72 +152,6 @@ class Default(object):
             self.__cursor -= 1
         self.update_buffer(context)
         self.cursor_highlight(context)
-
-    def cursor_highlight(self, context):
-        self.__vim.command('silent! call matchdelete(10)')
-        self.__vim.call('matchaddpos', context['cursor_highlight'],
-                        [self.__win_cursor], 10, 10)
-
-    def quit_buffer(self, context):
-        self.__vim.command('redraw | echo')
-        self.__vim.command('close!')
-
-    def input(self, context):
-        prompt_color = context.get('prompt_color', 'Statement')
-        prompt = context.get('prompt', '# ')
-        cursor_color = context.get('cursor_color', 'Cursor')
-
-        input_before = context.get('input', '')
-        input_cursor = ''
-        input_after = ''
-
-        esc = self.__vim.eval('"\<Esc>"')
-        bs = self.__vim.eval('"\<BS>"')
-        cr = self.__vim.eval('"\<CR>"')
-        ctrlh = self.__vim.eval('"\<C-h>"')
-        ctrln = self.__vim.eval('"\<C-n>"')
-        ctrlp = self.__vim.eval('"\<C-p>"')
-
-        while True:
-            self.__vim.command('redraw')
-            echo(self.__vim, prompt_color, prompt)
-            echo(self.__vim, 'Normal', input_before)
-            echo(self.__vim, cursor_color, input_cursor)
-            echo(self.__vim, 'Normal', input_after)
-
-            nr = self.__vim.funcs.getchar(0) if context[
-                'is_async'] else self.__vim.funcs.getchar()
-            char = nr if isinstance(nr, str) else chr(nr)
-            if not isinstance(nr, str) and nr >= 0x20:
-                # Normal input string
-                input_before += char
-                context['input'] = input_before + input_cursor + input_after
-                self.update_buffer(context)
-            elif char == esc:
-                self.quit_buffer(context)
-                break
-            elif char == bs or char == ctrlh:
-                input_before = re.sub('.$', '', input_before)
-                context['input'] = input_before + input_cursor + input_after
-                self.update_buffer(context)
-            elif char == ctrln:
-                self.move_to_next_line(context)
-            elif char == ctrlp:
-                self.move_to_prev_line(context)
-            elif char == cr:
-                self.quit_buffer(context)
-                self.do_action(context)
-                break
-            elif context['is_async']:
-                time.sleep(0.05)
-
-    def do_action(self, context):
-        if self.__cursor >= self.__candidates_len:
-            return
-
-        candidate = self.__candidates[self.__cursor + self.__win_cursor - 1]
-        self.__vim.call('denite#util#execute_path', 'edit',
-                        candidate['action__path'])
 
     def debug(self, expr):
         denite.util.debug(self.__vim, expr)
