@@ -112,7 +112,6 @@ class Default(object):
                 func = getattr(self, self.__mappings[char])
                 ret = func(context)
                 if ret:
-                    self.quit_buffer(context)
                     break
             elif char == esc:
                 self.quit_buffer(context)
@@ -122,15 +121,17 @@ class Default(object):
                 time.sleep(0.05)
 
     def quit(self, context):
+        self.quit_buffer(context)
         return True
 
     def do_action(self, context):
         if self.__cursor >= self.__candidates_len:
             return
 
-        candidate = self.__candidates[self.__cursor + self.__win_cursor - 1]
-        self.__vim.call('denite#util#execute_path', 'edit',
-                        candidate['action__path'])
+        self.quit_buffer(context)
+        self.__denite.do_action(
+            context, 'jump_list', 'default',
+            [self.__candidates[self.__cursor + self.__win_cursor - 1]])
         return True
 
     def delete_backward_char(self, context):

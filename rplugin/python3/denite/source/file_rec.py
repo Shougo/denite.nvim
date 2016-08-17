@@ -14,6 +14,7 @@ class Source(Base):
         Base.__init__(self, vim)
 
         self.name = 'file_rec'
+        self.kind = 'jump_list'
 
     def gather_candidates(self, context):
         args = ['find', '-L', '.', '-path', '*/.git/*', '-prune', '-o',

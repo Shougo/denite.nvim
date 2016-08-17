@@ -6,23 +6,22 @@
 
 from denite.util import globruntime, get_custom
 
-import denite.source
-import denite.filter
+import denite.source  # noqa
+import denite.filter  # noqa
+import denite.kind    # noqa
 
 import importlib.machinery
 import os.path
 import copy
-
-denite.source  # silence pyflakes
-denite.filter  # silence pyflakes
 
 
 class Denite(object):
 
     def __init__(self, vim):
         self.__vim = vim
-        self.__filters = {}
         self.__sources = {}
+        self.__filters = {}
+        self.__kinds = {}
         self.__runtimepath = ''
 
     def start(self):
@@ -30,6 +29,7 @@ class Denite(object):
             # Recache
             self.load_sources()
             self.load_filters()
+            self.load_kinds()
             self.__runtimepath = self.__vim.options['runtimepath']
 
     def gather_candidates(self, context):
@@ -96,3 +96,30 @@ class Denite(object):
                 'denite.filter.' + name, path).load_module()
             if hasattr(filter, 'Filter') and name not in self.__filters:
                 self.__filters[name] = filter.Filter(self.__vim)
+
+    def load_kinds(self):
+        # Load kinds from runtimepath
+        for path in globruntime(self.__vim,
+                                'rplugin/python3/denite/kind/base.py'
+                                ) + globruntime(
+                                    self.__vim,
+                                    'rplugin/python3/denite/kind/*.py'):
+            name = os.path.basename(path)[: -3]
+            kind = importlib.machinery.SourceFileLoader(
+                'denite.kind.' + name, path).load_module()
+            if hasattr(kind, 'Kind') and name not in self.__kinds:
+                self.__kinds[name] = kind.Kind(self.__vim)
+
+    def do_action(self, context, kind, action, targets):
+        if kind not in self.__kinds:
+            self.error('Invalid kind: ' + kind)
+            return
+
+        action_name = 'action_' + action
+        if not hasattr(self.__kinds[kind], action_name):
+            self.error('Invalid action: ' + action)
+            return
+
+        context['targets'] = targets
+        func = getattr(self.__kinds[kind], action_name)
+        func(context)
