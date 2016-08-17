@@ -40,6 +40,7 @@ class Default(object):
             self.__denite.gather_candidates(context)
             self.update_buffer(context)
 
+            self.error('candidates len = ' + str(self.__candidates_len))
             self.error(str(time.time() - start))
             self.input_loop(context)
 

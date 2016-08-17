@@ -33,11 +33,8 @@ class Denite(object):
             self.__runtimepath = self.__vim.options['runtimepath']
 
     def gather_candidates(self, context):
-        for [source, args] in [[self.__sources[x['name']], x['args']]
-                               for x in context['sources']
-                               if x['name'] in self.__sources]:
-            source.context = copy.deepcopy(context)
-            source.context['args'] = args
+        for source in [self.__sources[x['name']] for x in context['sources']
+                       if x['name'] in self.__sources]:
             source.context['candidates'] = source.gather_candidates(
                 source.context)
 
@@ -54,10 +51,14 @@ class Denite(object):
         return candidates
 
     def on_init(self, context):
-        for source in [self.__sources[x['name']] for x in context['sources']
-                       if x['name'] in self.__sources and
-                       hasattr(self.__sources[x['name']], 'on_init')]:
-            source.on_init(context)
+        for [source, args] in [[self.__sources[x['name']], x['args']]
+                               for x in context['sources']
+                               if x['name'] in self.__sources]:
+            source.context = copy.deepcopy(context)
+            source.context['args'] = args
+
+            if hasattr(source, 'on_init'):
+                source.on_init(source.context)
 
     def debug(self, expr):
         denite.util.debug(self.__vim, expr)
