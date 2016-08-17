@@ -5,10 +5,6 @@
 "=============================================================================
 
 function! denite#helper#complete(arglead, cmdline, cursorpos) abort "{{{
-  let ret = s:parse_options_args(a:cmdline)[0]
-  let source_name = ret[-1][0]
-  let source_args = ret[-1][1:]
-
   let _ = []
 
   if a:arglead !~ ':'
