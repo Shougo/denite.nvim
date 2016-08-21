@@ -3,8 +3,8 @@
 [![Join the chat at https://gitter.im/Shougo/denite.nvim](https://badges.gitter.im/Shougo/denite.nvim.svg)](https://gitter.im/Shougo/denite.nvim?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Denite.nvim is a dark powered Neovim unite all interfaces.
-
-Note: This is the my next vaporware!
+It resolves unite.vim problems.
+It is 10 times faster than unite.vim.
 
 
 ## Test method
@@ -27,7 +27,6 @@ you should read `:help provider-python`.
 
 ## Future works (not implemented yet)
 
-* Implement some sources (grep, line)
+* Implement some sources (grep, unite)
 
-* Can call unite sources
-
+* Customization support
