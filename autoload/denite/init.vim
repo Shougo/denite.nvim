@@ -50,11 +50,12 @@ function! denite#init#_variables() abort "{{{
   let g:denite#_default_mappings = {
         \ "\<Esc>": 'quit',
         \ "\<C-g>": 'quit',
-        \ "\<BS>": 'delete_backward_char',
+        \ "\<BS>":  'delete_backward_char',
         \ "\<C-h>": 'delete_backward_char',
         \ "\<C-n>": 'move_to_next_line',
         \ "\<C-p>": 'move_to_prev_line',
-        \ "\<CR>": 'do_action',
+        \ "\<C-j>": 'input_command_line',
+        \ "\<CR>":  'do_action',
         \}
 endfunction"}}}
 

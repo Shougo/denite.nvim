@@ -158,6 +158,14 @@ class Default(object):
         self.update_buffer(context)
         self.cursor_highlight(context)
 
+    def input_command_line(self, context):
+        self.__vim.command('redraw')
+        self.__input_before = self.__vim.call(
+            'input', context.get('prompt', '# '), context['input'])
+        self.__input_cursor = ''
+        self.__input_after = ''
+        self.update_input(context)
+
     def debug(self, expr):
         denite.util.debug(self.__vim, expr)
 
