@@ -18,15 +18,17 @@ class Filter(Base):
         self.description = 'fuzzy matcher'
 
     def filter(self, context):
-        input = context['input']
-        if input == '':
+        if context['input'] == '':
             return context['candidates']
-        if context['ignorecase']:
-            input = input.lower()
-        p = re.compile(fuzzy_escape(input, True))
-        if context['ignorecase']:
-            return [x for x in context['candidates']
-                    if p.search(x['word'].lower())]
-        else:
-            return [x for x in context['candidates']
-                    if p.search(x['word'])]
+        candidates = context['candidates']
+        for pattern in re.split(r'\s+', context['input']):
+            if context['ignorecase']:
+                pattern = pattern.lower()
+            p = re.compile(fuzzy_escape(pattern, True))
+            if context['ignorecase']:
+                candidates = [x for x in candidates
+                              if p.search(x['word'].lower())]
+            else:
+                candidates = [x for x in candidates
+                              if p.search(x['word'])]
+        return candidates
