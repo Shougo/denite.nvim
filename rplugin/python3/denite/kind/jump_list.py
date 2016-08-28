@@ -22,3 +22,5 @@ class Kind(Base):
             self.vim.current.window.cursor = (target['action__line'], 0)
         if 'action__col' in target:
             self.vim.current.window.cursor = (0, target['action__col'])
+        # Open folds
+        self.vim.execute('normal! zv')
