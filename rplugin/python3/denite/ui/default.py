@@ -142,6 +142,10 @@ class Default(object):
         self.__input_before = re.sub('.$', '', self.__input_before)
         self.update_input(context)
 
+    def delete_backward_word(self, context):
+        self.__input_before = re.sub('[^/ ]*.$', '', self.__input_before)
+        self.update_input(context)
+
     def move_to_next_line(self, context):
         if self.__win_cursor < context['winheight']:
             self.__win_cursor += 1
