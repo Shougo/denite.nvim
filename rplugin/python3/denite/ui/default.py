@@ -24,7 +24,7 @@ class Default(object):
 
     def start(self, sources, context):
         try:
-            start = time.time()
+            # start = time.time()
             context['sources'] = sources
             context['input'] = ''
             context['ignorecase'] = 1
