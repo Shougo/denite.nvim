@@ -20,6 +20,7 @@ class Denite(object):
     def __init__(self, vim):
         self.__vim = vim
         self.__sources = {}
+        self.__current_sources = []
         self.__filters = {}
         self.__kinds = {}
         self.__runtimepath = ''
@@ -33,15 +34,13 @@ class Denite(object):
             self.__runtimepath = self.__vim.options['runtimepath']
 
     def gather_candidates(self, context):
-        for source in [self.__sources[x['name']] for x in context['sources']
-                       if x['name'] in self.__sources]:
+        for source in self.__current_sources:
             source.context['candidates'] = source.gather_candidates(
                 source.context)
 
     def filter_candidates(self, context):
         candidates = []
-        for source in [self.__sources[x['name']] for x in context['sources']
-                       if x['name'] in self.__sources]:
+        for source in self.__current_sources:
             source.context['input'] = context['input']
             for filter in [self.__filters[x]
                            for x in source.matchers +
@@ -51,20 +50,26 @@ class Denite(object):
         return candidates
 
     def on_init(self, context):
-        for [source, args] in [[self.__sources[x['name']], x['args']]
-                               for x in context['sources']
-                               if x['name'] in self.__sources]:
+        self.__current_sources = []
+        for [name, args] in [[x['name'], x['args']]
+                             for x in context['sources']]:
+            if name not in self.__sources:
+                self.error('Source "' + name + '" is not found.')
+                continue
+            source = self.__sources[name]
             source.context = copy.deepcopy(context)
             source.context['args'] = args
 
             if hasattr(source, 'on_init'):
                 source.on_init(source.context)
+            self.__current_sources.append(source)
 
     def debug(self, expr):
         denite.util.debug(self.__vim, expr)
 
     def error(self, msg):
-        self.__vim.call('denite#util#print_error', msg)
+        self.__vim.call('denite#util#print_error',
+                        '[denite]' + msg)
 
     def load_sources(self):
         # Load sources from runtimepath
