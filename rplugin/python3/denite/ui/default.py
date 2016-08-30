@@ -64,14 +64,21 @@ class Default(object):
         self.cursor_highlight(context)
 
     def update_buffer(self, context):
-        self.__candidates = self.__denite.filter_candidates(context)
+        self.__candidates = []
+        statusline = ''
+        for name, candidates in self.__denite.filter_candidates(context):
+            self.__candidates += candidates
+            statusline += '{}({})'.format(name, len(candidates))
         self.__candidates_len = len(self.__candidates)
+        self.__window_options['statusline'] = statusline
+
         del self.__vim.current.buffer[:]
         self.__vim.current.buffer.append(
             [x['word'] for x in
              self.__candidates[self.__cursor:
                                self.__cursor + context['winheight']]])
         del self.__vim.current.buffer[0]
+
         self.__options['modified'] = False
 
     def cursor_highlight(self, context):
@@ -181,4 +188,4 @@ class Default(object):
 
     def error(self, msg):
         self.__vim.call('denite#util#print_error',
-                        '[denite]' + msg)
+                        '[denite]' + str(msg))
