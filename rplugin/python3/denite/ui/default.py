@@ -53,9 +53,14 @@ class Default(object):
     def init_buffer(self, context):
         self.__vim.command('new denite | resize ' +
                            str(context['winheight']))
+
         self.__options = self.__vim.current.buffer.options
         self.__options['buftype'] = 'nofile'
         self.__options['filetype'] = 'denite'
+
+        self.__window_options = self.__vim.current.window.options
+        self.__window_options['foldenable'] = False
+
         self.cursor_highlight(context)
 
     def update_buffer(self, context):
