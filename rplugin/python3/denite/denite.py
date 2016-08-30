@@ -46,7 +46,7 @@ class Denite(object):
                            for x in source.matchers +
                            source.sorters + source.converters
                            if x in self.__filters]:
-                yield (source.name, filter.filter(source.context))
+                yield source.name, filter.filter(source.context)
 
     def on_init(self, context):
         self.__current_sources = []
