@@ -94,7 +94,7 @@ class Denite(object):
             source.converters = get_custom(self.__vim, source.name).get(
                 'converters', source.converters)
 
-            self.__sources[name] = source
+            self.__sources[source.name] = source
 
     def load_filters(self):
         # Load filters from runtimepath
