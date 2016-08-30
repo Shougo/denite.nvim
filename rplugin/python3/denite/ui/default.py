@@ -152,9 +152,10 @@ class Default(object):
         self.update_input(context)
 
     def move_to_next_line(self, context):
-        if self.__win_cursor < context['winheight']:
+        if (self.__win_cursor < self.__candidates_len and
+                self.__win_cursor < context['winheight']):
             self.__win_cursor += 1
-        elif self.__cursor < self.__candidates_len - 1:
+        elif self.__win_cursor + self.__cursor < self.__candidates_len - 1:
             self.__cursor += 1
         self.update_buffer(context)
         self.cursor_highlight(context)
