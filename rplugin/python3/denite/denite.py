@@ -39,7 +39,6 @@ class Denite(object):
                 source.context)
 
     def filter_candidates(self, context):
-        candidates = []
         for source in self.__current_sources:
             source.context['input'] = context['input']
             for filter in [self.__filters[x]
