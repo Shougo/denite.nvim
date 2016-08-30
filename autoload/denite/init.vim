@@ -54,7 +54,9 @@ function! denite#init#_variables() abort "{{{
         \ "\<C-h>": 'delete_backward_char',
         \ "\<C-w>": 'delete_backward_word',
         \ "\<C-n>": 'move_to_next_line',
+        \ "\<Down>": 'move_to_next_line',
         \ "\<C-p>": 'move_to_prev_line',
+        \ "\<Up>": 'move_to_prev_line',
         \ "\<C-j>": 'input_command_line',
         \ "\<CR>":  'do_action',
         \}
