@@ -25,6 +25,13 @@ class Source(Base):
         args = ['find', '-L', context['__directory'],
                 '-path', '*/.git/*', '-prune', '-o',
                 '-type', 'l', '-print', '-o', '-type', 'f', '-print']
+        proc = subprocess.Popen(args,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE)
+        try:
+            outs, errs = proc.communicate(timeout=1)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+            outs, errs = proc.communicate()
         return [{'word': x, 'action__path': x}
-                for x in subprocess.check_output(args).decode(
-                        'utf-8').split('\n')]
+                for x in outs.decode('utf-8').split('\n')]
