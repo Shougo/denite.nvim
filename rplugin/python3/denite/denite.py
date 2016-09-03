@@ -35,8 +35,12 @@ class Denite(object):
 
     def gather_candidates(self, context):
         for source in self.__current_sources:
-            source.context['candidates'] = source.gather_candidates(
-                source.context)
+            candidates = []
+            for c in source.gather_candidates(source.context):
+                if "kind" not in c:
+                    c["kind"] = source.kind
+                candidates.append(c)
+            source.context['candidates'] = candidates
 
     def filter_candidates(self, context):
         for source in self.__current_sources:

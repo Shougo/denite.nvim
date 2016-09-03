@@ -145,9 +145,10 @@ class Default(object):
             return
 
         self.quit_buffer(context)
+        candidate = self.__candidates[self.__cursor + self.__win_cursor - 1]
         self.__denite.do_action(
-            context, 'jump_list', 'default',
-            [self.__candidates[self.__cursor + self.__win_cursor - 1]])
+            context, candidate["kind"], 'default',
+            [candidate])
         return True
 
     def delete_backward_char(self, context):
