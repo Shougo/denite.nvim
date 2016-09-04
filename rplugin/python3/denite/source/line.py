@@ -14,6 +14,7 @@ class Source(Base):
 
         self.name = 'line'
         self.kind = 'jump_list'
+        self.matchers = ['matcher_regexp']
 
     def on_init(self, context):
         context['__lines'] = self.vim.current.buffer[:]
