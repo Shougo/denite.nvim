@@ -12,7 +12,7 @@
 import re
 import string
 from .base import Base
-
+from denite.util import split_input
 
 class Filter(Base):
 
@@ -28,7 +28,7 @@ class Filter(Base):
         for c in candidates:
             c['filter__rank'] = 0
 
-        for pattern in re.split(r'\s+', context['input']):
+        for pattern in split_input(context['input']):
             for c in candidates:
                 c['filter__rank'] += get_score(c['word'], pattern)
         return sorted(candidates, key=lambda x: x['filter__rank'])

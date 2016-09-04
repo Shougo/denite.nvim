@@ -61,3 +61,7 @@ def load_external_module(file, module):
     current = os.path.dirname(os.path.abspath(file))
     module_dir = os.path.join(os.path.dirname(current), module)
     sys.path.insert(0, module_dir)
+
+
+def split_input(input):
+    return [x for x in re.split(r'\s+', input) if x != '']

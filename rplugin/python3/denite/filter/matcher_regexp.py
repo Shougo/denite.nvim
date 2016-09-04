@@ -6,6 +6,7 @@
 
 import re
 from .base import Base
+from denite.util import split_input
 
 
 class Filter(Base):
@@ -19,7 +20,7 @@ class Filter(Base):
     def filter(self, context, candidates):
         if context['input'] == '':
             return candidates
-        for pattern in re.split(r'\s+', context['input']):
+        for pattern in split_input(context['input']):
             try:
                 p = re.compile(pattern, flags=re.IGNORECASE
                                if context['ignorecase'] else 0)
