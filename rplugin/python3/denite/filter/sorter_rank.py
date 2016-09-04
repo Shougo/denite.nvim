@@ -22,17 +22,16 @@ class Filter(Base):
         self.name = 'sorter_rank'
         self.description = 'rank matcher'
 
-    def filter(self, context):
-        if context['input'] == '' or not context['candidates']:
-            return context['candidates']
-        for c in context['candidates']:
+    def filter(self, context, candidates):
+        if context['input'] == '' or not candidates:
+            return candidates
+        for c in candidates:
             c['filter__rank'] = 0
 
         for pattern in re.split(r'\s+', context['input']):
-            for c in context['candidates']:
+            for c in candidates:
                 c['filter__rank'] += get_score(c['word'], pattern)
-        return sorted(context['candidates'],
-                      key=lambda x: x['filter__rank'])
+        return sorted(candidates, key=lambda x: x['filter__rank'])
 
 BOUNDARY_CHARS = string.punctuation + string.whitespace
 

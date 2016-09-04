@@ -16,10 +16,9 @@ class Filter(Base):
         self.name = 'matcher_regexp'
         self.description = 'regexp matcher'
 
-    def filter(self, context):
+    def filter(self, context, candidates):
         if context['input'] == '':
-            return context['candidates']
-        candidates = context['candidates']
+            return candidates
         for pattern in re.split(r'\s+', context['input']):
             try:
                 p = re.compile(pattern, flags=re.IGNORECASE

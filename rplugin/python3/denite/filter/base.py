@@ -16,7 +16,7 @@ class Base(object):
         self.description = ''
 
     @abstractmethod
-    def filter(self, context):
+    def filter(self, context, candidates):
         pass
 
     def debug(self, expr):

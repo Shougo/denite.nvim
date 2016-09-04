@@ -39,19 +39,18 @@ class Denite(object):
             for c in source.gather_candidates(source.context):
                 c['source'] = source.name
                 candidates.append(c)
-            source.context['all_candidates'] = candidates
+            source.context['candidates'] = candidates
 
     def filter_candidates(self, context):
         for source in self.__current_sources:
             source.context['input'] = context['input']
-            source.context['candidates'] = copy.copy(
-                source.context['all_candidates'])
+            candidates = copy.copy(source.context['candidates'])
             for filter in [self.__filters[x]
                            for x in source.matchers +
                            source.sorters + source.converters
                            if x in self.__filters]:
-                source.context['candidates'] = filter.filter(source.context)
-            yield source.name, source.context['candidates']
+                candidates = filter.filter(source.context, candidates)
+            yield source.name, candidates
 
     def on_init(self, context):
         self.__current_sources = []

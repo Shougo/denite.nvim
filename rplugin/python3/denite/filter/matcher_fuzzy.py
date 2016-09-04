@@ -17,10 +17,9 @@ class Filter(Base):
         self.name = 'matcher_fuzzy'
         self.description = 'fuzzy matcher'
 
-    def filter(self, context):
+    def filter(self, context, candidates):
         if context['input'] == '':
-            return context['candidates']
-        candidates = context['candidates']
+            return candidates
         for pattern in re.split(r'\s+', context['input']):
             if context['ignorecase']:
                 pattern = pattern.lower()
