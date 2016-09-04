@@ -17,9 +17,10 @@ class Filter(Base):
         self.name = 'matcher_fuzzy'
         self.description = 'fuzzy matcher'
 
-    def filter(self, context, candidates):
+    def filter(self, context):
         if context['input'] == '':
-            return candidates
+            return context['candidates']
+        candidates = context['candidates']
         for pattern in split_input(context['input']):
             if context['ignorecase']:
                 pattern = pattern.lower()

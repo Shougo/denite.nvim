@@ -17,10 +17,11 @@ class Filter(Base):
         self.name = 'matcher_regexp'
         self.description = 'regexp matcher'
 
-    def filter(self, context, candidates):
+    def filter(self, context):
         if context['input'] == '':
-            return candidates
-        for pattern in split_input(context['input']):
+            return context['candidates']
+        candidates = context['candidates']
+        for pattern in re.split(r'\s+', context['input']):
             try:
                 p = re.compile(pattern, flags=re.IGNORECASE
                                if context['ignorecase'] else 0)
