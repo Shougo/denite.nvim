@@ -9,10 +9,10 @@
 # License: MIT license
 # ============================================================================
 
-import re
 import string
 from .base import Base
 from denite.util import split_input
+
 
 class Filter(Base):
 
