@@ -13,6 +13,7 @@ class Base(object):
     def __init__(self, vim):
         self.vim = vim
         self.name = 'base'
+        self.kind = 'base'
         self.matchers = ['matcher_fuzzy']
         self.sorters = []
         self.converters = []

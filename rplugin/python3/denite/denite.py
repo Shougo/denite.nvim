@@ -35,8 +35,11 @@ class Denite(object):
 
     def gather_candidates(self, context):
         for source in self.__current_sources:
-            source.context['candidates'] = source.gather_candidates(
-                source.context)
+            candidates = []
+            for c in source.gather_candidates(source.context):
+                c['source'] = source.name
+                candidates.append(c)
+            source.context['candidates'] = candidates
 
     def filter_candidates(self, context):
         for source in self.__current_sources:
@@ -68,6 +71,9 @@ class Denite(object):
     def error(self, msg):
         self.__vim.call('denite#util#print_error',
                         '[denite]' + msg)
+
+    def get_sources(self):
+        return self.__sources
 
     def load_sources(self):
         # Load sources from runtimepath
