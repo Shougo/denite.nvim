@@ -57,6 +57,7 @@ class Default(object):
         self.__options = self.__vim.current.buffer.options
         self.__options['buftype'] = 'nofile'
         self.__options['filetype'] = 'denite'
+        self.__options['swapfile'] = False
 
         self.__window_options = self.__vim.current.window.options
         self.__window_options['foldenable'] = False
