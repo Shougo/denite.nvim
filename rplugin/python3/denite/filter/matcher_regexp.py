@@ -6,7 +6,6 @@
 
 import re
 from .base import Base
-from denite.util import fuzzy_escape
 
 
 class Filter(Base):
