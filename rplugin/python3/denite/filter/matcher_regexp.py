@@ -21,7 +21,7 @@ class Filter(Base):
         if context['input'] == '':
             return context['candidates']
         candidates = context['candidates']
-        for pattern in re.split(r'\s+', context['input']):
+        for pattern in split_input(context['input']):
             try:
                 p = re.compile(pattern, flags=re.IGNORECASE
                                if context['ignorecase'] else 0)
