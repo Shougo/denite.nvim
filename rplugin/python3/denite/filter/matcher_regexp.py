@@ -21,9 +21,10 @@ class Filter(Base):
             return context['candidates']
         candidates = context['candidates']
         for pattern in re.split(r'\s+', context['input']):
-            if context['ignorecase']:
-                p = re.compile(pattern, re.IGNORECASE)
-            else:
-                p = re.compile(pattern)
+            try:
+                p = re.compile(pattern, flags=re.IGNORECASE
+                               if context['ignorecase'] else 0)
+            except Exception:
+                return []
             candidates = [x for x in candidates if p.search(x['word'])]
         return candidates
