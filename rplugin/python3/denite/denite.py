@@ -105,7 +105,7 @@ class Denite(object):
             source.converters = get_custom(self.__custom, source.name,
                                            'converters', source.converters)
             source.vars = get_custom(self.__custom, source.name,
-                                           'vars', source.vars)
+                                     'vars', source.vars)
 
             self.__sources[source.name] = source
 
