@@ -33,7 +33,7 @@ class Default(object):
             context['cursor_highlight'] = 'CursorLine'
             self.__mappings = self.__vim.eval('g:denite#_default_mappings')
 
-            self.__denite.start()
+            self.__denite.start(context)
             self.__denite.on_init(context)
 
             self.init_buffer(context)

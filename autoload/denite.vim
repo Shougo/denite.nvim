@@ -9,6 +9,8 @@ function! denite#initialize() abort "{{{
 endfunction"}}}
 function! denite#start(sources, ...) abort "{{{
   let context = get(a:000, 0, {})
+  let context.custom = denite#custom#get()
+
   call denite#initialize()
   call _denite_start(a:sources, context)
 endfunction"}}}

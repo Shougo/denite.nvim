@@ -19,6 +19,7 @@ class Base(object):
         self.converters = []
         self.context = {}
         self.rank = 100
+        self.vars = {}
 
     @abstractmethod
     def gather_candidate(self, context):

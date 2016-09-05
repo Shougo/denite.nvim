@@ -28,5 +28,3 @@ you should read `:help provider-python`.
 ## Future works (not implemented yet)
 
 * Implement some sources (grep, unite)
-
-* Customization support

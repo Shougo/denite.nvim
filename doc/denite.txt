@@ -58,7 +58,15 @@ https://github.com/tweekmonster/nvim-python-doctor
 
 ==============================================================================
 EXAMPLES						*denite-examples*
-
+>
+	" Change file_rec command.
+	call denite#custom#source(
+	\ 'file_rec', 'vars', {
+	\   'command': [
+	\      'ag', '--follow', '--nocolor', '--nogroup',
+	\      '--hidden', '-g', ''
+	\   ] })
+<
 ==============================================================================
 INTERFACE						*denite-interface*
 

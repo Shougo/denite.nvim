@@ -25,7 +25,9 @@ class Denite(object):
         self.__kinds = {}
         self.__runtimepath = ''
 
-    def start(self):
+    def start(self, context):
+        self.__custom = context['custom']
+
         if self.__vim.options['runtimepath'] != self.__runtimepath:
             # Recache
             self.load_sources()
@@ -96,12 +98,14 @@ class Denite(object):
             source = module.Source(self.__vim)
 
             # Set the source attributes.
-            source.matchers = get_custom(
-                self.__vim, source.name).get('matchers', source.matchers)
-            source.sorters = get_custom(self.__vim, source.name).get(
-                'sorters', source.sorters)
-            source.converters = get_custom(self.__vim, source.name).get(
-                'converters', source.converters)
+            source.matchers = get_custom(self.__custom, source.name,
+                                         'matchers', source.matchers)
+            source.sorters = get_custom(self.__custom, source.name,
+                                        'sorters', source.sorters)
+            source.converters = get_custom(self.__custom, source.name,
+                                           'converters', source.converters)
+            source.vars = get_custom(self.__custom, source.name,
+                                           'vars', source.vars)
 
             self.__sources[source.name] = source
 
