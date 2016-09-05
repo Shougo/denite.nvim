@@ -23,7 +23,7 @@ class Filter(Base):
         self.description = 'rank matcher'
 
     def filter(self, context):
-        if context['input'] == '' or not context['candidates']:
+        if len(context['input']) < 1 or not context['candidates']:
             return context['candidates']
         for c in context['candidates']:
             c['filter__rank'] = 0
