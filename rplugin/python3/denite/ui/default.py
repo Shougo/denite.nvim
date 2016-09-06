@@ -30,7 +30,6 @@ class Default(object):
             context['ignorecase'] = 1
             context['is_async'] = 0
             context['winheight'] = 20
-            context['cursor_highlight'] = 'CursorLine'
             self.__mappings = self.__vim.eval('g:denite#_default_mappings')
 
             self.__denite.start(context)
@@ -61,6 +60,7 @@ class Default(object):
 
         self.__window_options = self.__vim.current.window.options
         self.__window_options['foldenable'] = False
+        self.__window_options['cursorline'] = True
 
         self.cursor_highlight(context)
 
@@ -83,9 +83,7 @@ class Default(object):
         self.__options['modified'] = False
 
     def cursor_highlight(self, context):
-        self.__vim.command('silent! call matchdelete(10)')
-        self.__vim.call('matchaddpos', context['cursor_highlight'],
-                        [self.__win_cursor], 10, 10)
+        self.__vim.call('cursor', [self.__win_cursor, 0])
 
     def quit_buffer(self, context):
         self.__vim.command('redraw | echo')
