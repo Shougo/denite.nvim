@@ -15,13 +15,16 @@ class Source(Base):
         self.name = 'line'
         self.kind = 'jump_list'
         self.matchers = ['matcher_regexp']
+        self.sorters = []
 
     def on_init(self, context):
+        context['__linenr'] = self.vim.current.window.cursor[0]
         context['__lines'] = self.vim.current.buffer[:]
         context['__buffer'] = self.vim.current.buffer.name
 
     def gather_candidates(self, context):
-        return [{'word': x,
-                 'action__path': context['__buffer'],
-                 'action__line': (i + 1)}
-                for [i, x] in enumerate(context['__lines'])]
+        lines = [{'word': x,
+                  'action__path': context['__buffer'],
+                  'action__line': (i + 1)}
+                 for [i, x] in enumerate(context['__lines'])]
+        return lines[context['__linenr']-1:] + lines[:context['__linenr']-1]
