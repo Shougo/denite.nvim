@@ -60,8 +60,11 @@ class Default(object):
         self.__options['swapfile'] = False
 
         self.__window_options = self.__vim.current.window.options
-        self.__window_options['foldenable'] = False
         self.__window_options['cursorline'] = True
+        self.__window_options['colorcolumn'] = ''
+        self.__window_options['number'] = False
+        self.__window_options['foldenable'] = False
+        self.__window_options['foldcolumn'] = 0
 
         self.cursor_highlight(context)
 
@@ -162,7 +165,7 @@ class Default(object):
         if (self.__win_cursor < self.__candidates_len and
                 self.__win_cursor < context['winheight']):
             self.__win_cursor += 1
-        elif self.__win_cursor + self.__cursor < self.__candidates_len - 1:
+        elif self.__win_cursor + self.__cursor < self.__candidates_len:
             self.__cursor += 1
         self.update_buffer(context)
         self.cursor_highlight(context)
