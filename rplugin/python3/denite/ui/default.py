@@ -26,7 +26,8 @@ class Default(object):
         try:
             # start = time.time()
             context['sources'] = sources
-            context['input'] = ''
+            if 'input' not in context:
+                context['input'] = ''
             context['ignorecase'] = 1
             context['is_async'] = 0
             context['winheight'] = 20
