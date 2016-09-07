@@ -63,8 +63,7 @@ EXAMPLES						*denite-examples*
 	call denite#custom#source(
 	\ 'file_rec', 'vars', {
 	\   'command': [
-	\      'ag', '--follow', '--nocolor', '--nogroup',
-	\      '--hidden', '-g', ''
+	\      'ag', '--follow', '--nocolor', '--nogroup', '-g', ''
 	\   ] })
 <
 ==============================================================================
