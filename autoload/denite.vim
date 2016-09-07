@@ -12,7 +12,7 @@ function! denite#start(sources, ...) abort "{{{
   let context.custom = denite#custom#get()
 
   call denite#initialize()
-  call _denite_start(a:sources, context)
+  return _denite_start(a:sources, context)
 endfunction"}}}
 
 " vim: foldmethod=marker

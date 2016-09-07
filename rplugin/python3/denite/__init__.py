@@ -22,4 +22,4 @@ class DeniteHandlers(object):
     @neovim.function('_denite_start', sync=True)
     def start(self, args):
         self.__ui = Default(self.__vim)
-        self.__ui.start(args[0], args[1])
+        return self.__ui.start(args[0], args[1])

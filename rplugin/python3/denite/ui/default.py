@@ -21,6 +21,7 @@ class Default(object):
         self.__win_cursor = 1
         self.__candidates = []
         self.__candidates_len = 0
+        self.__result = []
 
     def start(self, sources, context):
         try:
@@ -49,6 +50,7 @@ class Default(object):
                 error(self.__vim, line)
             error(self.__vim,
                   'An error has occurred. Please execute :messages command.')
+        return self.__result
 
     def init_buffer(self, context):
         self.__vim.command('new denite | resize ' +
@@ -141,6 +143,7 @@ class Default(object):
 
     def quit(self, context):
         self.quit_buffer(context)
+        self.__result = []
         return True
 
     def do_action(self, context):
@@ -151,6 +154,7 @@ class Default(object):
         candidate = self.__candidates[self.__cursor + self.__win_cursor - 1]
         kind = self.__denite.get_sources()[candidate['source']].kind
         self.__denite.do_action(context, kind, 'default', [candidate])
+        self.__result = [candidate]
         return True
 
     def delete_backward_char(self, context):
@@ -190,5 +194,4 @@ class Default(object):
         denite.util.debug(self.__vim, expr)
 
     def error(self, msg):
-        self.__vim.call('denite#util#print_error',
-                        '[denite]' + str(msg))
+        self.__vim.call('denite#util#print_error', '[denite]' + str(msg))
