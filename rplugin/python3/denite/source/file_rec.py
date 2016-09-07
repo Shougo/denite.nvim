@@ -41,4 +41,4 @@ class Source(Base):
             proc.kill()
             outs, errs = proc.communicate()
         return [{'word': x, 'action__path': x}
-                for x in outs.decode('utf-8').split('\n')]
+                for x in outs.decode('utf-8').split('\n') if x != '']
