@@ -4,7 +4,7 @@
 # License: MIT license
 # ============================================================================
 
-from denite.util import globruntime, get_custom
+from denite.util import globruntime, get_custom_source
 
 import denite.source  # noqa
 import denite.filter  # noqa
@@ -98,14 +98,18 @@ class Denite(object):
             source = module.Source(self.__vim)
 
             # Set the source attributes.
-            source.matchers = get_custom(self.__custom, source.name,
-                                         'matchers', source.matchers)
-            source.sorters = get_custom(self.__custom, source.name,
-                                        'sorters', source.sorters)
-            source.converters = get_custom(self.__custom, source.name,
-                                           'converters', source.converters)
-            source.vars = get_custom(self.__custom, source.name,
-                                     'vars', source.vars)
+            source.matchers = get_custom_source(
+                self.__custom, source.name,
+                'matchers', source.matchers)
+            source.sorters = get_custom_source(
+                self.__custom, source.name,
+                'sorters', source.sorters)
+            source.converters = get_custom_source(
+                self.__custom, source.name,
+                'converters', source.converters)
+            source.vars = get_custom_source(
+                self.__custom, source.name,
+                'vars', source.vars)
 
             self.__sources[source.name] = source
 

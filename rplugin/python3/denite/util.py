@@ -53,13 +53,14 @@ def fuzzy_escape(string, camelcase):
     return p
 
 
-def get_custom(custom, source_name, key, default):
-    if source_name not in custom:
-        return get_custom(custom, '_', key, default)
-    elif key in custom[source_name]:
-        return custom[source_name][key]
-    elif key in custom['_']:
-        return custom['_'][key]
+def get_custom_source(custom, source_name, key, default):
+    source = custom['source']
+    if source_name not in source:
+        return get_custom_source(custom, '_', key, default)
+    elif key in source[source_name]:
+        return source[source_name][key]
+    elif key in source['_']:
+        return source['_'][key]
     else:
         return default
 
