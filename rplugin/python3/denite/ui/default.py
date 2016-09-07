@@ -4,7 +4,7 @@
 # License: MIT license
 # ============================================================================
 
-from denite.util import error, echo
+from denite.util import error, echo, debug
 from .. import denite
 
 import re
@@ -22,6 +22,7 @@ class Default(object):
         self.__candidates = []
         self.__candidates_len = 0
         self.__result = []
+        self.__mode = '_'
 
     def start(self, sources, context):
         try:
@@ -32,7 +33,10 @@ class Default(object):
             context['ignorecase'] = 1
             context['is_async'] = 0
             context['winheight'] = 20
-            self.__mappings = self.__vim.eval('g:denite#_default_mappings')
+            self.__mappings = self.__vim.eval(
+                'g:denite#_default_mappings')['_'].copy()
+            self.__mappings.update(context['custom']['map']['_'])
+            # debug(self.__vim, self.__mappings)
 
             self.__denite.start(context)
             self.__denite.on_init(context)
@@ -189,9 +193,6 @@ class Default(object):
         self.__input_cursor = ''
         self.__input_after = ''
         self.update_input(context)
-
-    def debug(self, expr):
-        denite.util.debug(self.__vim, expr)
 
     def error(self, msg):
         self.__vim.call('denite#util#print_error', '[denite]' + str(msg))

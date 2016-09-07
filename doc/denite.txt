@@ -65,6 +65,10 @@ EXAMPLES						*denite-examples*
 	\   'command': [
 	\      'ag', '--follow', '--nocolor', '--nogroup', '-g', ''
 	\   ] })
+
+	" Change mappings.
+	call denite#custom#map('_', "\<C-j>", 'move_to_next_line')
+	call denite#custom#map('_', "\<C-k>", 'move_to_prev_line')
 <
 ==============================================================================
 INTERFACE						*denite-interface*

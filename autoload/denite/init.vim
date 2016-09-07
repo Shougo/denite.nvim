@@ -47,7 +47,8 @@ endfunction"}}}
 
 function! denite#init#_variables() abort "{{{
   " Default mappings
-  let g:denite#_default_mappings = {
+  let g:denite#_default_mappings = {}
+  let g:denite#_default_mappings._ = {
         \ "\<Esc>": 'quit',
         \ "\<C-g>": 'quit',
         \ "\<BS>":  'delete_backward_char',
