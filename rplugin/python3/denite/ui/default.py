@@ -4,7 +4,7 @@
 # License: MIT license
 # ============================================================================
 
-from denite.util import error, echo, debug
+from denite.util import error, echo
 from .. import denite
 
 import re
@@ -32,6 +32,7 @@ class Default(object):
                 context['input'] = ''
             context['ignorecase'] = 1
             context['is_async'] = 0
+            context['path'] = ''
             context['winheight'] = 20
             self.__mappings = self.__vim.eval(
                 'g:denite#_default_mappings')['_'].copy()
@@ -79,7 +80,7 @@ class Default(object):
         statusline = ''
         for name, candidates in self.__denite.filter_candidates(context):
             self.__candidates += candidates
-            statusline += '{}({})'.format(name, len(candidates))
+            statusline += '{}({}) '.format(name, len(candidates))
         self.__candidates_len = len(self.__candidates)
         self.__window_options['statusline'] = statusline
 
