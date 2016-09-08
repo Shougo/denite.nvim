@@ -76,8 +76,7 @@ class Denite(object):
         denite.util.debug(self.__vim, expr)
 
     def error(self, msg):
-        self.__vim.call('denite#util#print_error',
-                        '[denite]' + msg)
+        self.__vim.call('denite#util#print_error', msg)
 
     def get_sources(self):
         return self.__sources
