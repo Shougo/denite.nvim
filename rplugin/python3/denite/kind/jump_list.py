@@ -21,9 +21,9 @@ class Kind(Base):
                          self.vim.current.buffer.name, ':p') != path:
             self.vim.call(
                 'denite#util#execute_path', 'edit', path)
-        if 'action__line' in target:
-            self.vim.current.window.cursor = (target['action__line'], 0)
-        if 'action__col' in target:
-            self.vim.current.window.cursor = (0, target['action__col'])
+        if int(target.get('action__line', 0)) > 0:
+            self.vim.current.window.cursor = (int(target['action__line']), 0)
+        if int(target.get('action__col', 0)) > 0:
+            self.vim.current.window.cursor = (0, int(target['action__col']))
         # Open folds
         self.vim.command('normal! zv')
