@@ -73,3 +73,21 @@ def load_external_module(file, module):
 
 def split_input(input):
     return [x for x in re.split(r'\s+', input) if x != '']
+
+
+def path2dir(path):
+    return path if os.path.isdir(path) else os.path.dirname(path)
+
+
+def path2project(path):
+    # Todo: other project files support
+    parent = path2dir(path)
+
+    while 1:
+        path = parent + '/.git'
+        if os.path.isdir(path) or os.path.isfile(path):
+            return parent
+        next = os.path.dirname(parent)
+        if next == parent:
+            return ''
+        parent = next
