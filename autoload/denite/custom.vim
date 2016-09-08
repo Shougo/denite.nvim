@@ -30,7 +30,7 @@ endfunction"}}}
 
 function! denite#custom#map(mode, key, mapping, ...) abort "{{{
   let custom = denite#custom#get()
-  let options = get(a:000, 0, {})
+  " let options = get(a:000, 0, {})
 
   for key in split(a:mode, '\s*,\s*')
     if !has_key(custom.map, key)
