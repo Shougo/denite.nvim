@@ -31,18 +31,15 @@ class Source(Base):
 
 
 def parse_jump_line(line):
-    m = re.search('^(.*):(\d+)(?::(\d+))?:(.*)$', line)
+    m = re.search(r'^(.*):(\d+)(?::(\d+))?:(.*)$', line)
     if not m or not m.group(1) or not m.group(4):
         return []
 
-    if re.search(':\d+$', m.group(1)):
+    if re.search(r':\d+$', m.group(1)):
         # Use column pattern
-        m = re.search('^(.*):(\d+):(\d+):(.*)$', line)
+        m = re.search(r'^(.*):(\d+):(\d+):(.*)$', line)
 
-    path = m.group(1)
-    linenr = m.group(2)
-    col = m.group(3)
-    text = m.group(4)
+    [path, linenr, col, text] = m.groups()
 
     if not linenr:
         linenr = '1'
