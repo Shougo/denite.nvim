@@ -78,9 +78,11 @@ class Default(object):
     def update_buffer(self, context):
         self.__candidates = []
         statusline = ''
-        for name, candidates in self.__denite.filter_candidates(context):
+        for name, all, candidates in self.__denite.filter_candidates(context):
+            if len(all) == 0:
+                continue
             self.__candidates += candidates
-            statusline += '{}({}) '.format(name, len(candidates))
+            statusline += '{}({}/{}) '.format(name, len(candidates), len(all))
         self.__candidates_len = len(self.__candidates)
         self.__window_options['statusline'] = statusline
 
