@@ -81,6 +81,9 @@ def path2dir(path):
 
 def path2project(path):
     # Todo: other project files support
+    if path == '':
+        return ''
+
     parent = path2dir(path)
 
     while 1:

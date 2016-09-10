@@ -17,10 +17,11 @@ class Filter(Base):
         self.description = 'project files matcher'
 
     def filter(self, context):
-        path = context['path'] if context[
-            'path'] != '' else self.vim.call('getcwd')
-        project = path2project(path) + '/'
+        project = path2project(context.get('path', ''))
+        if project == '':
+            project = self.vim.call('getcwd')
+        project += '/'
 
         return [x for x in context['candidates']
                 if 'action__path' not in x or
-                x['action__path'].find(project) == 0]
+                x['action__path'].startswith(project)]
