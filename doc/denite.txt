@@ -149,6 +149,17 @@ EXTERNAL SOURCES				*denite-external-sources*
 ==============================================================================
 FAQ							*denite-faq*
 
+Q: denite can support Vim8?
+
+A: To support Vim8, neovim-python compatible API is needed.
+I have not plan to create it.
+But if it is created, I will support it.
+
+Q: I want to change the cursor line color in denite buffer.
+
+A: denite uses 'cursorline' feature.
+So you can change the color by |hl-CursorLine| highlight.
+
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
 
