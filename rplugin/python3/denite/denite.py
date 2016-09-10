@@ -46,11 +46,19 @@ class Denite(object):
     def filter_candidates(self, context):
         for source in self.__current_sources:
             source.context['input'] = context['input']
-            source.context['candidates'] = copy.copy(
-                source.context['all_candidates'])
+            for matcher in [self.__filters[x]
+                            for x in source.matchers if x in self.__filters]:
+                candidates = []
+                max = len(source.context['all_candidates'])
+                for i in range(0, max, 1000):
+                    source.context['candidates'] = source.context[
+                        'all_candidates'][i:i+1000]
+                    candidates += matcher.filter(source.context)
+                    if len(candidates) >= 1000:
+                        break
+                source.context['candidates'] = candidates
             for filter in [self.__filters[x]
-                           for x in source.matchers +
-                           source.sorters + source.converters
+                           for x in source.sorters + source.converters
                            if x in self.__filters]:
                 source.context['candidates'] = filter.filter(source.context)
             candidates = source.context['candidates']

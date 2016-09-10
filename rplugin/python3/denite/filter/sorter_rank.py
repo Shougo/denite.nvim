@@ -23,7 +23,7 @@ class Filter(Base):
         self.description = 'rank matcher'
 
     def filter(self, context):
-        if len(context['input']) < 1 or len(context['candidates']) > 5000:
+        if len(context['input']) < 1:
             return context['candidates']
         for c in context['candidates']:
             c['filter__rank'] = 0
