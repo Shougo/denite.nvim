@@ -1,0 +1,57 @@
+# ============================================================================
+# FILE: line.py
+# AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
+#         TJ DeVries <devries.timothyj at gmail.com>
+# License: MIT license
+# ============================================================================
+
+from .base import Base
+
+
+class Source(Base):
+
+    def __init__(self, vim):
+        Base.__init__(self, vim)
+
+        self.name = 'menu'
+        self.kind = 'jump_list'
+
+        # self.matchers = []
+        # self.sorters = []
+
+    def on_init(self, context):
+        context['__menus'] = self.vim.vars['denite_source_menu_menus']
+
+    def gather_candidates(self, context):
+        lines = []
+
+        menu_context = [option for option in context['sources'] if option['name'] == self.name][0]
+
+        if menu_context == []:
+            # Exit quickly
+            return []
+        else:
+            # TODO: Get all the arguments, in case some aren't passed directly to the menu
+            if menu_context['args']:
+                # TODO:  Check the menu name
+
+                # Handle file candidates
+                lines.extend([{'word': str(candidate[0]),
+                                  'action__path': candidate[1], 
+                                  }
+                                for search_string in menu_context['args']
+                                    for candidate in context['__menus'][search_string]['file_candidates']
+                                 ])
+
+                # TODO: Handle command candidates
+                # TODO: Handle candidates
+            else:
+                # TODO: Display all the available menus
+                menu_options = context['__menus']
+
+                lines.extend([{'word': menu['description'],
+                                  'action__path': '~/test/denite/test_rc.vim',
+                                 }
+                                 for menu_option in context['__menus'] for menu in menu_option])
+
+        return lines
