@@ -20,6 +20,7 @@ class Source(Base):
         # self.sorters = []
 
     def on_init(self, context):
+        # TODO: Could also check for unite_source_menu_menus?
         context['__menus'] = self.vim.vars['denite_source_menu_menus']
 
     def gather_candidates(self, context):
@@ -49,9 +50,10 @@ class Source(Base):
                 # TODO: Display all the available menus
                 menu_options = context['__menus']
 
-                lines.extend([{'word': menu['description'],
-                                  'action__path': '~/test/denite/test_rc.vim',
-                                 }
-                                 for menu_option in context['__menus'] for menu in menu_option])
+                lines.extend([{'word': candidate,
+                               # TODO: Open the menu?
+                               }
+                              for candidate in context['__menus']]
+                             )
 
         return lines
