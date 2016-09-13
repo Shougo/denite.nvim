@@ -159,7 +159,10 @@ class Default(object):
 
         self.quit_buffer(context)
         candidate = self.__candidates[self.__cursor + self.__win_cursor - 1]
-        kind = self.__denite.get_sources()[candidate['source']].kind
+        if 'kind' in candidate:
+            kind = candidate['kind']
+        else:
+            kind = self.__denite.get_sources()[candidate['source']].kind
         self.__denite.do_action(context, kind, 'default', [candidate])
         self.__result = [candidate]
         return True
