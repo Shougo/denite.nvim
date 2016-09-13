@@ -38,11 +38,11 @@ class Source(Base):
 
                 # Handle file candidates
                 lines.extend([{'word': str(candidate[0]),
-                                  'action__path': candidate[1], 
-                                  }
+                                'action__path': candidate[1], 
+                                }
                                 for search_string in menu_context['args']
-                                    for candidate in context['__menus'][search_string]['file_candidates']
-                                 ])
+                                for candidate in context['__menus'][search_string]['file_candidates']
+                                ])
 
                 # TODO: Handle command candidates
                 # TODO: Handle candidates
