@@ -22,7 +22,6 @@ class Source(Base):
 
     def gather_candidates(self, context):
         result = parse_jump_line(context['__line'])
-        self.debug(result)
         return [{'word': result[0],
                  'action__path': result[0],
                  'action__line': result[1],
