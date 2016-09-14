@@ -60,11 +60,8 @@ https://github.com/tweekmonster/nvim-python-doctor
 EXAMPLES						*denite-examples*
 >
 	" Change file_rec command.
-	call denite#custom#source(
-	\ 'file_rec', 'vars', {
-	\   'command': [
-	\      'ag', '--follow', '--nocolor', '--nogroup', '-g', ''
-	\   ] })
+	call denite#custom#var('file_rec', 'command',
+	\ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
 
 	" Change mappings.
 	call denite#custom#map('_', "\<C-j>", 'move_to_next_line')
@@ -109,6 +106,15 @@ denite#start({sources}[, {context}])
 >
 		call denite#start({'name': 'file_rec', 'args': []})
 <
+
+						*denite#custom#source()*
+denite#custom#source({source-name}, {option-name}, {value})
+
+							*denite#custom#var()*
+denite#custom#var({source-name}, {var-name}, {value})
+
+							*denite#custom#map()*
+denite#custom#map({mode}, {key}, {mapping})
 
 ------------------------------------------------------------------------------
 OPTIONS							*denite-options*

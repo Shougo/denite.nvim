@@ -28,6 +28,21 @@ function! denite#custom#source(source_name, option_name, value) abort "{{{
   endfor
 endfunction"}}}
 
+function! denite#custom#var(source_name, var_name, value) abort "{{{
+  let custom = denite#custom#get()
+
+  for key in split(a:source_name, '\s*,\s*')
+    if !has_key(custom.source, key)
+      let custom.source[key] = {}
+    endif
+    let custom_source = custom.source[key]
+    if !has_key(custom_source, 'vars')
+      let custom_source['vars'] = {}
+    endif
+    let custom_source['vars'][a:var_name] = a:value
+  endfor
+endfunction"}}}
+
 function! denite#custom#map(mode, key, mapping, ...) abort "{{{
   let custom = denite#custom#get()
   " let options = get(a:000, 0, {})
