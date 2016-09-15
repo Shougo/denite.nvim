@@ -21,11 +21,7 @@ class Source(Base):
 
     def on_init(self, context):
         # TODO: Could also check for unite_source_menu_menus?
-        context['__menus'] = context.get('menus',
-                                         self.vim.vars.get(
-                                             'denite_source_menu_menus',
-                                             {}
-                                         ))
+        context['__menus'] = context['vars'].get('menus', {})
 
     def gather_candidates(self, context):
         lines = []
