@@ -100,7 +100,7 @@ class Default(object):
 
     def quit_buffer(self, context):
         self.__vim.command('redraw | echo')
-        self.__vim.command('close!')
+        self.__vim.command('bdelete!')
 
     def update_input(self, context):
         context['input'] = self.__input_before
