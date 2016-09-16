@@ -43,7 +43,7 @@ class Denite(object):
                 c['source'] = source.name
                 candidates.append(c)
             source.context['all_candidates'] = candidates
-            source.context['candidates'] = []
+            source.context['candidates'] = candidates
 
     def filter_candidates(self, context):
         for source in self.__current_sources:
