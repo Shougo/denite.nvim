@@ -4,6 +4,11 @@
 # License: MIT license
 # =============================================================================
 
+import importlib
+
+if importlib.find_loader('neovim') is None:
+    pass
+
 import neovim
 from denite.ui.default import Default
 
