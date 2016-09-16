@@ -19,23 +19,29 @@ class Source(Base):
         # self.matchers = []
         # self.sorters = []
 
+        self.dict_key = '__menus'
+
     def on_init(self, context):
-        # TODO: Could also check for unite_source_menu_menus?
-        context['__menus'] = context['vars'].get('menus', {})
+        context[self.dict_key] = context['custom']['source']['menu']['vars']\
+            .get('menus', {})
+
+        # TODO: Set a value to look for old unite menus from VIM?
+        unite_menu_compatibilty = False
+        if unite_menu_compatibilty:
+            context[self.dict_key].update(
+                self.vim.vars['unite_source_menu_menus']
+            )
 
     def gather_candidates(self, context):
-        lines = []
-
-        menu_context = [option for option in context['sources']
-                        if option['name'] == self.name][0]
-
-        if menu_context == []:
-            # Exit quickly
+        # If no menus have been defined, just exit
+        if self.dict_key not in context.keys() or not context[self.dict_key]:
             return []
 
-        # TODO: Get all the arguments,
-        # in case some aren't passed directly to the menu
-        if menu_context['args']:
+        lines = []
+
+        menu_args = context['args']
+
+        if menu_args:
             # TODO:  Check the menu name
 
             # Handle file candidates
@@ -43,9 +49,9 @@ class Source(Base):
                 {'word': str(candidate[0]),
                  'action__path': candidate[1],
                  }
-                for search_string in menu_context['args']
+                for search_string in menu_args
                 for candidate
-                in context['__menus'][search_string]['file_candidates']
+                in context[self.dict_key][search_string]['file_candidates']
             ])
 
             # TODO: Handle command candidates
@@ -55,7 +61,7 @@ class Source(Base):
             lines.extend([{'word': candidate,
                            # TODO: Open the menu?
                            }
-                          for candidate in context['__menus']
+                          for candidate in context[self.dict_key]
                           ]
                          )
 
