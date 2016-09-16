@@ -126,8 +126,11 @@ class Default(object):
             echo(self.__vim, cursor_color, self.__input_cursor)
             echo(self.__vim, 'Normal', self.__input_after)
 
-            nr = self.__vim.funcs.getchar(0) if context[
-                'is_async'] else self.__vim.funcs.getchar()
+            nr = self.__vim.call('getchar', 0) if context[
+                'is_async'] else self.__vim.call('getchar')
+            if isinstance(nr, bytes):
+                # Not supported
+                continue
             char = nr if isinstance(nr, str) else chr(nr)
             if not isinstance(nr, str) and nr >= 0x20:
                 # Normal input string
@@ -135,9 +138,9 @@ class Default(object):
                 self.update_input(context)
                 continue
 
-            if char in self.__mappings and hasattr(
-                    self, self.__mappings[char]):
-                func = getattr(self, self.__mappings[char])
+            if str(nr) in self.__mappings and hasattr(
+                    self, self.__mappings[str(nr)]):
+                func = getattr(self, self.__mappings[str(nr)])
                 ret = func(context)
                 if ret:
                     break

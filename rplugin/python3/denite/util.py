@@ -19,7 +19,7 @@ def convert2list(expr):
 
 
 def globruntime(vim, path):
-    return vim.funcs.globpath(vim.options['runtimepath'], path, 1, 1)
+    return vim.call('globpath', vim.options['runtimepath'], path, 1, 1)
 
 
 def echo(vim, color, string):

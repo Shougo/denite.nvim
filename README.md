@@ -14,7 +14,7 @@ It is 10 times faster than unite.vim.
 
 ## Requirements
 
-denite requires Neovim with if\_python3.
+denite requires Neovim or Vim8.0+ with if\_python3.
 If `:echo has("python3")` returns `1`, then you're done; otherwise, see below.
 
 You can enable Python3 interface with pip:

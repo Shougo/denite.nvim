@@ -21,7 +21,11 @@ function! denite#init#_initialize() abort "{{{
     autocmd!
   augroup END
 
-  if !has('nvim') || !has('python3')
+  if !has('nvim')
+    return denite#vim#_initialize()
+  endif
+
+  if !has('python3')
     call denite#util#print_error(
           \ 'denite.nvim does not work with this version.')
     call denite#util#print_error(
@@ -48,7 +52,8 @@ endfunction"}}}
 function! denite#init#_variables() abort "{{{
   " Default mappings
   let g:denite#_default_mappings = {}
-  let g:denite#_default_mappings._ = {
+  let g:denite#_default_mappings._ = {}
+  let default_mappings = {
         \ "\<Esc>": 'quit',
         \ "\<C-g>": 'quit',
         \ "\<BS>":  'delete_backward_char',
@@ -61,6 +66,9 @@ function! denite#init#_variables() abort "{{{
         \ "\<C-j>": 'input_command_line',
         \ "\<CR>":  'do_action',
         \}
+  for [key, value] in items(default_mappings)
+    let g:denite#_default_mappings._[char2nr(key)] = value
+  endfor
 endfunction"}}}
 
 " vim: foldmethod=marker
