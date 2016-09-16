@@ -10,7 +10,6 @@ import denite.source  # noqa
 import denite.filter  # noqa
 import denite.kind    # noqa
 
-
 import importlib.machinery
 import os.path
 import copy
