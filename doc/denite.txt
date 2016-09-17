@@ -224,7 +224,6 @@ denite#custom#map({mode}, {key}, {mapping})
 		instead of <C-h>.
 		Note: Multiple key stroke mappings like "\<C-h>\<C-b>" are not
 		supported.
-		Note: Backspace(<BS>) mapping is not supported.
 
 ------------------------------------------------------------------------------
 OPTIONS							*denite-options*
