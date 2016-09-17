@@ -57,6 +57,7 @@ function! denite#init#_variables() abort "{{{
         \ "\<Esc>": 'quit',
         \ "\<C-g>": 'quit',
         \ "\<C-h>": 'delete_backward_char',
+        \ "\<BS>": 'delete_backward_char',
         \ "\<C-w>": 'delete_backward_word',
         \ "\<C-n>": 'move_to_next_line',
         \ "\<Down>": 'move_to_next_line',
@@ -65,8 +66,8 @@ function! denite#init#_variables() abort "{{{
         \ "\<C-j>": 'input_command_line',
         \ "\<CR>":  'do_action',
         \}
-  for [key, value] in items(default_mappings)
-    let g:denite#_default_mappings._[char2nr(key)] = value
+  for [char, value] in items(default_mappings)
+    let g:denite#_default_mappings._[denite#util#char2key(char)] = value
   endfor
 endfunction"}}}
 

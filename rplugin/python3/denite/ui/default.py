@@ -126,11 +126,12 @@ class Default(object):
             echo(self.__vim, cursor_color, self.__input_cursor)
             echo(self.__vim, 'Normal', self.__input_after)
 
-            nr = self.__vim.call('getchar', 0) if context[
-                'is_async'] else self.__vim.call('getchar')
+            if context['is_async']:
+                nr = self.__vim.call('denite#util#getchar', 0)
+            else:
+                nr = self.__vim.call('denite#util#getchar')
             if isinstance(nr, bytes):
-                # Not supported
-                continue
+                nr = nr.decode('utf-8')
             char = nr if isinstance(nr, str) else chr(nr)
             if not isinstance(nr, str) and nr >= 0x20:
                 # Normal input string
@@ -197,8 +198,11 @@ class Default(object):
 
     def input_command_line(self, context):
         self.__vim.command('redraw')
-        self.__input_before = self.__vim.call(
+        input = self.__vim.call(
             'input', context.get('prompt', '# '), context['input'])
+        if isinstance(input, bytes):
+            input = input.decode('utf-8')
+        self.__input_before = input
         self.__input_cursor = ''
         self.__input_after = ''
         self.update_input(context)

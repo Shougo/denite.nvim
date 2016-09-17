@@ -155,6 +155,7 @@ All mode mappings.
 <Esc>		quit
 <C-g>		quit
 <C-h>		delete_backward_char
+<BS>		delete_backward_char
 <C-w>		delete_backward_word
 <C-n>		move_to_next_line
 <Down>		move_to_next_line
