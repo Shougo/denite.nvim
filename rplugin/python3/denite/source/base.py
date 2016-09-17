@@ -18,7 +18,6 @@ class Base(object):
         self.sorters = ['sorter_rank']
         self.converters = []
         self.context = {}
-        self.rank = 100
         self.vars = {}
 
     @abstractmethod
