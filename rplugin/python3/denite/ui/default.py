@@ -107,6 +107,7 @@ class Default(object):
         context['input'] += self.__input_cursor
         context['input'] += self.__input_after
         self.update_buffer(context)
+        self.__win_cursor = 1
 
     def input_loop(self, context):
         prompt_color = context.get('prompt_color', 'Statement')
