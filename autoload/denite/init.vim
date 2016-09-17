@@ -56,7 +56,6 @@ function! denite#init#_variables() abort "{{{
   let default_mappings = {
         \ "\<Esc>": 'quit',
         \ "\<C-g>": 'quit',
-        \ "\<BS>":  'delete_backward_char',
         \ "\<C-h>": 'delete_backward_char',
         \ "\<C-w>": 'delete_backward_word',
         \ "\<C-n>": 'move_to_next_line',
