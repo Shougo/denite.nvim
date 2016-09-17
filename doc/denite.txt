@@ -245,6 +245,15 @@ file_rec	Gather files recursive and nominates all file names under the
 		command		 default get files command
 				(default is used "find" command)
 
+						*denite-source-line*
+line		
+
+						*denite-source-jump_point*
+jump_point		
+
+						*denite-source-grep*
+grep		Gather grep results and nominates them.
+
 ==============================================================================
 KINDS							*denite-kinds*
 

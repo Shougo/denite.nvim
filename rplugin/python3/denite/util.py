@@ -94,3 +94,24 @@ def path2project(path):
         if next == parent:
             return ''
         parent = next
+
+
+def parse_jump_line(vim, line):
+    m = re.search(r'^(.*):(\d+)(?::(\d+))?:(.*)$', line)
+    if not m or not m.group(1) or not m.group(4):
+        return []
+
+    if re.search(r':\d+$', m.group(1)):
+        # Use column pattern
+        m = re.search(r'^(.*):(\d+):(\d+):(.*)$', line)
+
+    [path, linenr, col, text] = m.groups()
+
+    if not linenr:
+        linenr = '1'
+    if not col:
+        col = '0'
+    if not os.path.isabs(path):
+        path = vim.call('getcwd') + '/' + path
+
+    return [path, linenr, col, text]
