@@ -1,0 +1,35 @@
+# ============================================================================
+# FILE: word.py
+# AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
+# License: MIT license
+# ============================================================================
+
+from .base import Base
+
+
+class Kind(Base):
+
+    def __init__(self, vim):
+        Base.__init__(self, vim)
+
+        self.name = 'word'
+
+    def action_default(self, context):
+        target = context['targets'][0]
+        paste(self.vim, target['action__text'], 'p', 'v')
+
+def paste(vim, word, command, regtype):
+    if regtype == '':
+        regtype = 'v'
+
+    # Paste.
+    old_reg = [vim.call('getreg', '"'), vim.call('getregtype', '"')]
+
+    vim.call('setreg', '"', word, regtype)
+    try:
+        vim.command('normal! ""' + command)
+    finally:
+        vim.call('setreg', '"', old_reg[0], old_reg[1])
+
+    # Open folds
+    vim.command('normal! zv')

@@ -276,6 +276,12 @@ command		An interface to execute the command.
 			action__command		(String)	(Required)
 				The command that you'll execute.
 
+						*denite-kind-word*
+text		An interface to paste the text.
+
+			action__text		(String)	(Required)
+				The command that you'll paste.
+
 ==============================================================================
 FILTERS							*denite-filters*
 

@@ -39,8 +39,6 @@ you should read `:help provider-python`.
 
 * mode implementation
 
-* word kind implementation
-
 * default_action implementation
 
 * call map support
