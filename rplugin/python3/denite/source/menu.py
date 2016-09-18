@@ -63,9 +63,6 @@ class Source(Base):
                     lines.extend([
                         {'word': str(candidate[0]),
                          'kind': 'command',
-                         # 'action__command': 'execute("{0}")'.format(
-                         #     candidate[1])
-                         # 'action__command': ':' + candidate[1]
                          'action__command': candidate[1]
                          }
                         for candidate in menus[menu]['command_candidates']
