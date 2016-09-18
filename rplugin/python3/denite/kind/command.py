@@ -16,4 +16,4 @@ class Kind(Base):
 
     def action_default(self, context):
         target = context['targets'][0]
-        self.vim.execute(target['action__command'])
+        self.vim.command(target['action__command'])
