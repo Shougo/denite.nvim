@@ -258,8 +258,7 @@ grep		Gather grep results and nominates them.
 KINDS							*denite-kinds*
 
 						*denite-kind-jump_list*
-jump_list	An interface for jumping to the file position.
-		Note: The action__path is required.
+jump_list	An interface to jump to the file position.
 
 			action__path		(String)	(Required)
 				The path of the file that you'll jump into.
@@ -270,6 +269,12 @@ jump_list	An interface for jumping to the file position.
 			action__col		(Number)	(Optional)
 				The column number in the file you'll jump
 				into.
+
+						*denite-kind-command*
+command		An interface to execute the command.
+
+			action__command		(String)	(Required)
+				The command that you'll execute.
 
 ==============================================================================
 FILTERS							*denite-filters*
