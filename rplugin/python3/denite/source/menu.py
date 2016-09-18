@@ -52,18 +52,31 @@ class Source(Base):
                 if 'file_candidates' in menus[menu]:
                     lines.extend([
                         {'word': str(candidate[0]),
+                         'kind': 'jump_list',
                          'action__path': candidate[1],
                          }
                         for candidate in menus[menu]['file_candidates']
                     ])
 
                 # TODO: Handle command candidates
+                if 'command_candidates' in menus[menu]:
+                    lines.extend([
+                        {'word': str(candidate[0]),
+                         'kind': 'command',
+                         # 'action__command': 'execute("{0}")'.format(
+                         #     candidate[1])
+                         # 'action__command': ':' + candidate[1]
+                         'action__command': candidate[1]
+                         }
+                        for candidate in menus[menu]['command_candidates']
+                    ])
                 # TODO: Handle candidates
         else:
             # TODO: Display all the available menus
             lines.extend([
                 {'word': candidate,
-                 # TODO: Open the menu?
+                 'kind': 'command',
+                 'action__command': 'Denite menu:' + candidate,
                  }
                 for candidate in menus
             ])
