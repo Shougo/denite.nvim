@@ -27,4 +27,26 @@ you should read `:help provider-python`.
 
 ## Future works (not implemented yet)
 
-* Implement some sources (grep, unite)
+* preview action, auto preview feature
+
+* abbr implementation
+
+* asynchronous sources support
+
+* source restart support
+
+* cd action support
+
+* mode implementation
+
+* word kind implementation
+
+* default_action implementation
+
+* call map support
+
+* alias support
+
+* args customization
+
+* unite sources support
