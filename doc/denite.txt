@@ -117,10 +117,6 @@ COMMANDS 						*denite-commands*
 ------------------------------------------------------------------------------
 KEY MAPPINGS 						*denite-key-mappings*
 
-							*denite-map-quit*
-quit
-		Close current Denite buffer.
-
 					*denite-map-delete_backward_char*
 delete_backward_char
 		Delete current character and move to backward.
@@ -128,6 +124,15 @@ delete_backward_char
 					*denite-map-delete_backward_word*
 delete_backward_word
 		Delete current word and move to backward.
+
+							*denite-map-do_action*
+do_action
+		Close current Denite buffer and fire "default" action.
+
+					*denite-map-input_command_line*
+input_command_line
+		Input characters by Vim command line.
+		You can input multibyte characters.
 
 						*denite-map-move_to_next_line*
 move_to_next_line
@@ -137,14 +142,9 @@ move_to_next_line
 move_to_prev_line
 		Move to previous line.
 
-					*denite-map-input_command_line*
-input_command_line
-		Input characters by Vim command line.
-		You can input multibyte characters.
-
-							*denite-map-do_action*
-do_action
-		Close current Denite buffer and fire "default" action.
+							*denite-map-quit*
+quit
+		Close current Denite buffer.
 
 						*denite_default_key_mappings*
 Following keymappings are the default keymappings.
@@ -167,23 +167,16 @@ All mode mappings.
 ------------------------------------------------------------------------------
 FUNCTIONS						*denite-functions*
 
-							*denite#initialize()*
-denite#initialize()
-		Initialize denite and sources.
-		Note: You don't have to call it manually.
-
-							*denite#start()*
-denite#start({sources}[, {context}])
-		Creates a new Denite buffer.
-
-		{sources} is a list of elements which are formatted as
-		"{'name': {source-name}, 'args': {source-args}}".
-
-		Refer to |denite-notation-{context}| about {context}.  If you
-		skip a value, it uses the default value.
->
-		call denite#start({'name': 'file_rec', 'args': []})
-<
+							*denite#custom#map()*
+denite#custom#map({mode}, {key}, {mapping})
+		Set {key} keymapping to function {mapping} in {mode} mode.
+		{mapping} is denite key mapping name.
+		See |denite-key-mappings|.
+		Note: It is not related to Vim mappings.
+		Note: {key} must be one key code character like "\<C-h>"
+		instead of <C-h>.
+		Note: Multiple key stroke mappings like "\<C-h>\<C-b>" are not
+		supported.
 
 						*denite#custom#source()*
 denite#custom#source({source-name}, {option-name}, {value})
@@ -214,16 +207,23 @@ denite#custom#var({source-name}, {var-name}, {value})
 		to {value}.  You may specify multiple sources with the
 		separator "," in {source-name}.
 
-							*denite#custom#map()*
-denite#custom#map({mode}, {key}, {mapping})
-		Set {key} keymapping to function {mapping} in {mode} mode.
-		{mapping} is denite key mapping name.
-		See |denite-key-mappings|.
-		Note: It is not related to Vim mappings.
-		Note: {key} must be one key code character like "\<C-h>"
-		instead of <C-h>.
-		Note: Multiple key stroke mappings like "\<C-h>\<C-b>" are not
-		supported.
+							*denite#initialize()*
+denite#initialize()
+		Initialize denite and sources.
+		Note: You don't have to call it manually.
+
+							*denite#start()*
+denite#start({sources}[, {context}])
+		Creates a new Denite buffer.
+
+		{sources} is a list of elements which are formatted as
+		"{'name': {source-name}, 'args': {source-args}}".
+
+		Refer to |denite-notation-{context}| about {context}.  If you
+		skip a value, it uses the default value.
+>
+		call denite#start({'name': 'file_rec', 'args': []})
+<
 
 ------------------------------------------------------------------------------
 OPTIONS							*denite-options*
@@ -245,17 +245,23 @@ file_rec	Gather files recursive and nominates all file names under the
 		command		 default get files command
 				(default is used "find" command)
 
-						*denite-source-line*
-line		
-
 						*denite-source-jump_point*
 jump_point		
 
 						*denite-source-grep*
 grep		Gather grep results and nominates them.
 
+						*denite-source-line*
+line		
+
 ==============================================================================
 KINDS							*denite-kinds*
+
+						*denite-kind-command*
+command		An interface to execute the command.
+
+			action__command		(String)	(Required)
+				The command that you'll execute.
 
 						*denite-kind-jump_list*
 jump_list	An interface to jump to the file position.
@@ -269,12 +275,6 @@ jump_list	An interface to jump to the file position.
 			action__col		(Number)	(Optional)
 				The column number in the file you'll jump
 				into.
-
-						*denite-kind-command*
-command		An interface to execute the command.
-
-			action__command		(String)	(Required)
-				The command that you'll execute.
 
 						*denite-kind-word*
 text		An interface to paste the text.
