@@ -18,6 +18,7 @@ class Kind(Base):
         target = context['targets'][0]
         paste(self.vim, target['action__text'], 'p', 'v')
 
+
 def paste(vim, word, command, regtype):
     if regtype == '':
         regtype = 'v'
