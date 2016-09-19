@@ -69,7 +69,7 @@ class Source(Base):
                     ])
                 # TODO: Handle candidates
         else:
-            # TODO: Display all the available menus
+            # Display all the registered menus
             lines.extend([
                 {'word': candidate,
                  'kind': 'command',
