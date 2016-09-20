@@ -7,6 +7,7 @@
 from .base import Base
 from denite.util import parse_jump_line
 import subprocess
+import os
 
 
 class Source(Base):
@@ -53,7 +54,9 @@ class Source(Base):
             if result:
                 candidates.append({
                     'word': '{0}: {1}{2}: {3}'.format(
-                        result[0], result[1],
+                        os.path.relpath(result[0],
+                                        start=context['__directory']),
+                        result[1],
                         (': ' + result[2] if result[2] != '0' else ''),
                         result[3]),
                     'action__path': result[0],
