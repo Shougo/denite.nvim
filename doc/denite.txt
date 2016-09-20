@@ -72,6 +72,8 @@ EXAMPLES						*denite-examples*
 	" Change matchers.
 	call denite#custom#source(
 	\ 'file_mru', 'matchers', ['matcher_fuzzy', 'matcher_project_files'])
+	call denite#custom#source(
+	\ 'file_rec', 'matchers', ['matcher_cpsm'])
 
 <
 ==============================================================================
@@ -284,6 +286,12 @@ text		An interface to paste the text.
 
 ==============================================================================
 FILTERS							*denite-filters*
+
+						*denite-filter-matcher_cpsm*
+matcher_cpsm
+		A matcher which filters the candidates using cpsm.
+		Note: cpsm plugin build/install is needed in 'runtimepath'.
+		https://github.com/nixprime/cpsm
 
 						*denite-filter-matcher_fuzzy*
 matcher_fuzzy
