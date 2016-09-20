@@ -32,6 +32,9 @@ class Source(Base):
                                            'Pattern: ', context['input'])
 
     def gather_candidates(self, context):
+        if context['__input'] == '':
+            return []
+
         commands = []
         commands += self.vars['command']
         commands += self.vars['default_opts']
