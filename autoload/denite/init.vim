@@ -33,6 +33,14 @@ function! denite#init#_initialize() abort "{{{
     return 1
   endif
 
+  if !exists('*execute')
+    call denite#util#print_error(
+          \ 'denite.nvim does not work with this version.')
+    call denite#util#print_error(
+          \ 'It requires Neovim +v0.1.5.')
+    return 1
+  endif
+
   try
     if !exists('g:loaded_remote_plugins')
       runtime! plugin/rplugin.vim
