@@ -300,7 +300,7 @@ menu		Gather custom menus.
 
 		Source custom variables:
 		menus		dictionary containing menus in key value
-				pairs.
+				pairs (See |denite-examples|).
 
 
 

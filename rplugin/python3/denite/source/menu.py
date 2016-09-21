@@ -20,13 +20,12 @@ class Source(Base):
         # self.sorters = []
 
         self.vars = {
-            'menus': {}
+            'menus': {},
+            'unite_source_menu_compatibility': False,
         }
 
     def on_init(self, context):
-        # TODO: Set a value to look for old unite menus from VIM?
-        unite_menu_compatibilty = False
-        if unite_menu_compatibilty:
+        if self.vars['unite_source_menu_compatibilty']:
             self.vars['menus'].update(
                 self.vim.vars['unite_source_menu_menus']
             )
@@ -44,7 +43,6 @@ class Source(Base):
             # Loop through each menu option
             for menu in args:
                 # If a menu doesn't exist, just continue gracefully
-                # TODO: Print an error letting the user know
                 if menu not in menus.keys():
                     continue
 
@@ -58,7 +56,7 @@ class Source(Base):
                         for candidate in menus[menu]['file_candidates']
                     ])
 
-                # TODO: Handle command candidates
+                # Handle command candidates
                 if 'command_candidates' in menus[menu]:
                     lines.extend([
                         {'word': str(candidate[0]),
@@ -67,7 +65,6 @@ class Source(Base):
                          }
                         for candidate in menus[menu]['command_candidates']
                     ])
-                # TODO: Handle candidates
         else:
             # Display all the registered menus
             lines.extend([
