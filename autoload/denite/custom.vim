@@ -52,7 +52,7 @@ function! denite#custom#map(mode, key, mapping, ...) abort "{{{
       let custom.map[key] = {}
     endif
     let custom_map = custom.map[key]
-    let custom_map[denite#util#char2key(key)] = a:mapping
+    let custom_map[denite#util#char2key(a:key)] = a:mapping
   endfor
 endfunction"}}}
 
