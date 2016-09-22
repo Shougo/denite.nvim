@@ -38,6 +38,8 @@ class Filter(Base):
         cpsm_result = cpsm_py.ctrlp_match(
             (d['word'] for d in context['candidates']),
             context['input'],
-            ispath=('action__path' in context['candidates'][0]))[0][: 1000]
+            limit=1000,
+            highlight_mode='detailed',
+            ispath=('action__path' in context['candidates'][0]))[0]
         return [x for x in context['candidates']
                 if x['word'] in cpsm_result]
