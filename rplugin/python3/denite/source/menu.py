@@ -32,7 +32,7 @@ class Source(Base):
 
     def gather_candidates(self, context):
         # If no menus have been defined, just exit
-        if 'menus' not in self.vars.keys() or self.vars['menus'] == {}:
+        if 'menus' not in self.vars or self.vars['menus'] == {}:
             return []
 
         lines = []
@@ -43,7 +43,7 @@ class Source(Base):
             # Loop through each menu option
             for menu in args:
                 # If a menu doesn't exist, just continue gracefully
-                if menu not in menus.keys():
+                if menu not in menus:
                     continue
 
                 # Handle file candidates

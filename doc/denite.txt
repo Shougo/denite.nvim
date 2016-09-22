@@ -300,7 +300,13 @@ menu		Gather custom menus.
 
 		Source custom variables:
 		menus		dictionary containing menus in key value
-				pairs (See |denite-examples|).
+				pairs (See |denite-examples|). Only supports
+				candidates of type list.
+
+		unite_source_menu_compatibility
+				'boolean' to determine whether or not to
+				include menus previously defined in Unite
+				configurations.
 
 
 
