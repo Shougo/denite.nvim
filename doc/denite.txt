@@ -156,6 +156,7 @@ All mode mappings.
 --------	-----------------------------
 <Esc>		quit
 <C-g>		quit
+<C-c>		quit
 <C-h>		delete_backward_char
 <BS>		delete_backward_char
 <C-w>		delete_backward_word
@@ -165,6 +166,8 @@ All mode mappings.
 <Up>		move_to_prev_line
 <C-j>		input_command_line
 <CR>		do_action
+
+Note: You cannot change <C-c> default mapping.
 
 ------------------------------------------------------------------------------
 FUNCTIONS						*denite-functions*
@@ -179,6 +182,7 @@ denite#custom#map({mode}, {key}, {mapping})
 		instead of <C-h>.
 		Note: Multiple key stroke mappings like "\<C-h>\<C-b>" are not
 		supported.
+		Note: You cannot change <C-c> default mapping.
 
 						*denite#custom#source()*
 denite#custom#source({source-name}, {option-name}, {value})

@@ -127,10 +127,15 @@ class Default(object):
             echo(self.__vim, cursor_color, self.__input_cursor)
             echo(self.__vim, 'Normal', self.__input_after)
 
-            if context['is_async']:
-                nr = self.__vim.call('denite#util#getchar', 0)
-            else:
-                nr = self.__vim.call('denite#util#getchar')
+            try:
+                if context['is_async']:
+                    nr = self.__vim.call('denite#util#getchar', 0)
+                else:
+                    nr = self.__vim.call('denite#util#getchar')
+            except:
+                self.quit(context)
+                break
+
             if isinstance(nr, bytes):
                 nr = nr.decode('utf-8')
             char = nr if isinstance(nr, str) else chr(nr)
@@ -147,7 +152,7 @@ class Default(object):
                 if ret:
                     break
             elif char == esc:
-                self.quit_buffer(context)
+                self.quit(context)
                 break
 
             if context['is_async']:
