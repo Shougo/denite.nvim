@@ -11,7 +11,7 @@ from denite.util import path2project
 class Filter(Base):
 
     def __init__(self, vim):
-        Base.__init__(self, vim)
+        super().__init__(vim)
 
         self.name = 'matcher_project_files'
         self.description = 'project files matcher'

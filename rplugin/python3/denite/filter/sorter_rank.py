@@ -17,7 +17,7 @@ from denite.util import split_input
 class Filter(Base):
 
     def __init__(self, vim):
-        Base.__init__(self, vim)
+        super().__init__(vim)
 
         self.name = 'sorter_rank'
         self.description = 'rank matcher'

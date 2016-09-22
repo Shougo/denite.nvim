@@ -13,7 +13,7 @@ import os
 class Source(Base):
 
     def __init__(self, vim):
-        Base.__init__(self, vim)
+        super().__init__(vim)
 
         self.name = 'grep'
         self.kind = 'jump_list'
