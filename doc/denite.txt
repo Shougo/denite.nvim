@@ -345,7 +345,7 @@ SOURCE ATTRIBUTES				*denite-source-attributes*
 
 					*denite-source-attribute-__init__*
 __init__	(Function)
-		Source constructor.  It will be called in initializing.  It
+		Source constructor.  It is always called in initializing.  It
 		must call super() constructor.  This function takes {self} and
 		{vim} as its parameters.
 
