@@ -102,18 +102,26 @@ class Default(object):
         self.__vim.command('redraw | echo')
         self.__vim.command('bdelete!')
 
+    def update_prompt(self, context):
+        prompt_color = context.get('prompt_color', 'Statement')
+        prompt = context.get('prompt', '# ')
+        cursor_color = context.get('cursor_color', 'Cursor')
+
+        self.__vim.command('redraw')
+        echo(self.__vim, prompt_color, prompt)
+        echo(self.__vim, 'Normal', self.__input_before)
+        echo(self.__vim, cursor_color, self.__input_cursor)
+        echo(self.__vim, 'Normal', self.__input_after)
+
     def update_input(self, context):
         context['input'] = self.__input_before
         context['input'] += self.__input_cursor
         context['input'] += self.__input_after
         self.update_buffer(context)
+        self.update_prompt(context)
         self.__win_cursor = 1
 
     def input_loop(self, context):
-        prompt_color = context.get('prompt_color', 'Statement')
-        prompt = context.get('prompt', '# ')
-        cursor_color = context.get('cursor_color', 'Cursor')
-
         self.__input_before = context.get('input', '')
         self.__input_cursor = ''
         self.__input_after = ''
@@ -121,11 +129,7 @@ class Default(object):
         esc = self.__vim.eval('"\<Esc>"')
 
         while True:
-            self.__vim.command('redraw')
-            echo(self.__vim, prompt_color, prompt)
-            echo(self.__vim, 'Normal', self.__input_before)
-            echo(self.__vim, cursor_color, self.__input_cursor)
-            echo(self.__vim, 'Normal', self.__input_after)
+            self.update_prompt(context)
 
             try:
                 if context['is_async']:
@@ -183,6 +187,14 @@ class Default(object):
 
     def delete_backward_word(self, context):
         self.__input_before = re.sub('[^/ ]*.$', '', self.__input_before)
+        self.update_input(context)
+
+    def delete_backward_line(self, context):
+        self.__input_before = ''
+        self.update_input(context)
+
+    def paste_from_unnamed_register(self, context):
+        self.__input_before += re.sub(r'\n', '', self.__vim.eval('@"'))
         self.update_input(context)
 
     def move_to_next_line(self, context):

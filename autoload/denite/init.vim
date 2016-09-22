@@ -67,12 +67,14 @@ function! denite#init#_variables() abort "{{{
         \ "\<C-h>": 'delete_backward_char',
         \ "\<BS>": 'delete_backward_char',
         \ "\<C-w>": 'delete_backward_word',
+        \ "\<C-u>": 'delete_backward_line',
         \ "\<C-n>": 'move_to_next_line',
         \ "\<Down>": 'move_to_next_line',
         \ "\<C-p>": 'move_to_prev_line',
         \ "\<Up>": 'move_to_prev_line',
         \ "\<C-j>": 'input_command_line',
         \ "\<CR>":  'do_action',
+        \ "\<C-y>": 'paste_from_unnamed_register',
         \}
   for [char, value] in items(default_mappings)
     let g:denite#_default_mappings._[denite#util#char2key(char)] = value

@@ -123,6 +123,10 @@ KEY MAPPINGS 						*denite-key-mappings*
 delete_backward_char
 		Delete current character and move to backward.
 
+					*denite-map-delete_backward_line*
+delete_backward_line
+		Delete the text before the cursor and move to backward.
+
 					*denite-map-delete_backward_word*
 delete_backward_word
 		Delete current word and move to backward.
@@ -144,6 +148,10 @@ move_to_next_line
 move_to_prev_line
 		Move to previous line.
 
+				*denite-map-paste_from_unnamed_register*
+paste_from_unnamed_register
+		Paste the text from unnamed register.
+
 							*denite-map-quit*
 quit
 		Close current Denite buffer.
@@ -160,12 +168,14 @@ All mode mappings.
 <C-h>		delete_backward_char
 <BS>		delete_backward_char
 <C-w>		delete_backward_word
+<C-u>		delete_backward_line
 <C-n>		move_to_next_line
 <Down>		move_to_next_line
 <C-p>		move_to_prev_line
 <Up>		move_to_prev_line
 <C-j>		input_command_line
 <CR>		do_action
+<C-y>		paste_from_unnamed_register
 
 Note: You cannot change <C-c> default mapping.
 
