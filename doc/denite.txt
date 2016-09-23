@@ -75,7 +75,29 @@ EXAMPLES						*denite-examples*
 	call denite#custom#source(
 	\ 'file_rec', 'matchers', ['matcher_cpsm'])
 
+
+	" Add custom menus
+	let s:menus = {}
+
+	let s:menus.zsh = {
+		\ 'description': 'Edit your import zsh configuration'
+		\ }
+	let s:menus.zsh.file_candidates = [
+		\ ['zshrc', '~/.config/zsh/.zshrc'],
+		\ ['zshenv', '~/.zshenv'],
+		\ ]
+
+	let s:menus.my_commands = {
+		\ 'description': 'Example commands'
+		\ }
+	let s:menus.my_commands.command_candidates = [
+		\ ['Split the window', 'vnew'],
+		\ ['Open zsh menu', 'Denite menu:zsh'],
+		\ ]
+
+	call denite#custom#var('menu', 'menus', s:menus)
 <
+
 ==============================================================================
 INTERFACE						*denite-interface*
 
@@ -273,6 +295,24 @@ jump_point
 
 						*denite-source-line*
 line
+
+
+						*denite-source-menu*
+menu		Gather custom menus.
+
+		Source arguments:
+		1. The desired menu
+
+		Source custom variables:
+		menus		dictionary containing menus in key value
+				pairs (See |denite-examples|). Only supports
+				candidates of type list.
+
+		unite_source_menu_compatibility
+				'boolean' to determine whether or not to
+				include menus previously defined in Unite
+				configurations.
+
 
 
 ==============================================================================
