@@ -11,7 +11,10 @@ function! denite#start(sources, ...) abort "{{{
   let context = get(a:000, 0, {})
   let context.custom = denite#custom#get()
 
-  call denite#initialize()
+  if denite#initialize()
+    return
+  endif
+
   if has('nvim')
     return _denite_start(a:sources, context)
   else
