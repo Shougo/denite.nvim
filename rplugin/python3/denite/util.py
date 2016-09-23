@@ -8,6 +8,7 @@ import json
 import re
 import os
 import sys
+import glob
 
 
 def set_default(vim, var, val):
@@ -18,8 +19,11 @@ def convert2list(expr):
     return (expr if isinstance(expr, list) else [expr])
 
 
-def globruntime(vim, path):
-    return vim.call('globpath', vim.options['runtimepath'], path, 1, 1)
+def globruntime(runtimepath, path):
+    ret = []
+    for rtp in re.split(',', runtimepath):
+        ret += glob.glob(rtp + '/' + path)
+    return ret
 
 
 def echo(vim, color, string):

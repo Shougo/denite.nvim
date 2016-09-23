@@ -5,7 +5,8 @@
 # ============================================================================
 
 from .base import Base
-from os import path, listdir
+from os import path
+from denite.util import globruntime
 
 
 class Source(Base):
@@ -17,20 +18,13 @@ class Source(Base):
         self.kind = 'command'
 
     def gather_candidates(self, context):
-        # since self.vim.list_runtime_paths() does not work in vim 8
-        # use eval instead
-        rtps = self.vim.eval('&runtimepath').split(',')
         filetypes = {}
 
-        for rtp in rtps:
-            syntax_dir = path.join(rtp, 'syntax')
-            if path.exists(syntax_dir):
-                for file in listdir(syntax_dir):
-                    if file.endswith('.vim'):
-                        filetype = path.splitext(file)[0]
-                        filetypes[filetype] = {
-                            'word': filetype,
-                            'action__command': 'set filetype=' + filetype
-                        }
+        for file in globruntime(context['runtimepath'], 'syntax/*.vim'):
+            filetype = path.splitext(path.basename(file))[0]
+            filetypes[filetype] = {
+                'word': filetype,
+                'action__command': 'set filetype=' + filetype
+            }
 
         return sorted(filetypes.values(), key=lambda value: value['word'])

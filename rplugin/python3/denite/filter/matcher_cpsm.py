@@ -26,10 +26,10 @@ class Filter(Base):
 
         if not self.__initialized:
             # cpsm installation check
-            if globruntime(self.vim, 'bin/cpsm_py.so'):
+            if globruntime(context['runtimepath'], 'bin/cpsm_py.so'):
                 # Add path
                 sys.path.append(os.path.dirname(
-                    globruntime(self.vim, 'bin/cpsm_py.so')[0]))
+                    globruntime(context['runtimepath'], 'bin/cpsm_py.so')[0]))
                 self.__initialized = True
             else:
                 return []

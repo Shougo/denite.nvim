@@ -81,4 +81,10 @@ function! denite#init#_variables() abort "{{{
   endfor
 endfunction"}}}
 
+function! denite#init#_context() abort "{{{
+  return {
+        \ 'runtimepath': &runtimepath,
+        \}
+endfunction"}}}
+
 " vim: foldmethod=marker

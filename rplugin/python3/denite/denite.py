@@ -30,9 +30,9 @@ class Denite(object):
 
         if self.__vim.options['runtimepath'] != self.__runtimepath:
             # Recache
-            self.load_sources()
-            self.load_filters()
-            self.load_kinds()
+            self.load_sources(context)
+            self.load_filters(context)
+            self.load_kinds(context)
             self.__runtimepath = self.__vim.options['runtimepath']
 
     def gather_candidates(self, context):
@@ -90,16 +90,14 @@ class Denite(object):
     def get_sources(self):
         return self.__sources
 
-    def load_sources(self):
+    def load_sources(self, context):
         # Load sources from runtimepath
         rtps = globruntime(
-            self.__vim,
+            context['runtimepath'],
             'rplugin/python3/denite/source/base.py')
-        rtps.extend(globruntime(self.__vim,
+        rtps.extend(globruntime(context['runtimepath'],
                                 'rplugin/python3/denite/source/*.py'))
         for path in rtps:
-            if isinstance(path, bytes):
-                path = path.decode('utf-8')
             name = os.path.basename(path)[: -3]
             module = importlib.machinery.SourceFileLoader(
                 'denite.source.' + name, path).load_module()
@@ -124,32 +122,28 @@ class Denite(object):
 
             self.__sources[source.name] = source
 
-    def load_filters(self):
+    def load_filters(self, context):
         # Load filters from runtimepath
         rtps = globruntime(
-            self.__vim,
+            context['runtimepath'],
             'rplugin/python3/denite/filter/base.py')
-        rtps.extend(globruntime(self.__vim,
+        rtps.extend(globruntime(context['runtimepath'],
                                 'rplugin/python3/denite/filter/*.py'))
         for path in rtps:
-            if isinstance(path, bytes):
-                path = path.decode('utf-8')
             name = os.path.basename(path)[: -3]
             filter = importlib.machinery.SourceFileLoader(
                 'denite.filter.' + name, path).load_module()
             if hasattr(filter, 'Filter') and name not in self.__filters:
                 self.__filters[name] = filter.Filter(self.__vim)
 
-    def load_kinds(self):
+    def load_kinds(self, context):
         # Load kinds from runtimepath
         rtps = globruntime(
-            self.__vim,
+            context['runtimepath'],
             'rplugin/python3/denite/kind/base.py')
-        rtps.extend(globruntime(self.__vim,
+        rtps.extend(globruntime(context['runtimepath'],
                                 'rplugin/python3/denite/kind/*.py'))
         for path in rtps:
-            if isinstance(path, bytes):
-                path = path.decode('utf-8')
             name = os.path.basename(path)[: -3]
             kind = importlib.machinery.SourceFileLoader(
                 'denite.kind.' + name, path).load_module()
