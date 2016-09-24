@@ -290,6 +290,12 @@ filetype	Gather filetypes and change the filetype of the current
 						*denite-source-grep*
 grep		Gather grep results and nominates them.
 
+						*denite-source-ack*
+ack		Gather ack results and nominates them.
+		Examples when prompts for query:
+			* pattern
+			* --[type] pattern [relative path to current path]
+
 						*denite-source-jump_point*
 jump_point
 

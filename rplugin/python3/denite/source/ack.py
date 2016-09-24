@@ -19,8 +19,8 @@ class Source(Base):
         self.name = 'ack'
         self.kind = 'jump_list'
         self.vars = {
-            'command': ['ack'],
-            'default_opts': [],
+            'command': 'ack',
+            'default_opts': '-s -H --nopager --nocolor --nogroup --column',
         }
 
     def on_init(self, context):
@@ -28,19 +28,21 @@ class Source(Base):
             context['args']) > 0 else self.vim.call('getcwd')
         context['__directory'] = self.vim.call('expand', directory)
         context['__input'] = self.vim.call('input',
-                                           'Pattern: ', context['input'])
+                                           'Ack query: ', context['input'])
 
     def gather_candidates(self, context):
         if context['__input'] == '':
             return []
 
-        commands = []
-        commands += self.vars['command']
-        commands += self.vars['default_opts']
-        commands += [context['__input']]
-        proc = subprocess.Popen(commands,
+        command = '{0} {1} {2}'.format(
+            self.vars['command'],
+            self.vars['default_opts'],
+            context['__input']
+        )
+        proc = subprocess.Popen(command,
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE,
+                                shell=True,
                                 cwd=context['__directory'])
         try:
             outs, errs = proc.communicate(timeout=1)
@@ -53,7 +55,7 @@ class Source(Base):
             result = parse_jump_line(self.vim, line)
             if result:
                 candidates.append({
-                    'word': '{0}: {1}{2}: {3}'.format(
+                    'word': '{0}:{1}{2}: {3}'.format(
                         os.path.relpath(result[0],
                                         start=context['__directory']),
                         result[1],
