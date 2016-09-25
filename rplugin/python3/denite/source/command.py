@@ -36,13 +36,8 @@ class Source(Base):
 
         for helpfile in self._helpfiles:
             with open(helpfile) as doc:
-                lines = doc.readlines()
-                lines = filter(
-                    lambda line: self.__re_command.match(line),
-                    lines
-                )
-
-                for line in lines:
+                for line in [x for x in doc.readlines()
+                             if self.__re_command.match(x)]:
                     tokens = self.__re_tokens.match(line).groups()
                     command = "execute input(':{0} ')".format(tokens[0])
                     self.commands.append({
