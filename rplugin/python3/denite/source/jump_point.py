@@ -21,7 +21,8 @@ class Source(Base):
         context['__line'] = self.vim.current.line
 
     def gather_candidates(self, context):
-        result = parse_jump_line(self.vim, context['__line'])
+        result = parse_jump_line(
+            self.vim.call('getcwd'), context['__line'])
         return [{
             'word': '{0}: {1}{2}: {3}'.format(
                 result[0], result[1],

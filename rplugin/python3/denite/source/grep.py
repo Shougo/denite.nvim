@@ -69,7 +69,7 @@ class Source(Base):
 
         candidates = []
         for line in outs.decode('utf-8').split('\n'):
-            result = parse_jump_line(self.vim, line)
+            result = parse_jump_line(context['__directory'], line)
             if result:
                 candidates.append({
                     'word': '{0}:{1}{2}: {3}'.format(
