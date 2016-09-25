@@ -280,7 +280,7 @@ file_rec	Gather files recursive and nominates all file names under the
 		1. the search directory.
 
 		Source custom variables:
-		command		 default get files command
+		command		 the default get files command
 				(default is used "find" command)
 
 						*denite-source-filetype*
@@ -289,6 +289,23 @@ filetype	Gather filetypes and change the filetype of the current
 
 						*denite-source-grep*
 grep		Gather grep results and nominates them.
+		The source executes ["command", "default_opts",
+		"recursive_opts", "separator" {directory}] command line.
+		Note: The command result must be "path:linenr:text" pattern.
+
+		Source arguments:
+		1. the search directory.
+
+		Source custom variables:
+		command		the default grep command
+				(default: ["grep"])
+		default_opts	the grep default options
+				(default: ["-inH"])
+		recursive_opts	the recursive search arguments
+				(default: ["-r"])
+		separator	the argument separator
+				(default: ["--"])
+
 
 						*denite-source-jump_point*
 jump_point
