@@ -287,6 +287,9 @@ file_rec	Gather files recursive and nominates all file names under the
 filetype	Gather filetypes and change the filetype of the current
 		buffer.
 
+						*denite-source-command*
+commad		Gather commands and put on ex-mode.
+
 						*denite-source-grep*
 grep		Gather grep results and nominates them.
 		The source executes ["command", "default_opts",
