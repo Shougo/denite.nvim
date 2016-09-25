@@ -77,6 +77,8 @@ class Default(object):
     def update_buffer(self, context):
         self.__candidates = []
         statusline = ''
+        if self.__denite.is_async():
+            statusline += '[async]'
         for name, all, candidates in self.__denite.filter_candidates(context):
             if len(all) == 0:
                 continue
@@ -161,6 +163,7 @@ class Default(object):
 
             if is_async:
                 time.sleep(0.05)
+                self.update_buffer(context)
 
     def quit(self, context):
         self.__denite.on_close(context)

@@ -449,6 +449,8 @@ gather_candidates
 		Note: The source must not filter the candidates by user input.
 		It is |denite-filters| work.  If the source filter the
 		candidates, user cannot filter the candidates by fuzzy match.
+		Note: If the asynchronous gather is done, you must set
+		"context['is_async']" to "False"
 
 					*denite-source-attribute-on_init*
 on_init		(Function)			(Optional)
@@ -478,6 +480,10 @@ __{name}	(Unknown)			(Optional)
 
 		candidates		(List)
 			The current candidates.
+
+		is_async		(Bool)
+			If the gather is asynchronous, the source must set
+			it "True".
 
 ------------------------------------------------------------------------------
 CANDIDATE ATTRIBUTES			*denite-candidate-attributes*

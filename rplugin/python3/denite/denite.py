@@ -38,8 +38,6 @@ class Denite(object):
     def gather_candidates(self, context):
         for source in self.__current_sources:
             candidates = source.gather_candidates(source.context)
-            if source.context['is_async']:
-                candidates += source.async_gather_candidates(source.context)
             source.context['all_candidates'] = candidates
             source.context['candidates'] = candidates
 
@@ -52,7 +50,7 @@ class Denite(object):
                 candidates = []
                 all = ctx['all_candidates']
                 if ctx['is_async']:
-                    all += source.async_gather_candidates(ctx)
+                    all += source.gather_candidates(ctx)
                 for i in range(0, len(all), 1000):
                     ctx['candidates'] = all[i:i+1000]
                     candidates += matcher.filter(ctx)
@@ -177,4 +175,3 @@ class Denite(object):
     def is_async(self):
         return len([x for x in self.__current_sources
                     if x.context['is_async']]) > 0
-
