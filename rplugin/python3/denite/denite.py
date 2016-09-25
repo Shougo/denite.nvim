@@ -37,34 +37,37 @@ class Denite(object):
 
     def gather_candidates(self, context):
         for source in self.__current_sources:
-            candidates = []
-            for c in source.gather_candidates(source.context):
-                c['source'] = source.name
-                candidates.append(c)
+            candidates = source.gather_candidates(source.context)
+            if source.context['is_async']:
+                candidates += source.async_gather_candidates(source.context)
             source.context['all_candidates'] = candidates
             source.context['candidates'] = candidates
 
     def filter_candidates(self, context):
         for source in self.__current_sources:
-            source.context['input'] = context['input']
+            ctx = source.context
+            ctx['input'] = context['input']
             for matcher in [self.__filters[x]
                             for x in source.matchers if x in self.__filters]:
                 candidates = []
-                max = len(source.context['all_candidates'])
-                for i in range(0, max, 1000):
-                    source.context['candidates'] = source.context[
-                        'all_candidates'][i:i+1000]
-                    candidates += matcher.filter(source.context)
+                all = ctx['all_candidates']
+                if ctx['is_async']:
+                    all += source.async_gather_candidates(ctx)
+                for i in range(0, len(all), 1000):
+                    ctx['candidates'] = all[i:i+1000]
+                    candidates += matcher.filter(ctx)
                     if len(candidates) >= 1000:
                         break
-                source.context['candidates'] = candidates
+                ctx['candidates'] = candidates
             for filter in [self.__filters[x]
                            for x in source.sorters + source.converters
                            if x in self.__filters]:
-                source.context['candidates'] = filter.filter(source.context)
-            candidates = source.context['candidates']
-            source.context['candidates'] = []
-            yield source.name, source.context['all_candidates'], candidates
+                ctx['candidates'] = filter.filter(ctx)
+            candidates = ctx['candidates']
+            for c in candidates:
+                c['source'] = source.name
+            ctx['candidates'] = []
+            yield source.name, all, candidates
 
     def on_init(self, context):
         self.__current_sources = []
@@ -76,6 +79,8 @@ class Denite(object):
             source = self.__sources[name]
             source.context = copy.deepcopy(context)
             source.context['args'] = args
+            source.context['is_async'] = hasattr(source,
+                                                 'async_gather_candidates')
 
             if hasattr(source, 'on_init'):
                 source.on_init(source.context)
@@ -163,3 +168,8 @@ class Denite(object):
         context['targets'] = targets
         func = getattr(self.__kinds[kind], action_name)
         func(context)
+
+    def is_async(self):
+        return len([x for x in self.__current_sources
+                    if x.context['is_async']]) > 0
+

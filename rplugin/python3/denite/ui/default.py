@@ -31,7 +31,6 @@ class Default(object):
             if 'input' not in context:
                 context['input'] = ''
             context['ignorecase'] = 1
-            context['is_async'] = 0
             context['path'] = ''
             context['winheight'] = 20
             self.__mappings = self.__vim.eval(
@@ -131,8 +130,9 @@ class Default(object):
         while True:
             self.update_prompt(context)
 
+            is_async = self.__denite.is_async()
             try:
-                if context['is_async']:
+                if is_async:
                     nr = self.__vim.call('denite#util#getchar', 0)
                 else:
                     nr = self.__vim.call('denite#util#getchar')
@@ -159,7 +159,7 @@ class Default(object):
                 self.quit(context)
                 break
 
-            if context['is_async']:
+            if is_async:
                 time.sleep(0.05)
 
     def quit(self, context):
