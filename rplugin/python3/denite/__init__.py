@@ -10,7 +10,12 @@ import importlib
 if importlib.find_loader('vim'):
     # Set vim.call for compatibility
     import vim
-    vim.call = lambda name, *arguments: vim.Function(name, args=arguments)()
+    def vim_call(name, *arguments):
+        result = vim.Function(name, args=arguments)()
+        if isinstance(result, bytes):
+            result = result.decode('utf-8')
+        return result
+    vim.call = vim_call
 else:
     import neovim
     from denite.ui.default import Default

@@ -142,8 +142,6 @@ class Default(object):
                 self.quit(context)
                 break
 
-            if isinstance(nr, bytes):
-                nr = nr.decode('utf-8')
             char = nr if isinstance(nr, str) else chr(nr)
             if not isinstance(nr, str) and nr >= 0x20:
                 # Normal input string
@@ -222,8 +220,6 @@ class Default(object):
         self.__vim.command('redraw')
         input = self.__vim.call(
             'input', context.get('prompt', '# '), context['input'])
-        if isinstance(input, bytes):
-            input = input.decode('utf-8')
         self.__input_before = input
         self.__input_cursor = ''
         self.__input_after = ''
