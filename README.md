@@ -27,13 +27,9 @@ you should read `:help provider-python`.
 
 ## Future works (not implemented yet)
 
-* cpsm matcher
-
 * preview action, auto preview feature
 
 * abbr implementation
-
-* asynchronous sources support
 
 * source restart support
 
