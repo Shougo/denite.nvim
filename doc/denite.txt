@@ -288,7 +288,7 @@ filetype	Gather filetypes and change the filetype of the current
 		buffer.
 
 						*denite-source-command*
-commad		Gather commands and put on ex-mode.
+command		Gather commands and put on ex-mode.
 
 						*denite-source-grep*
 grep		Gather grep results and nominates them.

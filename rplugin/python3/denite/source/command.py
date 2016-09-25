@@ -8,10 +8,7 @@
 import re
 
 from .base import Base
-
-
-re_command = re.compile(r'^\|:.+\|')
-re_tokens = re.compile(r'^\|:(.+)\|[\t\s]+:([^\t]+)[\t\s]+(.+)')
+from denite.util import globruntime
 
 
 class Source(Base):
@@ -23,32 +20,40 @@ class Source(Base):
         self.kind = 'command'
         self.commands = []
 
+        self.__re_command = re.compile(r'^\|:.+\|')
+        self.__re_tokens = re.compile(r'^\|:(.+)\|[\t\s]+:([^\t]+)[\t\s]+(.+)')
+
     def on_init(self, context):
-        self._helpfile = self.vim.eval(
-            'expand(findfile("doc/index.txt", &runtimepath))'
-        )
+        runtimepath = self.vim.eval('&runtimepath')
+        self._helpfiles = globruntime(runtimepath, 'doc/index.txt')
 
     def gather_candidates(self, context):
         if self.commands:
             return self.commands
 
-        if not self._helpfile:
+        if not self._helpfiles:
             return []
 
-        lines = open(self._helpfile).readlines()
-        lines = filter(lambda line: re_command.match(line), lines)
+        for helpfile in self._helpfiles:
+            with open(helpfile) as doc:
+                lines = doc.readlines()
+                lines = filter(
+                    lambda line: self.__re_command.match(line),
+                    lines
+                )
 
-        for line in lines:
-            tokens = re_tokens.match(line).groups()
-            self.commands.append({
-                'kind': 'command',
-                'action__command': tokens[0],
-                'source__command': ':' + tokens[0],
-                'word': '{0} - {1} -- {2}'.format(
-                    tokens[0],
-                    tokens[1].replace('\t', ''),
-                    tokens[2],
-                ),
-            })
+                for line in lines:
+                    tokens = self.__re_tokens.match(line).groups()
+                    command = "execute input(':{0} ')".format(tokens[0])
+                    self.commands.append({
+                        'kind': 'command',
+                        'action__command': command,
+                        'source__command': ':' + tokens[0],
+                        'word': '{0} - {1} -- {2}'.format(
+                            tokens[0],
+                            tokens[1].replace('\t', ''),
+                            tokens[2],
+                        ),
+                    })
 
         return self.commands
