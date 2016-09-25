@@ -104,7 +104,7 @@ EXAMPLES						*denite-examples*
 	call denite#custom#var('grep', 'final_opts', [])
 	call denite#custom#var('grep', 'separator', [])
 	call denite#custom#var('grep', 'default_opts',
-			\ ['--ackrc '.$HOME.'/.ackrc', '-H',
+			\ ['--ackrc', $HOME.'/.ackrc', '-H',
 			\ '--nopager', '--nocolor', '--nogroup', '--column'])
 
 <

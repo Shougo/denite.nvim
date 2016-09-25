@@ -8,6 +8,7 @@ from .base import Base
 from denite.util import parse_jump_line
 import subprocess
 import os
+import shlex
 
 
 class Source(Base):
@@ -52,7 +53,7 @@ class Source(Base):
         commands += self.vars['recursive_opts']
         commands += context['__arguments']
         commands += self.vars['separator']
-        commands += [context['__input']]
+        commands += shlex.split(context['__input'])
         commands += self.vars['final_opts']
 
         self.__proc = subprocess.Popen(commands,
@@ -64,7 +65,8 @@ class Source(Base):
 
     def __async_gather_candidates(self, context):
         try:
-            outs, errs = self.__proc.communicate(timeout=0.1)
+            outs, errs = self.__proc.communicate(timeout=2)
+            self.debug(errs)
             context['is_async'] = False
         except subprocess.TimeoutExpired:
             return []
