@@ -22,6 +22,7 @@ class Source(Base):
             'default_opts': ['-inH'],
             'recursive_opts': ['-r'],
             'separator': ['--'],
+            'final_opts': ['.'],
         }
         self.__proc = None
 
@@ -52,7 +53,8 @@ class Source(Base):
         commands += context['__arguments']
         commands += self.vars['separator']
         commands += [context['__input']]
-        commands += [context['__directory']]
+        commands += self.vars['final_opts']
+
         self.__proc = subprocess.Popen(commands,
                                        stdout=subprocess.PIPE,
                                        stderr=subprocess.PIPE,
