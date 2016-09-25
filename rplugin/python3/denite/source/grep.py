@@ -70,6 +70,7 @@ class Source(Base):
             return []
 
         candidates = []
+
         for line in outs.decode('utf-8').split('\n'):
             result = parse_jump_line(self.vim, line)
             if result:
