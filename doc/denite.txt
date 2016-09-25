@@ -290,11 +290,13 @@ filetype	Gather filetypes and change the filetype of the current
 						*denite-source-grep*
 grep		Gather grep results and nominates them.
 		The source executes ["command", "default_opts",
-		"recursive_opts", "separator" {directory}] command line.
+		"recursive_opts", {arguments}, "separator", {directory}]
+		command line.
 		Note: The command result must be "path:linenr:text" pattern.
 
 		Source arguments:
 		1. the search directory.
+		2. the additional arguments.
 
 		Source custom variables:
 		command		the default grep command

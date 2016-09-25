@@ -27,6 +27,7 @@ class Source(Base):
     def on_init(self, context):
         directory = context['args'][0] if len(
             context['args']) > 0 else self.vim.call('getcwd')
+        context['__arguments'] = context['args'][1:]
         context['__directory'] = self.vim.call('expand', directory)
         context['__input'] = self.vim.call('input',
                                            'Pattern: ', context['input'])
@@ -39,6 +40,7 @@ class Source(Base):
         commands += self.vars['command']
         commands += self.vars['default_opts']
         commands += self.vars['recursive_opts']
+        commands += context['__arguments']
         commands += self.vars['separator']
         commands += [context['__input']]
         commands += [context['__directory']]
