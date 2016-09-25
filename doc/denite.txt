@@ -282,6 +282,9 @@ Note: Not implemented yet...
 ==============================================================================
 SOURCES							*denite-sources*
 
+						*denite-source-colorscheme*
+colorscheme	Gather colorschemes and change the colorscheme.
+
 						*denite-source-file_rec*
 file_rec	Gather files recursive and nominates all file names under the
 		search directory (argument 1) or the current directory (if
