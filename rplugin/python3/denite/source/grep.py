@@ -23,6 +23,7 @@ class Source(Base):
             'recursive_opts': ['-r'],
             'separator': ['--'],
         }
+        self.__proc = None
 
     def on_init(self, context):
         directory = context['args'][0] if len(
@@ -32,7 +33,15 @@ class Source(Base):
         context['__input'] = self.vim.call('input',
                                            'Pattern: ', context['input'])
 
+    def on_close(self, context):
+        if self.__proc:
+            self.__proc.kill()
+            self.__proc = None
+
     def gather_candidates(self, context):
+        if self.__proc:
+            return self.__async_gather_candidates(context)
+
         if context['__input'] == '':
             return []
 
@@ -44,15 +53,19 @@ class Source(Base):
         commands += self.vars['separator']
         commands += [context['__input']]
         commands += [context['__directory']]
-        proc = subprocess.Popen(commands,
-                                stdout=subprocess.PIPE,
-                                stderr=subprocess.PIPE,
-                                cwd=context['__directory'])
+        self.__proc = subprocess.Popen(commands,
+                                       stdout=subprocess.PIPE,
+                                       stderr=subprocess.PIPE,
+                                       cwd=context['__directory'])
+        context['is_async'] = True
+        return self.__async_gather_candidates(context)
+
+    def __async_gather_candidates(self, context):
         try:
-            outs, errs = proc.communicate(timeout=1)
+            outs, errs = self.__proc.communicate(timeout=0.1)
+            context['is_async'] = False
         except subprocess.TimeoutExpired:
-            proc.kill()
-            outs, errs = proc.communicate()
+            return []
 
         candidates = []
         for line in outs.decode('utf-8').split('\n'):
