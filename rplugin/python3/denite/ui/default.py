@@ -163,6 +163,7 @@ class Default(object):
                 time.sleep(0.05)
 
     def quit(self, context):
+        self.__denite.on_close(context)
         self.quit_buffer(context)
         self.__result = []
         return True

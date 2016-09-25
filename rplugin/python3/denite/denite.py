@@ -86,6 +86,11 @@ class Denite(object):
                 source.on_init(source.context)
             self.__current_sources.append(source)
 
+    def on_close(self, context):
+        for source in self.__current_sources:
+            if hasattr(source, 'on_close'):
+                source.on_close(source.context)
+
     def debug(self, expr):
         denite.util.debug(self.__vim, expr)
 

@@ -455,6 +455,11 @@ on_init		(Function)			(Optional)
 		It is called after the source is initialized.
 		It takes {self} and {context} as its parameter.
 
+					*denite-source-attribute-on_close*
+on_close	(Function)			(Optional)
+		It is called before quit.
+		It takes {self} and {context} as its parameter.
+
 						*denite-source-attribute-__*
 __{name}	(Unknown)			(Optional)
 		Additional source information.
