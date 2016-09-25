@@ -46,7 +46,8 @@ class Source(Base):
         commands += [context['__directory']]
         proc = subprocess.Popen(commands,
                                 stdout=subprocess.PIPE,
-                                stderr=subprocess.PIPE)
+                                stderr=subprocess.PIPE,
+                                cwd=context['__directory'])
         try:
             outs, errs = proc.communicate(timeout=1)
         except subprocess.TimeoutExpired:
@@ -58,7 +59,7 @@ class Source(Base):
             result = parse_jump_line(self.vim, line)
             if result:
                 candidates.append({
-                    'word': '{0}: {1}{2}: {3}'.format(
+                    'word': '{0}:{1}{2}: {3}'.format(
                         os.path.relpath(result[0],
                                         start=context['__directory']),
                         result[1],
