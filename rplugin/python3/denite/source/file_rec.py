@@ -50,7 +50,7 @@ class Source(Base):
 
     def __async_gather_candidates(self, context):
         try:
-            outs, errs = self.__proc.communicate(timeout=0.1)
+            outs, errs = self.__proc.communicate(timeout=2.0)
             context['is_async'] = False
         except subprocess.TimeoutExpired:
             return []
