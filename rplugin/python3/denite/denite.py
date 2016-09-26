@@ -45,12 +45,14 @@ class Denite(object):
         candidate_results = {}
         with ThreadPoolExecutor(max_workers=self.__num_threads) as e:
             for source in self.__current_sources:
-                candidate_results[source] = e.submit(source.gather_candidates, source.context)
+                candidate_results[source] = e.submit(source.gather_candidates,
+                                                     source.context)
 
         # Once finished, place the results in source context, as before
         for source in candidate_results:
-            source.context['all_candidates'] = candidate_results[source].result()
-            source.context['candidates'] = candidate_results[source].result()
+            candidate = candidate_results[source].result()
+            source.context['all_candidates'] = candidate
+            source.context['candidates'] = candidate
 
     def filter_candidates(self, context):
         for source in self.__current_sources:
