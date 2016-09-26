@@ -5,7 +5,7 @@
 # ============================================================================
 
 from .base import Base
-import subprocess
+from denite.process import Process
 
 
 class Source(Base):
@@ -41,18 +41,11 @@ class Source(Base):
                 '-type', 'l', '-print', '-o', '-type', 'f', '-print']
         else:
             self.vars['command'].append(context['__directory'])
-        self.__proc = subprocess.Popen(self.vars['command'],
-                                       stdout=subprocess.PIPE,
-                                       stderr=subprocess.PIPE)
+        self.__proc = Process(self.vars['command'], context['__directory'])
         context['is_async'] = True
-
         return self.__async_gather_candidates(context)
 
     def __async_gather_candidates(self, context):
-        try:
-            outs, errs = self.__proc.communicate(timeout=2.0)
-            context['is_async'] = False
-        except subprocess.TimeoutExpired:
-            return []
-        return [{'word': x, 'action__path': x}
-                for x in outs.decode('utf-8').split('\n') if x != '']
+        outs, errs = self.__proc.communicate(timeout=2.0)
+        context['is_async'] = not self.__proc.eof()
+        return [{'word': x, 'action__path': x} for x in outs if x != '']

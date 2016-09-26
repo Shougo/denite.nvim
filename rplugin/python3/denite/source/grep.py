@@ -6,7 +6,7 @@
 
 from .base import Base
 from denite.util import parse_jump_line
-import subprocess
+from denite.process import Process
 import os
 import shlex
 
@@ -56,23 +56,17 @@ class Source(Base):
         commands += shlex.split(context['__input'])
         commands += self.vars['final_opts']
 
-        self.__proc = subprocess.Popen(commands,
-                                       stdout=subprocess.PIPE,
-                                       stderr=subprocess.PIPE,
-                                       cwd=context['__directory'])
+        self.__proc = Process(commands, context['__directory'])
         context['is_async'] = True
         return self.__async_gather_candidates(context)
 
     def __async_gather_candidates(self, context):
-        try:
-            outs, errs = self.__proc.communicate(timeout=2)
-            context['is_async'] = False
-        except subprocess.TimeoutExpired:
-            return []
+        outs, errs = self.__proc.communicate(timeout=2.0)
+        context['is_async'] = not self.__proc.eof()
 
         candidates = []
 
-        for line in outs.decode('utf-8').split('\n'):
+        for line in outs:
             result = parse_jump_line(context['__directory'], line)
             if result:
                 candidates.append({
