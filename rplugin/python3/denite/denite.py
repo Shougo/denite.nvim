@@ -10,6 +10,8 @@ import denite.source  # noqa
 import denite.filter  # noqa
 import denite.kind    # noqa
 
+from concurrent.futures import ThreadPoolExecutor as PoolExecutor
+
 import importlib.machinery
 import os.path
 import copy
@@ -25,6 +27,10 @@ class Denite(object):
         self.__kinds = {}
         self.__runtimepath = ''
 
+        # TODO: Set this via some denite function?
+        self.__num_threads = 4
+        self.__pool = PoolExecutor(max_workers=self.__num_threads)
+
     def start(self, context):
         self.__custom = context['custom']
 
@@ -36,10 +42,18 @@ class Denite(object):
             self.__runtimepath = self.__vim.options['runtimepath']
 
     def gather_candidates(self, context):
-        for source in self.__current_sources:
-            candidates = source.gather_candidates(source.context)
-            source.context['all_candidates'] = candidates
-            source.context['candidates'] = candidates
+        # Submit the jobs to multiple threads
+        candidate_results = {}
+        with self.__pool as e:
+            for source in self.__current_sources:
+                candidate_results[source] = e.submit(source.gather_candidates,
+                                                     source.context)
+
+        # Once finished, place the results in source context, as before
+        for source in candidate_results:
+            candidate = candidate_results[source].result()
+            source.context['all_candidates'] = candidate
+            source.context['candidates'] = candidate
 
     def filter_candidates(self, context):
         for source in self.__current_sources:
@@ -52,7 +66,7 @@ class Denite(object):
                 if ctx['is_async']:
                     all += source.gather_candidates(ctx)
                 for i in range(0, len(all), 1000):
-                    ctx['candidates'] = all[i:i+1000]
+                    ctx['candidates'] = all[i:i + 1000]
                     candidates += matcher.filter(ctx)
                     if len(candidates) >= 1000:
                         break
