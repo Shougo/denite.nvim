@@ -10,7 +10,7 @@ import denite.source  # noqa
 import denite.filter  # noqa
 import denite.kind    # noqa
 
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor as PoolExecutor
 
 import importlib.machinery
 import os.path
@@ -29,6 +29,7 @@ class Denite(object):
 
         # TODO: Set this via some denite function?
         self.__num_threads = 4
+        self.__pool = PoolExecutor(max_workers=self.__num_threads)
 
     def start(self, context):
         self.__custom = context['custom']
@@ -43,7 +44,7 @@ class Denite(object):
     def gather_candidates(self, context):
         # Submit the jobs to multiple threads
         candidate_results = {}
-        with ThreadPoolExecutor(max_workers=self.__num_threads) as e:
+        with self.__pool as e:
             for source in self.__current_sources:
                 candidate_results[source] = e.submit(source.gather_candidates,
                                                      source.context)
