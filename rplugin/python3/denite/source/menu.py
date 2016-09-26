@@ -25,13 +25,10 @@ class Source(Base):
         }
 
     def on_init(self, context):
-        try:
-            if self.vars['unite_source_menu_compatibilty']:
-                self.vars['menus'].update(
-                    self.vim.vars['unite_source_menu_menus']
-                )
-        except KeyError:
-            pass
+        if self.vars['unite_source_menu_compatibilty']:
+            self.vars['menus'].update(
+                self.vim.vars['unite_source_menu_menus']
+            )
 
     def gather_candidates(self, context):
         # If no menus have been defined, just exit
