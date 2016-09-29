@@ -75,6 +75,7 @@ class Default(object):
         self.cursor_highlight(context)
 
     def update_buffer(self, context):
+        prev_len = len(self.__candidates)
         self.__candidates = []
         statusline = ''
         if self.__denite.is_async():
@@ -96,8 +97,13 @@ class Default(object):
 
         self.__options['modified'] = False
 
+        if prev_len > self.__candidates_len:
+            # Init cursor
+            self.__cursor = 0
+            self.__win_cursor = 1
+
     def cursor_highlight(self, context):
-        self.__vim.call('cursor', [self.__win_cursor, 0])
+        self.__vim.call('cursor', [self.__win_cursor, 1])
 
     def quit_buffer(self, context):
         self.__vim.command('redraw | echo')
