@@ -41,7 +41,8 @@ class Source(Base):
                 '-type', 'l', '-print', '-o', '-type', 'f', '-print']
         else:
             self.vars['command'].append(context['__directory'])
-        self.__proc = Process(self.vars['command'], context['__directory'])
+        self.__proc = Process(self.vars['command'],
+                              context, context['__directory'])
         context['is_async'] = True
         return self.__async_gather_candidates(context)
 

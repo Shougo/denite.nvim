@@ -13,7 +13,7 @@ if importlib.find_loader('vim'):
     def vim_call(name, *arguments):
         result = vim.Function(name, args=arguments)()
         if isinstance(result, bytes):
-            result = result.decode('utf-8')
+            result = result.decode(vim.eval('&encoding'))
         return result
 
     # Set vim.call for compatibility

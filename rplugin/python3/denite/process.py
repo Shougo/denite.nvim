@@ -8,12 +8,13 @@ import subprocess
 
 
 class Process(object):
-    def __init__(self, commands, cwd):
+    def __init__(self, commands, context, cwd):
         self.__proc = subprocess.Popen(commands,
                                        stdout=subprocess.PIPE,
                                        stderr=subprocess.PIPE,
                                        cwd=cwd)
         self.__eof = False
+        self.__context = context
 
     def eof(self):
         return self.__eof
@@ -26,8 +27,8 @@ class Process(object):
         errs = []
         try:
             outs, errs = self.__proc.communicate(timeout=timeout)
-            outs = outs.decode('utf-8').split('\n')
-            errs = errs.decode('utf-8').split('\n')
+            outs = outs.decode(self.__context['encoding']).split('\n')
+            errs = errs.decode(self.__context['encoding']).split('\n')
             self.__eof = True
         except subprocess.TimeoutExpired:
             return (outs, errs)

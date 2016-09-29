@@ -56,7 +56,7 @@ class Source(Base):
         commands += shlex.split(context['__input'])
         commands += self.vars['final_opts']
 
-        self.__proc = Process(commands, context['__directory'])
+        self.__proc = Process(commands, context, context['__directory'])
         context['is_async'] = True
         return self.__async_gather_candidates(context)
 
