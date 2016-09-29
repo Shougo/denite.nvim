@@ -16,9 +16,14 @@ function! denite#vim#_initialize() abort "{{{
     return 1
   endif
 
-  " Add sys.path
-  execute 'python3' 'import vim'
-  execute 'python3' 'sys.path.insert(0, vim.eval("s:denite_path"))'
+  python3 << EOF
+import vim
+# Add sys.path
+sys.path.insert(0, vim.eval('s:denite_path'))
+
+import denite.ui.default
+denite_ui = denite.ui.default.Default(vim)
+EOF
 
   call denite#init#_variables()
 endfunction"}}}
@@ -26,10 +31,7 @@ endfunction"}}}
 function! denite#vim#_start(sources, context) abort "{{{
   python3 << EOF
 import vim
-import denite.ui.default
-
-denite.ui.default.Default(vim).start(
-    vim.eval('a:sources'), vim.eval('a:context'))
+denite_ui.start(vim.eval('a:sources'), vim.eval('a:context'))
 EOF
   return []
 endfunction"}}}

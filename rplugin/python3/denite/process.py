@@ -20,9 +20,15 @@ class Process(object):
         return self.__eof
 
     def kill(self):
-        return self.__proc.kill()
+        if not self.__proc:
+            return
+        self.__proc.kill()
+        self.__proc = None
 
     def communicate(self, timeout):
+        if not self.__proc:
+            return []
+
         outs = []
         errs = []
         try:
@@ -33,4 +39,5 @@ class Process(object):
         except subprocess.TimeoutExpired:
             return (outs, errs)
 
+        self.__proc = None
         return (outs, errs)

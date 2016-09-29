@@ -25,9 +25,9 @@ class Source(Base):
             'separator': ['--'],
             'final_opts': ['.'],
         }
-        self.__proc = None
 
     def on_init(self, context):
+        self.__proc = None
         directory = context['args'][0] if len(
             context['args']) > 0 else self.vim.call('getcwd')
         context['__arguments'] = context['args'][1:]
@@ -57,7 +57,6 @@ class Source(Base):
         commands += self.vars['final_opts']
 
         self.__proc = Process(commands, context, context['__directory'])
-        context['is_async'] = True
         return self.__async_gather_candidates(context)
 
     def __async_gather_candidates(self, context):

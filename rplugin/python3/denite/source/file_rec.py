@@ -18,9 +18,9 @@ class Source(Base):
         self.vars = {
             'command': []
         }
-        self.__proc = None
 
     def on_init(self, context):
+        self.__proc = None
         directory = context['args'][0] if len(
             context['args']) > 0 else self.vim.call('getcwd')
         context['__directory'] = self.vim.call('expand', directory)
@@ -43,7 +43,6 @@ class Source(Base):
             self.vars['command'].append(context['__directory'])
         self.__proc = Process(self.vars['command'],
                               context, context['__directory'])
-        context['is_async'] = True
         return self.__async_gather_candidates(context)
 
     def __async_gather_candidates(self, context):

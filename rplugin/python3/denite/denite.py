@@ -20,10 +20,10 @@ class Denite(object):
     def __init__(self, vim):
         self.__vim = vim
         self.__sources = {}
-        self.__current_sources = []
         self.__filters = {}
         self.__kinds = {}
         self.__runtimepath = ''
+        self.__current_sources = []
 
     def start(self, context):
         self.__custom = context['custom']
@@ -45,18 +45,17 @@ class Denite(object):
         for source in self.__current_sources:
             ctx = source.context
             ctx['input'] = context['input']
-            for matcher in [self.__filters[x]
-                            for x in source.matchers if x in self.__filters]:
-                candidates = []
-                all = ctx['all_candidates']
-                if ctx['is_async']:
-                    all += source.gather_candidates(ctx)
-                for i in range(0, len(all), 1000):
-                    ctx['candidates'] = all[i:i+1000]
-                    candidates += matcher.filter(ctx)
-                    if len(candidates) >= 1000:
-                        break
-                ctx['candidates'] = candidates
+            all = ctx['all_candidates']
+            if ctx['is_async']:
+                all += source.gather_candidates(ctx)
+            for i in range(0, len(all), 1000):
+                ctx['candidates'] = all[i:i+1000]
+                for matcher in [self.__filters[x]
+                                for x in source.matchers
+                                if x in self.__filters]:
+                    ctx['candidates'] = matcher.filter(ctx)
+                if len(ctx['candidates']) >= 1000:
+                    break
             for filter in [self.__filters[x]
                            for x in source.sorters + source.converters
                            if x in self.__filters]:
@@ -77,8 +76,9 @@ class Denite(object):
             source = self.__sources[name]
             source.context = copy.deepcopy(context)
             source.context['args'] = args
-            source.context['is_async'] = hasattr(source,
-                                                 'async_gather_candidates')
+            source.context['is_async'] = False
+            source.context['all_candidates'] = []
+            source.context['candidates'] = []
 
             if hasattr(source, 'on_init'):
                 source.on_init(source.context)
