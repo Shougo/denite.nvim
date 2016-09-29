@@ -25,7 +25,7 @@ class Source(Base):
         }
 
     def on_init(self, context):
-        if self.vars['unite_source_menu_compatibilty']:
+        if self.vars['unite_source_menu_compatibility']:
             self.vars['menus'].update(
                 self.vim.vars['unite_source_menu_menus']
             )
