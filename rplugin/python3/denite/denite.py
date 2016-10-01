@@ -48,14 +48,17 @@ class Denite(object):
             all = ctx['all_candidates']
             if ctx['is_async']:
                 all += source.gather_candidates(ctx)
+            candidates = []
             for i in range(0, len(all), 1000):
                 ctx['candidates'] = all[i:i+1000]
                 for matcher in [self.__filters[x]
                                 for x in source.matchers
                                 if x in self.__filters]:
                     ctx['candidates'] = matcher.filter(ctx)
-                if len(ctx['candidates']) >= 1000:
+                    candidates += ctx['candidates']
+                if len(candidates) >= 1000:
                     break
+            ctx['candidates'] = candidates
             for filter in [self.__filters[x]
                            for x in source.sorters + source.converters
                            if x in self.__filters]:
