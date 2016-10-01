@@ -4,21 +4,10 @@
 # License: MIT license
 # =============================================================================
 
-import importlib
+from importlib import find_loader
 
 
-if importlib.find_loader('vim'):
-    import vim
-
-    def vim_call(name, *arguments):
-        result = vim.Function(name, args=arguments)()
-        if isinstance(result, bytes):
-            result = result.decode(vim.eval('&encoding'))
-        return result
-
-    # Set vim.call for compatibility
-    vim.call = vim_call
-else:
+if not find_loader('vim'):
     import neovim
     from denite.ui.default import Default
 
