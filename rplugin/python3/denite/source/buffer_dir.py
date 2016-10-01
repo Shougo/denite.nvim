@@ -7,6 +7,7 @@
 
 from .base import Base
 from os import listdir
+from os import path
 
 
 class Source(Base):
@@ -21,6 +22,7 @@ class Source(Base):
         directory = context['args'][0] if len(
             context['args']) > 0 else self.vim.call('expand', '%:p:h')
         context['__directory'] = directory
+        context['__current_dir'] = path.abspath(directory)
 
     def gather_candidates(self, context):
         files = []
