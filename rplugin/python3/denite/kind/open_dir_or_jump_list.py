@@ -29,6 +29,7 @@ class Kind(Base):
             self.vim.command(action_command)
         else:
             if self.vim.call('fnamemodify',
-                    self.vim.current.buffer.name, ':p') != action_path:
+                             self.vim.current.buffer.name,
+                             ':p') != action_path:
                 self.vim.call(
                     'denite#util#execute_path', 'edit', action_path)
