@@ -282,6 +282,10 @@ Note: Not implemented yet...
 ==============================================================================
 SOURCES							*denite-sources*
 
+						*denite-source-bufferdir*
+buffer_dir	Gather buffer' directory files and open file or gather files
+		from selected directory.
+
 						*denite-source-colorscheme*
 colorscheme	Gather colorschemes and change the colorscheme.
 
@@ -374,6 +378,16 @@ jump_list	An interface to jump to the file position.
 			action__col		(Number)	(Optional)
 				The column number in the file you'll jump
 				into.
+
+					    *denite-kind-open_dir_or_jump_list*
+open_dir_or_jump_list	An interface to open directory or jump to the file
+			position.
+
+			action__path		(String)	(Required)
+				The path of the file that you'll jump into.
+				Or
+				The path of the directory that gather files
+				from directory.
 
 						*denite-kind-word*
 text		An interface to paste the text.
