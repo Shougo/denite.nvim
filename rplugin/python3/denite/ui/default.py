@@ -84,6 +84,9 @@ class Default(object):
                 continue
             self.__candidates += candidates
             statusline += '{}({}/{}) '.format(name, len(candidates), len(all))
+        current_dir = self.__denite.get_current_dir()
+        if current_dir:
+            statusline += '[{}] '.format(current_dir)
         self.__candidates_len = len(self.__candidates)
         self.__window_options['statusline'] = statusline
 

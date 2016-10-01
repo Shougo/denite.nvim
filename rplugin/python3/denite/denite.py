@@ -175,3 +175,8 @@ class Denite(object):
     def is_async(self):
         return len([x for x in self.__current_sources
                     if x.context['is_async']]) > 0
+
+    def get_current_dir(self):
+        for x in self.__current_sources:
+            if '__current_dir' in x.context:
+                return x.context['__current_dir']
