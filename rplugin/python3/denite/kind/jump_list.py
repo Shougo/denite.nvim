@@ -25,9 +25,9 @@ class Kind(Base):
         col = int(target.get('action__col', 0))
         try:
             if line > 0:
-                self.vim.current.window.cursor = (line, 0)
+                self.vim.call('cursor', [line, 0])
             if col > 0:
-                self.vim.current.window.cursor = (0, col)
+                self.vim.call('cursor', [0, col])
         except Exception:
             pass
 

@@ -73,7 +73,7 @@ class Source(Base):
                         os.path.relpath(result[0],
                                         start=context['__directory']),
                         result[1],
-                        (': ' + result[2] if result[2] != '0' else ''),
+                        (':' + result[2] if result[2] != '0' else ''),
                         result[3]),
                     'action__path': result[0],
                     'action__line': result[1],

@@ -26,7 +26,7 @@ class Source(Base):
         return [{
             'word': '{0}: {1}{2}: {3}'.format(
                 result[0], result[1],
-                (': ' + result[2] if result[2] != '0' else ''),
+                (':' + result[2] if result[2] != '0' else ''),
                 result[3]),
             'action__path': result[0],
             'action__line': result[1],
