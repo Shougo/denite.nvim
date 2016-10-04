@@ -33,8 +33,10 @@ class Process(object):
         errs = []
         try:
             outs, errs = self.__proc.communicate(timeout=timeout)
-            outs = outs.decode(self.__context['encoding']).split('\n')
-            errs = errs.decode(self.__context['encoding']).split('\n')
+            outs = outs.decode(self.__context['encoding'],
+                               errors='replace').split('\n')
+            errs = errs.decode(self.__context['encoding'],
+                               errors='replace').split('\n')
             self.__eof = True
         except subprocess.TimeoutExpired:
             return (outs, errs)
