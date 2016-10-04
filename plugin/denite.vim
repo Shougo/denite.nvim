@@ -17,5 +17,9 @@ command! -nargs=* -range -complete=customlist,denite#helper#complete
       \ DeniteCursorWord
       \ call denite#helper#call_denite('DeniteCursorWord',
       \                                <q-args>, <line1>, <line2>)
+command! -nargs=* -range -complete=customlist,denite#helper#complete
+      \ DeniteBufferDir
+      \ call denite#helper#call_denite('DeniteBufferDir',
+      \                                <q-args>, <line1>, <line2>)
 
 " vim: foldmethod=marker

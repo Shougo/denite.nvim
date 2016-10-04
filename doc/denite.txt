@@ -154,6 +154,10 @@ COMMANDS 						*denite-commands*
 
 		{options} are options for a denite buffer: |denite-options|
 
+:DeniteBufferDir [{options}] {sources}			*:DeniteBufferDir*
+		Equivalent to |:Denite| except that it targets the buffer
+		directory.
+
 :DeniteCursorWord [{options}] {sources}			*:DeniteCursorWord*
 		Equivalent to |:Denite| except that it targets the word under
 		the cursor for the initial narrowing text.
