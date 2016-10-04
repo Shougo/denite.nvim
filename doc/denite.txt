@@ -294,6 +294,18 @@ SOURCES							*denite-sources*
 						*denite-source-colorscheme*
 colorscheme	Gather colorschemes and change the colorscheme.
 
+						*denite-source-directory_rec*
+directory_rec	Gather directories recursive and nominates all directory names
+		under the search directory (argument 1) or the current directory
+		(if argument is omitted) as candidates.
+
+		Source arguments:
+		1. the search directory.
+
+		Source custom variables:
+		command		 the default get files command
+				(default is used "find" command)
+
 						*denite-source-file_rec*
 file_rec	Gather files recursive and nominates all file names under the
 		search directory (argument 1) or the current directory (if
@@ -370,6 +382,13 @@ command		An interface to execute the command.
 
 			action__command		(String)	(Required)
 				The command that you'll execute.
+
+						*denite-kind-directory*
+directory	An interface to change directory.
+
+			action__path		(String)	(Required)
+				The path of the directory that you'll change
+				directory.
 
 						*denite-kind-jump_list*
 jump_list	An interface to jump to the file position.
