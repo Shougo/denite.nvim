@@ -92,7 +92,6 @@ class Default(object):
             self.__candidates_len)
         self.__window_options['statusline'] = statusline
 
-
         del self.__vim.current.buffer[:]
         self.__vim.current.buffer.append(
             [x['word'] for x in
