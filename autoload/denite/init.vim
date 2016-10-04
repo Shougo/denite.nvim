@@ -85,6 +85,7 @@ function! denite#init#_context() abort "{{{
   return {
         \ 'runtimepath': &runtimepath,
         \ 'encoding': &encoding,
+        \ 'directory': getcwd(),
         \}
 endfunction"}}}
 

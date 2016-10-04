@@ -86,7 +86,12 @@ class Default(object):
             self.__candidates += candidates
             statusline += '{}({}/{}) '.format(name, len(candidates), len(all))
         self.__candidates_len = len(self.__candidates)
+        statusline += '%=[{}] {:3}/{:4}'.format(
+            context['directory'],
+            self.__cursor + self.__win_cursor,
+            self.__candidates_len)
         self.__window_options['statusline'] = statusline
+
 
         del self.__vim.current.buffer[:]
         self.__vim.current.buffer.append(
