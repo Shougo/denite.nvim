@@ -22,16 +22,10 @@ import vim
 # Add sys.path
 sys.path.insert(0, vim.eval('s:denite_path'))
 
-def vim_call(name, *arguments):
-    result = vim.Function(name, args=arguments)()
-    if isinstance(result, bytes):
-        result = result.decode(vim.eval('&encoding'))
-    return result
+import denite.rplugin
 
-# Set vim.call for compatibility
-vim.call = vim_call
 import denite.ui.default
-denite_ui = denite.ui.default.Default(vim)
+denite_ui = denite.ui.default.Default(denite.rplugin.Neovim(vim))
 EOF
 
   call denite#init#_variables()
