@@ -14,7 +14,7 @@ class Source(Base):
         super().__init__(vim)
 
         self.name = 'file_rec'
-        self.kind = 'jump_list'
+        self.kind = 'file'
         self.vars = {
             'command': []
         }

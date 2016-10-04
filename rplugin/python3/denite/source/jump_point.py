@@ -15,7 +15,7 @@ class Source(Base):
         super().__init__(vim)
 
         self.name = 'jump_point'
-        self.kind = 'jump_list'
+        self.kind = 'file'
 
     def on_init(self, context):
         context['__line'] = self.vim.current.line

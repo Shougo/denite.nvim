@@ -17,7 +17,7 @@ class Source(Base):
         super().__init__(vim)
 
         self.name = 'grep'
-        self.kind = 'jump_list'
+        self.kind = 'file'
         self.vars = {
             'command': ['grep'],
             'default_opts': ['-inH'],

@@ -390,8 +390,8 @@ directory	An interface to change directory.
 				The path of the directory that you'll change
 				directory.
 
-						*denite-kind-jump_list*
-jump_list	An interface to jump to the file position.
+						*denite-kind-file*
+file		An interface to jump to the file position.
 
 			action__path		(String)	(Required)
 				The path of the file that you'll jump into.

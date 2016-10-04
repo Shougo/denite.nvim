@@ -13,7 +13,7 @@ class Source(Base):
         super().__init__(vim)
 
         self.name = 'line'
-        self.kind = 'jump_list'
+        self.kind = 'file'
         self.matchers = ['matcher_regexp']
         self.sorters = []
 

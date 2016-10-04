@@ -1,5 +1,5 @@
 # ============================================================================
-# FILE: jump_list.py
+# FILE: file.py
 # AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
 # License: MIT license
 # ============================================================================
@@ -12,7 +12,7 @@ class Kind(Base):
     def __init__(self, vim):
         super().__init__(vim)
 
-        self.name = 'jump_list'
+        self.name = 'file'
 
     def action_default(self, context):
         target = context['targets'][0]

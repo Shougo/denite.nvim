@@ -14,7 +14,7 @@ class Source(Base):
         Base.__init__(self, vim)
 
         self.name = 'menu'
-        self.kind = 'jump_list'
+        self.kind = 'file'
 
         # self.matchers = []
         # self.sorters = []
@@ -50,7 +50,7 @@ class Source(Base):
                 if 'file_candidates' in menus[menu]:
                     lines.extend([
                         {'word': str(candidate[0]),
-                         'kind': 'jump_list',
+                         'kind': 'file',
                          'action__path': candidate[1],
                          }
                         for candidate in menus[menu]['file_candidates']
