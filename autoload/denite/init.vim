@@ -76,7 +76,7 @@ function! denite#init#_variables() abort "{{{
         \ "\<Up>": 'move_to_prev_line',
         \ "\<C-j>": 'input_command_line',
         \ "\<CR>":  'do_action',
-        \ "\<C-y>": 'paste_from_unnamed_register',
+        \ "\<C-r>": 'paste_from_register',
         \}
   for [char, value] in items(default_mappings)
     let g:denite#_default_mappings._[denite#util#char2key(char)] = value

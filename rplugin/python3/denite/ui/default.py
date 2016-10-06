@@ -205,7 +205,7 @@ class Default(object):
         self.__input_before = ''
         self.update_input(context)
 
-    def paste_from_unnamed_register(self, context):
+    def paste_from_register(self, context):
         self.__input_before += re.sub(r'\n', '', self.__vim.eval('@"'))
         self.update_input(context)
 

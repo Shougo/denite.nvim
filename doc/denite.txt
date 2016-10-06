@@ -194,8 +194,8 @@ move_to_next_line
 move_to_prev_line
 		Move to previous line.
 
-				*denite-map-paste_from_unnamed_register*
-paste_from_unnamed_register
+				*denite-map-paste_from_register*
+paste_from_register
 		Paste the text from unnamed register.
 
 							*denite-map-quit*
@@ -223,7 +223,7 @@ All mode mappings.
 <S-Tab>		move_to_prev_line
 <C-j>		input_command_line
 <CR>		do_action
-<C-y>		paste_from_unnamed_register
+<C-r>		paste_from_register
 
 Note: You cannot change <C-c> default mapping.
 
