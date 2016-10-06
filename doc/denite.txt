@@ -217,8 +217,10 @@ All mode mappings.
 <C-u>		delete_backward_line
 <C-n>		move_to_next_line
 <Down>		move_to_next_line
+<Tab>		move_to_next_line
 <C-p>		move_to_prev_line
 <Up>		move_to_prev_line
+<S-Tab>		move_to_prev_line
 <C-j>		input_command_line
 <CR>		do_action
 <C-y>		paste_from_unnamed_register
