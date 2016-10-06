@@ -6,6 +6,7 @@
 
 from .base import Base
 from denite.process import Process
+from os.path import relpath
 
 
 class Source(Base):
@@ -48,4 +49,5 @@ class Source(Base):
     def __async_gather_candidates(self, context):
         outs, errs = self.__proc.communicate(timeout=2.0)
         context['is_async'] = not self.__proc.eof()
-        return [{'word': x, 'action__path': x} for x in outs if x != '']
+        return [{'word': relpath(x, start=context['__directory']),
+                 'action__path': x} for x in outs if x != '']
