@@ -79,7 +79,6 @@ EXAMPLES						*denite-examples*
 	call denite#custom#source(
 	\ 'file_rec', 'matchers', ['matcher_cpsm'])
 
-
 	" Add custom menus
 	let s:menus = {}
 
@@ -116,6 +115,9 @@ EXAMPLES						*denite-examples*
 	call denite#custom#var('grep', 'separator', ['--'])
 	call denite#custom#var('grep', 'default_opts',
 			\ ['--vimgrep', '--no-heading']
+
+	call denite#custom#source('file_mru', 'converters',
+	      \ ['converter_relative_word'])
 <
 
 ==============================================================================
