@@ -19,3 +19,7 @@ class Kind(Base):
         target = context['targets'][0]
         # TODO want to narrow
         self.vim.command('cd {}'.format(target['action__path']))
+
+        if self.vim.current.buffer.options['filetype'] == 'vimshell':
+            # Change vimshell current directory
+            self.vim.command('VimShellCurrentDir')
