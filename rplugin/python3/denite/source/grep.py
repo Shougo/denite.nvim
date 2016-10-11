@@ -42,7 +42,7 @@ class Source(Base):
 
     def gather_candidates(self, context):
         if self.__proc:
-            return self.__async_gather_candidates(context)
+            return self.__async_gather_candidates(context, 0.5)
 
         if context['__input'] == '':
             return []
@@ -57,10 +57,10 @@ class Source(Base):
         commands += self.vars['final_opts']
 
         self.__proc = Process(commands, context, context['__directory'])
-        return self.__async_gather_candidates(context)
+        return self.__async_gather_candidates(context, 2.0)
 
-    def __async_gather_candidates(self, context):
-        outs, errs = self.__proc.communicate(timeout=2.0)
+    def __async_gather_candidates(self, context, timeout):
+        outs, errs = self.__proc.communicate(timeout=timeout)
         context['is_async'] = not self.__proc.eof()
 
         candidates = []

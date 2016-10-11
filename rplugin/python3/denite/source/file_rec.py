@@ -33,7 +33,7 @@ class Source(Base):
 
     def gather_candidates(self, context):
         if self.__proc:
-            return self.__async_gather_candidates(context)
+            return self.__async_gather_candidates(context, 0.5)
 
         if not self.vars['command']:
             self.vars['command'] = [
@@ -44,10 +44,10 @@ class Source(Base):
             self.vars['command'].append(context['__directory'])
         self.__proc = Process(self.vars['command'],
                               context, context['__directory'])
-        return self.__async_gather_candidates(context)
+        return self.__async_gather_candidates(context, 2.0)
 
-    def __async_gather_candidates(self, context):
-        outs, errs = self.__proc.communicate(timeout=2.0)
+    def __async_gather_candidates(self, context, timeout):
+        outs, errs = self.__proc.communicate(timeout=timeout)
         context['is_async'] = not self.__proc.eof()
         return [{'word': relpath(x, start=context['__directory']),
                  'action__path': x} for x in outs if x != '']
