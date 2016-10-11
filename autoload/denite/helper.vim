@@ -17,7 +17,7 @@ function! denite#helper#complete(arglead, cmdline, cursorpos) abort "{{{
           \ "fnamemodify(v:val, ':t:r')")
   endif
 
-  return sort(filter(_, 'stridx(v:val, a:arglead) == 0'))
+  return uniq(sort(filter(_, 'stridx(v:val, a:arglead) == 0')))
 endfunction"}}}
 
 function! denite#helper#call_denite(command, args, line1, line2) abort "{{{
