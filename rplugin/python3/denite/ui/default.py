@@ -79,7 +79,7 @@ class Default(object):
         self.__candidates = []
         statusline = ''
         if self.__denite.is_async():
-            statusline += '[async]'
+            statusline += '[async] '
         for name, all, candidates in self.__denite.filter_candidates(context):
             if len(all) == 0:
                 continue
