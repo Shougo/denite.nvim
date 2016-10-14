@@ -308,8 +308,9 @@ directory_rec	Gather directories recursive and nominates all directory names
 		1. the search directory.
 
 		Source custom variables:
-		command		 the default get files command
-				(default is used "find" command)
+		command		 the default get directories command
+				(default is used "find" command in Unix
+				environment)
 
 						*denite-source-file_rec*
 file_rec	Gather files recursive and nominates all file names under the
@@ -321,7 +322,8 @@ file_rec	Gather files recursive and nominates all file names under the
 
 		Source custom variables:
 		command		 the default get files command
-				(default is used "find" command)
+				(default is used "find" command in Unix
+				environment)
 
 						*denite-source-filetype*
 filetype	Gather filetypes and change the filetype of the current

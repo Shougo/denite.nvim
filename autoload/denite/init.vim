@@ -85,6 +85,7 @@ function! denite#init#_context() abort "{{{
         \ 'runtimepath': &runtimepath,
         \ 'encoding': &encoding,
         \ 'directory': getcwd(),
+        \ 'is_windows': has('win32') || has('win64'),
         \}
 endfunction"}}}
 
