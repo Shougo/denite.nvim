@@ -5,7 +5,7 @@
 # ============================================================================
 
 from .base import Base
-from os.path import relpath, getatime, exists
+from os.path import getatime, exists
 from time import localtime, strftime, time
 
 
@@ -22,12 +22,11 @@ class Source(Base):
             'exclude_filetypes': ['denite']
         }
 
-
     def on_init(self, context):
-        self.__exclude_unlisted = not '!' in context['args'] and self.vars['exclude_unlisted']
-        self.__caller_bufnr     = context['bufnr']
-        self.__alter_bufnr      = self.vim.call('bufnr', '#')
-
+        self.__exclude_unlisted = \
+            '!' not in context['args'] and self.vars['exclude_unlisted']
+        self.__caller_bufnr = context['bufnr']
+        self.__alter_bufnr = self.vim.call('bufnr', '#')
 
     def gather_candidates(self, context):
         return [
@@ -38,7 +37,6 @@ class Source(Base):
             ]
         ]
 
-
     def _is_excluded(self, buffer_attr):
         if self.__exclude_unlisted and buffer_attr['status'][0] == 'u':
             return True
@@ -46,20 +44,22 @@ class Source(Base):
             return True
         return False
 
-
     def _convert(self, buffer_attr):
         return {
             'bufnr': buffer_attr['number'],
             'word': '{0}{1} {2}{3} ({4})'.format(
-                str(buffer_attr['number']).rjust(len('{}'.format(len(self.vim.buffers))) + 1, ' '),
+                str(buffer_attr['number']).rjust(
+                    len('{}'.format(len(self.vim.buffers))) + 1, ' '),
                 buffer_attr['status'],
                 self.vim.call('fnamemodify', buffer_attr['name'], ':~:.'),
-                ' [{}]'.format(buffer_attr['filetype']) if buffer_attr['filetype'] != '' else '',
-                strftime(self.vars['date_format'], localtime(buffer_attr['timestamp']))
+                ' [{}]'.format(
+                    buffer_attr['filetype']
+                ) if buffer_attr['filetype'] != '' else '',
+                strftime(self.vars['date_format'],
+                         localtime(buffer_attr['timestamp']))
             ),
             'action__command': 'buffer {0}'.format(buffer_attr['number'])
         }
-
 
     def _get_attributes(self, buf):
         attr = {
@@ -69,16 +69,18 @@ class Source(Base):
 
         attr.update({
             'filetype': buf.options['filetype'],
-            'timestamp': getatime(attr['name']) if exists(attr['name']) else time(),
+            'timestamp': getatime(
+                attr['name']) if exists(attr['name']) else time(),
             'status': '{0}{1}{2}{3}'.format(
                 ' ' if self.vim.call('buflisted', attr['number']) else 'u',
                 '%' if attr['number'] == self.__caller_bufnr
                     else '#' if attr['number'] == self.__alter_bufnr else ' ',
                 'a' if self.vim.call('bufwinnr', attr['number']) > 0
-                    else 'h' if self.vim.call('bufloaded', attr['number']) != 0 else ' ',
+                    else 'h' if self.vim.call('bufloaded',
+                                              attr['number']) != 0 else ' ',
                 '=' if buf.options['readonly']
-                    else '+' if buf.options['modified']
-                             else '-' if buf.options['modifiable'] == 0 else ' '
+                    else ('+' if buf.options['modified']
+                          else '-' if buf.options['modifiable'] == 0 else ' ')
             )
         })
 
