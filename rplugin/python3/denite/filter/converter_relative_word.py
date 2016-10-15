@@ -5,7 +5,7 @@
 # ============================================================================
 
 from .base import Base
-from os.path import relpath
+from os.path import relpath, isabs
 
 
 class Filter(Base):
@@ -18,6 +18,7 @@ class Filter(Base):
 
     def filter(self, context):
         for candidate in context['candidates']:
-            candidate['word'] = relpath(
-                candidate['word'], start=context['directory'])
+            if isabs(candidate['word']):
+                candidate['word'] = relpath(
+                    candidate['word'], start=context['directory'])
         return context['candidates']
