@@ -312,6 +312,9 @@ directory_rec	Gather directories recursive and nominates all directory names
 				(default is used "find" command in Unix
 				environment)
 
+						*denite-source-file_point*
+file_point
+
 						*denite-source-file_rec*
 file_rec	Gather files recursive and nominates all file names under the
 		search directory (argument 1) or the current directory (if
@@ -355,9 +358,6 @@ grep		Gather grep results and nominates them.
 		final_opts	the final arguments
 				(default: ["."] path to search argument)
 
-
-						*denite-source-jump_point*
-jump_point
 
 						*denite-source-line*
 line

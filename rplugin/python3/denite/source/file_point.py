@@ -1,5 +1,5 @@
 # ============================================================================
-# FILE: jump_point.py
+# FILE: file_point.py
 # AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
 # License: MIT license
 # ============================================================================
@@ -14,7 +14,7 @@ class Source(Base):
     def __init__(self, vim):
         super().__init__(vim)
 
-        self.name = 'jump_point'
+        self.name = 'file_point'
         self.kind = 'file'
 
     def on_init(self, context):
