@@ -5,6 +5,7 @@
 # ============================================================================
 
 from .base import Base
+import re
 
 
 class Kind(Base):
@@ -17,6 +18,12 @@ class Kind(Base):
     def action_default(self, context):
         target = context['targets'][0]
         path = target['action__path']
+
+        if re.match('^\w+://', path):
+            # URI
+            self.vim.call('denite#util#open', path)
+            return
+
         if self.vim.call('fnamemodify',
                          self.vim.current.buffer.name, ':p') != path:
             self.vim.call(

@@ -119,3 +119,7 @@ def parse_jump_line(cwd, line):
         path = cwd + '/' + path
 
     return [path, linenr, col, text]
+
+
+def expand(path):
+    return os.path.expandvars(os.path.expanduser(path))
