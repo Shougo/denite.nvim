@@ -42,6 +42,7 @@ class Source(Base):
             'action__col': result[2],
         }] if result and os.path.isfile(result[0]) else []
 
+
 def checkhost(path):
     if path == '':
         return ''
