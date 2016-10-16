@@ -6,7 +6,7 @@
 
 from .base import Base
 from os import path
-from denite.util import globruntime, debug
+from denite.util import globruntime
 
 
 class Source(Base):
