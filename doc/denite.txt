@@ -296,6 +296,21 @@ Note: Not implemented yet...
 ==============================================================================
 SOURCES							*denite-sources*
 
+						*denite-source-buffer*
+buffer		Gather buffers and jump to the buffer.
+
+		Source arguments:
+		1. '!' : a flag to show unlisted buffers
+
+		Source custom variables:
+		date_format	  the format string to show date
+		exclude_unlisted
+				  a flag to exclude unlisted buffers
+				  (default is '1')
+		exclude_filetypes
+				  the list of excluded filetypes
+				  (default is ['denite'])
+
 						*denite-source-colorscheme*
 colorscheme	Gather colorschemes and change the colorscheme.
 
