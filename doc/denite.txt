@@ -359,6 +359,9 @@ grep		Gather grep results and nominates them.
 				(default: ["."] path to search argument)
 
 
+						*denite-source-help*
+help		Search through doc tags
+
 						*denite-source-line*
 line
 

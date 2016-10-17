@@ -19,11 +19,13 @@ class Source(Base):
 
     def gather_candidates(self, context):
         helpDocs = {}
-        for file in globruntime(context['runtimepath'], 'doc/*.txt'):
-            helpDoc = path.splitext(path.basename(file))[0]
-            helpDocs[helpDoc] = {
-                'word': helpDoc,
-                'action__command': 'help ' + helpDoc
-            }
+        for file in globruntime(context['runtimepath'], 'doc/tags'):
+            with open(file, 'r') as ins:
+                for line in ins:
+                    name = line.split("\t", 1)[0]
+                    helpDocs[name] = {
+                        'word': name,
+                        'action__command': 'help ' + name
+                    }
 
         return sorted(helpDocs.values(), key=lambda value: value['word'])
