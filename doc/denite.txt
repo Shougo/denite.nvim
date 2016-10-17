@@ -373,6 +373,9 @@ grep		Gather grep results and nominates them.
 		final_opts	the final arguments
 				(default: ["."] path to search argument)
 
+						*denite-source-help*
+help		Search through doc tags
+
 
 						*denite-source-line*
 line
