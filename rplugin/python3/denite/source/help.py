@@ -5,7 +5,6 @@
 # ============================================================================
 
 from .base import Base
-from os import path
 from denite.util import globruntime
 
 
