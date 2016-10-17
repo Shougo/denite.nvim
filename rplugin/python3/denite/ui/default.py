@@ -78,13 +78,13 @@ class Default(object):
         prev_len = len(self.__candidates)
         self.__candidates = []
         statusline = ''
-        if self.__denite.is_async():
-            statusline += '[async] '
         for name, all, candidates in self.__denite.filter_candidates(context):
             if len(all) == 0:
                 continue
             self.__candidates += candidates
             statusline += '{}({}/{}) '.format(name, len(candidates), len(all))
+        if self.__denite.is_async():
+            statusline = '[async] ' + statusline
         self.__candidates_len = len(self.__candidates)
         statusline += '%=[{}] {:3}/{:4}'.format(
             context['directory'],
