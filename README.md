@@ -35,8 +35,6 @@ you should read `:help provider-python`.
 
 * source kind support
 
-* cd action support
-
 * mode implementation
 
 * default_action implementation
@@ -48,3 +46,5 @@ you should read `:help provider-python`.
 * args customization
 
 * unite sources support
+
+* source completion support: completion(args, arglead)
