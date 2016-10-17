@@ -55,7 +55,7 @@ class Denite(object):
                                 for x in source.matchers
                                 if x in self.__filters]:
                     ctx['candidates'] = matcher.filter(ctx)
-                    candidates += ctx['candidates']
+                candidates = ctx['candidates']
                 if len(candidates) >= 1000:
                     break
             ctx['candidates'] = candidates
