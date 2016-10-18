@@ -9,13 +9,19 @@ from threading import Thread
 from queue import Queue
 from time import time, sleep
 from collections import deque
+import os
 
 
 class Process(object):
     def __init__(self, commands, context, cwd):
+        startupinfo = None
+        if os.name == 'nt':
+            startupinfo = subprocess.STARTUPINFO()
+            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
         self.__proc = subprocess.Popen(commands,
                                        stdout=subprocess.PIPE,
                                        stderr=subprocess.PIPE,
+                                       startupinfo=startupinfo,
                                        cwd=cwd)
         self.__eof = False
         self.__context = context
