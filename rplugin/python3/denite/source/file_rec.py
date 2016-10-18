@@ -7,6 +7,7 @@
 from .base import Base
 from denite.process import Process
 from os.path import relpath
+from copy import copy
 
 
 class Source(Base):
@@ -46,7 +47,7 @@ class Source(Base):
         if directory in self.__cache:
             return self.__cache[directory]
 
-        command = self.vars['command']
+        command = copy(self.vars['command'])
         if not command:
             if context['is_windows']:
                 return []
