@@ -24,5 +24,5 @@ if not find_loader('vim'):
 
         @neovim.function('_denite_start', sync=True)
         def start(self, args):
-            self.__ui = Default(self.__vim)
+            # self.__ui = Default(self.__vim)
             return self.__ui.start(args[0], args[1])
