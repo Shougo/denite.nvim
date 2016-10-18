@@ -83,6 +83,20 @@ class Denite(object):
             source.context['all_candidates'] = []
             source.context['candidates'] = []
 
+            # Set the source attributes.
+            source.matchers = get_custom_source(
+                self.__custom, source.name,
+                'matchers', source.matchers)
+            source.sorters = get_custom_source(
+                self.__custom, source.name,
+                'sorters', source.sorters)
+            source.converters = get_custom_source(
+                self.__custom, source.name,
+                'converters', source.converters)
+            source.vars.update(
+                get_custom_source(self.__custom, source.name,
+                                  'vars', source.vars))
+
             if hasattr(source, 'on_init'):
                 source.on_init(source.context)
             self.__current_sources.append(source)
@@ -116,21 +130,6 @@ class Denite(object):
                 continue
 
             source = module.Source(self.__vim)
-
-            # Set the source attributes.
-            source.matchers = get_custom_source(
-                self.__custom, source.name,
-                'matchers', source.matchers)
-            source.sorters = get_custom_source(
-                self.__custom, source.name,
-                'sorters', source.sorters)
-            source.converters = get_custom_source(
-                self.__custom, source.name,
-                'converters', source.converters)
-            source.vars.update(
-                get_custom_source(self.__custom, source.name,
-                                  'vars', source.vars))
-
             self.__sources[source.name] = source
 
     def load_filters(self, context):
