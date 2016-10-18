@@ -69,7 +69,7 @@ class Source(Base):
             self.__proc.kill()
             self.__proc = None
         candidates = [{'word': relpath(x, start=context['__directory']),
-                 'action__path': x} for x in outs if x != '']
+                       'action__path': x} for x in outs if x != '']
         self.__current_candidates += candidates
         if len(self.__current_candidates) >= self.vars['min_cache_files']:
             self.__cache[context['__directory']] = self.__current_candidates
