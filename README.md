@@ -48,3 +48,5 @@ you should read `:help provider-python`.
 * unite sources support
 
 * source completion support: completion(args, arglead)
+
+* matcher_hide_hidden_files
