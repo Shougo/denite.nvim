@@ -66,7 +66,6 @@ class Source(Base):
         outs, errs = self.__proc.communicate(timeout=timeout)
         context['is_async'] = not self.__proc.eof()
         if self.__proc.eof():
-            self.__proc.kill()
             self.__proc = None
         candidates = [{'word': relpath(x, start=context['__directory']),
                        'action__path': x} for x in outs if x != '']
