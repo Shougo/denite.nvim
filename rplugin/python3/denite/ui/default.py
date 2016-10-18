@@ -170,7 +170,7 @@ class Default(object):
                 break
 
             if is_async:
-                time.sleep(0.05)
+                time.sleep(0.01)
                 self.update_buffer(context)
 
     def quit(self, context):

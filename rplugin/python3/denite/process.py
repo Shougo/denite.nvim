@@ -7,7 +7,7 @@
 import subprocess
 from threading import Thread
 from queue import Queue
-from time import time
+from time import time, sleep
 from collections import deque
 
 
@@ -57,6 +57,7 @@ class Process(object):
             outs = self.__outs + outs
             self.__outs = None
 
+        sleep(0.05)
         if self.__thread.is_alive() or not self.__queue_out.empty():
             if len(outs) < 5000:
                 # Skip the update
