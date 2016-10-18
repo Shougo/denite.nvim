@@ -62,6 +62,9 @@ class Source(Base):
     def __async_gather_candidates(self, context, timeout):
         outs, errs = self.__proc.communicate(timeout=timeout)
         context['is_async'] = not self.__proc.eof()
+        if self.__proc.eof():
+            self.__proc.kill()
+            self.__proc = None
 
         candidates = []
 

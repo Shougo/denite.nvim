@@ -38,29 +38,35 @@ class Source(Base):
             candidates = self.__async_gather_candidates(context, 0.5)
             return candidates
 
+        if context['is_redraw']:
+            self.__cache = {}
+
         directory = context['__directory']
 
-        if directory in self.__cache and not context['is_redraw']:
+        if directory in self.__cache:
             return self.__cache[directory]
 
-        if not self.vars['command']:
+        command = self.vars['command']
+        if not command:
             if context['is_windows']:
                 return []
 
-            self.vars['command'] = [
+            command = [
                 'find', '-L', directory,
                 '-path', '*/.git/*', '-prune', '-o',
                 '-type', 'l', '-print', '-o', '-type', 'f', '-print']
         else:
-            self.vars['command'].append(directory)
-        self.__proc = Process(self.vars['command'],
-                              context, directory)
+            command.append(directory)
+        self.__proc = Process(command, context, directory)
         self.__current_candidates = []
         return self.__async_gather_candidates(context, 2.0)
 
     def __async_gather_candidates(self, context, timeout):
         outs, errs = self.__proc.communicate(timeout=timeout)
         context['is_async'] = not self.__proc.eof()
+        if self.__proc.eof():
+            self.__proc.kill()
+            self.__proc = None
         candidates = [{'word': relpath(x, start=context['__directory']),
                  'action__path': x} for x in outs if x != '']
         self.__current_candidates += candidates

@@ -200,6 +200,10 @@ move_to_prev_line
 paste_from_register
 		Paste the text from unnamed register.
 
+				*denite-map-redraw*
+redraw
+		Clear the cache and redraw the candidates.
+
 							*denite-map-quit*
 quit
 		Close current Denite buffer.

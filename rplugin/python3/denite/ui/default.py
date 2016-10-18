@@ -236,5 +236,11 @@ class Default(object):
         self.__input_after = ''
         self.update_input(context)
 
+    def redraw(self, context):
+        context['is_redraw'] = True
+        self.__denite.gather_candidates(context)
+        self.update_buffer(context)
+        context['is_redraw'] = False
+
     def error(self, msg):
         self.__vim.call('denite#util#print_error', '[denite]' + str(msg))
