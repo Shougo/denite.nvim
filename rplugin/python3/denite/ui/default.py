@@ -33,6 +33,7 @@ class Default(object):
             context['ignorecase'] = 1
             context['path'] = ''
             context['winheight'] = 20
+            context['is_redraw'] = False
             self.__mappings = self.__vim.eval(
                 'g:denite#_default_mappings')['_'].copy()
             self.__mappings.update(context['custom']['map']['_'])

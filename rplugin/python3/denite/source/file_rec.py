@@ -17,8 +17,10 @@ class Source(Base):
         self.name = 'file_rec'
         self.kind = 'file'
         self.vars = {
-            'command': []
+            'command': [],
+            'min_cache_files': 10000,
         }
+        self.__cache = {}
 
     def on_init(self, context):
         self.__proc = None
@@ -33,24 +35,35 @@ class Source(Base):
 
     def gather_candidates(self, context):
         if self.__proc:
-            return self.__async_gather_candidates(context, 0.5)
+            candidates = self.__async_gather_candidates(context, 0.5)
+            return candidates
+
+        directory = context['__directory']
+
+        if directory in self.__cache and not context['is_redraw']:
+            return self.__cache[directory]
 
         if not self.vars['command']:
             if context['is_windows']:
                 return []
 
             self.vars['command'] = [
-                'find', '-L', context['__directory'],
+                'find', '-L', directory,
                 '-path', '*/.git/*', '-prune', '-o',
                 '-type', 'l', '-print', '-o', '-type', 'f', '-print']
         else:
-            self.vars['command'].append(context['__directory'])
+            self.vars['command'].append(directory)
         self.__proc = Process(self.vars['command'],
-                              context, context['__directory'])
+                              context, directory)
+        self.__current_candidates = []
         return self.__async_gather_candidates(context, 2.0)
 
     def __async_gather_candidates(self, context, timeout):
         outs, errs = self.__proc.communicate(timeout=timeout)
         context['is_async'] = not self.__proc.eof()
-        return [{'word': relpath(x, start=context['__directory']),
+        candidates = [{'word': relpath(x, start=context['__directory']),
                  'action__path': x} for x in outs if x != '']
+        self.__current_candidates += candidates
+        if len(self.__current_candidates) >= self.vars['min_cache_files']:
+            self.__cache[context['__directory']] = self.__current_candidates
+        return candidates
