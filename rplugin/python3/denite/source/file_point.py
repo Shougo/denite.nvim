@@ -7,7 +7,7 @@
 from .base import Base
 from denite.util import parse_jump_line, expand
 from socket import gethostbyname
-from re import sub
+from re import sub, match
 import os
 
 
@@ -44,7 +44,7 @@ class Source(Base):
 
 
 def checkhost(path):
-    if path == '':
+    if not match(r'^\w+://', path):
         return ''
     try:
         return gethostbyname(sub(r'^\w+://', '', path))
