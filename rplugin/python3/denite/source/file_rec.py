@@ -36,11 +36,13 @@ class Source(Base):
             return self.__async_gather_candidates(context, 0.5)
 
         if not self.vars['command']:
-            if not context['is_windows']:
-                self.vars['command'] = [
-                    'find', '-L', context['__directory'],
-                    '-path', '*/.git/*', '-prune', '-o',
-                    '-type', 'l', '-print', '-o', '-type', 'f', '-print']
+            if context['is_windows']:
+                return []
+
+            self.vars['command'] = [
+                'find', '-L', context['__directory'],
+                '-path', '*/.git/*', '-prune', '-o',
+                '-type', 'l', '-print', '-o', '-type', 'f', '-print']
         else:
             self.vars['command'].append(context['__directory'])
         self.__proc = Process(self.vars['command'],
