@@ -29,6 +29,8 @@ denite_ui = denite.ui.default.Default(denite.rplugin.Neovim(vim))
 EOF
 
   call denite#init#_variables()
+
+  let g:denite#_channel_id = getpid()
 endfunction"}}}
 
 function! denite#vim#_start(sources, context) abort "{{{
