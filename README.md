@@ -44,3 +44,5 @@ you should read `:help provider-python`.
 * source completion support: completion(args, arglead)
 
 * matcher_hide_hidden_files
+
+* quickmatch feature
