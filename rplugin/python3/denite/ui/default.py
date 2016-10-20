@@ -228,6 +228,7 @@ class Default(object):
 
         # Todo: Better window restore
         prev_winnr = self.__vim.call('winnr')
+        self.__vim.command('wincmd p')
         is_quit = not self.__denite.do_action(
             context, kind, action, [candidate])
         self.__vim.command(str(prev_winnr) + 'wincmd w')

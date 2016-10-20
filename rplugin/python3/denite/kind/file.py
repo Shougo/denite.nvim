@@ -25,8 +25,7 @@ class Kind(Base):
             self.vim.call('denite#util#open', path)
             return
 
-        if self.vim.call('fnamemodify',
-                         self.vim.current.buffer.name, ':p') != path:
+        if self.vim.call('bufwinnr', path) <= 0:
             self.vim.call(
                 'denite#util#execute_path', 'edit', path)
         self.__jump(target)
@@ -39,8 +38,7 @@ class Kind(Base):
         path = target['action__path']
 
         prev_winnr = str(self.vim.call('winnr'))
-        self.vim.call(
-            'denite#util#execute_path', 'pedit', path)
+        self.vim.call('denite#util#execute_path', 'pedit', path)
         self.vim.command('wincmd P')
         self.__jump(target)
         self.vim.command(str(prev_winnr) + 'wincmd w')
