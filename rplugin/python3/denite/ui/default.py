@@ -191,10 +191,11 @@ class Default(object):
                 mapping = self.__current_mappings.get(char, None)
             if mapping:
                 map_args = re.split(':', mapping)
+                arg = ':'.join(map_args[1:])
                 if hasattr(self, map_args[0]):
                     func = getattr(self, map_args[0])
                     ret = func(context) if len(map_args) == 1 else func(
-                        context, map_args[1])
+                        context, arg)
                     if ret:
                         break
             elif self.__current_mode == 'insert' and not isinstance(
