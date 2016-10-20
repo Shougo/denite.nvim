@@ -112,7 +112,9 @@ function! denite#init#_user_options() abort "{{{
         \ 'path': getcwd(),
         \ 'mode': 'insert',
         \ 'default_action': 'default',
-        \ 'auto_preview': 0,
+        \ 'auto_preview': v:false,
+        \ 'ignorecase': v:true,
+        \ 'winheight': 20,
         \}
 endfunction"}}}
 

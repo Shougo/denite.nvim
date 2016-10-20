@@ -35,8 +35,6 @@ class Default(object):
             context['sources'] = sources
             if 'input' not in context:
                 context['input'] = ''
-            context['ignorecase'] = 1
-            context['winheight'] = 20
             context['is_redraw'] = False
             self.__default_mappings = self.__vim.eval(
                 'g:denite#_default_mappings')
@@ -61,8 +59,8 @@ class Default(object):
         return self.__result
 
     def init_buffer(self, context):
-        self.__vim.command('new denite | resize ' +
-                           str(context['winheight']))
+        self.__vim.command('new denite | resize '
+                           + str(context['winheight']))
 
         self.__options = self.__vim.current.buffer.options
         self.__options['buftype'] = 'nofile'
@@ -101,7 +99,7 @@ class Default(object):
         self.__vim.current.buffer.append(
             [x['word'] for x in
              self.__candidates[self.__cursor:
-                               self.__cursor + context['winheight']]])
+                               self.__cursor + int(context['winheight'])]])
         del self.__vim.current.buffer[0]
 
         self.__options['modified'] = False
@@ -257,7 +255,7 @@ class Default(object):
 
     def move_to_next_line(self, context):
         if (self.__win_cursor < self.__candidates_len and
-                self.__win_cursor < context['winheight']):
+                self.__win_cursor < int(context['winheight'])):
             self.__win_cursor += 1
         elif self.__win_cursor + self.__cursor < self.__candidates_len:
             self.__cursor += 1

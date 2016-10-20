@@ -36,7 +36,10 @@ endfunction"}}}
 function! denite#vim#_start(sources, context) abort "{{{
   python3 << EOF
 import vim
-denite_ui.start(vim.eval('a:sources'), vim.eval('a:context'))
+import denite.rplugin
+
+denite_ui.start(denite.rplugin.reform_bytes(vim.bindeval('a:sources')),
+                denite.rplugin.reform_bytes(vim.bindeval('a:context')))
 EOF
   return []
 endfunction"}}}
