@@ -242,6 +242,7 @@ All mode mappings.
 <C-j>		input_command_line
 <C-r>		paste_from_register
 <C-o>		enter_mode:normal
+<C-v>		do_action:preview
 
 "normal" mode mappings.
 {key}		{mapping}
@@ -249,6 +250,7 @@ All mode mappings.
 i		enter_mode:insert
 j		move_to_next_line
 k		move_to_next_line
+p		do_action:preview
 
 Note: You cannot change <C-c> default mapping.
 
@@ -482,6 +484,9 @@ file		An interface to jump to the file position.
 						*denite-kind-file-actions*
 			open (default)
 				Open the file.
+
+			preview (default)
+				Preview the file.
 
 						*denite-kind-word*
 word		An interface to paste the text.

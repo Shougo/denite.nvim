@@ -77,11 +77,13 @@ function! denite#init#_variables() abort "{{{
         \ "\<C-r>": 'paste_from_register',
         \ "\<C-l>": 'redraw',
         \ "\<C-o>": 'enter_mode:normal',
+        \ "\<C-v>": 'do_action:preview',
         \}
   let normal_mode_mappings = {
         \ "i": 'enter_mode:insert',
         \ "j": 'move_to_next_line',
         \ "k": 'move_to_prev_line',
+        \ "p": 'do_action:preview',
         \}
   for [char, value] in items(default_mode_mappings)
     let g:denite#_default_mappings._[

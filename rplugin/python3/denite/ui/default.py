@@ -134,6 +134,7 @@ class Default(object):
     def quit_buffer(self, context):
         self.__vim.command('redraw | echo')
         self.__vim.command('bdelete!')
+        self.__vim.command('pclose!')
 
     def update_prompt(self, context):
         prompt_color = context.get('prompt_color', 'Statement')
@@ -226,10 +227,10 @@ class Default(object):
             kind = self.__denite.get_sources()[candidate['source']].kind
 
         # Todo: Better window restore
-        self.__vim.command('wincmd p')
+        prev_winnr = self.__vim.call('winnr')
         is_quit = not self.__denite.do_action(
             context, kind, action, [candidate])
-        self.__vim.command('wincmd p')
+        self.__vim.command(str(prev_winnr) + 'wincmd w')
 
         if is_quit:
             self.quit_buffer(context)
