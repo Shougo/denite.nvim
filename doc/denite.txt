@@ -180,13 +180,21 @@ delete_backward_word
 		Delete current word and move to backward.
 
 							*denite-map-do_action*
-do_action
-		Close current Denite buffer and fire "default" action.
+do_action:{action}
+		Close current Denite buffer and fire {action} action.
+
+							*denite-map-enter_mode*
+enter_mode:{mode}
+		Enter to {mode} mode.
 
 					*denite-map-input_command_line*
 input_command_line
 		Input characters by Vim command line.
 		You can input multibyte characters.
+
+							*denite-map-leave_mode*
+leave_mode
+		Return to the previous mode or close current Denite buffer.
 
 						*denite-map-move_to_next_line*
 move_to_next_line
@@ -214,8 +222,15 @@ Following keymappings are the default keymappings.
 All mode mappings.
 {key}		{mapping}
 --------	-----------------------------
-<Esc>		quit
+<Esc>		leave_mode
 <C-c>		quit
+<CR>		do_action:default
+
+<Esc>		quit
+
+"insert" mode mappings.
+{key}		{mapping}
+--------	-----------------------------
 <C-h>		delete_backward_char
 <BS>		delete_backward_char
 <C-w>		delete_backward_word
@@ -225,8 +240,15 @@ All mode mappings.
 <C-t>		move_to_prev_line
 <S-Tab>		move_to_prev_line
 <C-j>		input_command_line
-<CR>		do_action
 <C-r>		paste_from_register
+<C-o>		enter_mode:normal
+
+"normal" mode mappings.
+{key}		{mapping}
+--------	-----------------------------
+i		enter_mode:insert
+j		move_to_next_line
+k		move_to_next_line
 
 Note: You cannot change <C-c> default mapping.
 
@@ -295,7 +317,10 @@ denite#start({sources}[, {context}])
 ------------------------------------------------------------------------------
 OPTIONS							*denite-options*
 
-Note: Not implemented yet...
+							*denite-options-mode*
+-mode={mode}
+		Specify the default mode.
+		Default: "insert"
 
 ==============================================================================
 SOURCES							*denite-sources*

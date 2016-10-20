@@ -22,7 +22,12 @@ class Default(object):
         self.__candidates = []
         self.__candidates_len = 0
         self.__result = []
-        self.__mode = '_'
+        self.__current_mode = ''
+        self.__mode_stack = []
+        self.__current_mappings = {}
+        self.__input_before = ''
+        self.__input_cursor = ''
+        self.__input_after = ''
 
     def start(self, sources, context):
         try:
@@ -34,17 +39,16 @@ class Default(object):
             context['path'] = ''
             context['winheight'] = 20
             context['is_redraw'] = False
-            self.__mappings = self.__vim.eval(
-                'g:denite#_default_mappings')['_'].copy()
-            self.__mappings.update(context['custom']['map']['_'])
-            # debug(self.__vim, self.__mappings)
+            self.__default_mappings = self.__vim.eval(
+                'g:denite#_default_mappings')
+            self.__current_mode = context['mode']
 
             self.__denite.start(context)
             self.__denite.on_init(context)
 
             self.init_buffer(context)
             self.__denite.gather_candidates(context)
-            self.update_buffer(context)
+            self.change_mode(context, self.__current_mode)
 
             # self.error('candidates len = ' + str(self.__candidates_len))
             # self.error(str(time.time() - start))
@@ -73,12 +77,15 @@ class Default(object):
         self.__window_options['foldenable'] = False
         self.__window_options['foldcolumn'] = 0
 
+        self.__cursor = 0
+        self.__win_cursor = 1
+
         self.cursor_highlight(context)
 
     def update_buffer(self, context):
         prev_len = len(self.__candidates)
         self.__candidates = []
-        statusline = ''
+        statusline = '--' + self.__current_mode + '-- '
         for name, all, candidates in self.__denite.filter_candidates(context):
             if len(all) == 0:
                 continue
@@ -110,6 +117,21 @@ class Default(object):
     def cursor_highlight(self, context):
         self.__vim.call('cursor', [self.__win_cursor, 1])
 
+    def change_mode(self, context, mode):
+        custom = context['custom']['map']
+
+        self.__current_mode = mode
+        self.__current_mappings = self.__default_mappings['_'].copy()
+        if '_' in custom:
+            self.__current_mappings.update(custom['_'])
+
+        if mode in self.__default_mappings:
+            self.__current_mappings.update(self.__default_mappings[mode])
+        if mode in custom:
+            self.__current_mappings.update(custom[mode])
+
+        self.update_buffer(context)
+
     def quit_buffer(self, context):
         self.__vim.command('redraw | echo')
         self.__vim.command('bdelete!')
@@ -133,6 +155,15 @@ class Default(object):
         self.update_prompt(context)
         self.__win_cursor = 1
 
+    def redraw(self, context):
+        context['is_redraw'] = True
+        self.__denite.gather_candidates(context)
+        self.update_buffer(context)
+        context['is_redraw'] = False
+
+    def error(self, msg):
+        self.__vim.call('denite#util#print_error', '[denite]' + str(msg))
+
     def input_loop(self, context):
         self.__input_before = context.get('input', '')
         self.__input_cursor = ''
@@ -154,21 +185,24 @@ class Default(object):
                 break
 
             char = nr if isinstance(nr, str) else chr(nr)
-            if not isinstance(nr, str) and nr >= 0x20:
+
+            mapping = self.__current_mappings.get(str(nr), None)
+            if not mapping:
+                mapping = self.__current_mappings.get(char, None)
+            if mapping:
+                map_args = re.split(':', mapping)
+                if hasattr(self, map_args[0]):
+                    func = getattr(self, map_args[0])
+                    ret = func(context) if len(map_args) == 1 else func(
+                        context, map_args[1])
+                    if ret:
+                        break
+            elif self.__current_mode == 'insert' and not isinstance(
+                    nr, str) and nr >= 0x20:
                 # Normal input string
                 self.__input_before += char
                 self.update_input(context)
                 continue
-
-            if str(nr) in self.__mappings and hasattr(
-                    self, self.__mappings[str(nr)]):
-                func = getattr(self, self.__mappings[str(nr)])
-                ret = func(context)
-                if ret:
-                    break
-            elif char == esc:
-                self.quit(context)
-                break
 
             if is_async:
                 time.sleep(0.01)
@@ -180,7 +214,7 @@ class Default(object):
         self.__result = []
         return True
 
-    def do_action(self, context):
+    def do_action(self, context, action):
         if self.__cursor >= self.__candidates_len:
             return
 
@@ -190,7 +224,7 @@ class Default(object):
             kind = candidate['kind']
         else:
             kind = self.__denite.get_sources()[candidate['source']].kind
-        self.__denite.do_action(context, kind, 'default', [candidate])
+        self.__denite.do_action(context, kind, action, [candidate])
         self.__result = [candidate]
         return True
 
@@ -236,11 +270,14 @@ class Default(object):
         self.__input_after = ''
         self.update_input(context)
 
-    def redraw(self, context):
-        context['is_redraw'] = True
-        self.__denite.gather_candidates(context)
-        self.update_buffer(context)
-        context['is_redraw'] = False
+    def enter_mode(self, context, mode):
+        self.__mode_stack.append(self.__current_mode)
+        self.change_mode(context, mode)
 
-    def error(self, msg):
-        self.__vim.call('denite#util#print_error', '[denite]' + str(msg))
+    def leave_mode(self, context):
+        if not self.__mode_stack:
+            return self.quit(context)
+
+        self.__current_mode = self.__mode_stack[-1]
+        self.__mode_stack = self.__mode_stack[:-1]
+        self.change_mode(context, self.__current_mode)

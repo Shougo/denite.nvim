@@ -59,10 +59,12 @@ endfunction"}}}
 
 function! denite#init#_variables() abort "{{{
   " Default mappings
-  let g:denite#_default_mappings = {}
-  let g:denite#_default_mappings._ = {}
-  let default_mappings = {
-        \ "\<Esc>": 'quit',
+  let g:denite#_default_mappings = {'_': {}, 'normal': {}, 'insert': {}}
+  let default_mode_mappings = {
+        \ "\<Esc>": 'leave_mode',
+        \ "\<CR>":  'do_action:default',
+        \}
+  let insert_mode_mappings = {
         \ "\<C-h>": 'delete_backward_char',
         \ "\<BS>": 'delete_backward_char',
         \ "\<C-w>": 'delete_backward_word',
@@ -72,12 +74,26 @@ function! denite#init#_variables() abort "{{{
         \ "\<C-t>": 'move_to_prev_line',
         \ "\<S-Tab>": 'move_to_prev_line',
         \ "\<C-j>": 'input_command_line',
-        \ "\<CR>":  'do_action',
         \ "\<C-r>": 'paste_from_register',
         \ "\<C-l>": 'redraw',
+        \ "\<C-o>": 'enter_mode:normal',
         \}
-  for [char, value] in items(default_mappings)
-    let g:denite#_default_mappings._[denite#util#char2key(char)] = value
+  let normal_mode_mappings = {
+        \ "i": 'enter_mode:insert',
+        \ "j": 'move_to_next_line',
+        \ "k": 'move_to_prev_line',
+        \}
+  for [char, value] in items(default_mode_mappings)
+    let g:denite#_default_mappings._[
+          \ denite#util#char2key(char)] = value
+  endfor
+  for [char, value] in items(insert_mode_mappings)
+    let g:denite#_default_mappings.insert[
+          \ denite#util#char2key(char)] = value
+  endfor
+  for [char, value] in items(normal_mode_mappings)
+    let g:denite#_default_mappings.normal[
+          \ denite#util#char2key(char)] = value
   endfor
 endfunction"}}}
 
@@ -87,6 +103,7 @@ function! denite#init#_context() abort "{{{
         \ 'encoding': &encoding,
         \ 'directory': getcwd(),
         \ 'is_windows': has('win32') || has('win64'),
+        \ 'mode': 'insert',
         \}
 endfunction"}}}
 
