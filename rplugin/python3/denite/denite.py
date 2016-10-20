@@ -174,7 +174,7 @@ class Denite(object):
 
         context['targets'] = targets
         func = getattr(self.__kinds[kind], action_name)
-        func(context)
+        return func(context)
 
     def is_async(self):
         return len([x for x in self.__current_sources

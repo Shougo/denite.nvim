@@ -223,9 +223,9 @@ class Default(object):
             kind = candidate['kind']
         else:
             kind = self.__denite.get_sources()[candidate['source']].kind
-        self.__denite.do_action(context, kind, action, [candidate])
+        is_quit = self.__denite.do_action(context, kind, action, [candidate])
         self.__result = [candidate]
-        return True
+        return not is_quit
 
     def delete_backward_char(self, context):
         self.__input_before = re.sub('.$', '', self.__input_before)
