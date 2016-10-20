@@ -162,18 +162,23 @@ class Denite(object):
             if hasattr(kind, 'Kind') and name not in self.__kinds:
                 self.__kinds[name] = kind.Kind(self.__vim)
 
-    def do_action(self, context, kind, action, targets):
-        if kind not in self.__kinds:
-            self.error('Invalid kind: ' + kind)
+    def do_action(self, context, kind_name, action_name, targets):
+        if kind_name not in self.__kinds:
+            self.error('Invalid kind: ' + kind_name)
             return True
 
-        action_name = 'action_' + action
-        if not hasattr(self.__kinds[kind], action_name):
-            self.error('Invalid action: ' + action)
+        kind = self.__kinds[kind_name]
+        if action_name == 'default':
+            action_name = context['default_action']
+            if action_name == 'default':
+                action_name = kind.default_action
+        action_attr = 'action_' + action_name
+        if not hasattr(kind, action_attr):
+            self.error('Invalid action: ' + action_name)
             return True
 
         context['targets'] = targets
-        func = getattr(self.__kinds[kind], action_name)
+        func = getattr(kind, action_attr)
         return func(context)
 
     def is_async(self):

@@ -109,6 +109,7 @@ function! denite#init#_user_options() abort "{{{
   return {
         \ 'path': getcwd(),
         \ 'mode': 'insert',
+        \ 'default_action': 'default',
         \}
 endfunction"}}}
 

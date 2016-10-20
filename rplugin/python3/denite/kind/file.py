@@ -14,8 +14,9 @@ class Kind(Base):
         super().__init__(vim)
 
         self.name = 'file'
+        self.default_action = 'open'
 
-    def action_default(self, context):
+    def action_open(self, context):
         target = context['targets'][0]
         path = target['action__path']
 

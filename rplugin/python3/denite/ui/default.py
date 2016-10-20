@@ -4,7 +4,7 @@
 # License: MIT license
 # ============================================================================
 
-from denite.util import error, echo
+from denite.util import error, echo, debug
 from .. import denite
 
 import re
@@ -160,6 +160,9 @@ class Default(object):
         self.update_buffer(context)
         context['is_redraw'] = False
 
+    def debug(self, expr):
+        debug(self.__vim, expr)
+
     def error(self, msg):
         self.__vim.call('denite#util#print_error', '[denite]' + str(msg))
 
@@ -215,15 +218,22 @@ class Default(object):
         if self.__cursor >= self.__candidates_len:
             return
 
-        self.quit_buffer(context)
         candidate = self.__candidates[self.__cursor + self.__win_cursor - 1]
         if 'kind' in candidate:
             kind = candidate['kind']
         else:
             kind = self.__denite.get_sources()[candidate['source']].kind
-        is_quit = self.__denite.do_action(context, kind, action, [candidate])
+
+        # Todo: Better window restore
+        self.__vim.command('wincmd p')
+        is_quit = not self.__denite.do_action(
+            context, kind, action, [candidate])
+        self.__vim.command('wincmd p')
+
+        if is_quit:
+            self.quit_buffer(context)
         self.__result = [candidate]
-        return not is_quit
+        return is_quit
 
     def delete_backward_char(self, context):
         self.__input_before = re.sub('.$', '', self.__input_before)

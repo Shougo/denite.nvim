@@ -14,11 +14,12 @@ class Kind(Base):
         super().__init__(vim)
 
         self.name = 'directory'
+        self.default_action = 'cd'
 
-    def action_default(self, context):
+    def action_cd(self, context):
         target = context['targets'][0]
         # TODO want to narrow
-        self.vim.command('cd {}'.format(target['action__path']))
+        self.vim.command('lcd {}'.format(target['action__path']))
 
         if self.vim.current.buffer.options['filetype'] == 'vimshell':
             # Change vimshell current directory

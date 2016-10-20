@@ -13,7 +13,8 @@ class Kind(Base):
         super().__init__(vim)
 
         self.name = 'command'
+        self.default_action = 'execute'
 
-    def action_default(self, context):
+    def action_execute(self, context):
         target = context['targets'][0]
         self.vim.command(target['action__command'])

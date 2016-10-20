@@ -31,16 +31,16 @@ def echo(vim, color, string):
 
 def debug(vim, expr):
     if hasattr(vim, 'out_write'):
-        string = (str(expr) if isinstance(expr, str) else expr)
-        return vim.out_write('[denite]' + string + '\n')
+        string = (expr if isinstance(expr, str) else str(expr))
+        return vim.out_write('[denite] ' + string + '\n')
     else:
         print(expr)
 
 
 def error(vim, expr):
     if hasattr(vim, 'err_write'):
-        string = (str(expr) if isinstance(expr, str) else expr)
-        return vim.err_write('[denite]' + string + '\n')
+        string = (expr if isinstance(expr, str) else str(expr))
+        return vim.err_write('[denite] ' + string + '\n')
     else:
         vim.call('denite#util#print_error', expr)
 

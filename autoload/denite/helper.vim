@@ -9,7 +9,7 @@ function! denite#helper#complete(arglead, cmdline, cursorpos) abort "{{{
 
   if a:arglead !~ ':'
     " Option names completion.
-    let _ += copy(denite#helper#options())
+    let _ += map(copy(denite#helper#options()), "'-' . v:val")
 
     " Source name completion.
     let _ += map(globpath(&runtimepath,
@@ -36,7 +36,7 @@ function! denite#helper#call_denite(command, args, line1, line2) abort "{{{
 endfunction"}}}
 
 function! denite#helper#options() abort "{{{
-  return keys(denite#init#_user_options())
+  return map(keys(denite#init#_user_options()), "tr(v:val, '_', '-')")
 endfunction"}}}
 
 function! s:parse_options(cmdline) abort "{{{
@@ -51,12 +51,11 @@ function! s:parse_options(cmdline) abort "{{{
     let arg = substitute(arg, '\\\( \)', '\1', 'g')
     let arg_key = substitute(arg, '=\zs.*$', '', '')
 
-    let name = substitute(tr(arg_key, '-', '_'), '=$', '', '')
+    let name = substitute(tr(arg_key, '-', '_'), '=$', '', '')[1:]
     let value = (arg_key =~ '=$') ? arg[len(arg_key) :] : 1
 
-    if arg_key =~ '^-custom-'
-          \ || index(denite#helper#options(), arg_key) >= 0
-      let options[name[1:]] = value
+    if index(keys(denite#init#_user_options()), name) >= 0
+      let options[name] = value
     else
       call add(args, arg)
     endif

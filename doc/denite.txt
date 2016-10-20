@@ -317,6 +317,11 @@ denite#start({sources}[, {context}])
 ------------------------------------------------------------------------------
 OPTIONS							*denite-options*
 
+						*denite-options-default-action*
+-default-action={action}
+		Specify the default action as {action}.
+		Default: "default"
+
 							*denite-options-mode*
 -mode={mode}
 		Specify the default mode.
@@ -445,11 +450,20 @@ command		An interface to execute the command.
 			action__command		(String)	(Required)
 				The command that you'll execute.
 
+						*denite-kind-command-actions*
+			execute (default)
+				Execute the command.
+
 						*denite-kind-directory*
 directory	An interface to change directory.
 
 			action__path		(String)	(Required)
 				The path of the directory that you'll change
+				directory.
+
+					*denite-kind-directory-actions*
+			cd (default)
+				Change the Vim current directory to the
 				directory.
 
 						*denite-kind-file*
@@ -465,11 +479,20 @@ file		An interface to jump to the file position.
 				The column number in the file you'll jump
 				into.
 
+						*denite-kind-file-actions*
+			open (default)
+				Open the file.
+
 						*denite-kind-word*
-text		An interface to paste the text.
+word		An interface to paste the text.
 
 			action__text		(String)	(Required)
 				The command that you'll paste.
+
+						*denite-kind-word-actions*
+			append (default)
+				Insert the candidate word or text after the
+				cursor.
 
 ==============================================================================
 FILTERS							*denite-filters*
@@ -500,11 +523,6 @@ sorter_rank
 				*denite-filter-converter_relative_word*
 converter_relative_word
 		Convert candidate's word to the relative path.
-
-==============================================================================
-ACTIONS							*denite-actions*
-
-Note: Not implemented yet...
 
 ==============================================================================
 CREATE SOURCE						*denite-create-source*
