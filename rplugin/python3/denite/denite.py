@@ -165,12 +165,12 @@ class Denite(object):
     def do_action(self, context, kind, action, targets):
         if kind not in self.__kinds:
             self.error('Invalid kind: ' + kind)
-            return
+            return True
 
         action_name = 'action_' + action
         if not hasattr(self.__kinds[kind], action_name):
             self.error('Invalid action: ' + action)
-            return
+            return True
 
         context['targets'] = targets
         func = getattr(self.__kinds[kind], action_name)
