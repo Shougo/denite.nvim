@@ -4,7 +4,6 @@
 # License: MIT license
 # ============================================================================
 
-import json
 import re
 import os
 import sys
@@ -31,16 +30,19 @@ def echo(vim, color, string):
 
 
 def debug(vim, expr):
-    try:
-        json_data = json.dumps(str(expr).strip())
-    except Exception:
-        vim.command('echomsg string(\'' + str(expr).strip() + '\')')
+    if hasattr(vim, 'out_write'):
+        string = (str(expr) if isinstance(expr, str) else expr)
+        return vim.out_write('[denite]' + string + '\n')
     else:
-        vim.command('echomsg string(\'' + escape(json_data) + '\')')
+        print(expr)
 
 
-def error(vim, msg):
-    vim.call('denite#util#print_error', msg)
+def error(vim, expr):
+    if hasattr(vim, 'err_write'):
+        string = (str(expr) if isinstance(expr, str) else expr)
+        return vim.err_write('[denite]' + string + '\n')
+    else:
+        vim.call('denite#util#print_error', expr)
 
 
 def escape(expr):
