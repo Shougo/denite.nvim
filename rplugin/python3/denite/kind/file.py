@@ -30,18 +30,15 @@ class Kind(Base):
                 'denite#util#execute_path', 'edit', path)
         self.__jump(target)
 
-        # Open folds
-        self.vim.command('normal! zv')
-
     def action_preview(self, context):
         target = context['targets'][0]
         path = target['action__path']
 
-        prev_winnr = str(self.vim.call('winnr'))
-        self.vim.call('denite#util#execute_path', 'pedit', path)
+        prev_id = self.vim.call('win_getid')
+        self.vim.call('denite#util#execute_path', 'pedit!', path)
         self.vim.command('wincmd P')
         self.__jump(target)
-        self.vim.command(str(prev_winnr) + 'wincmd w')
+        self.vim.call('win_gotoid', prev_id)
         return True
 
     def __jump(self, target):
@@ -55,3 +52,6 @@ class Kind(Base):
                 self.vim.call('cursor', [0, col])
         except Exception:
             pass
+
+        # Open folds
+        self.vim.command('normal! zv')

@@ -79,8 +79,6 @@ class Default(object):
         self.__cursor = 0
         self.__win_cursor = 1
 
-        self.cursor_highlight(context)
-
     def update_buffer(self, context):
         prev_len = len(self.__candidates)
         self.__candidates = []
@@ -113,8 +111,12 @@ class Default(object):
             self.__cursor = 0
             self.__win_cursor = 1
 
-    def cursor_highlight(self, context):
+        self.move_cursor(context)
+
+    def move_cursor(self, context):
         self.__vim.call('cursor', [self.__win_cursor, 1])
+        if context['auto_preview']:
+            self.do_action(context, 'preview')
 
     def change_mode(self, context, mode):
         custom = context['custom']['map']
@@ -226,12 +228,11 @@ class Default(object):
         else:
             kind = self.__denite.get_sources()[candidate['source']].kind
 
-        # Todo: Better window restore
-        prev_winnr = self.__vim.call('winnr')
+        prev_id = self.__vim.call('win_getid')
         self.__vim.command('wincmd p')
         is_quit = not self.__denite.do_action(
             context, kind, action, [candidate])
-        self.__vim.command(str(prev_winnr) + 'wincmd w')
+        self.__vim.call('win_gotoid', prev_id)
 
         if is_quit:
             self.quit_buffer(context)
@@ -261,7 +262,7 @@ class Default(object):
         elif self.__win_cursor + self.__cursor < self.__candidates_len:
             self.__cursor += 1
         self.update_buffer(context)
-        self.cursor_highlight(context)
+        self.move_cursor(context)
 
     def move_to_prev_line(self, context):
         if self.__win_cursor > 1:
@@ -269,7 +270,7 @@ class Default(object):
         elif self.__cursor >= 1:
             self.__cursor -= 1
         self.update_buffer(context)
-        self.cursor_highlight(context)
+        self.move_cursor(context)
 
     def input_command_line(self, context):
         self.__vim.command('redraw')

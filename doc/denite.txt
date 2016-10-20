@@ -319,6 +319,10 @@ denite#start({sources}[, {context}])
 ------------------------------------------------------------------------------
 OPTIONS							*denite-options*
 
+						*denite-options-auto-preview*
+-auto-preview
+		When you select a candidate, it runs the "preview" action
+		automatically.
 						*denite-options-default-action*
 -default-action={action}
 		Specify the default action as {action}.
