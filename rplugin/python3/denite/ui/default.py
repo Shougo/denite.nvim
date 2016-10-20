@@ -168,8 +168,6 @@ class Default(object):
         self.__input_cursor = ''
         self.__input_after = ''
 
-        esc = self.__vim.eval('"\<Esc>"')
-
         while True:
             self.update_prompt(context)
 
