@@ -29,7 +29,7 @@ class Source(Base):
     def on_init(self, context):
         self.__proc = None
         directory = context['args'][0] if len(
-            context['args']) > 0 else context['directory']
+            context['args']) > 0 else context['path']
         context['__arguments'] = context['args'][1:]
         context['__directory'] = self.vim.call('expand', directory)
         context['__input'] = self.vim.call('input',

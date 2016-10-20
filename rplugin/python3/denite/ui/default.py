@@ -36,7 +36,6 @@ class Default(object):
             if 'input' not in context:
                 context['input'] = ''
             context['ignorecase'] = 1
-            context['path'] = ''
             context['winheight'] = 20
             context['is_redraw'] = False
             self.__default_mappings = self.__vim.eval(
@@ -95,7 +94,7 @@ class Default(object):
             statusline = '[async] ' + statusline
         self.__candidates_len = len(self.__candidates)
         statusline += '%=[{}] {:3}/{:4}'.format(
-            context['directory'],
+            context['path'],
             self.__cursor + self.__win_cursor,
             self.__candidates_len)
         self.__window_options['statusline'] = statusline

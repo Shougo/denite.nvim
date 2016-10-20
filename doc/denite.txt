@@ -322,6 +322,11 @@ OPTIONS							*denite-options*
 		Specify the default mode.
 		Default: "insert"
 
+							*denite-options-path*
+-path={input-text}
+		Specify an initial narrowing path.
+		Default: ""
+
 ==============================================================================
 SOURCES							*denite-sources*
 

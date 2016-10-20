@@ -101,8 +101,13 @@ function! denite#init#_context() abort "{{{
   return {
         \ 'runtimepath': &runtimepath,
         \ 'encoding': &encoding,
-        \ 'directory': getcwd(),
         \ 'is_windows': has('win32') || has('win64'),
+        \ 'mode': 'insert',
+        \}
+endfunction"}}}
+function! denite#init#_user_options() abort "{{{
+  return {
+        \ 'path': getcwd(),
         \ 'mode': 'insert',
         \}
 endfunction"}}}

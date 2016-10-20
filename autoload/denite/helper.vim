@@ -29,14 +29,14 @@ function! denite#helper#call_denite(command, args, line1, line2) abort "{{{
   if a:command ==# 'DeniteCursorWord'
     let context.input = expand('<cword>')
   elseif a:command ==# 'DeniteBufferDir'
-    let context.directory = fnamemodify(bufname('%'), ':p:h')
+    let context.path = fnamemodify(bufname('%'), ':p:h')
   endif
 
   call denite#start(args, context)
 endfunction"}}}
 
 function! denite#helper#options() abort "{{{
-  return []
+  return keys(denite#init#_user_options())
 endfunction"}}}
 
 function! s:parse_options(cmdline) abort "{{{

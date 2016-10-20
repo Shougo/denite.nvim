@@ -20,5 +20,5 @@ class Filter(Base):
         for candidate in context['candidates']:
             if isabs(candidate['word']):
                 candidate['word'] = relpath(
-                    candidate['word'], start=context['directory'])
+                    candidate['word'], start=context['path'])
         return context['candidates']
