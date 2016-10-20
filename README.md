@@ -27,17 +27,11 @@ you should read `:help provider-python`.
 
 ## Future works (not implemented yet)
 
-* preview action, auto preview feature
-
 * abbr implementation
 
 * source restart support
 
 * source kind support
-
-* mode implementation
-
-* default_action implementation
 
 * call map support
 
