@@ -698,6 +698,12 @@ Q: I want to change the cursor line color in denite buffer.
 A: denite uses 'cursorline' feature.
 So you can change the color by |hl-CursorLine| highlight.
 
+Q: I want to use unite source in denite.
+
+A: You can use |unite-denite-source-unite| for it. >
+	Denite unite:file
+Note: unite installation is needed.
+
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
 

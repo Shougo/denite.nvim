@@ -39,8 +39,6 @@ you should read `:help provider-python`.
 
 * args customization
 
-* unite sources support
-
 * source completion support: completion(args, arglead)
 
 * matcher_hide_hidden_files
