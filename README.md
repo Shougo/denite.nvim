@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/Shougo/denite.nvim](https://badges.gitter.im/Shougo/denite.nvim.svg)](https://gitter.im/Shougo/denite.nvim?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Denite.nvim is a dark powered Neovim unite all interfaces.
+Denite.nvim is a dark powered for Neovim/Vim8 unite all interfaces.
 It resolves unite.vim problems.
 It is 10 times faster than unite.vim.
 

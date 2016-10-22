@@ -35,8 +35,8 @@ USAGE							*denite-usage*
 ==============================================================================
 INSTALL							*denite-install*
 
-Note: denite requires Neovim(latest is recommended) or Vim8.0+(experimental
-support) with Python3 enabled.
+Note: denite requires Neovim(the latest is recommended) or Vim8.0+ with
+|:python3| enabled.
 
 For neovim install:
 
@@ -57,6 +57,10 @@ https://github.com/zchee/deoplete-jedi/wiki/Setting-up-Python-for-Neovim
 You can check the Python3 installation by nvim-python-doctor or |:CheckHealth|
 command.
 https://github.com/tweekmonster/nvim-python-doctor
+
+For Vim8.0+:
+
+Use |:python3| enabled Vim.
 
 ==============================================================================
 EXAMPLES						*denite-examples*
