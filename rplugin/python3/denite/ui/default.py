@@ -60,8 +60,8 @@ class Default(object):
         return self.__result
 
     def init_buffer(self, context):
-        self.__vim.command('new denite | resize '
-                           + str(context['winheight']))
+        self.__vim.command('new denite | resize ' +
+                           str(context['winheight']))
 
         self.__options = self.__vim.current.buffer.options
         self.__options['buftype'] = 'nofile'
