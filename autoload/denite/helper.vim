@@ -11,6 +11,11 @@ function! denite#helper#complete(arglead, cmdline, cursorpos) abort "{{{
     " Option names completion.
     let _ += map(copy(denite#helper#options()), "'-' . v:val")
 
+    " Add "-no-" option names completion.
+    let _ += values(map(filter(copy(denite#init#_user_options()),
+          \ 'type(v:val) == type(v:true) || type(v:val) == type(v:false)'),
+          \ "'-no-' . tr(v:key, '_', '-')"))
+
     " Source name completion.
     let _ += map(globpath(&runtimepath,
           \ 'rplugin/python3/denite/source/*.py', 1, 1),
@@ -52,7 +57,12 @@ function! s:parse_options(cmdline) abort "{{{
     let arg_key = substitute(arg, '=\zs.*$', '', '')
 
     let name = substitute(tr(arg_key, '-', '_'), '=$', '', '')[1:]
-    let value = (arg_key =~ '=$') ? arg[len(arg_key) :] : 1
+    if name =~ '^no_'
+      let name = name[3:]
+      let value = 0
+    else
+      let value = (arg_key =~ '=$') ? arg[len(arg_key) :] : 1
+    endif
 
     if index(keys(denite#init#_user_options()), name) >= 0
       let options[name] = value
