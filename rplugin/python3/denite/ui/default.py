@@ -28,6 +28,7 @@ class Default(object):
         self.__input_before = ''
         self.__input_cursor = ''
         self.__input_after = ''
+        self.__bufnr = -1
 
     def start(self, sources, context):
         try:
@@ -77,6 +78,7 @@ class Default(object):
 
         self.__cursor = 0
         self.__win_cursor = 1
+        self.__bufnr = self.__vim.current.buffer.number
 
     def update_buffer(self, context):
         prev_len = len(self.__candidates)
@@ -134,7 +136,7 @@ class Default(object):
 
     def quit_buffer(self, context):
         self.__vim.command('redraw | echo')
-        self.__vim.command('bdelete!')
+        self.__vim.command('silent bdelete! ' + str(self.__bufnr))
         self.__vim.command('pclose!')
 
     def update_prompt(self, context):
@@ -229,9 +231,15 @@ class Default(object):
 
         prev_id = self.__vim.call('win_getid')
         self.__vim.command('wincmd p')
+        now_id = self.__vim.call('win_getid')
+        if prev_id == now_id:
+            # The previous window search is failed.
+            # Jump to the other window.
+            self.__vim.command('wincmd w')
         is_quit = not self.__denite.do_action(
             context, kind, action, [candidate])
         self.__vim.call('win_gotoid', prev_id)
+        self.__vim.command('echomsg winnr()')
 
         if is_quit:
             self.quit_buffer(context)
