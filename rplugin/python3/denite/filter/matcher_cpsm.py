@@ -5,7 +5,7 @@
 # ============================================================================
 
 from .base import Base
-from denite.util import globruntime
+from denite.util import globruntime, error
 import sys
 import os
 
@@ -19,9 +19,11 @@ class Filter(Base):
         self.description = 'cpsm matcher'
 
         self.__initialized = False
+        self.__disabled = False
 
     def filter(self, context):
-        if not context['candidates'] or not context['input']:
+        if not context['candidates'] or not context[
+                'input'] or self.__disabled:
             return context['candidates']
 
         if not self.__initialized:
@@ -32,6 +34,11 @@ class Filter(Base):
                     globruntime(context['runtimepath'], 'bin/cpsm_py.so')[0]))
                 self.__initialized = True
             else:
+                error(self.vim, 'matcher_cpsm: bin/cpsm_py.so' +
+                      ' is not found in your runtimepath.')
+                error(self.vim, 'matcher_cpsm: You must install/build' +
+                      ' Python3 support enabled cpsm.')
+                self.__disabled = True
                 return []
 
         import cpsm_py
