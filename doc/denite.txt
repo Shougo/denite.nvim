@@ -1,4 +1,4 @@
-*denite.txt*	Dark powered asynchronous unite all interfaces for neovim.
+*denite.txt*	Dark powered asynchronous unite all interfaces for NeoVim/Vim.
 
 Version: 0.1
 Author:  Shougo <Shougo.Matsu at gmail.com>
@@ -29,9 +29,31 @@ Compatibility		|denite-compatibility|
 ==============================================================================
 INTRODUCTION						*denite-introduction*
 
+*denite* or *denite.vim* is a common extensible interface for searching and
+displaying lists of information from within NeoVim/Vim. It can display and
+search through any arbitrary source, from files and directories to buffers.
+
 ==============================================================================
 USAGE							*denite-usage*
 
+	To browse a list of currently open buffers like |:ls| command.
+>
+	:Denite buffer
+<
+	To browse recursive list of all the files under the current working
+	directory.
+>
+	:Denite file_rec
+<
+	Or you can combine sources, to browse files and buffers.
+>
+	:Denite file_rec buffer
+<
+	There are a number of command line flags (see |denite-options|), for
+	example to set an initial search term (foo) to filter files search.
+>
+	:Denite -input=foo file_rec
+<
 ==============================================================================
 INSTALL							*denite-install*
 
@@ -333,10 +355,17 @@ OPTIONS							*denite-options*
 -auto-preview
 		When you select a candidate, it runs the "preview" action
 		automatically.
+		Default: false
+
 						*denite-options-default-action*
 -default-action={action}
 		Specify the default action as {action}.
 		Default: "default"
+
+							*denite-options-input*
+-input={input-text}
+		Specify an initial narrowing text.
+		Default: ""
 
 							*denite-options-mode*
 -mode={mode}
