@@ -24,12 +24,15 @@ class Source(Base):
         context['__cfile'] = expand(self.vim.call('expand', '<cfile>'))
 
     def gather_candidates(self, context):
-        if os.path.exists(context['__cfile']):
-            return [{'word': context['__cfile'],
-                     'action__path': os.path.abspath(context['__cfile'])}]
-        if checkhost(context['__cfile']):
-            return [{'word': context['__cfile'],
-                     'action__path': context['__cfile']}]
+        cfile = context['__cfile']
+        if cfile == '.' or cfile == '..':
+            return []
+        if os.path.exists(cfile):
+            return [{'word': cfile,
+                     'action__path': os.path.abspath(cfile)}]
+        if checkhost(cfile):
+            return [{'word': cfile, 'action__path': cfile}]
+
         result = parse_jump_line(
             self.vim.call('getcwd'), context['__line'])
         return [{
