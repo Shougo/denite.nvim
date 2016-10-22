@@ -63,7 +63,7 @@ class Process(object):
             outs = self.__outs + outs
             self.__outs = None
 
-        sleep(0.05)
+        sleep(0.1)
         if self.__thread.is_alive() or not self.__queue_out.empty():
             if len(outs) < 5000:
                 # Skip the update
