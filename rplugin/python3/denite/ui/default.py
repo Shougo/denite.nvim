@@ -71,6 +71,7 @@ class Default(object):
         self.__window_options['cursorline'] = True
         self.__window_options['colorcolumn'] = ''
         self.__window_options['number'] = False
+        self.__window_options['relativenumber'] = False
         self.__window_options['foldenable'] = False
         self.__window_options['foldcolumn'] = 0
 
