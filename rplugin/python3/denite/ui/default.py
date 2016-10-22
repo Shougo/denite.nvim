@@ -239,7 +239,6 @@ class Default(object):
         is_quit = not self.__denite.do_action(
             context, kind, action, [candidate])
         self.__vim.call('win_gotoid', prev_id)
-        self.__vim.command('echomsg winnr()')
 
         if is_quit:
             self.quit_buffer(context)
