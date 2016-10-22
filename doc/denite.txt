@@ -357,6 +357,11 @@ OPTIONS							*denite-options*
 		automatically.
 		Default: false
 
+						*denite-options-buffer-name*
+-buffer-name
+		Specify the name of denite buffer.
+		Default: "default"
+
 						*denite-options-default-action*
 -default-action={action}
 		Specify the default action as {action}.

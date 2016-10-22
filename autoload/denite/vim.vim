@@ -25,7 +25,7 @@ sys.path.insert(0, vim.eval('s:denite_path'))
 import denite.rplugin
 
 import denite.ui.default
-denite_ui = denite.ui.default.Default(denite.rplugin.Neovim(vim))
+denite__uis = {}
 EOF
 
   call denite#init#_variables()
@@ -38,8 +38,14 @@ function! denite#vim#_start(sources, context) abort "{{{
 import vim
 import denite.rplugin
 
-denite_ui.start(denite.rplugin.reform_bytes(vim.bindeval('a:sources')),
-                denite.rplugin.reform_bytes(vim.bindeval('a:context')))
+denite__buffer_name = vim.bindeval('a:context')['buffer_name']
+if denite__buffer_name not in denite__uis:
+    denite__uis[denite__buffer_name] = denite.ui.default.Default(
+            denite.rplugin.Neovim(vim))
+denite__uis[denite__buffer_name].start(denite.rplugin.reform_bytes(
+                vim.bindeval('a:sources')),
+                denite.rplugin.reform_bytes(
+                vim.bindeval('a:context')))
 EOF
   return []
 endfunction"}}}

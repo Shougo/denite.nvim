@@ -109,11 +109,12 @@ function! denite#init#_context() abort "{{{
 endfunction"}}}
 function! denite#init#_user_options() abort "{{{
   return {
-        \ 'path': getcwd(),
-        \ 'mode': 'insert',
-        \ 'default_action': 'default',
         \ 'auto_preview': v:false,
+        \ 'buffer_name': 'default',
+        \ 'default_action': 'default',
         \ 'ignorecase': v:true,
+        \ 'mode': 'insert',
+        \ 'path': getcwd(),
         \ 'winheight': 20,
         \}
 endfunction"}}}
