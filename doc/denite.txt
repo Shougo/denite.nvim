@@ -319,6 +319,12 @@ denite#start({sources}[, {context}])
 ------------------------------------------------------------------------------
 OPTIONS							*denite-options*
 
+							*denite-options-no-*
+		-no-{option-name}
+		Disable {option-name} flag.
+		Note: If you use both {option-name} and -no-{option-name} in
+		the same denite buffer, it is undefined.
+
 						*denite-options-auto-preview*
 -auto-preview
 		When you select a candidate, it runs the "preview" action
