@@ -71,8 +71,14 @@ class Default(object):
     def init_buffer(self):
         self.__winheight = int(self.__context['winheight'])
 
-        self.__vim.command('botright new denite | resize ' +
-                           str(self.__winheight))
+        if self.__vim.current.buffer.options['filetype'] != 'denite':
+            # Create new buffer
+            self.__vim.command('botright new denite | resize ' +
+                            str(self.__winheight))
+        self.__vim.command('resize ' + str(self.__winheight))
+        self.__vim.command('nnoremap <silent><buffer> <CR> ' +
+                           ':<C-u>Denite -resume -buffer_name=' +
+                           self.__context['buffer_name'] + '<CR>')
 
         self.__options = self.__vim.current.buffer.options
         self.__options['buftype'] = 'nofile'
@@ -317,3 +323,7 @@ class Default(object):
         self.__current_mode = self.__mode_stack[-1]
         self.__mode_stack = self.__mode_stack[:-1]
         self.change_mode(self.__current_mode)
+
+    def suspend(self):
+        return True
+

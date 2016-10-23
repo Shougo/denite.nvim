@@ -63,6 +63,7 @@ function! denite#init#_variables() abort "{{{
   let default_mode_mappings = {
         \ "\<Esc>": 'leave_mode',
         \ "\<CR>":  'do_action:default',
+        \ "\<C-z>":  'suspend',
         \}
   let insert_mode_mappings = {
         \ "\<C-h>": 'delete_backward_char',

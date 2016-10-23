@@ -242,6 +242,11 @@ redraw
 quit
 		Close current Denite buffer.
 
+							*denite-map-suspend*
+suspend
+		Suspend current Denite buffer.
+		You can resume the Denite buffer by <CR> mapping.
+
 						*denite_default_key_mappings*
 Following keymappings are the default keymappings.
 
@@ -251,6 +256,7 @@ All mode mappings.
 <Esc>		leave_mode
 <C-c>		quit
 <CR>		do_action:default
+<C-z>		suspend
 
 <Esc>		quit
 
