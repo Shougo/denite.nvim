@@ -84,6 +84,7 @@ function! denite#init#_variables() abort "{{{
         \ "j": 'move_to_next_line',
         \ "k": 'move_to_prev_line',
         \ "p": 'do_action:preview',
+        \ "q": 'quit',
         \}
   for [char, value] in items(default_mode_mappings)
     let g:denite#_default_mappings._[

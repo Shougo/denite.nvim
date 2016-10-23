@@ -277,6 +277,7 @@ i		enter_mode:insert
 j		move_to_next_line
 k		move_to_next_line
 p		do_action:preview
+q		quit
 
 Note: You cannot change <C-c> default mapping.
 
