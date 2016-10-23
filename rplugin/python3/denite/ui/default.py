@@ -73,8 +73,10 @@ class Default(object):
 
         if self.__vim.current.buffer.options['filetype'] != 'denite':
             # Create new buffer
-            self.__vim.command('botright new denite | resize ' +
-                            str(self.__winheight))
+            self.__vim.command('botright new denite')
+        else:
+            # Move the window to bottom
+            self.__vim.command('wincmd J')
         self.__vim.command('resize ' + str(self.__winheight))
         self.__vim.command('nnoremap <silent><buffer> <CR> ' +
                            ':<C-u>Denite -resume -buffer_name=' +
