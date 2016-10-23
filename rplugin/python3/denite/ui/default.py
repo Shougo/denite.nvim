@@ -22,6 +22,7 @@ class Default(object):
         self.__candidates = []
         self.__candidates_len = 0
         self.__result = []
+        self.__context = {}
         self.__current_mode = ''
         self.__mode_stack = []
         self.__current_mappings = {}
@@ -29,29 +30,34 @@ class Default(object):
         self.__input_cursor = ''
         self.__input_after = ''
         self.__bufnr = -1
+        self.__initialized = False
+        self.__winheight = 0
 
     def start(self, sources, context):
         try:
-            # start = time.time()
-            context['sources'] = sources
-            if 'input' not in context:
-                context['input'] = ''
-            context['is_redraw'] = False
-            self.__default_mappings = self.__vim.eval(
-                'g:denite#_default_mappings')
-            self.__current_mode = context['mode']
+            if self.__initialized and context['resume']:
+                # Skip the initialization
+                self.change_mode(context, self.__current_mode)
+                self.input_loop(context)
+            else:
+                self.__context = context
+                self.__context['sources'] = sources
+                self.__context['is_redraw'] = False
+                self.__default_mappings = self.__vim.eval(
+                    'g:denite#_default_mappings')
+                self.__current_mode = context['mode']
 
-            self.__denite.start(context)
-            self.__denite.on_init(context)
+                self.__denite.start(self.__context)
+                self.__denite.on_init(self.__context)
 
-            self.init_buffer(context)
-            self.__denite.gather_candidates(context)
-            self.change_mode(context, self.__current_mode)
+                self.init_buffer()
+                self.init_cursor()
+                self.__initialized = True
 
-            # self.error('candidates len = ' + str(self.__candidates_len))
-            # self.error(str(time.time() - start))
-            self.input_loop(context)
+                self.__denite.gather_candidates(self.__context)
+                self.change_mode(self.__current_mode)
 
+                self.input_loop()
         except Exception:
             for line in traceback.format_exc().splitlines():
                 error(self.__vim, line)
@@ -59,9 +65,10 @@ class Default(object):
                   'An error has occurred. Please execute :messages command.')
         return self.__result
 
-    def init_buffer(self, context):
-        self.__vim.command('new denite | resize ' +
-                           str(context['winheight']))
+    def init_buffer(self):
+        self.__winheight = int(self.__context['winheight'])
+
+        self.__vim.command('new denite | resize ' + str(self.__winheight))
 
         self.__options = self.__vim.current.buffer.options
         self.__options['buftype'] = 'nofile'
@@ -76,15 +83,18 @@ class Default(object):
         self.__window_options['foldenable'] = False
         self.__window_options['foldcolumn'] = 0
 
-        self.__cursor = 0
-        self.__win_cursor = 1
         self.__bufnr = self.__vim.current.buffer.number
 
-    def update_buffer(self, context):
+    def init_cursor(self):
+        self.__cursor = 0
+        self.__win_cursor = 1
+
+    def update_buffer(self):
         prev_len = len(self.__candidates)
         self.__candidates = []
         statusline = '--' + self.__current_mode + '-- '
-        for name, all, candidates in self.__denite.filter_candidates(context):
+        for name, all, candidates in self.__denite.filter_candidates(
+                self.__context):
             if len(all) == 0:
                 continue
             self.__candidates += candidates
@@ -93,7 +103,7 @@ class Default(object):
             statusline = '[async] ' + statusline
         self.__candidates_len = len(self.__candidates)
         statusline += '%=[{}] {:3}/{:4}'.format(
-            context['path'],
+            self.__context['path'],
             self.__cursor + self.__win_cursor,
             self.__candidates_len)
         self.__window_options['statusline'] = statusline
@@ -102,25 +112,23 @@ class Default(object):
         self.__vim.current.buffer.append(
             [x['word'] for x in
              self.__candidates[self.__cursor:
-                               self.__cursor + int(context['winheight'])]])
+                               self.__cursor + self.__winheight]])
         del self.__vim.current.buffer[0]
 
         self.__options['modified'] = False
 
         if prev_len > self.__candidates_len:
-            # Init cursor
-            self.__cursor = 0
-            self.__win_cursor = 1
+            self.init_cursor()
 
-        self.move_cursor(context)
+        self.move_cursor()
 
-    def move_cursor(self, context):
+    def move_cursor(self):
         self.__vim.call('cursor', [self.__win_cursor, 1])
-        if context['auto_preview']:
-            self.do_action(context, 'preview')
+        if self.__context['auto_preview']:
+            self.do_action(self.__context, 'preview')
 
-    def change_mode(self, context, mode):
-        custom = context['custom']['map']
+    def change_mode(self, mode):
+        custom = self.__context['custom']['map']
 
         self.__current_mode = mode
         self.__current_mappings = self.__default_mappings['_'].copy()
@@ -132,37 +140,37 @@ class Default(object):
         if mode in custom:
             self.__current_mappings.update(custom[mode])
 
-        self.update_buffer(context)
+        self.update_buffer()
 
-    def quit_buffer(self, context):
+    def quit_buffer(self):
         self.__vim.command('redraw | echo')
         self.__vim.command('silent bdelete! ' + str(self.__bufnr))
         self.__vim.command('pclose!')
 
-    def update_prompt(self, context):
-        prompt_color = context.get('prompt_color', 'Statement')
-        prompt = context.get('prompt', '# ')
-        cursor_color = context.get('cursor_color', 'Cursor')
-
+    def update_prompt(self):
         self.__vim.command('redraw')
-        echo(self.__vim, prompt_color, prompt)
-        echo(self.__vim, 'Normal', self.__input_before)
-        echo(self.__vim, cursor_color, self.__input_cursor)
-        echo(self.__vim, 'Normal', self.__input_after)
+        echo(self.__vim, self.__context['prompt_highlight'],
+             self.__context['prompt'] + ' ')
+        echo(self.__vim, 'Normal',
+             self.__input_before)
+        echo(self.__vim, self.__context['cursor_highlight'],
+             self.__input_cursor)
+        echo(self.__vim, 'Normal',
+             self.__input_after)
 
-    def update_input(self, context):
-        context['input'] = self.__input_before
-        context['input'] += self.__input_cursor
-        context['input'] += self.__input_after
-        self.update_buffer(context)
-        self.update_prompt(context)
+    def update_input(self):
+        self.__context['input'] = self.__input_before
+        self.__context['input'] += self.__input_cursor
+        self.__context['input'] += self.__input_after
+        self.update_buffer()
+        self.update_prompt()
         self.__win_cursor = 1
 
-    def redraw(self, context):
-        context['is_redraw'] = True
-        self.__denite.gather_candidates(context)
-        self.update_buffer(context)
-        context['is_redraw'] = False
+    def redraw(self):
+        self.__context['is_redraw'] = True
+        self.__denite.gather_candidates(self.__context)
+        self.update_buffer()
+        self.__context['is_redraw'] = False
 
     def debug(self, expr):
         debug(self.__vim, expr)
@@ -170,13 +178,13 @@ class Default(object):
     def error(self, msg):
         self.__vim.call('denite#util#print_error', '[denite]' + str(msg))
 
-    def input_loop(self, context):
-        self.__input_before = context.get('input', '')
+    def input_loop(self):
+        self.__input_before = self.__context['input']
         self.__input_cursor = ''
         self.__input_after = ''
 
         while True:
-            self.update_prompt(context)
+            self.update_prompt()
 
             is_async = self.__denite.is_async()
             try:
@@ -185,7 +193,7 @@ class Default(object):
                 else:
                     nr = self.__vim.call('denite#util#getchar')
             except:
-                self.quit(context)
+                self.quit()
                 break
 
             char = nr if isinstance(nr, str) else chr(nr)
@@ -198,28 +206,27 @@ class Default(object):
                 arg = ':'.join(map_args[1:])
                 if hasattr(self, map_args[0]):
                     func = getattr(self, map_args[0])
-                    ret = func(context) if len(map_args) == 1 else func(
-                        context, arg)
+                    ret = func() if len(map_args) == 1 else func(arg)
                     if ret:
                         break
             elif self.__current_mode == 'insert' and not isinstance(
                     nr, str) and nr >= 0x20:
                 # Normal input string
                 self.__input_before += char
-                self.update_input(context)
+                self.update_input()
                 continue
 
             if is_async:
                 time.sleep(0.01)
-                self.update_buffer(context)
+                self.update_buffer()
 
-    def quit(self, context):
-        self.__denite.on_close(context)
-        self.quit_buffer(context)
+    def quit(self):
+        self.__denite.on_close(self.__context)
+        self.quit_buffer()
         self.__result = []
         return True
 
-    def do_action(self, context, action):
+    def do_action(self, action):
         if self.__cursor >= self.__candidates_len:
             return
 
@@ -237,64 +244,65 @@ class Default(object):
             # Jump to the other window.
             self.__vim.command('wincmd w')
         is_quit = not self.__denite.do_action(
-            context, kind, action, [candidate])
+            self.__context, kind, action, [candidate])
         self.__vim.call('win_gotoid', prev_id)
 
         if is_quit:
-            self.quit_buffer(context)
+            self.quit_buffer()
         self.__result = [candidate]
         return is_quit
 
-    def delete_backward_char(self, context):
+    def delete_backward_char(self):
         self.__input_before = re.sub('.$', '', self.__input_before)
-        self.update_input(context)
+        self.update_input()
 
-    def delete_backward_word(self, context):
+    def delete_backward_word(self):
         self.__input_before = re.sub('[^/ ]*.$', '', self.__input_before)
-        self.update_input(context)
+        self.update_input()
 
-    def delete_backward_line(self, context):
+    def delete_backward_line(self):
         self.__input_before = ''
-        self.update_input(context)
+        self.update_input()
 
-    def paste_from_register(self, context):
+    def paste_from_register(self):
         self.__input_before += re.sub(r'\n', '', self.__vim.eval('@"'))
-        self.update_input(context)
+        self.update_input()
 
-    def move_to_next_line(self, context):
+    def move_to_next_line(self):
         if (self.__win_cursor < self.__candidates_len and
-                self.__win_cursor < int(context['winheight'])):
+                self.__win_cursor < self.__winheight):
             self.__win_cursor += 1
         elif self.__win_cursor + self.__cursor < self.__candidates_len:
             self.__cursor += 1
-        self.update_buffer(context)
-        self.move_cursor(context)
+        self.update_buffer()
+        self.move_cursor()
 
-    def move_to_prev_line(self, context):
+    def move_to_prev_line(self):
         if self.__win_cursor > 1:
             self.__win_cursor -= 1
         elif self.__cursor >= 1:
             self.__cursor -= 1
-        self.update_buffer(context)
-        self.move_cursor(context)
+        self.update_buffer()
+        self.move_cursor()
 
-    def input_command_line(self, context):
+    def input_command_line(self):
         self.__vim.command('redraw')
         input = self.__vim.call(
-            'input', context.get('prompt', '# '), context['input'])
+            'input', self.__context['prompt'] + ' ',
+            self.__context['input'])
         self.__input_before = input
         self.__input_cursor = ''
         self.__input_after = ''
-        self.update_input(context)
+        self.update_input()
 
-    def enter_mode(self, context, mode):
+    def enter_mode(self, mode):
         self.__mode_stack.append(self.__current_mode)
-        self.change_mode(context, mode)
+        self.change_mode(mode)
 
-    def leave_mode(self, context):
+    def leave_mode(self):
         if not self.__mode_stack:
-            return self.quit(context)
+            return self.quit()
 
         self.__current_mode = self.__mode_stack[-1]
         self.__mode_stack = self.__mode_stack[:-1]
-        self.change_mode(context, self.__current_mode)
+        self.change_mode(self.__current_mode)

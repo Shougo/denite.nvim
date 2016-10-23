@@ -111,10 +111,15 @@ function! denite#init#_user_options() abort "{{{
   return {
         \ 'auto_preview': v:false,
         \ 'buffer_name': 'default',
+        \ 'cursor_highlight': 'Cursor',
         \ 'default_action': 'default',
         \ 'ignorecase': v:true,
+        \ 'input': '',
         \ 'mode': 'insert',
         \ 'path': getcwd(),
+        \ 'prompt': '#',
+        \ 'prompt_highlight': 'Statement',
+        \ 'resume': v:false,
         \ 'winheight': 20,
         \}
 endfunction"}}}
