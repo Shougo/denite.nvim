@@ -24,11 +24,9 @@ you should read `:help provider-python`.
 
 * abbr implementation
 
-* source restart support
-
 * source kind support
 
-* call map support
+* map "call:funcname" support
 
 * alias support
 
@@ -38,4 +36,12 @@ you should read `:help provider-python`.
 
 * matcher_hide_hidden_files
 
+* matcher_ignore_globs
+
 * quickmatch feature
+
+* match highlight
+
+* multiple candidates select
+
+* choose action
