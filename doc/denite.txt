@@ -383,6 +383,11 @@ OPTIONS							*denite-options*
 		Default: ""
 
 							*denite-options-resume*
+-quit
+		Quit the denite buffer after the action is executed.
+		Default: true
+
+							*denite-options-resume*
 -resume
 		Reuse the previous buffer.  If none exist, a new denite
 		buffer gets created.

@@ -255,7 +255,11 @@ class Default(object):
         self.__vim.call('win_gotoid', prev_id)
 
         if is_quit:
-            self.quit_buffer()
+            if self.__context['quit']:
+                self.quit_buffer()
+            else:
+                # Disable quit flag
+                is_quit = False
         self.__result = [candidate]
         return is_quit
 

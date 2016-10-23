@@ -119,6 +119,7 @@ function! denite#init#_user_options() abort "{{{
         \ 'path': getcwd(),
         \ 'prompt': '#',
         \ 'prompt_highlight': 'Statement',
+        \ 'quit': v:true,
         \ 'resume': v:false,
         \ 'winheight': 20,
         \}
