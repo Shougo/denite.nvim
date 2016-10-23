@@ -246,7 +246,10 @@ class Default(object):
         if prev_id == now_id:
             # The previous window search is failed.
             # Jump to the other window.
-            self.__vim.command('wincmd w')
+            if len(self.__vim.windows) == 1:
+                self.__vim.command('topleft new')
+            else:
+                self.__vim.command('wincmd w')
         is_quit = not self.__denite.do_action(
             self.__context, kind, action, [candidate])
         self.__vim.call('win_gotoid', prev_id)
