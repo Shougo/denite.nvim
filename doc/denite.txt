@@ -389,7 +389,7 @@ OPTIONS							*denite-options*
 		Specify an initial narrowing path.
 		Default: ""
 
-							*denite-options-resume*
+							*denite-options-quit*
 -quit
 		Quit the denite buffer after the action is executed.
 		Default: true
