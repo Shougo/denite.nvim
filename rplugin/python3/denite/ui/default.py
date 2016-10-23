@@ -71,7 +71,8 @@ class Default(object):
     def init_buffer(self):
         self.__winheight = int(self.__context['winheight'])
 
-        self.__vim.command('new denite | resize ' + str(self.__winheight))
+        self.__vim.command('botright new denite | resize ' +
+                           str(self.__winheight))
 
         self.__options = self.__vim.current.buffer.options
         self.__options['buftype'] = 'nofile'
