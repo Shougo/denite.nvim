@@ -37,8 +37,11 @@ class Default(object):
         try:
             if self.__initialized and context['resume']:
                 # Skip the initialization
-                self.change_mode(context, self.__current_mode)
-                self.input_loop(context)
+                self.__current_mode = context['mode']
+
+                self.init_buffer()
+                self.change_mode(self.__current_mode)
+                self.input_loop()
             else:
                 self.__context = context
                 self.__context['sources'] = sources
