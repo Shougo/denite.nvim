@@ -156,7 +156,7 @@ class Default(object):
         self.update_buffer()
 
     def quit_buffer(self):
-        self.__vim.command('redraw | echo')
+        self.__vim.command('redraw | echo | wincmd p')
         self.__vim.command('silent bdelete! ' + str(self.__bufnr))
         self.__vim.command('pclose!')
 
