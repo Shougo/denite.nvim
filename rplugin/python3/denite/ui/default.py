@@ -162,8 +162,9 @@ class Default(object):
 
     def update_prompt(self):
         self.__vim.command('redraw')
-        echo(self.__vim, self.__context['prompt_highlight'],
-             self.__context['prompt'] + ' ')
+        if self.__context['prompt'] != '':
+            echo(self.__vim, self.__context['prompt_highlight'],
+                 self.__context['prompt'] + ' ')
         echo(self.__vim, 'Normal',
              self.__input_before)
         echo(self.__vim, self.__context['cursor_highlight'],
