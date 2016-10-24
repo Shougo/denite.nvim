@@ -123,7 +123,7 @@ class Default(object):
 
         del self.__vim.current.buffer[:]
         self.__vim.current.buffer.append(
-            [x['word'] for x in
+            [x.get('abbr', x['word']) for x in
              self.__candidates[self.__cursor:
                                self.__cursor + self.__winheight]])
         del self.__vim.current.buffer[0]

@@ -698,6 +698,12 @@ CANDIDATE ATTRIBUTES			*denite-candidate-attributes*
 word		(String)			(Required)
 		The word of a candidate. It is used for matching inputs.
 
+					*denite-candidate-attribute-abbr*
+abbr		(String)			(Optional)
+		The string displayed in denite buffer.  If it is omitted, word
+		attribute is used instead.  It is not used for matching
+		inputs.
+
 ==============================================================================
 CREATE KIND						*denite-create-kind*
 

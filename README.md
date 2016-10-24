@@ -22,8 +22,6 @@ you should read `:help provider-python`.
 
 ## Future works (not implemented yet)
 
-* abbr implementation
-
 * source kind support
 
 * map "call:funcname" support
