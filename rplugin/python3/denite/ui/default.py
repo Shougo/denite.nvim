@@ -70,6 +70,7 @@ class Default(object):
 
     def init_buffer(self):
         self.__winheight = int(self.__context['winheight'])
+        self.__prev_winnr = self.__vim.call('win_getid')
 
         if self.__vim.current.buffer.options['filetype'] != 'denite':
             # Create new buffer
@@ -251,7 +252,7 @@ class Default(object):
             kind = self.__denite.get_sources()[candidate['source']].kind
 
         prev_id = self.__vim.call('win_getid')
-        self.__vim.command('wincmd p')
+        self.__vim.call('win_gotoid', self.__prev_winnr)
         now_id = self.__vim.call('win_getid')
         if prev_id == now_id:
             # The previous window search is failed.
