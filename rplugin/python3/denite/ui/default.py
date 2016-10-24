@@ -86,6 +86,7 @@ class Default(object):
         self.__options['buftype'] = 'nofile'
         self.__options['filetype'] = 'denite'
         self.__options['swapfile'] = False
+        self.__options['modifiable'] = True
 
         self.__window_options = self.__vim.current.window.options
         self.__window_options['cursorline'] = True
@@ -327,5 +328,5 @@ class Default(object):
         self.change_mode(self.__current_mode)
 
     def suspend(self):
+        self.__options['modifiable'] = False
         return True
-
