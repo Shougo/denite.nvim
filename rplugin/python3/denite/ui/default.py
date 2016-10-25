@@ -266,6 +266,7 @@ class Default(object):
         self.__vim.call('win_gotoid', prev_id)
 
         if is_quit:
+            self.__denite.on_close(self.__context)
             if self.__context['quit']:
                 self.quit_buffer()
             else:
