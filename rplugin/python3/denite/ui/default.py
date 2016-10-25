@@ -30,6 +30,7 @@ class Default(object):
         self.__input_cursor = ''
         self.__input_after = ''
         self.__bufnr = -1
+        self.__winid = -1
         self.__initialized = False
         self.__winheight = 0
 
@@ -72,12 +73,13 @@ class Default(object):
         self.__winheight = int(self.__context['winheight'])
         self.__prev_winid = self.__vim.call('win_getid')
 
-        if self.__vim.current.buffer.options['filetype'] != 'denite':
-            # Create new buffer
-            self.__vim.command('botright new denite')
-        else:
+        if self.__winid > 0 and self.__vim.call(
+                'win_gotoid', self.__winid):
             # Move the window to bottom
             self.__vim.command('wincmd J')
+        else:
+            # Create new buffer
+            self.__vim.command('botright new denite')
         self.__vim.command('resize ' + str(self.__winheight))
         self.__vim.command('nnoremap <silent><buffer> <CR> ' +
                            ':<C-u>Denite -resume -buffer_name=' +
@@ -98,6 +100,7 @@ class Default(object):
         self.__window_options['foldcolumn'] = 0
 
         self.__bufnr = self.__vim.current.buffer.number
+        self.__winid = self.__vim.call('win_getid')
 
     def init_cursor(self):
         self.__cursor = 0
