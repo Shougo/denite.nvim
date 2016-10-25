@@ -7,6 +7,7 @@
 from .base import Base
 from os.path import getatime, exists
 from time import localtime, strftime, time
+import sys
 
 
 class Source(Base):
@@ -29,13 +30,17 @@ class Source(Base):
         self.__alter_bufnr = self.vim.call('bufnr', '#')
 
     def gather_candidates(self, context):
-        return [
+        candidates = [
             self._convert(ba) for ba in [
                 bufattr for bufattr in [
                     self._get_attributes(buf) for buf in self.vim.buffers
                 ] if not self._is_excluded(bufattr)
             ]
         ]
+        return sorted(candidates, key=(lambda x:
+            sys.maxsize if self.__caller_bufnr == x['bufnr']
+            else -sys.maxsize if self.__alter_bufnr == x['bufnr']
+            else x['timestamp']))
 
     def _is_excluded(self, buffer_attr):
         if self.__exclude_unlisted and buffer_attr['status'][0] == 'u':
@@ -58,7 +63,8 @@ class Source(Base):
                 strftime(self.vars['date_format'],
                          localtime(buffer_attr['timestamp']))
             ),
-            'action__command': 'buffer {0}'.format(buffer_attr['number'])
+            'action__command': 'buffer {0}'.format(buffer_attr['number']),
+            'timestamp': buffer_attr['timestamp']
         }
 
     def _get_attributes(self, buf):
