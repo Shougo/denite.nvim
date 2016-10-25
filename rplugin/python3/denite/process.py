@@ -44,9 +44,11 @@ class Process(object):
 
     def enqueue_output(self):
         for line in self.__proc.stdout:
+            if not self.__queue_out:
+                return
             self.__queue_out.put(
                 line.decode(self.__context['encoding'],
-                            errors='replace').strip('\n'))
+                            errors='replace').strip('\r\n'))
 
     def communicate(self, timeout):
         if not self.__proc:
@@ -73,7 +75,7 @@ class Process(object):
 
         _, errs = self.__proc.communicate(timeout=timeout)
         errs = errs.decode(self.__context['encoding'],
-                           errors='replace').split('\n')
+                           errors='replace').splitlines()
         self.__eof = True
         self.__proc = None
         self.__thread = None
