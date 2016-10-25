@@ -7,7 +7,7 @@
 from .base import Base
 from os.path import getatime, exists
 from time import localtime, strftime, time
-import sys
+from sys import maxsize
 
 
 class Source(Base):
@@ -37,9 +37,10 @@ class Source(Base):
                 ] if not self._is_excluded(bufattr)
             ]
         ]
-        return sorted(candidates, key=(lambda x:
-            sys.maxsize if self.__caller_bufnr == x['bufnr']
-            else -sys.maxsize if self.__alter_bufnr == x['bufnr']
+        return sorted(candidates, key=(
+            lambda x:
+            maxsize if self.__caller_bufnr == x['bufnr']
+            else -maxsize if self.__alter_bufnr == x['bufnr']
             else x['timestamp']))
 
     def _is_excluded(self, buffer_attr):
