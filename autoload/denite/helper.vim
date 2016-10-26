@@ -26,7 +26,7 @@ function! denite#helper#complete(arglead, cmdline, cursorpos) abort "{{{
 endfunction"}}}
 
 function! denite#helper#call_denite(command, args, line1, line2) abort "{{{
-  let [args, context] = s:parse_options_args(a:args)
+  let [args, context] = denite#helper#_parse_options_args(a:args)
 
   let context.firstline = a:line1
   let context.lastline = a:line2
@@ -44,6 +44,21 @@ function! denite#helper#options() abort "{{{
   return map(keys(denite#init#_user_options()), "tr(v:val, '_', '-')")
 endfunction"}}}
 
+function! denite#helper#_parse_options_args(cmdline) abort "{{{
+  let _ = []
+  let [args, options] = s:parse_options(a:cmdline)
+  for arg in args
+    " Add source name.
+    let source_name = matchstr(arg, '^[^:]*')
+    let source_arg = arg[len(source_name)+1 :]
+    let source_args = source_arg  == '' ? [] :
+          \  map(split(source_arg, '\\\@<!:', 1),
+          \      'substitute(v:val, ''\\\(.\)'', "\\1", "g")')
+    call add(_, { 'name': source_name, 'args': source_args })
+  endfor
+
+  return [_, options]
+endfunction"}}}
 function! s:parse_options(cmdline) abort "{{{
   let args = []
   let options = {}
@@ -73,20 +88,26 @@ function! s:parse_options(cmdline) abort "{{{
 
   return [args, options]
 endfunction"}}}
-function! s:parse_options_args(cmdline) abort "{{{
-  let _ = []
-  let [args, options] = s:parse_options(a:cmdline)
-  for arg in args
-    " Add source name.
-    let source_name = matchstr(arg, '^[^:]*')
-    let source_arg = arg[len(source_name)+1 :]
-    let source_args = source_arg  == '' ? [] :
-          \  map(split(source_arg, '\\\@<!:', 1),
-          \      'substitute(v:val, ''\\\(.\)'', "\\1", "g")')
-    call add(_, { 'name': source_name, 'args': source_args })
-  endfor
+function! s:eval_cmdline(cmdline) abort "{{{
+  let cmdline = ''
+  let prev_match = 0
+  let match = match(a:cmdline, '\\\@<!`.\{-}\\\@<!`')
+  while match >= 0
+    if match - prev_match > 0
+      let cmdline .= a:cmdline[prev_match : match - 1]
+    endif
+    let prev_match = matchend(a:cmdline,
+          \ '\\\@<!`.\{-}\\\@<!`', match)
+    sandbox let cmdline .= escape(eval(
+          \ a:cmdline[match+1 : prev_match - 2]), '\: ')
 
-  return [_, options]
+    let match = match(a:cmdline, '\\\@<!`.\{-}\\\@<!`', prev_match)
+  endwhile
+  if prev_match >= 0
+    let cmdline .= a:cmdline[prev_match :]
+  endif
+
+  return cmdline
 endfunction"}}}
 
 " vim: foldmethod=marker

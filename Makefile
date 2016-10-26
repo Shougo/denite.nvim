@@ -1,5 +1,5 @@
 test: vim-themis
-	# vim-themis/bin/themis --reporter spec test
+	./vim-themis/bin/themis --reporter spec test
 	nosetests -v rplugin/python3
 	flake8 rplugin/
 
