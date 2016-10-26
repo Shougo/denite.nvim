@@ -25,6 +25,7 @@ class Source(Base):
             'separator': ['--'],
             'final_opts': ['.'],
         }
+        self.matchers = ['matcher_ignore_globs', 'matcher_regexp']
 
     def on_init(self, context):
         self.__proc = None

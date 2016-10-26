@@ -14,6 +14,7 @@ class Base(object):
         self.vim = vim
         self.name = 'base'
         self.description = ''
+        self.vars = {}
 
     @abstractmethod
     def filter(self, context):
