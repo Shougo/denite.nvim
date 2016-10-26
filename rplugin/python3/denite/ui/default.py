@@ -208,6 +208,7 @@ class Default(object):
             is_async = self.__denite.is_async()
             try:
                 if is_async:
+                    time.sleep(0.005)
                     nr = self.__vim.call('denite#util#getchar', 0)
                 else:
                     nr = self.__vim.call('denite#util#getchar')
@@ -228,6 +229,7 @@ class Default(object):
                     ret = func() if len(map_args) == 1 else func(arg)
                     if ret:
                         break
+                    continue
             elif self.__current_mode == 'insert' and not isinstance(
                     nr, str) and nr >= 0x20:
                 # Normal input string
@@ -236,7 +238,6 @@ class Default(object):
                 continue
 
             if is_async:
-                time.sleep(0.01)
                 self.update_buffer()
 
     def quit(self):
