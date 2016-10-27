@@ -147,6 +147,9 @@ EXAMPLES						*denite-examples*
 
 	" Define alias
 	call denite#custom#alias('source', 'file_rec/git', 'file_rec')
+
+	" Change default prompt
+	call denite#custom#option('default', 'prompt', '>')
 <
 
 ==============================================================================
@@ -297,6 +300,13 @@ FUNCTIONS						*denite-functions*
 denite#custom#alias({type}, {alias-name}, {base-name})
 		Define {alias-name} alias based on {base-name}.
 		{type} must be "source" or "filter".
+
+						*denite#custom#option()*
+denite#custom#option({buffer-name}, {option-name}, {value})
+		Set {option-name} option to {value} in {buffer-name}
+		buffer.
+		Note: The all options are in |denite-options|.  However, "-" is
+		substituted to "_", and "-" prefix is removed.
 
 							*denite#custom#map()*
 denite#custom#map({mode}, {key}, {mapping})
