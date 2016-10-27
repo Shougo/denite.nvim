@@ -115,6 +115,11 @@ class Denite(object):
                 source.on_init(source.context)
             self.__current_sources.append(source)
 
+        for filter in [x for x in self.__filters.values() if x.vars]:
+            filter.vars.update(
+                get_custom_source(self.__custom, filter.name,
+                                  'filters', filter.vars))
+
     def on_close(self, context):
         for source in self.__current_sources:
             if hasattr(source, 'on_close'):

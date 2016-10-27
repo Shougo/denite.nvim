@@ -301,6 +301,12 @@ denite#custom#alias({type}, {alias-name}, {base-name})
 		Define {alias-name} alias based on {base-name}.
 		{type} must be "source" or "filter".
 
+						*denite#custom#filter()*
+denite#custom#filter({filter-name}, {variable-name}, {value})
+		Set {filter-name} filter specialized variable {variable-name}
+		to {value}.  You may specify multiple filters with the
+		separator "," in {filter-name}.
+
 						*denite#custom#option()*
 denite#custom#option({buffer-name}, {option-name}, {value})
 		Set {option-name} option to {value} in {buffer-name}

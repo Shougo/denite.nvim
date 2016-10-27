@@ -14,6 +14,7 @@ function! denite#custom#get() abort "{{{
     let s:custom.alias_source = {}
     let s:custom.alias_filter = {}
     let s:custom.option = {}
+    let s:custom.filter = {}
   endif
 
   return s:custom
@@ -27,6 +28,17 @@ function! denite#custom#source(source_name, option_name, value) abort "{{{
       let custom[key] = {}
     endif
     let custom[key][a:option_name] = a:value
+  endfor
+endfunction"}}}
+
+function! denite#custom#filter(filter_name, var_name, value) abort "{{{
+  let custom = denite#custom#get().filter
+
+  for key in denite#util#split(a:filter_name)
+    if !has_key(custom, key)
+      let custom[key] = {}
+    endif
+    let custom[key][a:var_name] = a:value
   endfor
 endfunction"}}}
 
