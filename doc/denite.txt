@@ -147,6 +147,8 @@ EXAMPLES						*denite-examples*
 
 	" Define alias
 	call denite#custom#alias('source', 'file_rec/git', 'file_rec')
+	call denite#custom#var('file_rec/git', 'command',
+	      \ ['git', 'ls-files', '-co', '--exclude-standard'])
 
 	" Change default prompt
 	call denite#custom#option('default', 'prompt', '>')
@@ -186,6 +188,12 @@ COMMANDS 						*denite-commands*
 		"file_rec:foo::bar": the parameters of source file are
 		                     ["foo", "", "bar"].
 
+		You can use evaluation cmdline by ``.
+		Note: In the evaluation, The special characters(spaces,  "\"
+		and ":") are escaped automatically.
+>
+        :Denite -buffer-name=search%`bufnr('%')` line<CR>
+<
 		{options} are options for a denite buffer: |denite-options|
 
 :DeniteBufferDir [{options}] {sources}			*:DeniteBufferDir*
@@ -808,6 +816,16 @@ Q: I want to use unite source in denite.
 A: You can use |unite-denite-source-unite| for it. >
 	Denite unite:file
 Note: unite installation is needed.
+
+Q: What is the correct way to say "if I'm in a git directory, git ls-files for
+file_rec" ?
+
+A: >
+	call denite#custom#alias('source', 'file_rec/git', 'file_rec')
+	call denite#custom#var('file_rec/git', 'command',
+	\ ['git', 'ls-files', '-co', '--exclude-standard'])
+	nnoremap <silent> <C-p> :<C-u>Denite
+	\ `finddir('.git', ';') != '' ? 'file_rec/git' : 'file_rec'`<CR>
 
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
