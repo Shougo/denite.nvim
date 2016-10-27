@@ -6,7 +6,7 @@
 
 from .base import Base
 from denite.process import Process
-from os.path import relpath
+from os.path import relpath, isabs
 from copy import copy
 
 
@@ -67,8 +67,16 @@ class Source(Base):
         context['is_async'] = not self.__proc.eof()
         if self.__proc.eof():
             self.__proc = None
-        candidates = [{'word': relpath(x, start=context['__directory']),
-                       'action__path': x} for x in outs if x != '']
+        if not outs:
+            return []
+        if isabs(outs[0]):
+            candidates = [{'word': relpath(x, start=context['__directory']),
+                           'action__path': x}
+                          for x in outs if x != '']
+        else:
+            candidates = [{'word': x, 'action__path':
+                           context['__directory'] + '/' + x}
+                          for x in outs if x != '']
         self.__current_candidates += candidates
         if len(self.__current_candidates) >= self.vars['min_cache_files']:
             self.__cache[context['__directory']] = self.__current_candidates
