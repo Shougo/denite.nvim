@@ -28,13 +28,9 @@ you should read `:help provider-python`.
 
 * alias support
 
-* args customization
-
 * source completion support: completion(args, arglead)
 
 * matcher_hide_hidden_files
-
-* matcher_ignore_globs
 
 * quickmatch feature
 

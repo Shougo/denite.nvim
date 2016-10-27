@@ -98,6 +98,9 @@ class Denite(object):
             source.vars.update(
                 get_custom_source(self.__custom, source.name,
                                   'vars', source.vars))
+            if not source.context['args']:
+                source.context['args'] = get_custom_source(
+                    self.__custom, source.name, 'args', [])
 
             if hasattr(source, 'on_init'):
                 source.on_init(source.context)

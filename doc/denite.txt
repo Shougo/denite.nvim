@@ -325,6 +325,10 @@ denite#custom#source({source-name}, {option-name}, {value})
 		source default converters.
 		Default:  []
 
+		args				(List)
+		Specify the source default arguments.
+		Default:  []
+
 							*denite#custom#var()*
 denite#custom#var({source-name}, {var-name}, {value})
 		Set {source-name} source specialized variable {variable-name}
