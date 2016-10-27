@@ -101,4 +101,8 @@ function! denite#util#open(filename) abort "{{{
     throw 'Not supported.'
   endif
 endfunction"}}}
+
+function! denite#util#split(string) abort "{{{
+  return split(a:string, '\s*,\s*')
+endfunction"}}}
 " vim: foldmethod=marker

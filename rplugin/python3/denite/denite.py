@@ -35,6 +35,15 @@ class Denite(object):
             self.load_kinds(context)
             self.__runtimepath = self.__vim.options['runtimepath']
 
+        for alias, base in [[x, y] for [x, y] in
+                            self.__custom['alias_source'].items()
+                            if x not in self.__sources]:
+            if base not in self.__sources:
+                self.error('Invalid base: ' + base)
+                continue
+            self.__sources[alias] = copy.copy(self.__sources[base])
+            self.__sources[alias].name = alias
+
     def gather_candidates(self, context):
         for source in self.__current_sources:
             source.context['is_redraw'] = context['is_redraw']
@@ -129,13 +138,19 @@ class Denite(object):
                                 'rplugin/python3/denite/source/*.py'))
         for path in rtps:
             name = os.path.basename(path)[: -3]
-            module = importlib.machinery.SourceFileLoader(
-                'denite.source.' + name, path).load_module()
-            if not hasattr(module, 'Source') or name in self.__sources:
+            if name == 'base' or name in self.__sources:
                 continue
 
+            module = importlib.machinery.SourceFileLoader(
+                'denite.source.' + name, path).load_module()
             source = module.Source(self.__vim)
             self.__sources[source.name] = source
+
+            if source.name in self.__custom['alias_source']:
+                # Load alias
+                for alias in self.__custom['alias_source'][source.name]:
+                    self.__sources[alias] = module.Source(self.__vim)
+                    self.__sources[alias].name = alias
 
     def load_filters(self, context):
         # Load filters from runtimepath
@@ -146,10 +161,19 @@ class Denite(object):
                                 'rplugin/python3/denite/filter/*.py'))
         for path in rtps:
             name = os.path.basename(path)[: -3]
-            filter = importlib.machinery.SourceFileLoader(
+            if name == 'base' or name in self.__filters:
+                continue
+
+            module = importlib.machinery.SourceFileLoader(
                 'denite.filter.' + name, path).load_module()
-            if hasattr(filter, 'Filter') and name not in self.__filters:
-                self.__filters[name] = filter.Filter(self.__vim)
+            filter = module.Filter(self.__vim)
+            self.__filters[name] = filter
+
+            if name in self.__custom['alias_filter']:
+                # Load alias
+                for alias in self.__custom['alias_filter'][name]:
+                    self.__filters[alias] = module.Filter(self.__vim)
+                    self.__filters[alias].name = alias
 
     def load_kinds(self, context):
         # Load kinds from runtimepath
@@ -160,10 +184,12 @@ class Denite(object):
                                 'rplugin/python3/denite/kind/*.py'))
         for path in rtps:
             name = os.path.basename(path)[: -3]
-            kind = importlib.machinery.SourceFileLoader(
+            if name == 'base' or name in self.__kinds:
+                continue
+
+            module = importlib.machinery.SourceFileLoader(
                 'denite.kind.' + name, path).load_module()
-            if hasattr(kind, 'Kind') and name not in self.__kinds:
-                self.__kinds[name] = kind.Kind(self.__vim)
+            self.__kinds[name] = module.Kind(self.__vim)
 
     def do_action(self, context, kind_name, action_name, targets):
         if kind_name not in self.__kinds:

@@ -144,6 +144,9 @@ EXAMPLES						*denite-examples*
 
 	call denite#custom#source('file_mru', 'converters',
 	      \ ['converter_relative_word'])
+
+	" Define alias
+	call denite#custom#alias('source', 'file_rec/git', 'file_rec')
 <
 
 ==============================================================================
@@ -289,6 +292,11 @@ Note: You cannot change <C-c> default mapping.
 
 ------------------------------------------------------------------------------
 FUNCTIONS						*denite-functions*
+
+							*denite#custom#alias()*
+denite#custom#alias({type}, {alias-name}, {base-name})
+		Define {alias-name} alias based on {base-name}.
+		{type} must be "source" or "filter".
 
 							*denite#custom#map()*
 denite#custom#map({mode}, {key}, {mapping})
