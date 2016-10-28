@@ -34,6 +34,14 @@ class Default(object):
         self.__initialized = False
         self.__winheight = 0
 
+    @property
+    def current_mode(self):
+        return self.__current_mode
+
+    @property
+    def context(self):
+        return self.__context
+
     def start(self, sources, context):
         try:
             if self.__initialized and context['resume']:
