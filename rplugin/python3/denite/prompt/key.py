@@ -128,7 +128,7 @@ class Key(KeyBase):
         if isinstance(code, int):
             return int2char(nvim, code)
         if code in SPECIAL_KEYS_REVRESE:
-            char = SPECIAL_KEYS_REVRESE.get(code).capitalize()
+            char = SPECIAL_KEYS_REVRESE.get(code)
             return '<%s>' % char
         else:
             return ensure_str(nvim, code)
