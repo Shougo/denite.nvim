@@ -4,7 +4,10 @@
 # License: MIT license
 # ============================================================================
 
+from curses.ascii import isprint
 from denite.util import error, echo, debug
+from ..prompt.key import Key
+from ..prompt.util import getchar, ensure_str
 from .. import denite
 
 import re
@@ -47,8 +50,8 @@ class Default(object):
                 self.__context = context
                 self.__context['sources'] = sources
                 self.__context['is_redraw'] = False
-                self.__default_mappings = self.__vim.eval(
-                    'g:denite#_default_mappings')
+                self.__default_mappings = \
+                    self.__vim.vars['denite#_default_mappings']
                 self.__current_mode = context['mode']
 
                 self.__denite.start(self.__context)
@@ -148,15 +151,20 @@ class Default(object):
         custom = self.__context['custom']['map']
 
         self.__current_mode = mode
-        self.__current_mappings = self.__default_mappings['_'].copy()
+
+        raw_mappings = self.__default_mappings['_'].copy()
         if '_' in custom:
-            self.__current_mappings.update(custom['_'])
+            raw_mappings.update(custom['_'])
 
         if mode in self.__default_mappings:
-            self.__current_mappings.update(self.__default_mappings[mode])
+            raw_mappings.update(self.__default_mappings[mode])
         if mode in custom:
-            self.__current_mappings.update(custom[mode])
+            raw_mappings.update(custom[mode])
 
+        self.__current_mappings = {
+            Key.parse(self.__vim, k).code: v
+            for k, v in raw_mappings.items()
+        }
         self.update_buffer()
 
     def quit_buffer(self):
@@ -206,21 +214,18 @@ class Default(object):
             self.update_prompt()
 
             is_async = self.__denite.is_async()
-            try:
-                if is_async:
-                    time.sleep(0.005)
-                    nr = self.__vim.call('denite#util#getchar', 0)
-                else:
-                    nr = self.__vim.call('denite#util#getchar')
-            except:
+            if is_async:
+                time.sleep(0.005)
+                key = Key.parse(self.__vim, getchar(self.__vim, 0))
+            else:
+                key = Key.parse(self.__vim, getchar(self.__vim))
+
+            # Terminate input_loop when user hit <C-c>
+            if key.code == 0x03:
                 self.quit()
                 break
 
-            char = nr if isinstance(nr, str) else chr(nr)
-
-            mapping = self.__current_mappings.get(str(nr), None)
-            if not mapping:
-                mapping = self.__current_mappings.get(char, None)
+            mapping = self.__current_mappings.get(key.code, None)
             if mapping:
                 map_args = re.split(':', mapping)
                 arg = ':'.join(map_args[1:])
@@ -230,10 +235,9 @@ class Default(object):
                     if ret:
                         break
                     continue
-            elif self.__current_mode == 'insert' and not isinstance(
-                    nr, str) and nr >= 0x20:
+            elif self.__current_mode == 'insert' and isprint(key.char):
                 # Normal input string
-                self.__input_before += char
+                self.__input_before += key.char
                 self.update_input()
                 continue
 

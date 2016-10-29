@@ -42,14 +42,6 @@ function! denite#util#echo(color, string) abort "{{{
   echohl NONE
 endfunction"}}}
 
-function! denite#util#char2key(char) abort "{{{
-  return char2nr(a:char) < 0x80 ? char2nr(a:char) : string(a:char)[2:-2]
-endfunction"}}}
-function! denite#util#getchar(...) abort "{{{
-  let char = call('getchar', a:000)
-  return char2nr(char) < 0x80 ? char : string(char)[2:-2]
-endfunction"}}}
-
 function! denite#util#open(filename) abort "{{{
   let filename = fnamemodify(a:filename, ':p')
 
