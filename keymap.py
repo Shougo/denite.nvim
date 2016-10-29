@@ -1,10 +1,58 @@
 """Keymap."""
 import time
+from collections import namedtuple
 from operator import itemgetter
 from datetime import datetime
 from .key import Key
 from .keystroke import Keystroke
 from .util import getchar
+
+
+DefinitionBase = namedtuple('DefinitionBase', [
+    'lhs',
+    'rhs',
+    'noremap',
+    'nowait',
+    'expr',
+])
+
+
+class Definition(DefinitionBase):
+    """An individual keymap definition."""
+
+    __slots__ = ()
+
+    def __new__(cls, lhs, rhs, noremap=False, nowait=False, expr=False):
+        if expr and not isinstance(rhs, str):
+            raise AttributeError(
+                '"rhs" of "expr" mapping requires to be a str.'
+            )
+        return super().__new__(cls, lhs, rhs, noremap, nowait, expr)
+
+    @classmethod
+    def parse(cls, nvim, rule):
+        """Parse a rule (list) and return a definition instance."""
+        if len(rule) == 2:
+            lhs, rhs = rule
+            flags = ''
+        elif len(rule) == 3:
+            lhs, rhs, flags = rule
+        else:
+            raise AttributeError(
+                'To many arguments are specified.'
+            )
+        flags = flags.split()
+        kwargs = {}
+        for flag in flags:
+            if flag not in ['noremap', 'nowait', 'expr']:
+                raise AttributeError(
+                    'Unknown flag "%s" has specified.' % flag
+                )
+            kwargs[flag] = True
+        lhs = Keystroke.parse(nvim, lhs)
+        if not kwargs.get('expr', False):
+            rhs = Keystroke.parse(nvim, rhs)
+        return cls(lhs, rhs, **kwargs)
 
 
 class Keymap:
@@ -16,16 +64,11 @@ class Keymap:
         """Constructor."""
         self.registry = {}
 
-    def register(self, lhs, rhs, noremap=False, nowait=False):
+    def register(self, definition):
         """Register a keymap.
 
         Args:
-            lhs (Keystroke): A left hand side Keystroke instance of the
-                mapping.
-            rhs (Keystroke): A right hand side Keystroke instance of the
-                mapping.
-            noremap (bool): A boolean to indicate noremap in Vim.
-            nowait (bool): A boolean to indicate nowait in Vim.
+            definition (Definition): A definition instance.
 
         Example:
             >>> from .keystroke import Keystroke
@@ -33,37 +76,36 @@ class Keymap:
             >>> nvim = MagicMock()
             >>> nvim.options = {'encoding': 'utf-8'}
             >>> keymap = Keymap()
-            >>> keymap.register(
+            >>> keymap.register(Definition(
             ...     Keystroke.parse(nvim, '<C-H>'),
             ...     Keystroke.parse(nvim, '<BS>'),
-            ... )
-            >>> keymap.register(
-            ...     Keystroke.parse(nvim, '<C-H>'),
-            ...     Keystroke.parse(nvim, '<BS>'),
-            ...     noremap=True,
-            ... )
-            >>> keymap.register(
-            ...     Keystroke.parse(nvim, '<C-H>'),
-            ...     Keystroke.parse(nvim, '<BS>'),
-            ...     nowait=True,
-            ... )
-            >>> keymap.register(
+            ... ))
+            >>> keymap.register(Definition(
             ...     Keystroke.parse(nvim, '<C-H>'),
             ...     Keystroke.parse(nvim, '<BS>'),
             ...     noremap=True,
+            ... ))
+            >>> keymap.register(Definition(
+            ...     Keystroke.parse(nvim, '<C-H>'),
+            ...     Keystroke.parse(nvim, '<BS>'),
             ...     nowait=True,
-            ... )
+            ... ))
+            >>> keymap.register(Definition(
+            ...     Keystroke.parse(nvim, '<C-H>'),
+            ...     Keystroke.parse(nvim, '<BS>'),
+            ...     noremap=True,
+            ...     nowait=True,
+            ... ))
 
         """
-        self.registry[lhs] = (lhs, rhs, noremap, nowait)
+        self.registry[definition.lhs] = definition
 
     def register_from_rule(self, nvim, rule):
         """Register a keymap from a rule.
 
         Args:
             nvim (neovim.Nvim): A ``neovim.Nvim`` instance.
-            rule (tuple): A rule tuple. The rule is arguments of
-                ``Key.register`` method.
+            rule (tuple): A rule tuple.
 
         Example:
             >>> from .keystroke import Keystroke
@@ -71,37 +113,23 @@ class Keymap:
             >>> nvim = MagicMock()
             >>> nvim.options = {'encoding': 'utf-8'}
             >>> keymap = Keymap()
+            >>> keymap.register_from_rule(nvim, ['<C-H>', '<BS>'])
             >>> keymap.register_from_rule(nvim, [
-            ...     Keystroke.parse(nvim, '<C-H>'),
-            ...     Keystroke.parse(nvim, '<BS>'),
+            ...     '<C-H>',
+            ...     '<BS>',
+            ...     'noremap',
             ... ])
             >>> keymap.register_from_rule(nvim, [
-            ...     Keystroke.parse(nvim, '<C-H>'),
-            ...     Keystroke.parse(nvim, '<BS>'),
-            ...     True,
-            ... ])
-            >>> keymap.register_from_rule(nvim, [
-            ...     Keystroke.parse(nvim, '<C-H>'),
-            ...     Keystroke.parse(nvim, '<BS>'),
-            ...     True, True,
+            ...     '<C-H>',
+            ...     '<BS>',
+            ...     'noremap nowait',
             ... ])
 
         """
-        if len(rule) == 2:
-            lhs, rhs = rule
-            noremap = False
-            nowait = False
-        elif len(rule) == 3:
-            lhs, rhs, noremap = rule
-            nowait = False
-        else:
-            lhs, rhs, noremap, nowait = rule
-        lhs = Keystroke.parse(nvim, lhs)
-        rhs = Keystroke.parse(nvim, rhs)
-        self.register(lhs, rhs, noremap, nowait)
+        self.register(Definition.parse(nvim, rule))
 
     def register_from_rules(self, nvim, rules):
-        """Register keymaps from rule tuple.
+        """Register keymaps from raw rule tuple.
 
         Args:
             nvim (neovim.Nvim): A ``neovim.Nvim`` instance.
@@ -121,8 +149,8 @@ class Keymap:
             >>> keymap = Keymap()
             >>> keymap.register_from_rules(nvim, [
             ...     (lhs1, rhs1),
-            ...     (lhs2, rhs2, True),
-            ...     (lhs3, rhs3, False, True),
+            ...     (lhs2, rhs2, 'noremap'),
+            ...     (lhs3, rhs3, 'nowait'),
             ... ])
 
         """
@@ -143,34 +171,34 @@ class Keymap:
             >>> k = lambda x: Keystroke.parse(nvim, x)
             >>> keymap = Keymap()
             >>> keymap.register_from_rules(nvim, [
-            ...     (k('<C-A><C-A>'), k('<prompt:A>')),
-            ...     (k('<C-A><C-B>'), k('<prompt:B>')),
-            ...     (k('<C-B><C-A>'), k('<prompt:C>')),
+            ...     ('<C-A><C-A>', '<prompt:A>'),
+            ...     ('<C-A><C-B>', '<prompt:B>'),
+            ...     ('<C-B><C-A>', '<prompt:C>'),
             ... ])
             >>> candidates = keymap.filter(k(''))
             >>> len(candidates)
             3
             >>> candidates[0]
-            ((Key(...), Key(...)), (Key(code=b'<prompt:A>', ...)
+            Definition(..., rhs=(Key(code=b'<prompt:A>', ...)
             >>> candidates[1]
-            ((Key(...), Key(...)), (Key(code=b'<prompt:B>', ...)
+            Definition(..., rhs=(Key(code=b'<prompt:B>', ...)
             >>> candidates[2]
-            ((Key(...), Key(...)), (Key(code=b'<prompt:C>', ...)
+            Definition(..., rhs=(Key(code=b'<prompt:C>', ...)
             >>> candidates = keymap.filter(k('<C-A>'))
             >>> len(candidates)
             2
             >>> candidates[0]
-            ((Key(...), Key(...)), (Key(code=b'<prompt:A>', ...)
+            Definition(..., rhs=(Key(code=b'<prompt:A>', ...)
             >>> candidates[1]
-            ((Key(...), Key(...)), (Key(code=b'<prompt:B>', ...)
+            Definition(..., rhs=(Key(code=b'<prompt:B>', ...)
             >>> candidates = keymap.filter(k('<C-A><C-A>'))
             >>> len(candidates)
             1
             >>> candidates[0]
-            ((Key(...), Key(...)), (Key(code=b'<prompt:A>', ...)
+            Definition(..., rhs=(Key(code=b'<prompt:A>', ...)
 
         Returns:
-            Iterator[Keystroke]: Sorted Keystroke instances which starts from
+            Iterator[Definition]: Sorted Definition instances which starts from
                 `lhs` Keystroke instance
         """
         candidates = (
@@ -179,10 +207,11 @@ class Keymap:
         )
         return sorted(candidates, key=itemgetter(0))
 
-    def resolve(self, lhs, nowait=False):
+    def resolve(self, nvim, lhs, nowait=False):
         """Resolve ``lhs`` Keystroke instance and return resolved keystroke.
 
         Args:
+            nvim (neovim.Nvim): A ``neovim.Nvim`` instance.
             lhs (Keystroke): A left hand side Keystroke instance.
             nowait (bool): Return a first exact matched keystroke even there
                 are multiple keystroke instances are matched.
@@ -195,43 +224,43 @@ class Keymap:
             >>> k = lambda x: Keystroke.parse(nvim, x)
             >>> keymap = Keymap()
             >>> keymap.register_from_rules(nvim, [
-            ...     (k('<C-A><C-A>'), k('<prompt:A>')),
-            ...     (k('<C-A><C-B>'), k('<prompt:B>')),
-            ...     (k('<C-B><C-A>'), k('<C-A><C-A>'), False),
-            ...     (k('<C-B><C-B>'), k('<C-A><C-B>'), True),
-            ...     (k('<C-C>'), k('<prompt:C>'), False, False),
-            ...     (k('<C-C><C-A>'), k('<prompt:C1>')),
-            ...     (k('<C-C><C-B>'), k('<prompt:C2>')),
-            ...     (k('<C-D>'), k('<prompt:D>'), False, True),
-            ...     (k('<C-D><C-A>'), k('<prompt:D1>')),
-            ...     (k('<C-D><C-B>'), k('<prompt:D2>')),
+            ...     ('<C-A><C-A>', '<prompt:A>'),
+            ...     ('<C-A><C-B>', '<prompt:B>'),
+            ...     ('<C-B><C-A>', '<C-A><C-A>', ''),
+            ...     ('<C-B><C-B>', '<C-A><C-B>', 'noremap'),
+            ...     ('<C-C>', '<prompt:C>', ''),
+            ...     ('<C-C><C-A>', '<prompt:C1>'),
+            ...     ('<C-C><C-B>', '<prompt:C2>'),
+            ...     ('<C-D>', '<prompt:D>', 'nowait'),
+            ...     ('<C-D><C-A>', '<prompt:D1>'),
+            ...     ('<C-D><C-B>', '<prompt:D2>'),
             ... ])
             >>> # No mapping starts from <C-C> so <C-C> is returned
-            >>> keymap.resolve(k('<C-Z>'))
+            >>> keymap.resolve(nvim, k('<C-Z>'))
             (Key(code=26, ...),)
             >>> # No single keystroke is resolved in the following case so None
             >>> # will be returned.
-            >>> keymap.resolve(k('')) is None
+            >>> keymap.resolve(nvim, k('')) is None
             True
-            >>> keymap.resolve(k('<C-A>')) is None
+            >>> keymap.resolve(nvim, k('<C-A>')) is None
             True
             >>> # A single keystroke is resolved so rhs is returned.
             >>> # will be returned.
-            >>> keymap.resolve(k('<C-A><C-A>'))
+            >>> keymap.resolve(nvim, k('<C-A><C-A>'))
             (Key(code=b'<prompt:A>', ...),)
-            >>> keymap.resolve(k('<C-A><C-B>'))
+            >>> keymap.resolve(nvim, k('<C-A><C-B>'))
             (Key(code=b'<prompt:B>', ...),)
             >>> # noremap = False so recursively resolved
-            >>> keymap.resolve(k('<C-B><C-A>'))
+            >>> keymap.resolve(nvim, k('<C-B><C-A>'))
             (Key(code=b'<prompt:A>', ...),)
             >>> # noremap = True so resolved only once
-            >>> keymap.resolve(k('<C-B><C-B>'))
+            >>> keymap.resolve(nvim, k('<C-B><C-B>'))
             (Key(code=1, ...), Key(code=2, ...))
             >>> # nowait = False so no single keystroke could be resolved.
-            >>> keymap.resolve(k('<C-C>')) is None
+            >>> keymap.resolve(nvim, k('<C-C>')) is None
             True
             >>> # nowait = True so the first matched candidate is returned.
-            >>> keymap.resolve(k('<C-D>'))
+            >>> keymap.resolve(nvim, k('<C-D>'))
             (Key(code=b'<prompt:D>', ...),)
 
         Returns:
@@ -245,20 +274,29 @@ class Keymap:
         if n == 0:
             return lhs
         elif n == 1:
-            _lhs, rhs, noremap, _nowait = candidates[0]
-            if lhs == _lhs:
-                return rhs if noremap else self.resolve(rhs, nowait=True)
+            definition = candidates[0]
+            if definition.lhs == lhs:
+                return self._resolve(nvim, definition)
         elif nowait:
             # Use the first matched candidate if lhs is equal
-            _lhs, rhs, noremap, _nowait = candidates[0]
-            if lhs == _lhs:
-                return rhs if noremap else self.resolve(rhs, nowait=True)
+            definition = candidates[0]
+            if definition.lhs == lhs:
+                return self._resolve(nvim, definition)
         else:
             # Check if the current first candidate is defined as nowait
-            _lhs, rhs, noremap, nowait = candidates[0]
-            if nowait and lhs == _lhs:
-                return rhs if noremap else self.resolve(rhs, nowait=True)
+            definition = candidates[0]
+            if definition.nowait and definition.lhs == lhs:
+                return self._resolve(nvim, definition)
         return None
+
+    def _resolve(self, nvim, definition):
+        if definition.expr:
+            rhs = Keystroke.parse(nvim, nvim.eval(definition.rhs))
+        else:
+            rhs = definition.rhs
+        if definition.noremap:
+            return rhs
+        return self.resolve(nvim, rhs, nowait=True)
 
     def harvest(self, nvim, timeoutlen):
         """Harvest a keystroke from getchar in Vim and return resolved.
@@ -291,9 +329,9 @@ class Keymap:
                 continue
             elif code is None:
                 # timeout
-                return self.resolve(previous, nowait=True) or previous
+                return self.resolve(nvim, previous, nowait=True) or previous
             previous = Keystroke((previous or ()) + (Key.parse(nvim, code),))
-            keystroke = self.resolve(previous, nowait=False)
+            keystroke = self.resolve(nvim, previous, nowait=False)
             if keystroke:
                 # resolved
                 return keystroke
@@ -319,8 +357,8 @@ class Keymap:
             >>> rhs3 = Keystroke.parse(nvim, '<CR>')
             >>> keymap = Keymap.from_rules(nvim, [
             ...     (lhs1, rhs1),
-            ...     (lhs2, rhs2, True),
-            ...     (lhs3, rhs3, False, True),
+            ...     (lhs2, rhs2, 'noremap'),
+            ...     (lhs3, rhs3, 'nowait'),
             ... ])
 
         Returns:
@@ -341,37 +379,37 @@ def _getcode(nvim, timeout):
 
 
 DEFAULT_KEYMAP_RULES = (
-    ('<C-B>', '<prompt:move_caret_to_head>', True),
-    ('<C-E>', '<prompt:move_caret_to_tail>', True),
-    ('<BS>', '<prompt:delete_char_before_caret>', True),
-    ('<C-H>', '<prompt:delete_char_before_caret>', True),
-    ('<S-TAB>', '<prompt:assign_previous_text>', True),
-    ('<C-J>', '<prompt:accept>', True),
-    ('<C-K>', '<prompt:insert_digraph>', True),
-    ('<CR>', '<prompt:accept>', True),
-    ('<C-M>', '<prompt:accept>', True),
-    ('<C-N>', '<prompt:assign_next_text>', True),
-    ('<C-P>', '<prompt:assign_previous_text>', True),
-    ('<C-Q>', '<prompt:insert_special>', True),
-    ('<C-R>', '<prompt:paste_from_register>', True),
-    ('<C-U>', '<prompt:delete_entire_text>', True),
-    ('<C-V>', '<prompt:insert_special>', True),
-    ('<C-W>', '<prompt:delete_word_before_caret>', True),
-    ('<ESC>', '<prompt:cancel>', True),
-    ('<DEL>', '<prompt:delete_char_under_caret>', True),
-    ('<Left>', '<prompt:move_caret_to_left>', True),
-    # ('<S-Left>', '<prompt:move_caret_to_one_word_left>', True),
-    # ('<C-Left>', '<prompt:move_caret_to_one_word_left>', True),
-    ('<Right>', '<prompt:move_caret_to_right>', True),
-    # ('<S-Right>', '<prompt:move_caret_to_one_word_right>', True),
-    # ('<C-Right>', '<prompt:move_caret_to_one_word_right>', True),
-    ('<Up>', '<prompt:assign_previous_matched_text>', True),
-    ('<S-Up>', '<prompt:assign_previous_text>', True),
-    ('<Down>', '<prompt:assign_next_matched_text>', True),
-    ('<S-Down>', '<prompt:assign_next_text>', True),
-    ('<Home>', '<prompt:move_caret_to_head>', True),
-    ('<End>', '<prompt:move_caret_to_tail>', True),
-    ('<PageDown>', '<prompt:assign_next_text>', True),
-    ('<PageUp>', '<prompt:assign_previous_text>', True),
-    ('<INSERT>', '<prompt:toggle_insert_mode>', True),
+    ('<C-B>', '<prompt:move_caret_to_head>', 'noremap'),
+    ('<C-E>', '<prompt:move_caret_to_tail>', 'noremap'),
+    ('<BS>', '<prompt:delete_char_before_caret>', 'noremap'),
+    ('<C-H>', '<prompt:delete_char_before_caret>', 'noremap'),
+    ('<S-TAB>', '<prompt:assign_previous_text>', 'noremap'),
+    ('<C-J>', '<prompt:accept>', 'noremap'),
+    ('<C-K>', '<prompt:insert_digraph>', 'noremap'),
+    ('<CR>', '<prompt:accept>', 'noremap'),
+    ('<C-M>', '<prompt:accept>', 'noremap'),
+    ('<C-N>', '<prompt:assign_next_text>', 'noremap'),
+    ('<C-P>', '<prompt:assign_previous_text>', 'noremap'),
+    ('<C-Q>', '<prompt:insert_special>', 'noremap'),
+    ('<C-R>', '<prompt:paste_from_register>', 'noremap'),
+    ('<C-U>', '<prompt:delete_entire_text>', 'noremap'),
+    ('<C-V>', '<prompt:insert_special>', 'noremap'),
+    ('<C-W>', '<prompt:delete_word_before_caret>', 'noremap'),
+    ('<ESC>', '<prompt:cancel>', 'noremap'),
+    ('<DEL>', '<prompt:delete_char_under_caret>', 'noremap'),
+    ('<Left>', '<prompt:move_caret_to_left>', 'noremap'),
+    ('<S-Left>', '<prompt:move_caret_to_one_word_left>', 'noremap'),
+    ('<C-Left>', '<prompt:move_caret_to_one_word_left>', 'noremap'),
+    ('<Right>', '<prompt:move_caret_to_right>', 'noremap'),
+    ('<S-Right>', '<prompt:move_caret_to_one_word_right>', 'noremap'),
+    ('<C-Right>', '<prompt:move_caret_to_one_word_right>', 'noremap'),
+    ('<Up>', '<prompt:assign_previous_matched_text>', 'noremap'),
+    ('<S-Up>', '<prompt:assign_previous_text>', 'noremap'),
+    ('<Down>', '<prompt:assign_next_matched_text>', 'noremap'),
+    ('<S-Down>', '<prompt:assign_next_text>', 'noremap'),
+    ('<Home>', '<prompt:move_caret_to_head>', 'noremap'),
+    ('<End>', '<prompt:move_caret_to_tail>', 'noremap'),
+    ('<PageDown>', '<prompt:assign_next_text>', 'noremap'),
+    ('<PageUp>', '<prompt:assign_previous_text>', 'noremap'),
+    ('<INSERT>', '<prompt:toggle_insert_mode>', 'noremap'),
 )

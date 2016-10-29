@@ -1,7 +1,7 @@
 """Action module."""
-from .prompt import STATUS_PROGRESS
+import re
 from .digraph import Digraph
-from .util import safeget, int2char, int2repr, getchar
+from .util import int2char, int2repr, getchar
 
 
 class Action:
@@ -68,15 +68,23 @@ class Action:
             ... ])
             >>> action.call(prompt, 'prompt:accept')
             1
+            >>> action.call(prompt, 'unknown:accept')
+            1
+            >>> action.call(prompt, 'unknown:unknown')
+            Traceback (most recent call last):
+              ...
+            AttributeError: No action "unknown:unknown" has registered.
 
         Returns:
             None or int: None or int which represent the prompt status.
         """
+        alternative_name = re.sub(r'[^:]+:(.*)', r'prompt:\1', name)
+        if name not in self.registry and alternative_name in self.registry:
+            # fallback to the prompt's builtin action
+            name = alternative_name
         if name in self.registry:
             fn = self.registry[name]
             return fn(prompt)
-        elif name.startswith('call:'):
-            return _call(prompt, name[5:])
         raise AttributeError(
             'No action "%s" has registered.' % name
         )
@@ -103,25 +111,6 @@ class Action:
         action = cls()
         action.register_from_rules(rules)
         return action
-
-
-# Special actions -------------------------------------------------------------
-def _call(prompt, fname):
-    result = prompt.nvim.call(fname, prompt.context.to_dict())
-    if result is None:
-        return STATUS_PROGRESS
-    elif isinstance(result, int):
-        return result
-    elif isinstance(result, dict):
-        prompt.context.extend(result)
-    elif isinstance(result, (list, tuple)):
-        status = safeget(result, 0, default=STATUS_PROGRESS)
-        prompt.context.extend(safeget(result, 1, default={}))
-        return status
-    else:
-        raise AttributeError(
-            "A function '%s' does not return a correct value." % fname
-        )
 
 
 # Default actions -------------------------------------------------------------
@@ -192,8 +181,29 @@ def _move_caret_to_left(prompt):
     prompt.caret.locus -= 1
 
 
+def _move_caret_to_one_word_left(prompt):
+    # Use vim's substitute to respect 'iskeyword'
+    original_text = prompt.caret.get_backward_text()
+    substituted_text = prompt.nvim.call(
+        'substitute',
+        original_text, '\k\+\s\?$', '', '',
+    )
+    offset = len(original_text) - len(substituted_text)
+    prompt.caret.locus -= 1 if not offset else offset
+
+
 def _move_caret_to_right(prompt):
     prompt.caret.locus += 1
+
+
+def _move_caret_to_one_word_right(prompt):
+    # Use vim's substitute to respect 'iskeyword'
+    original_text = prompt.caret.get_forward_text()
+    substituted_text = prompt.nvim.call(
+        'substitute',
+        original_text, '^\k\+', '', '',
+    )
+    prompt.caret.locus += 1 + len(original_text) - len(substituted_text)
 
 
 def _move_caret_to_head(prompt):
@@ -285,7 +295,9 @@ DEFAULT_ACTION = Action.from_rules([
     ('prompt:delete_text_after_caret', _delete_text_after_caret),
     ('prompt:delete_entire_text', _delete_entire_text),
     ('prompt:move_caret_to_left', _move_caret_to_left),
+    ('prompt:move_caret_to_one_word_left', _move_caret_to_one_word_left),
     ('prompt:move_caret_to_right', _move_caret_to_right),
+    ('prompt:move_caret_to_one_word_right', _move_caret_to_one_word_right),
     ('prompt:move_caret_to_head', _move_caret_to_head),
     ('prompt:move_caret_to_lead', _move_caret_to_lead),
     ('prompt:move_caret_to_tail', _move_caret_to_tail),
