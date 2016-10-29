@@ -13,6 +13,10 @@ META_KEY = b'\x80\xfc\x08'
 
 # https://github.com/vim/vim/blob/d58b0f982ad758c59abe47627216a15497e9c3c1/src/gui_w32.c#L389-L456
 SPECIAL_KEYS = {k: getattr(ascii, k) for k in ascii.controlnames}
+# TAB is registered as HT so renmae
+SPECIAL_KEYS['TAB'] = SPECIAL_KEYS['HT']
+del SPECIAL_KEYS['HT']
+# Update Vim specific keys
 SPECIAL_KEYS.update(dict(
     BSLASH=ord('\\'),
     LT=ord('<'),
@@ -162,7 +166,7 @@ def _resolve_from_special_keys(nvim, inner):
         return SPECIAL_KEYS[inner_upper_str]
     elif inner_upper.startswith(b'C-'):
         if len(inner) == 3:
-            if inner_upper[-1] in b'@ABCDEFGHIKLMNOPQRSTUVWXYZ[\\]^_?':
+            if inner_upper[-1] in b'@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_?':
                 return ascii.ctrl(inner[-1])
         return b''.join([
             CTRL_KEY,
