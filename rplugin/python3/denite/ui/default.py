@@ -7,7 +7,7 @@
 from curses.ascii import isprint
 from denite.util import error, echo, debug
 from ..prompt.key import Key
-from ..prompt.util import getchar, ensure_str
+from ..prompt.util import getchar
 from .. import denite
 
 import re
