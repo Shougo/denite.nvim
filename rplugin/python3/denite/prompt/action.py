@@ -154,6 +154,23 @@ def _delete_char_before_caret(prompt):
     prompt.caret.locus -= 1
 
 
+def _delete_word_before_caret(prompt):
+    if prompt.caret.locus == 0:
+        return
+    # Use vim's substitute to respect 'iskeyword'
+    original_backward_text = prompt.caret.get_backward_text()
+    backward_text = prompt.nvim.call(
+        'substitute',
+        original_backward_text, '\k\+\s*$', '', '',
+    )
+    prompt.context.text = ''.join([
+        backward_text,
+        prompt.caret.get_selected_text(),
+        prompt.caret.get_forward_text(),
+    ])
+    prompt.caret.locus -= len(original_backward_text) - len(backward_text)
+
+
 def _delete_char_under_caret(prompt):
     prompt.context.text = ''.join([
         prompt.caret.get_backward_text(),
@@ -263,6 +280,7 @@ DEFAULT_ACTION = Action.from_rules([
     ('prompt:cancel', _cancel),
     ('prompt:toggle_insert_mode', _toggle_insert_mode),
     ('prompt:delete_char_before_caret', _delete_char_before_caret),
+    ('prompt:delete_word_before_caret', _delete_word_before_caret),
     ('prompt:delete_char_under_caret', _delete_char_under_caret),
     ('prompt:delete_text_after_caret', _delete_text_after_caret),
     ('prompt:delete_entire_text', _delete_entire_text),

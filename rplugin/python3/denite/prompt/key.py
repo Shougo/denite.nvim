@@ -166,7 +166,7 @@ def _resolve_from_special_keys(nvim, inner):
         return SPECIAL_KEYS[inner_upper_str]
     elif inner_upper.startswith(b'C-'):
         if len(inner) == 3:
-            if inner_upper[-1] in b'@ABCDEFGHIKLMNOPQRSTUVWXYZ[\\]^_?':
+            if inner_upper[-1] in b'@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_?':
                 return ascii.ctrl(inner[-1])
         return b''.join([
             CTRL_KEY,
