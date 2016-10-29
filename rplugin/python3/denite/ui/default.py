@@ -15,6 +15,12 @@ import traceback
 import time
 
 
+def _safe_isprint(c):
+    if not c:
+        return False
+    return isprint(c)
+
+
 class Default(object):
 
     def __init__(self, vim):
@@ -235,7 +241,7 @@ class Default(object):
                     if ret:
                         break
                     continue
-            elif self.__current_mode == 'insert' and isprint(key.char):
+            elif (self.__current_mode == 'insert' and _safe_isprint(key.char)):
                 # Normal input string
                 self.__input_before += key.char
                 self.update_input()
