@@ -161,9 +161,12 @@ class Default(object):
 
     def quit_buffer(self):
         self.__vim.command('redraw | echo')
+        self.__vim.command('pclose!')
+
+        if not self.__vim.call('bufexists', self.__bufnr):
+            return
         self.__vim.call('win_gotoid', self.__prev_winid)
         self.__vim.command('silent bdelete! ' + str(self.__bufnr))
-        self.__vim.command('pclose!')
 
     def update_prompt(self):
         self.__vim.command('redraw')
