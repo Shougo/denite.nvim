@@ -446,6 +446,11 @@ OPTIONS							*denite-options*
 		previous buffers.
 		Default: false
 
+						*denite-options-statusline*
+-statusline
+		Enable statuslie.
+		Default: true
+
 ==============================================================================
 SOURCES							*denite-sources*
 

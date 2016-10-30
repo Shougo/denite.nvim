@@ -105,8 +105,10 @@ class Default(object):
 
         self.__bufvars['denite_statusline_left'] = ''
         self.__bufvars['denite_statusline_right'] = ''
-        self.__window_options['statusline'] = \
-            '%{denite#get_status_left()} %=%{denite#get_status_right()}'
+
+        if self.__context['statusline']:
+            self.__window_options['statusline'] = \
+                '%{denite#get_status_left()} %=%{denite#get_status_right()}'
 
     def init_cursor(self):
         self.__cursor = 0
