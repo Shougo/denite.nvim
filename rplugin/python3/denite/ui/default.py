@@ -4,7 +4,8 @@
 # License: MIT license
 # ============================================================================
 
-from denite.util import error, echo, debug
+from denite.util import (
+    error, echo, debug, convert2fuzzy_pattern, convert2regex_pattern)
 from .. import denite
 
 import re
@@ -106,6 +107,9 @@ class Default(object):
         self.__bufvars['denite_statusline_left'] = ''
         self.__bufvars['denite_statusline_right'] = ''
 
+        self.__vim.command('syntax case ignore')
+        self.__vim.command('highlight default link deniteMatched Search')
+
         if self.__context['statusline']:
             self.__window_options['statusline'] = \
                 '%{denite#get_status_left()} %=%{denite#get_status_right()}'
@@ -115,15 +119,23 @@ class Default(object):
         self.__win_cursor = 1
 
     def update_buffer(self):
+        self.__vim.command('silent! syntax clear deniteMatched')
+
         prev_len = len(self.__candidates)
         self.__candidates = []
         statusleft = '--' + self.__current_mode + '-- '
+        pattern = ''
         for name, all, candidates in self.__denite.filter_candidates(
                 self.__context):
-            if len(all) == 0:
-                continue
             self.__candidates += candidates
             statusleft += '{}({}/{}) '.format(name, len(candidates), len(all))
+
+            matchers = self.__denite.get_sources()[name].matchers
+            if ('matcher_fuzzy' or 'matcher_cpsm') in matchers:
+                pattern = convert2fuzzy_pattern(self.__context['input'])
+            elif 'matcher_regexp' in matchers:
+                pattern = convert2regex_pattern(self.__context['input'])
+
         if self.__denite.is_async():
             statusleft = '[async] ' + statusleft
         self.__candidates_len = len(self.__candidates)
@@ -134,6 +146,10 @@ class Default(object):
             self.__candidates_len)
         self.__bufvars['denite_statusline_left'] = statusleft
         self.__bufvars['denite_statusline_right'] = statusright
+
+        if pattern != '':
+            self.__vim.command(
+                'syntax match deniteMatched /' + pattern + '/')
 
         del self.__vim.current.buffer[:]
         self.__vim.current.buffer.append(
