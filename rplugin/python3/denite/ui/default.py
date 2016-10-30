@@ -116,7 +116,6 @@ class Default(object):
         self.__vim.command('syntax case ignore')
         self.__vim.command('highlight default link deniteMatched Function')
 
-        sources = self.__denite.get_sources()
         has_multiple_sources = len(self.__context['sources']) > 1
         for raw_source in self.__context['sources']:
             name = raw_source['name']
@@ -126,7 +125,7 @@ class Default(object):
                 'deniteSource_' + name,
             )
             self.__vim.command(syntax_line)
-            sources[name].highlight_syntax()
+            self.__denite.get_source(name).highlight_syntax()
 
     def init_cursor(self):
         self.__cursor = 0
@@ -144,7 +143,7 @@ class Default(object):
             self.__candidates += candidates
             statusleft += '{}({}/{}) '.format(name, len(candidates), len(all))
 
-            matchers = self.__denite.get_sources()[name].matchers
+            matchers = self.__denite.get_sources(name).matchers
             for matcher in matchers:
                 filter = self.__denite.get_filter(matcher)
                 if filter:
@@ -163,7 +162,8 @@ class Default(object):
 
         if pattern != '':
             self.__vim.command(
-                'syntax match deniteMatched /' + pattern + '/')
+                'silent! syntax match deniteMatched /' +
+                re.sub(r'/', r'\\/', pattern) + '/')
 
         del self.__vim.current.buffer[:]
         self.__vim.current.buffer.append(
@@ -297,7 +297,7 @@ class Default(object):
         if 'kind' in candidate:
             kind = candidate['kind']
         else:
-            kind = self.__denite.get_sources()[candidate['source']].kind
+            kind = self.__denite.get_source(candidate['source']).kind
 
         prev_id = self.__vim.call('win_getid')
         self.__vim.call('win_gotoid', self.__prev_winid)

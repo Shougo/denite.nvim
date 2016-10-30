@@ -24,7 +24,7 @@ you should read `:help provider-python`.
 
 * source kind support
 
-* map "call:funcname" support
+* neovim-prompt integration
 
 * source completion support: completion(args, arglead)
 

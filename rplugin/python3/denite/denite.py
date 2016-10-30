@@ -136,6 +136,12 @@ class Denite(object):
     def get_sources(self):
         return self.__sources
 
+    def get_source(self, name):
+        return self.__sources.get(name, {})
+
+    def get_current_sources(self):
+        return self.__current_sources
+
     def load_sources(self, context):
         # Load sources from runtimepath
         rtps = globruntime(
