@@ -26,4 +26,11 @@ function! denite#start(sources, ...) abort "{{{
         \            : denite#vim#_start(a:sources, context)
 endfunction"}}}
 
+function! denite#get_status_left() abort "{{{
+  return b:denite_statusline_left
+endfunction"}}}
+function! denite#get_status_right() abort "{{{
+  return b:denite_statusline_right
+endfunction"}}}
+
 " vim: foldmethod=marker

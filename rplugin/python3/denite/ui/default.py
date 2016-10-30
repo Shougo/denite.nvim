@@ -99,8 +99,14 @@ class Default(object):
         self.__window_options['foldenable'] = False
         self.__window_options['foldcolumn'] = 0
 
+        self.__bufvars = self.__vim.current.buffer.vars
         self.__bufnr = self.__vim.current.buffer.number
         self.__winid = self.__vim.call('win_getid')
+
+        self.__bufvars['denite_statusline_left'] = ''
+        self.__bufvars['denite_statusline_right'] = ''
+        self.__window_options['statusline'] = \
+            '%{denite#get_status_left()} %=%{denite#get_status_right()}'
 
     def init_cursor(self):
         self.__cursor = 0
@@ -109,21 +115,23 @@ class Default(object):
     def update_buffer(self):
         prev_len = len(self.__candidates)
         self.__candidates = []
-        statusline = '--' + self.__current_mode + '-- '
+        statusleft = '--' + self.__current_mode + '-- '
         for name, all, candidates in self.__denite.filter_candidates(
                 self.__context):
             if len(all) == 0:
                 continue
             self.__candidates += candidates
-            statusline += '{}({}/{}) '.format(name, len(candidates), len(all))
+            statusleft += '{}({}/{}) '.format(name, len(candidates), len(all))
         if self.__denite.is_async():
-            statusline = '[async] ' + statusline
+            statusleft = '[async] ' + statusleft
         self.__candidates_len = len(self.__candidates)
-        statusline += '%=[{}] {:3}/{:4}'.format(
+        max = len(str(self.__candidates_len))
+        statusright = ('[{}] {:'+str(max)+'}/{:'+str(max)+'}').format(
             self.__context['path'],
             self.__cursor + self.__win_cursor,
             self.__candidates_len)
-        self.__window_options['statusline'] = statusline
+        self.__bufvars['denite_statusline_left'] = statusleft
+        self.__bufvars['denite_statusline_right'] = statusright
 
         del self.__vim.current.buffer[:]
         self.__vim.current.buffer.append(

@@ -367,6 +367,14 @@ denite#custom#var({source-name}, {var-name}, {value})
 		to {value}.  You may specify multiple sources with the
 		separator "," in {source-name}.
 
+denite#get_status_left()			 *denite#get_status_left()*
+		Returns the left part of the status string.  It is useful to
+		customize the statusline.
+
+denite#get_status_right()			 *denite#get_status_right()*
+		Returns the right part of the status string.  It is useful to
+		customize the statusline.
+
 							*denite#initialize()*
 denite#initialize()
 		Initialize denite and sources.
