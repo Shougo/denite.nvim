@@ -149,7 +149,8 @@ class Default(object):
 
         if pattern != '':
             self.__vim.command(
-                'syntax match deniteMatched /' + pattern + '/')
+                'silent! syntax match deniteMatched /' +
+                re.sub(r'/', r'\\/', pattern) + '/')
 
         del self.__vim.current.buffer[:]
         self.__vim.current.buffer.append(
