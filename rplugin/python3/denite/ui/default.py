@@ -116,13 +116,18 @@ class Default(object):
         self.__vim.command('syntax case ignore')
         self.__vim.command('highlight default link deniteMatched Search')
 
-        has_multiple_sources = len(self.__context['sources']) > 1
+        multi_src = len(self.__context['sources']) > 1
         for raw_source in self.__context['sources']:
             name = raw_source['name']
             syntax_line = 'syntax match %s /%s/ nextgroup=%s keepend' % (
                 'deniteSourceLine_' + name,
-                name if has_multiple_sources else '',
+                name if multi_src else '',
                 'deniteSource_' + name,
+            )
+            self.__vim.command(
+                'highlight default link ' +
+                'deniteSourceLine_' + name +
+                ' Type'
             )
             self.__vim.command(syntax_line)
             self.__denite.get_source(name).highlight_syntax()
@@ -166,10 +171,14 @@ class Default(object):
                 re.sub(r'/', r'\\/', pattern) + '/')
 
         del self.__vim.current.buffer[:]
-        self.__vim.current.buffer.append(
-            [x.get('abbr', x['word']) for x in
-             self.__candidates[self.__cursor:
-                               self.__cursor + self.__winheight]])
+        multi_src = len(self.__context['sources']) > 1
+        content = []
+        for x in self.__candidates[self.__cursor:
+                                   self.__cursor + self.__winheight]:
+            prefix = ' ' + x['source'] if multi_src else ''
+            line = prefix + ' ' + x.get('abbr', x['word'])
+            content.append(line)
+        self.__vim.current.buffer.append(content)
         del self.__vim.current.buffer[0]
 
         self.__options['modified'] = False
