@@ -22,11 +22,8 @@ function! denite#start(sources, ...) abort "{{{
     return
   endif
 
-  if has('nvim')
-    return _denite_start(a:sources, context)
-  else
-    return denite#vim#_start(a:sources, context)
-  endif
+  return has('nvim') ? _denite_start(a:sources, context)
+        \            : denite#vim#_start(a:sources, context)
 endfunction"}}}
 
 " vim: foldmethod=marker
