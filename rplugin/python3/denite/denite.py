@@ -159,6 +159,9 @@ class Denite(object):
                     self.__sources[alias] = module.Source(self.__vim)
                     self.__sources[alias].name = alias
 
+    def get_filter(self, filter_name):
+        return self.__filters.get(filter_name, None)
+
     def load_filters(self, context):
         # Load filters from runtimepath
         rtps = globruntime(

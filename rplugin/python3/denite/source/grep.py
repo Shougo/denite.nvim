@@ -47,8 +47,8 @@ class Source(Base):
             'syntax region deniteSource_grep start=// end=/$/ ' +
             'contains=deniteGrepInput,deniteMatched contained')
         self.vim.command(
-            'syntax match deniteGrepInput /%s/ ' +
-            'containedin=deniteSource_grep' % input_str)
+            'syntax match deniteGrepInput /%s/ ' % input_str +
+            'containedin=deniteSource_grep')
         self.vim.command('highlight default link deniteGrepInput Search')
 
     def gather_candidates(self, context):

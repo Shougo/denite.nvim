@@ -20,5 +20,8 @@ class Base(object):
     def filter(self, context):
         pass
 
+    def convert_pattern(self, input_str):
+        return ''
+
     def debug(self, expr):
         denite.util.debug(self.vim, expr)

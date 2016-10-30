@@ -4,8 +4,7 @@
 # License: MIT license
 # ============================================================================
 
-from denite.util import (
-    error, echo, debug, convert2fuzzy_pattern, convert2regex_pattern)
+from denite.util import error, echo, debug
 from .. import denite
 
 import re
@@ -146,10 +145,10 @@ class Default(object):
             statusleft += '{}({}/{}) '.format(name, len(candidates), len(all))
 
             matchers = self.__denite.get_sources()[name].matchers
-            if ('matcher_fuzzy' or 'matcher_cpsm') in matchers:
-                pattern = convert2fuzzy_pattern(self.__context['input'])
-            elif 'matcher_regexp' in matchers:
-                pattern = convert2regex_pattern(self.__context['input'])
+            for matcher in matchers:
+                filter = self.__denite.get_filter(matcher)
+                if filter:
+                    pattern = filter.convert_pattern(self.__context['input'])
 
         if self.__denite.is_async():
             statusleft = '[async] ' + statusleft

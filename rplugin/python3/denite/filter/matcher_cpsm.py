@@ -5,7 +5,7 @@
 # ============================================================================
 
 from .base import Base
-from denite.util import globruntime, error
+from denite.util import globruntime, error, convert2fuzzy_pattern
 import sys
 import os
 
@@ -50,3 +50,6 @@ class Filter(Base):
             ispath=('action__path' in context['candidates'][0]))[0]
         return [x for x in context['candidates']
                 if x['word'] in cpsm_result]
+
+    def convert_pattern(self, input_str):
+        return convert2fuzzy_pattern(input_str)
