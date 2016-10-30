@@ -15,15 +15,15 @@ syntax match deniteSource_grepHeader /\\v[^:]*:\d+(:\d+)? / contained keepend
 '''.strip()
 
 GREP_FILE_SYNTAX = (
-    'syntax match deniteSource_grepFile ' +
-    '/[^:]*:/ contained ' +
-    'containedin=deniteSource_grepHeader ' +
+    'syntax match deniteSource_grepFile '
+    '/[^:]*:/ contained '
+    'containedin=deniteSource_grepHeader '
     'nextgroup=deniteSource_grepLineNR')
 GREP_FILE_HIGHLIGHT = 'highlight default link deniteSource_grepFile Comment'
 
 GREP_LINE_SYNTAX = (
-    'syntax match deniteSource_grepLineNR ' +
-    '/\d\+\(:\d\+\)\?/ ' +
+    'syntax match deniteSource_grepLineNR '
+    '/\d\+\(:\d\+\)\?/ '
     'contained containedin=deniteSource_grepHeader')
 GREP_LINE_HIGHLIGHT = 'highlight default link deniteSource_grepLineNR LineNR'
 
@@ -66,7 +66,7 @@ class Source(Base):
         self.vim.command(GREP_LINE_SYNTAX)
         self.vim.command(GREP_LINE_HIGHLIGHT)
         self.vim.command(
-            'syntax region deniteSource_grep start=// end=/$/ ' +
+            'syntax region deniteSource_grep start=// end=/$/ '
             'contains=deniteSource_grepHeader,deniteMatched contained')
         self.vim.command(
             'syntax match deniteGrepInput /%s/ ' % input_str +
