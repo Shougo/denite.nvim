@@ -20,6 +20,9 @@ class Base(object):
         self.context = {}
         self.vars = {}
 
+    def highlight_syntax(self):
+        pass
+
     @abstractmethod
     def gather_candidate(self, context):
         pass

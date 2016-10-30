@@ -107,12 +107,27 @@ class Default(object):
         self.__bufvars['denite_statusline_left'] = ''
         self.__bufvars['denite_statusline_right'] = ''
 
-        self.__vim.command('syntax case ignore')
-        self.__vim.command('highlight default link deniteMatched Search')
+        self.__init_syntax()
 
         if self.__context['statusline']:
             self.__window_options['statusline'] = \
                 '%{denite#get_status_left()} %=%{denite#get_status_right()}'
+
+    def __init_syntax(self):
+        self.__vim.command('syntax case ignore')
+        self.__vim.command('highlight default link deniteMatched Function')
+
+        sources = self.__denite.get_sources()
+        has_multiple_sources = len(self.__context['sources']) > 1
+        for raw_source in self.__context['sources']:
+            name = raw_source['name']
+            syntax_line = 'syntax match %s /%s/ nextgroup=%s keepend' % (
+                'deniteSourceLine_' + name,
+                name if has_multiple_sources else '',
+                'deniteSource_' + name,
+            )
+            self.__vim.command(syntax_line)
+            sources[name].highlight_syntax()
 
     def init_cursor(self):
         self.__cursor = 0
