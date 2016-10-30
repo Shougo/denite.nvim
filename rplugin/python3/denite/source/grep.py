@@ -11,12 +11,12 @@ import os
 import shlex
 
 GREP_HEADER_SYNTAX = '''
-syntax match deniteSource_grepHeader /^\s*[^:]*: \d\+\(:\d\+\)\? / contained
+syntax match deniteSource_grepHeader /\\v[^:]*:\d+(:\d+)? / contained keepend
 '''.strip()
 
 GREP_FILE_SYNTAX = (
     'syntax match deniteSource_grepFile ' +
-    '/^\s*[^:]*: / contained ' +
+    '/[^:]*:/ contained ' +
     'containedin=deniteSource_grepHeader ' +
     'nextgroup=deniteSource_grepLineNR')
 GREP_FILE_HIGHLIGHT = 'highlight default link deniteSource_grepFile Comment'
@@ -104,7 +104,7 @@ class Source(Base):
             result = parse_jump_line(context['__directory'], line)
             if result:
                 candidates.append({
-                    'word': '{0}: {1}{2} {3}'.format(
+                    'word': '{0}:{1}{2} {3}'.format(
                         os.path.relpath(result[0],
                                         start=context['__directory']),
                         result[1],
