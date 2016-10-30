@@ -43,9 +43,13 @@ class Source(Base):
 
     def highlight_syntax(self):
         input_str = self.context['__input']
-        self.vim.command('syntax region deniteSource_grep start=// end=/$/ contains=grepWord,deniteMatched contained')
-        self.vim.command('syntax match grepWord /%s/ containedin=deniteSource_grep' % input_str)
-        self.vim.command('highlight default link grepWord Search')
+        self.vim.command(
+            'syntax region deniteSource_grep start=// end=/$/ ' +
+            'contains=deniteGrepInput,deniteMatched contained')
+        self.vim.command(
+            'syntax match deniteGrepInput /%s/ ' +
+            'containedin=deniteSource_grep' % input_str)
+        self.vim.command('highlight default link deniteGrepInput Search')
 
     def gather_candidates(self, context):
         if self.__proc:
