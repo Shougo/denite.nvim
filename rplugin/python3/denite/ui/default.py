@@ -114,7 +114,7 @@ class Default(object):
 
     def __init_syntax(self):
         self.__vim.command('syntax case ignore')
-        self.__vim.command('highlight default link deniteMatched Function')
+        self.__vim.command('highlight default link deniteMatched Search')
 
         has_multiple_sources = len(self.__context['sources']) > 1
         for raw_source in self.__context['sources']:
@@ -143,7 +143,7 @@ class Default(object):
             self.__candidates += candidates
             statusleft += '{}({}/{}) '.format(name, len(candidates), len(all))
 
-            matchers = self.__denite.get_sources(name).matchers
+            matchers = self.__denite.get_source(name).matchers
             for matcher in matchers:
                 filter = self.__denite.get_filter(matcher)
                 if filter:

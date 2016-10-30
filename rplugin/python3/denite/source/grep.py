@@ -49,7 +49,7 @@ class Source(Base):
         self.vim.command(
             'syntax match deniteGrepInput /%s/ ' % input_str +
             'containedin=deniteSource_grep')
-        self.vim.command('highlight default link deniteGrepInput Search')
+        self.vim.command('highlight default link deniteGrepInput Function')
 
     def gather_candidates(self, context):
         if self.__proc:
