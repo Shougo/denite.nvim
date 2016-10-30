@@ -120,6 +120,7 @@ function! denite#init#_user_options() abort "{{{
         \ 'prompt_highlight': 'Statement',
         \ 'quit': v:true,
         \ 'resume': v:false,
+        \ 'statusline': v:true,
         \ 'winheight': 20,
         \}
 endfunction"}}}

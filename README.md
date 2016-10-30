@@ -26,15 +26,11 @@ you should read `:help provider-python`.
 
 * map "call:funcname" support
 
-* alias support
-
 * source completion support: completion(args, arglead)
 
 * matcher_hide_hidden_files
 
 * quickmatch feature
-
-* match highlight
 
 * multiple candidates select
 

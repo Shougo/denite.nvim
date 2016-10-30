@@ -59,6 +59,8 @@ class Denite(object):
             all = ctx['all_candidates']
             if ctx['is_async']:
                 all += source.gather_candidates(ctx)
+            if not all:
+                continue
             candidates = []
             for i in range(0, len(all), 1000):
                 ctx['candidates'] = all[i:i+1000]

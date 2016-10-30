@@ -50,9 +50,9 @@ function! denite#custom#var(source_name, var_name, value) abort "{{{
       let custom[key] = {}
     endif
     if !has_key(custom[key], 'vars')
-      let custom[key]['vars'] = {}
+      let custom[key].vars = {}
     endif
-    let custom[key]['vars'][a:var_name] = a:value
+    let custom[key].vars[a:var_name] = a:value
   endfor
 endfunction"}}}
 

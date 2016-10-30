@@ -5,7 +5,8 @@
 # ============================================================================
 
 from curses.ascii import isprint
-from denite.util import error, echo, debug
+from denite.util import (
+    error, echo, debug, convert2fuzzy_pattern, convert2regex_pattern)
 from ..prompt.key import Key
 from ..prompt.util import getchar
 from .. import denite
@@ -56,8 +57,8 @@ class Default(object):
                 self.__context = context
                 self.__context['sources'] = sources
                 self.__context['is_redraw'] = False
-                self.__default_mappings = \
-                    self.__vim.vars['denite#_default_mappings']
+                self.__default_mappings = self.__vim.eval(
+                    'g:denite#_default_mappings')
                 self.__current_mode = context['mode']
 
                 self.__denite.start(self.__context)
@@ -108,31 +109,56 @@ class Default(object):
         self.__window_options['foldenable'] = False
         self.__window_options['foldcolumn'] = 0
 
+        self.__bufvars = self.__vim.current.buffer.vars
         self.__bufnr = self.__vim.current.buffer.number
         self.__winid = self.__vim.call('win_getid')
+
+        self.__bufvars['denite_statusline_left'] = ''
+        self.__bufvars['denite_statusline_right'] = ''
+
+        self.__vim.command('syntax case ignore')
+        self.__vim.command('highlight default link deniteMatched Search')
+
+        if self.__context['statusline']:
+            self.__window_options['statusline'] = \
+                '%{denite#get_status_left()} %=%{denite#get_status_right()}'
 
     def init_cursor(self):
         self.__cursor = 0
         self.__win_cursor = 1
 
     def update_buffer(self):
+        self.__vim.command('silent! syntax clear deniteMatched')
+
         prev_len = len(self.__candidates)
         self.__candidates = []
-        statusline = '--' + self.__current_mode + '-- '
+        statusleft = '--' + self.__current_mode + '-- '
+        pattern = ''
         for name, all, candidates in self.__denite.filter_candidates(
                 self.__context):
-            if len(all) == 0:
-                continue
             self.__candidates += candidates
-            statusline += '{}({}/{}) '.format(name, len(candidates), len(all))
+            statusleft += '{}({}/{}) '.format(name, len(candidates), len(all))
+
+            matchers = self.__denite.get_sources()[name].matchers
+            if ('matcher_fuzzy' or 'matcher_cpsm') in matchers:
+                pattern = convert2fuzzy_pattern(self.__context['input'])
+            elif 'matcher_regexp' in matchers:
+                pattern = convert2regex_pattern(self.__context['input'])
+
         if self.__denite.is_async():
-            statusline = '[async] ' + statusline
+            statusleft = '[async] ' + statusleft
         self.__candidates_len = len(self.__candidates)
-        statusline += '%=[{}] {:3}/{:4}'.format(
+        max = len(str(self.__candidates_len))
+        statusright = ('[{}] {:'+str(max)+'}/{:'+str(max)+'}').format(
             self.__context['path'],
             self.__cursor + self.__win_cursor,
             self.__candidates_len)
-        self.__window_options['statusline'] = statusline
+        self.__bufvars['denite_statusline_left'] = statusleft
+        self.__bufvars['denite_statusline_right'] = statusright
+
+        if pattern != '':
+            self.__vim.command(
+                'syntax match deniteMatched /' + pattern + '/')
 
         del self.__vim.current.buffer[:]
         self.__vim.current.buffer.append(
@@ -175,9 +201,12 @@ class Default(object):
 
     def quit_buffer(self):
         self.__vim.command('redraw | echo')
+        self.__vim.command('pclose!')
+
+        if not self.__vim.call('bufexists', self.__bufnr):
+            return
         self.__vim.call('win_gotoid', self.__prev_winid)
         self.__vim.command('silent bdelete! ' + str(self.__bufnr))
-        self.__vim.command('pclose!')
 
     def update_prompt(self):
         self.__vim.command('redraw')
@@ -276,8 +305,15 @@ class Default(object):
                 self.__vim.command('topleft new')
             else:
                 self.__vim.command('wincmd w')
-        is_quit = not self.__denite.do_action(
-            self.__context, kind, action, [candidate])
+        try:
+            is_quit = not self.__denite.do_action(
+                self.__context, kind, action, [candidate])
+        except Exception:
+            for line in traceback.format_exc().splitlines():
+                error(self.__vim, line)
+            error(self.__vim,
+                  'The action ' + action + ' execution is failed.')
+            return
         self.__vim.call('win_gotoid', prev_id)
 
         if is_quit:

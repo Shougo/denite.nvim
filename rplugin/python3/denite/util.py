@@ -125,3 +125,12 @@ def parse_jump_line(cwd, line):
 
 def expand(path):
     return os.path.expandvars(os.path.expanduser(path))
+
+
+def convert2fuzzy_pattern(input):
+    return '\|'.join([re.sub(r'(.)(?!$)', r'\1[^\1]\{-}', x)
+                      for x in split_input(input)])
+
+
+def convert2regex_pattern(input):
+    return '\|'.join(split_input(input))
