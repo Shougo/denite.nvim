@@ -130,7 +130,7 @@ class Default(object):
             self.__candidates += candidates
             statusleft += '{}({}/{}) '.format(name, len(candidates), len(all))
 
-            matchers = self.__denite.get_sources()[name].matchers
+            matchers = self.__denite.get_source(name).matchers
             if ('matcher_fuzzy' or 'matcher_cpsm') in matchers:
                 pattern = convert2fuzzy_pattern(self.__context['input'])
             elif 'matcher_regexp' in matchers:
@@ -284,7 +284,7 @@ class Default(object):
         if 'kind' in candidate:
             kind = candidate['kind']
         else:
-            kind = self.__denite.get_sources()[candidate['source']].kind
+            kind = self.__denite.get_source(candidate['source']).kind
 
         prev_id = self.__vim.call('win_getid')
         self.__vim.call('win_gotoid', self.__prev_winid)
