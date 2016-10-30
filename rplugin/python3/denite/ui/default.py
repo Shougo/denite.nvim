@@ -116,8 +116,17 @@ class Default(object):
         self.__vim.command('syntax case ignore')
         self.__vim.command('highlight default link deniteMatched Search')
 
-        multi_src = len(self.__context['sources']) > 1
-        for raw_source in self.__context['sources']:
+        # only define highlight when multiple sources exists
+        # or source has need_highlight set to True
+        raw_sources = self.__context['sources']
+        if len(raw_sources) == 1:
+            source = self.__denite.get_source(
+                raw_sources[0]['name'])
+            if not source.need_highlight:
+                return
+
+        multi_src = len(raw_sources) > 1
+        for raw_source in raw_sources:
             name = raw_source['name']
             syntax_line = 'syntax match %s /%s/ nextgroup=%s keepend' % (
                 'deniteSourceLine_' + name,
