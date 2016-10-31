@@ -4,8 +4,7 @@
 # License: MIT license
 # ============================================================================
 
-from denite.util import (
-    error, echo, debug, convert2fuzzy_pattern, convert2regex_pattern)
+from denite.util import error, echo, debug
 from .. import denite
 
 import re
@@ -107,12 +106,40 @@ class Default(object):
         self.__bufvars['denite_statusline_left'] = ''
         self.__bufvars['denite_statusline_right'] = ''
 
-        self.__vim.command('syntax case ignore')
-        self.__vim.command('highlight default link deniteMatched Search')
+        self.__init_syntax()
 
         if self.__context['statusline']:
             self.__window_options['statusline'] = \
                 '%{denite#get_status_left()} %=%{denite#get_status_right()}'
+
+    def __init_syntax(self):
+        self.__vim.command('syntax case ignore')
+        self.__vim.command('highlight default link deniteMatched Search')
+
+        # only define highlight when multiple sources exists
+        # or source has need_highlight set to True
+        raw_sources = self.__context['sources']
+        if len(raw_sources) == 1:
+            source = self.__denite.get_source(
+                raw_sources[0]['name'])
+            if not source.need_highlight:
+                return
+
+        multi_src = len(raw_sources) > 1
+        for raw_source in raw_sources:
+            name = raw_source['name']
+            syntax_line = 'syntax match %s /%s/ nextgroup=%s keepend' % (
+                'deniteSourceLine_' + name,
+                name if multi_src else '',
+                'deniteSource_' + name,
+            )
+            self.__vim.command(
+                'highlight default link ' +
+                'deniteSourceLine_' + name +
+                ' Type'
+            )
+            self.__vim.command(syntax_line)
+            self.__denite.get_source(name).highlight_syntax()
 
     def init_cursor(self):
         self.__cursor = 0
@@ -131,10 +158,10 @@ class Default(object):
             statusleft += '{}({}/{}) '.format(name, len(candidates), len(all))
 
             matchers = self.__denite.get_source(name).matchers
-            if ('matcher_fuzzy' or 'matcher_cpsm') in matchers:
-                pattern = convert2fuzzy_pattern(self.__context['input'])
-            elif 'matcher_regexp' in matchers:
-                pattern = convert2regex_pattern(self.__context['input'])
+            for matcher in matchers:
+                filter = self.__denite.get_filter(matcher)
+                if filter:
+                    pattern = filter.convert_pattern(self.__context['input'])
 
         if self.__denite.is_async():
             statusleft = '[async] ' + statusleft
@@ -153,10 +180,14 @@ class Default(object):
                 re.sub(r'/', r'\\/', pattern) + '/')
 
         del self.__vim.current.buffer[:]
-        self.__vim.current.buffer.append(
-            [x.get('abbr', x['word']) for x in
-             self.__candidates[self.__cursor:
-                               self.__cursor + self.__winheight]])
+        multi_src = len(self.__context['sources']) > 1
+        content = []
+        for x in self.__candidates[self.__cursor:
+                                   self.__cursor + self.__winheight]:
+            prefix = ' ' + x['source'] if multi_src else ''
+            line = prefix + ' ' + x.get('abbr', x['word'])
+            content.append(line)
+        self.__vim.current.buffer.append(content)
         del self.__vim.current.buffer[0]
 
         self.__options['modified'] = False
