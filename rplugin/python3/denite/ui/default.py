@@ -76,6 +76,8 @@ class Default(object):
     def init_buffer(self):
         self.__winheight = int(self.__context['winheight'])
         self.__prev_winid = self.__vim.call('win_getid')
+        self.__prev_bufnr = self.__vim.current.buffer.number
+        self.__prev_tabpages = self.__vim.call('tabpagebuflist')
         self.__winrestcmd = self.__vim.call('winrestcmd')
         self.__winsaveview = self.__vim.call('winsaveview')
 
@@ -226,8 +228,11 @@ class Default(object):
         # Restore the view
         self.__vim.call('win_gotoid', self.__prev_winid)
         self.__vim.command('silent bdelete! ' + str(self.__bufnr))
-        self.__vim.command(self.__winrestcmd)
-        self.__vim.call('winrestview', self.__winsaveview)
+
+        if self.__vim.call('tabpagebuflist') == self.__prev_tabpages:
+            self.__vim.command(self.__winrestcmd)
+        if self.__vim.current.buffer.number == self.__prev_bufnr:
+            self.__vim.call('winrestview', self.__winsaveview)
 
     def update_prompt(self):
         self.__vim.command('redraw')
