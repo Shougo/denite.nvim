@@ -33,6 +33,7 @@ class Default(object):
         self.__winid = -1
         self.__initialized = False
         self.__winheight = 0
+        self.__is_multi = False
 
     def start(self, sources, context):
         try:
@@ -50,6 +51,7 @@ class Default(object):
                 self.__default_mappings = self.__vim.eval(
                     'g:denite#_default_mappings')
                 self.__current_mode = context['mode']
+                self.__is_multi = len(sources) > 1
 
                 self.__denite.start(self.__context)
                 self.__denite.on_init(self.__context)
@@ -116,27 +118,22 @@ class Default(object):
         self.__vim.command('syntax case ignore')
         self.__vim.command('highlight default link deniteMatched Search')
 
-        # only define highlight when multiple sources exists
-        # or source has need_highlight set to True
-        raw_sources = self.__context['sources']
-        if len(raw_sources) == 1:
-            source = self.__denite.get_source(
-                raw_sources[0]['name'])
-            if not source.need_highlight:
-                return
+        # Only define highlight when multiple sources exists or source has
+        # need_highlight set to True
+        for source in [x for x in self.__denite.get_current_sources()
+                       if self.__is_multi or x.need_highlight]:
+            name = source.name
 
-        multi_src = len(raw_sources) > 1
-        for raw_source in raw_sources:
-            name = raw_source['name']
-            syntax_line = 'syntax match %s /%s/ nextgroup=%s keepend' % (
-                'deniteSourceLine_' + name,
-                name if multi_src else '',
-                'deniteSource_' + name,
-            )
             self.__vim.command(
                 'highlight default link ' +
                 'deniteSourceLine_' + name +
                 ' Type'
+            )
+
+            syntax_line = 'syntax match %s /%s/ nextgroup=%s keepend' % (
+                'deniteSourceLine_' + name,
+                name if self.__is_multi else '',
+                'deniteSource_' + name,
             )
             self.__vim.command(syntax_line)
             self.__denite.get_source(name).highlight_syntax()
@@ -180,14 +177,12 @@ class Default(object):
                 re.sub(r'/', r'\\/', pattern) + '/')
 
         del self.__vim.current.buffer[:]
-        multi_src = len(self.__context['sources']) > 1
-        content = []
-        for x in self.__candidates[self.__cursor:
-                                   self.__cursor + self.__winheight]:
-            prefix = ' ' + x['source'] if multi_src else ''
-            line = prefix + ' ' + x.get('abbr', x['word'])
-            content.append(line)
-        self.__vim.current.buffer.append(content)
+        self.__vim.current.buffer.append(
+            ['%s %s' % (
+                x['source'] if self.__is_multi else '',
+                x.get('abbr', x['word']))
+             for x in self.__candidates[self.__cursor:
+                                        self.__cursor + self.__winheight]])
         del self.__vim.current.buffer[0]
 
         self.__options['modified'] = False
