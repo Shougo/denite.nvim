@@ -231,8 +231,10 @@ class Default(object):
 
         if self.__vim.call('tabpagebuflist') == self.__prev_tabpages:
             self.__vim.command(self.__winrestcmd)
-        if self.__vim.current.buffer.number == self.__prev_bufnr:
-            self.__vim.call('winrestview', self.__winsaveview)
+
+        # Note: Does not work for line source
+        # if self.__vim.current.buffer.number == self.__prev_bufnr:
+        #     self.__vim.call('winrestview', self.__winsaveview)
 
     def update_prompt(self):
         self.__vim.command('redraw')
