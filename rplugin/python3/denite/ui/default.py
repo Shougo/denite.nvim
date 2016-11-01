@@ -153,7 +153,7 @@ class Default(object):
 
         prev_len = len(self.__candidates)
         self.__candidates = []
-        statusleft = '--' + self.__current_mode + '-- '
+        statusleft = '-- ' + self.__current_mode.upper() + ' -- '
         pattern = ''
         for name, all, candidates in self.__denite.filter_candidates(
                 self.__context):
