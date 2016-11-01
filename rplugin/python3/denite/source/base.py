@@ -13,6 +13,7 @@ class Base(object):
     def __init__(self, vim):
         self.vim = vim
         self.name = 'base'
+        self.syntax_name = 'deniteSource_base'
         self.kind = 'base'
         self.matchers = ['matcher_fuzzy']
         self.sorters = ['sorter_rank']

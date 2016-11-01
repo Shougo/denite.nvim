@@ -49,6 +49,9 @@ def escape(expr):
     return expr.replace("'", "''")
 
 
+def syntax_escape(expr):
+    return re.sub(r'([/~])', r'\\\1', expr)
+
 def fuzzy_escape(string, camelcase):
     # Escape string for python regexp.
     p = re.sub(r'([a-zA-Z0-9_])', r'\1.*', re.escape(string))

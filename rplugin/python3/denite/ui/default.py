@@ -4,7 +4,7 @@
 # License: MIT license
 # ============================================================================
 
-from denite.util import error, echo, debug
+from denite.util import error, echo, debug, syntax_escape
 from .. import denite
 
 import re
@@ -128,7 +128,7 @@ class Default(object):
         # need_highlight set to True
         for source in [x for x in self.__denite.get_current_sources()
                        if self.__is_multi or x.need_highlight]:
-            name = source.name
+            name = source.name.replace('/', '_')
 
             self.__vim.command(
                 'highlight default link ' +
@@ -138,11 +138,11 @@ class Default(object):
 
             syntax_line = 'syntax match %s /%s/ nextgroup=%s keepend' % (
                 'deniteSourceLine_' + name,
-                name if self.__is_multi else '',
-                'deniteSource_' + name,
+                syntax_escape(source.name if self.__is_multi else ''),
+                source.syntax_name,
             )
             self.__vim.command(syntax_line)
-            self.__denite.get_source(name).highlight_syntax()
+            source.highlight_syntax()
 
     def init_cursor(self):
         self.__cursor = 0
@@ -180,7 +180,7 @@ class Default(object):
         if pattern != '':
             self.__vim.command(
                 'silent! syntax match deniteMatched /' +
-                re.sub(r'/', r'\\/', pattern) + '/')
+                syntax_escape(pattern) + '/')
 
         del self.__vim.current.buffer[:]
         self.__vim.current.buffer.append(
