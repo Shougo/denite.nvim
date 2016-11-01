@@ -100,7 +100,8 @@ class Default(object):
         self.__options['modifiable'] = True
 
         self.__window_options = self.__vim.current.window.options
-        self.__window_options['cursorline'] = True
+        if self.__context['cursorline']:
+            self.__window_options['cursorline'] = True
         self.__window_options['colorcolumn'] = ''
         self.__window_options['number'] = False
         self.__window_options['relativenumber'] = False
@@ -136,7 +137,7 @@ class Default(object):
                 ' Type'
             )
 
-            syntax_line = 'syntax match %s /%s/ nextgroup=%s keepend' % (
+            syntax_line = 'syntax match %s /^%s/ nextgroup=%s keepend' % (
                 'deniteSourceLine_' + name,
                 escape_syntax(source.name if self.__is_multi else ''),
                 source.syntax_name,
@@ -200,6 +201,10 @@ class Default(object):
 
     def move_cursor(self):
         self.__vim.call('cursor', [self.__win_cursor, 1])
+        self.__vim.call('clearmatches')
+        self.__vim.call('matchaddpos',
+                        self.__context['cursor_highlight'],
+                        [[self.__win_cursor, 1]])
         if self.__context['auto_preview']:
             self.do_action(self.__context, 'preview')
 
