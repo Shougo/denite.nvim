@@ -854,6 +854,11 @@ A: Please install neomru.vim plugin.  It includes file_mru source for
 denite.nvim.
 https://github.com/Shougo/neomru.vim
 
+Q: Vimfiler will support denite?
+
+A: Denite file explorer interface should be implemented by another de-***
+plugin.  It is not vimfiler work.
+
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
 
