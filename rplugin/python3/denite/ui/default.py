@@ -87,7 +87,7 @@ class Default(object):
             self.__vim.command('wincmd J')
         else:
             # Create new buffer
-            self.__vim.command('botright new denite')
+            self.__vim.command('silent botright new denite')
         self.__vim.command('resize ' + str(self.__winheight))
         self.__vim.command('nnoremap <silent><buffer> <CR> ' +
                            ':<C-u>Denite -resume -buffer_name=' +
@@ -172,10 +172,12 @@ class Default(object):
             sources += '{}({}/{}) '.format(name, len(candidates), len(all))
 
             matchers = self.__denite.get_source(name).matchers
-            for matcher in matchers:
-                filter = self.__denite.get_filter(matcher)
-                if filter:
-                    pattern = filter.convert_pattern(self.__context['input'])
+            for filter in [self.__denite.get_filter(x) for x in matchers
+                           if self.__denite.get_filter(x)]:
+                pat = filter.convert_pattern(self.__context['input'])
+                if pat != '':
+                    pattern = pat
+                    break
 
         if self.__denite.is_async():
             sources = '[async] ' + sources
