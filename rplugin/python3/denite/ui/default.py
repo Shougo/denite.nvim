@@ -112,18 +112,28 @@ class Default(object):
         self.__bufnr = self.__vim.current.buffer.number
         self.__winid = self.__vim.call('win_getid')
 
-        self.__bufvars['denite_statusline_left'] = ''
-        self.__bufvars['denite_statusline_right'] = ''
+        self.__bufvars['denite_statusline_mode'] = ''
+        self.__bufvars['denite_statusline_sources'] = ''
+        self.__bufvars['denite_statusline_path'] = ''
+        self.__bufvars['denite_statusline_linenr'] = ''
 
         self.__init_syntax()
 
         if self.__context['statusline']:
-            self.__window_options['statusline'] = \
-                '%{denite#get_status_left()} %=%{denite#get_status_right()}'
+            self.__window_options['statusline'] = (
+                '%#deniteMode#%{denite#get_status_mode()}%* ' +
+                '%{denite#get_status_sources()} %=' +
+                '%#deniteStatusLinePath# %{denite#get_status_path()} %*' +
+                '%#deniteStatusLineNumber#%{denite#get_status_linenr()}%*')
 
     def __init_syntax(self):
         self.__vim.command('syntax case ignore')
+        self.__vim.command('highlight default link deniteMode ModeMsg')
         self.__vim.command('highlight default link deniteMatched Search')
+        self.__vim.command('highlight default link ' +
+                           'deniteStatusLinePath Comment')
+        self.__vim.command('highlight default link ' +
+                           'deniteStatusLineNumber LineNR')
 
         # Only define highlight when multiple sources exists or source has
         # need_highlight set to True
@@ -154,12 +164,12 @@ class Default(object):
 
         prev_len = len(self.__candidates)
         self.__candidates = []
-        statusleft = '-- ' + self.__current_mode.upper() + ' -- '
         pattern = ''
+        sources = ''
         for name, all, candidates in self.__denite.filter_candidates(
                 self.__context):
             self.__candidates += candidates
-            statusleft += '{}({}/{}) '.format(name, len(candidates), len(all))
+            sources += '{}({}/{}) '.format(name, len(candidates), len(all))
 
             matchers = self.__denite.get_source(name).matchers
             for matcher in matchers:
@@ -168,15 +178,18 @@ class Default(object):
                     pattern = filter.convert_pattern(self.__context['input'])
 
         if self.__denite.is_async():
-            statusleft = '[async] ' + statusleft
+            sources = '[async] ' + sources
         self.__candidates_len = len(self.__candidates)
         max = len(str(self.__candidates_len))
-        statusright = ('[{}] {:'+str(max)+'}/{:'+str(max)+'}').format(
-            self.__context['path'],
+        linenr = ('{:'+str(max)+'}/{:'+str(max)+'}').format(
             self.__cursor + self.__win_cursor,
             self.__candidates_len)
-        self.__bufvars['denite_statusline_left'] = statusleft
-        self.__bufvars['denite_statusline_right'] = statusright
+        mode = '-- ' + self.__current_mode.upper() + ' -- '
+        self.__bufvars['denite_statusline_mode'] = mode
+        self.__bufvars['denite_statusline_sources'] = sources
+        self.__bufvars['denite_statusline_path'] = (
+            '[' + self.__context['path'] + ']')
+        self.__bufvars['denite_statusline_linenr'] = linenr
 
         if pattern != '':
             self.__vim.command(
