@@ -128,6 +128,8 @@ class Default(object):
 
     def __init_syntax(self):
         self.__vim.command('syntax case ignore')
+        self.__vim.command('highlight default link ' +
+                           self.__context['cursor_highlight'] + ' Normal')
         self.__vim.command('highlight default link deniteMode ModeMsg')
         self.__vim.command('highlight default link deniteMatched Search')
         self.__vim.command('highlight default link ' +
@@ -216,11 +218,10 @@ class Default(object):
 
     def move_cursor(self):
         self.__vim.call('cursor', [self.__win_cursor, 1])
-        if not self.__context['cursorline']:
-            self.__vim.call('clearmatches')
-            self.__vim.call('matchaddpos',
-                            self.__context['cursor_highlight'],
-                            [[self.__win_cursor, 1]])
+        self.__vim.call('clearmatches')
+        self.__vim.call('matchaddpos',
+                        self.__context['cursor_highlight'],
+                        [[self.__win_cursor, 1]])
         if self.__context['auto_preview']:
             self.do_action(self.__context, 'preview')
 
