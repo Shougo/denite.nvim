@@ -848,6 +848,12 @@ A: >
 	nnoremap <silent> <C-p> :<C-u>Denite
 	\ `finddir('.git', ';') != '' ? 'file_rec/git' : 'file_rec'`<CR>
 
+Q: Where is "file_mru" source for denite.nvim?
+
+A: Please install neomru.vim plugin.  It includes file_mru source for
+denite.nvim.
+https://github.com/Shougo/neomru.vim
+
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
 
