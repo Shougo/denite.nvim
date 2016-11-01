@@ -216,10 +216,11 @@ class Default(object):
 
     def move_cursor(self):
         self.__vim.call('cursor', [self.__win_cursor, 1])
-        self.__vim.call('clearmatches')
-        self.__vim.call('matchaddpos',
-                        self.__context['cursor_highlight'],
-                        [[self.__win_cursor, 1]])
+        if not self.__context['cursorline']:
+            self.__vim.call('clearmatches')
+            self.__vim.call('matchaddpos',
+                            self.__context['cursor_highlight'],
+                            [[self.__win_cursor, 1]])
         if self.__context['auto_preview']:
             self.do_action(self.__context, 'preview')
 
