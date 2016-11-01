@@ -6,7 +6,7 @@
 
 import re
 from .base import Base
-from denite.util import fuzzy_escape, split_input, convert2fuzzy_pattern
+from denite.util import escape_fuzzy, split_input, convert2fuzzy_pattern
 
 
 class Filter(Base):
@@ -24,7 +24,7 @@ class Filter(Base):
         for pattern in split_input(context['input']):
             if context['ignorecase']:
                 pattern = pattern.lower()
-            p = re.compile(fuzzy_escape(pattern, True))
+            p = re.compile(escape_fuzzy(pattern, True))
             if context['ignorecase']:
                 candidates = [x for x in candidates
                               if p.search(x['word'].lower())]

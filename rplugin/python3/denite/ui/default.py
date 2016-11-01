@@ -4,7 +4,7 @@
 # License: MIT license
 # ============================================================================
 
-from denite.util import error, echo, debug, syntax_escape
+from denite.util import error, echo, debug, escape_syntax
 from .. import denite
 
 import re
@@ -138,7 +138,7 @@ class Default(object):
 
             syntax_line = 'syntax match %s /%s/ nextgroup=%s keepend' % (
                 'deniteSourceLine_' + name,
-                syntax_escape(source.name if self.__is_multi else ''),
+                escape_syntax(source.name if self.__is_multi else ''),
                 source.syntax_name,
             )
             self.__vim.command(syntax_line)
@@ -180,7 +180,7 @@ class Default(object):
         if pattern != '':
             self.__vim.command(
                 'silent! syntax match deniteMatched /' +
-                syntax_escape(pattern) + '/')
+                escape_syntax(pattern) + '/')
 
         del self.__vim.current.buffer[:]
         self.__vim.current.buffer.append(

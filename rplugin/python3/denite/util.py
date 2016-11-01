@@ -49,10 +49,11 @@ def escape(expr):
     return expr.replace("'", "''")
 
 
-def syntax_escape(expr):
+def escape_syntax(expr):
     return re.sub(r'([/~])', r'\\\1', expr)
 
-def fuzzy_escape(string, camelcase):
+
+def escape_fuzzy(string, camelcase):
     # Escape string for python regexp.
     p = re.sub(r'([a-zA-Z0-9_])', r'\1.*', re.escape(string))
     if camelcase and re.search(r'[A-Z]', string):
