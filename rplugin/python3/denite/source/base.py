@@ -20,6 +20,13 @@ class Base(object):
         self.context = {}
         self.vars = {}
 
+    def highlight_syntax(self):
+        pass
+
+    @property
+    def need_highlight(self):
+        return self.__class__.highlight_syntax is not Base.highlight_syntax
+
     @abstractmethod
     def gather_candidate(self, context):
         pass

@@ -10,6 +10,23 @@ from denite.process import Process
 import os
 import shlex
 
+GREP_HEADER_SYNTAX = '''
+syntax match deniteSource_grepHeader /\\v[^:]*:\d+(:\d+)? / contained keepend
+'''.strip()
+
+GREP_FILE_SYNTAX = (
+    'syntax match deniteSource_grepFile '
+    '/[^:]*:/ contained '
+    'containedin=deniteSource_grepHeader '
+    'nextgroup=deniteSource_grepLineNR')
+GREP_FILE_HIGHLIGHT = 'highlight default link deniteSource_grepFile Comment'
+
+GREP_LINE_SYNTAX = (
+    'syntax match deniteSource_grepLineNR '
+    '/\d\+\(:\d\+\)\?/ '
+    'contained containedin=deniteSource_grepHeader')
+GREP_LINE_HIGHLIGHT = 'highlight default link deniteSource_grepLineNR LineNR'
+
 
 class Source(Base):
 
@@ -40,6 +57,21 @@ class Source(Base):
         if self.__proc:
             self.__proc.kill()
             self.__proc = None
+
+    def highlight_syntax(self):
+        input_str = self.context['__input']
+        self.vim.command(GREP_HEADER_SYNTAX)
+        self.vim.command(GREP_FILE_SYNTAX)
+        self.vim.command(GREP_FILE_HIGHLIGHT)
+        self.vim.command(GREP_LINE_SYNTAX)
+        self.vim.command(GREP_LINE_HIGHLIGHT)
+        self.vim.command(
+            'syntax region deniteSource_grep start=// end=/$/ '
+            'contains=deniteSource_grepHeader,deniteMatched contained')
+        self.vim.command(
+            'syntax match deniteGrepInput /%s/ ' % input_str +
+            'contained containedin=deniteSource_grep')
+        self.vim.command('highlight default link deniteGrepInput Function')
 
     def gather_candidates(self, context):
         if self.__proc:
@@ -72,7 +104,7 @@ class Source(Base):
             result = parse_jump_line(context['__directory'], line)
             if result:
                 candidates.append({
-                    'word': '{0}:{1}{2}: {3}'.format(
+                    'word': '{0}:{1}{2} {3}'.format(
                         os.path.relpath(result[0],
                                         start=context['__directory']),
                         result[1],

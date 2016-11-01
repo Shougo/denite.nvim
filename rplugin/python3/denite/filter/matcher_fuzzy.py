@@ -6,7 +6,7 @@
 
 import re
 from .base import Base
-from denite.util import fuzzy_escape, split_input
+from denite.util import fuzzy_escape, split_input, convert2fuzzy_pattern
 
 
 class Filter(Base):
@@ -32,3 +32,6 @@ class Filter(Base):
                 candidates = [x for x in candidates
                               if p.search(x['word'])]
         return candidates
+
+    def convert_pattern(self, input_str):
+        return convert2fuzzy_pattern(input_str)
