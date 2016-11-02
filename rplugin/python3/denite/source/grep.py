@@ -34,6 +34,7 @@ class Source(Base):
         super().__init__(vim)
 
         self.name = 'grep'
+        self.syntax_name = 'deniteSource_grep'
         self.kind = 'file'
         self.vars = {
             'command': ['grep'],
@@ -66,11 +67,11 @@ class Source(Base):
         self.vim.command(GREP_LINE_SYNTAX)
         self.vim.command(GREP_LINE_HIGHLIGHT)
         self.vim.command(
-            'syntax region deniteSource_grep start=// end=/$/ '
+            'syntax region ' + self.syntax_name + ' start=// end=/$/ '
             'contains=deniteSource_grepHeader,deniteMatched contained')
         self.vim.command(
             'syntax match deniteGrepInput /%s/ ' % input_str +
-            'contained containedin=deniteSource_grep')
+            'contained containedin=' + self.syntax_name)
         self.vim.command('highlight default link deniteGrepInput Function')
 
     def gather_candidates(self, context):

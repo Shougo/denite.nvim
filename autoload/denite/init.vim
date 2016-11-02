@@ -111,6 +111,7 @@ function! denite#init#_user_options() abort "{{{
         \ 'auto_preview': v:false,
         \ 'buffer_name': 'default',
         \ 'cursor_highlight': 'Cursor',
+        \ 'cursorline': v:true,
         \ 'default_action': 'default',
         \ 'ignorecase': v:true,
         \ 'input': '',

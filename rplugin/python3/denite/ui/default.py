@@ -5,7 +5,7 @@
 # ============================================================================
 
 from curses.ascii import isprint
-from denite.util import error, echo, debug
+from denite.util import error, echo, debug, escape_syntax
 from ..prompt.key import Key
 from ..prompt.util import getchar
 from .. import denite
@@ -96,7 +96,7 @@ class Default(object):
             self.__vim.command('wincmd J')
         else:
             # Create new buffer
-            self.__vim.command('botright new denite')
+            self.__vim.command('silent botright new denite')
         self.__vim.command('resize ' + str(self.__winheight))
         self.__vim.command('nnoremap <silent><buffer> <CR> ' +
                            ':<C-u>Denite -resume -buffer_name=' +
@@ -109,7 +109,8 @@ class Default(object):
         self.__options['modifiable'] = True
 
         self.__window_options = self.__vim.current.window.options
-        self.__window_options['cursorline'] = True
+        if self.__context['cursorline']:
+            self.__window_options['cursorline'] = True
         self.__window_options['colorcolumn'] = ''
         self.__window_options['number'] = False
         self.__window_options['relativenumber'] = False
@@ -120,24 +121,36 @@ class Default(object):
         self.__bufnr = self.__vim.current.buffer.number
         self.__winid = self.__vim.call('win_getid')
 
-        self.__bufvars['denite_statusline_left'] = ''
-        self.__bufvars['denite_statusline_right'] = ''
+        self.__bufvars['denite_statusline_mode'] = ''
+        self.__bufvars['denite_statusline_sources'] = ''
+        self.__bufvars['denite_statusline_path'] = ''
+        self.__bufvars['denite_statusline_linenr'] = ''
 
         self.__init_syntax()
 
         if self.__context['statusline']:
-            self.__window_options['statusline'] = \
-                '%{denite#get_status_left()} %=%{denite#get_status_right()}'
+            self.__window_options['statusline'] = (
+                '%#deniteMode#%{denite#get_status_mode()}%* ' +
+                '%{denite#get_status_sources()} %=' +
+                '%#deniteStatusLinePath# %{denite#get_status_path()} %*' +
+                '%#deniteStatusLineNumber#%{denite#get_status_linenr()}%*')
 
     def __init_syntax(self):
         self.__vim.command('syntax case ignore')
+        self.__vim.command('highlight default link ' +
+                           self.__context['cursor_highlight'] + ' Normal')
+        self.__vim.command('highlight default link deniteMode ModeMsg')
         self.__vim.command('highlight default link deniteMatched Search')
+        self.__vim.command('highlight default link ' +
+                           'deniteStatusLinePath Comment')
+        self.__vim.command('highlight default link ' +
+                           'deniteStatusLineNumber LineNR')
 
         # Only define highlight when multiple sources exists or source has
         # need_highlight set to True
         for source in [x for x in self.__denite.get_current_sources()
                        if self.__is_multi or x.need_highlight]:
-            name = source.name
+            name = source.name.replace('/', '_')
 
             self.__vim.command(
                 'highlight default link ' +
@@ -145,13 +158,13 @@ class Default(object):
                 ' Type'
             )
 
-            syntax_line = 'syntax match %s /%s/ nextgroup=%s keepend' % (
+            syntax_line = 'syntax match %s /^%s/ nextgroup=%s keepend' % (
                 'deniteSourceLine_' + name,
-                name if self.__is_multi else '',
-                'deniteSource_' + name,
+                escape_syntax(source.name if self.__is_multi else ''),
+                source.syntax_name,
             )
             self.__vim.command(syntax_line)
-            self.__denite.get_source(name).highlight_syntax()
+            source.highlight_syntax()
 
     def init_cursor(self):
         self.__cursor = 0
@@ -162,34 +175,39 @@ class Default(object):
 
         prev_len = len(self.__candidates)
         self.__candidates = []
-        statusleft = '--' + self.__current_mode + '-- '
         pattern = ''
+        sources = ''
         for name, all, candidates in self.__denite.filter_candidates(
                 self.__context):
             self.__candidates += candidates
-            statusleft += '{}({}/{}) '.format(name, len(candidates), len(all))
+            sources += '{}({}/{}) '.format(name, len(candidates), len(all))
 
             matchers = self.__denite.get_source(name).matchers
-            for matcher in matchers:
-                filter = self.__denite.get_filter(matcher)
-                if filter:
-                    pattern = filter.convert_pattern(self.__context['input'])
+            for filter in [self.__denite.get_filter(x) for x in matchers
+                           if self.__denite.get_filter(x)]:
+                pat = filter.convert_pattern(self.__context['input'])
+                if pat != '':
+                    pattern = pat
+                    break
 
         if self.__denite.is_async():
-            statusleft = '[async] ' + statusleft
+            sources = '[async] ' + sources
         self.__candidates_len = len(self.__candidates)
         max = len(str(self.__candidates_len))
-        statusright = ('[{}] {:'+str(max)+'}/{:'+str(max)+'}').format(
-            self.__context['path'],
+        linenr = ('{:'+str(max)+'}/{:'+str(max)+'}').format(
             self.__cursor + self.__win_cursor,
             self.__candidates_len)
-        self.__bufvars['denite_statusline_left'] = statusleft
-        self.__bufvars['denite_statusline_right'] = statusright
+        mode = '-- ' + self.__current_mode.upper() + ' -- '
+        self.__bufvars['denite_statusline_mode'] = mode
+        self.__bufvars['denite_statusline_sources'] = sources
+        self.__bufvars['denite_statusline_path'] = (
+            '[' + self.__context['path'] + ']')
+        self.__bufvars['denite_statusline_linenr'] = linenr
 
         if pattern != '':
             self.__vim.command(
                 'silent! syntax match deniteMatched /' +
-                re.sub(r'/', r'\\/', pattern) + '/')
+                escape_syntax(pattern) + '/')
 
         del self.__vim.current.buffer[:]
         self.__vim.current.buffer.append(
@@ -209,6 +227,10 @@ class Default(object):
 
     def move_cursor(self):
         self.__vim.call('cursor', [self.__win_cursor, 1])
+        self.__vim.call('clearmatches')
+        self.__vim.call('matchaddpos',
+                        self.__context['cursor_highlight'],
+                        [[self.__win_cursor, 1]])
         if self.__context['auto_preview']:
             self.do_action(self.__context, 'preview')
 
@@ -245,8 +267,10 @@ class Default(object):
 
         if self.__vim.call('tabpagebuflist') == self.__prev_tabpages:
             self.__vim.command(self.__winrestcmd)
-        if self.__vim.current.buffer.number == self.__prev_bufnr:
-            self.__vim.call('winrestview', self.__winsaveview)
+
+        # Note: Does not work for line source
+        # if self.__vim.current.buffer.number == self.__prev_bufnr:
+        #     self.__vim.call('winrestview', self.__winsaveview)
 
     def update_prompt(self):
         self.__vim.command('redraw')

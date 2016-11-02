@@ -367,13 +367,21 @@ denite#custom#var({source-name}, {var-name}, {value})
 		to {value}.  You may specify multiple sources with the
 		separator "," in {source-name}.
 
-denite#get_status_left()			 *denite#get_status_left()*
-		Returns the left part of the status string.  It is useful to
+denite#get_status_mode()			 *denite#get_status_mode()*
+		Returns the mode part of the status string.  It is useful to
 		customize the statusline.
 
-denite#get_status_right()			 *denite#get_status_right()*
-		Returns the right part of the status string.  It is useful to
+denite#get_status_sources()			 *denite#get_status_sources()*
+		Returns the sources part of the status string.  It is useful to
 		customize the statusline.
+
+denite#get_status_path()			 *denite#get_status_path()*
+		Returns the path part of the status string.  It is useful to
+		customize the statusline.
+
+denite#get_status_linenr()			 *denite#get_status_linenr()*
+		Returns the line number part of the status string.  It is
+		useful to customize the statusline.
 
 							*denite#initialize()*
 denite#initialize()
@@ -839,6 +847,12 @@ A: >
 	\ ['git', 'ls-files', '-co', '--exclude-standard'])
 	nnoremap <silent> <C-p> :<C-u>Denite
 	\ `finddir('.git', ';') != '' ? 'file_rec/git' : 'file_rec'`<CR>
+
+Q: Where is "file_mru" source for denite.nvim?
+
+A: Please install neomru.vim plugin.  It includes file_mru source for
+denite.nvim.
+https://github.com/Shougo/neomru.vim
 
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*

@@ -46,7 +46,6 @@ class Filter(Base):
             (d['word'] for d in context['candidates']),
             context['input'],
             limit=1000,
-            highlight_mode='detailed',
             ispath=('action__path' in context['candidates'][0]))[0]
         return [x for x in context['candidates']
                 if x['word'] in cpsm_result]
