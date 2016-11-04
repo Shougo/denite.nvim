@@ -22,11 +22,9 @@ class Base(object):
         self.vars = {}
 
     def highlight_syntax(self):
-        pass
-
-    @property
-    def need_highlight(self):
-        return self.__class__.highlight_syntax is not Base.highlight_syntax
+        self.vim.command(
+            'syntax region ' + self.syntax_name + ' start=// end=/$/ '
+            'contains=deniteMatched contained')
 
     @abstractmethod
     def gather_candidate(self, context):

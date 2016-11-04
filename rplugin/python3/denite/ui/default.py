@@ -146,10 +146,7 @@ class Default(object):
         self.__vim.command('highlight default link ' +
                            'deniteStatusLineNumber LineNR')
 
-        # Only define highlight when multiple sources exists or source has
-        # need_highlight set to True
-        for source in [x for x in self.__denite.get_current_sources()
-                       if self.__is_multi or x.need_highlight]:
+        for source in [x for x in self.__denite.get_current_sources()]:
             name = source.name.replace('/', '_')
 
             self.__vim.command(
@@ -207,7 +204,7 @@ class Default(object):
         if pattern != '':
             self.__vim.command(
                 'silent! syntax match deniteMatched /' +
-                escape_syntax(pattern) + '/')
+                escape_syntax(pattern) + '/ contained')
 
         del self.__vim.current.buffer[:]
         self.__vim.current.buffer.append(
