@@ -255,7 +255,7 @@ class Default(object):
         self.__vim.command('redraw | echo')
         self.__vim.command('pclose!')
 
-        if not self.__vim.call('bufexists', self.__bufnr):
+        if not self.__vim.call('bufloaded', self.__bufnr):
             return
 
         # Restore the view
