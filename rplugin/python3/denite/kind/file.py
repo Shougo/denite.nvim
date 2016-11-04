@@ -28,7 +28,7 @@ class Kind(Base):
         if self.vim.call('bufwinnr', path) <= 0:
             self.vim.call(
                 'denite#util#execute_path', 'edit', path)
-        self.__jump(target)
+        self.__jump(context, target)
 
     def action_preview(self, context):
         target = context['targets'][0]
@@ -37,17 +37,22 @@ class Kind(Base):
         prev_id = self.vim.call('win_getid')
         self.vim.call('denite#util#execute_path', 'pedit!', path)
         self.vim.command('wincmd P')
-        self.__jump(target)
+        self.__jump(context, target)
         self.vim.call('win_gotoid', prev_id)
         return True
 
-    def __jump(self, target):
+    def __jump(self, context, target):
         line = int(target.get('action__line', 0))
         col = int(target.get('action__col', 0))
 
         try:
             if line > 0:
                 self.vim.call('cursor', [line, 0])
+                if 'action__col' not in target:
+                    pos = self.vim.current.line.lower().find(
+                        context['input'].lower())
+                    if pos >= 0:
+                        self.vim.call('cursor', [0, pos + 1])
             if col > 0:
                 self.vim.call('cursor', [0, col])
         except Exception:
