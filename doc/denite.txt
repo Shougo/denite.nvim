@@ -456,7 +456,7 @@ OPTIONS							*denite-options*
 
 						*denite-options-statusline*
 -statusline
-		Enable statuslie.
+		Enable statusline.
 		Default: true
 
 ==============================================================================
