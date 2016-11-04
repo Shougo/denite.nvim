@@ -92,6 +92,7 @@ def path2dir(path):
 def path2project(vim, path):
     return vim.call('denite#util#path2project_directory', path)
 
+
 def parse_jump_line(cwd, line):
     m = re.search(r'^(.*):(\d+)(?::(\d+))?:(.*)$', line)
     if not m or not m.group(1) or not m.group(4):
