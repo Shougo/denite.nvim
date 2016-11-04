@@ -5,7 +5,7 @@
 # ============================================================================
 
 from .base import Base
-from denite.util import parse_jump_line
+from denite.util import parse_jump_line, escape_syntax
 from denite.process import Process
 import os
 import shlex
@@ -71,7 +71,7 @@ class Source(Base):
             'contains=deniteSource_grepHeader,deniteMatched contained')
         self.vim.command(
             'syntax match deniteGrepInput /%s/ ' % input_str +
-            'contained containedin=' + self.syntax_name)
+            'contained containedin=' + escape_syntax(self.syntax_name))
         self.vim.command('highlight default link deniteGrepInput Function')
 
     def gather_candidates(self, context):
