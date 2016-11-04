@@ -426,6 +426,11 @@ OPTIONS							*denite-options*
 		Specify the default action as {action}.
 		Default: "default"
 
+						*denite-options-empty*
+-empty
+		Open any denite buffer if the candidate is empty.
+		Default: true
+
 							*denite-options-input*
 -input={input-text}
 		Specify an initial narrowing text.

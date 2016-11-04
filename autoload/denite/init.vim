@@ -113,6 +113,7 @@ function! denite#init#_user_options() abort "{{{
         \ 'cursor_highlight': 'Cursor',
         \ 'cursorline': v:true,
         \ 'default_action': 'default',
+        \ 'empty': v:true,
         \ 'ignorecase': v:true,
         \ 'input': '',
         \ 'mode': 'insert',

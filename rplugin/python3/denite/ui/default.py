@@ -72,6 +72,8 @@ class Default(object):
 
                 self.__denite.gather_candidates(self.__context)
                 self.update_candidates()
+                if self.check_empty():
+                    return self.__result
 
                 self.init_buffer()
                 self.init_cursor()
@@ -206,6 +208,10 @@ class Default(object):
             self.init_cursor()
 
         self.move_cursor()
+
+    def check_empty(self):
+        return not (self.__context['empty'] or
+                    self.__denite.is_async() or self.__candidates)
 
     def update_candidates(self):
         pattern = ''
@@ -351,6 +357,9 @@ class Default(object):
             if is_async:
                 self.update_candidates()
                 self.update_buffer()
+                if self.check_empty():
+                    self.quit()
+                    break
 
     def quit(self):
         self.__denite.on_close(self.__context)
