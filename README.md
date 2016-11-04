@@ -24,8 +24,6 @@ you should read `:help provider-python`.
 
 * source kind support
 
-* neovim-prompt integration
-
 * source completion support: completion(args, arglead)
 
 * matcher_hide_hidden_files
