@@ -30,6 +30,7 @@ class Default(object):
         self.__win_cursor = 1
         self.__candidates = []
         self.__candidates_len = 0
+        self.__prev_candidates_len = 0
         self.__result = []
         self.__context = {}
         self.__current_mode = ''
@@ -45,6 +46,8 @@ class Default(object):
         self.__initialized = False
         self.__winheight = 0
         self.__is_multi = False
+        self.__matched_pattern = ''
+        self.__statusline_sources = ''
 
     def start(self, sources, context):
         try:
@@ -67,12 +70,15 @@ class Default(object):
                 self.__denite.start(self.__context)
                 self.__denite.on_init(self.__context)
 
+                self.__denite.gather_candidates(self.__context)
+                self.update_candidates()
+
                 self.init_buffer()
                 self.init_cursor()
-                self.__initialized = True
 
-                self.__denite.gather_candidates(self.__context)
                 self.change_mode(self.__current_mode)
+
+                self.__initialized = True
 
                 self.input_loop()
         except Exception:
@@ -168,43 +174,22 @@ class Default(object):
         self.__win_cursor = 1
 
     def update_buffer(self):
-        self.__vim.command('silent! syntax clear deniteMatched')
-
-        prev_len = len(self.__candidates)
-        self.__candidates = []
-        pattern = ''
-        sources = ''
-        for name, all, candidates in self.__denite.filter_candidates(
-                self.__context):
-            self.__candidates += candidates
-            sources += '{}({}/{}) '.format(name, len(candidates), len(all))
-
-            matchers = self.__denite.get_source(name).matchers
-            for filter in [self.__denite.get_filter(x) for x in matchers
-                           if self.__denite.get_filter(x)]:
-                pat = filter.convert_pattern(self.__context['input'])
-                if pat != '':
-                    pattern = pat
-                    break
-
-        if self.__denite.is_async():
-            sources = '[async] ' + sources
-        self.__candidates_len = len(self.__candidates)
         max = len(str(self.__candidates_len))
         linenr = ('{:'+str(max)+'}/{:'+str(max)+'}').format(
             self.__cursor + self.__win_cursor,
             self.__candidates_len)
         mode = '-- ' + self.__current_mode.upper() + ' -- '
         self.__bufvars['denite_statusline_mode'] = mode
-        self.__bufvars['denite_statusline_sources'] = sources
+        self.__bufvars['denite_statusline_sources'] = self.__statusline_sources
         self.__bufvars['denite_statusline_path'] = (
             '[' + self.__context['path'] + ']')
         self.__bufvars['denite_statusline_linenr'] = linenr
 
-        if pattern != '':
+        self.__vim.command('silent! syntax clear deniteMatched')
+        if self.__matched_pattern != '':
             self.__vim.command(
                 'silent! syntax match deniteMatched /' +
-                escape_syntax(pattern) + '/ contained')
+                escape_syntax(self.__matched_pattern) + '/ contained')
 
         del self.__vim.current.buffer[:]
         self.__vim.current.buffer.append(
@@ -217,10 +202,34 @@ class Default(object):
 
         self.__options['modified'] = False
 
-        if prev_len > self.__candidates_len:
+        if self.__prev_candidates_len > self.__candidates_len:
             self.init_cursor()
 
         self.move_cursor()
+
+    def update_candidates(self):
+        pattern = ''
+        sources = ''
+        self.__candidates = []
+        self.__prev_candidates_len = self.__candidates_len
+        for name, all, candidates in self.__denite.filter_candidates(
+                self.__context):
+            self.__candidates += candidates
+            sources += '{}({}/{}) '.format(name, len(candidates), len(all))
+
+            matchers = self.__denite.get_source(name).matchers
+            for filter in [self.__denite.get_filter(x) for x in matchers
+                           if self.__denite.get_filter(x)]:
+                pat = filter.convert_pattern(self.__context['input'])
+                if pat != '':
+                    pattern = pat
+                    break
+        self.__matched_pattern = pattern
+        self.__candidates_len = len(self.__candidates)
+
+        if self.__denite.is_async():
+            sources = '[async] ' + sources
+        self.__statusline_sources = sources
 
     def move_cursor(self):
         self.__vim.call('cursor', [self.__win_cursor, 1])
@@ -285,6 +294,7 @@ class Default(object):
         self.__context['input'] = self.__input_before
         self.__context['input'] += self.__input_cursor
         self.__context['input'] += self.__input_after
+        self.update_candidates()
         self.update_buffer()
         self.update_prompt()
         self.__win_cursor = 1
@@ -292,6 +302,7 @@ class Default(object):
     def redraw(self):
         self.__context['is_redraw'] = True
         self.__denite.gather_candidates(self.__context)
+        self.update_candidates()
         self.update_buffer()
         self.__context['is_redraw'] = False
 
@@ -338,6 +349,7 @@ class Default(object):
                 continue
 
             if is_async:
+                self.update_candidates()
                 self.update_buffer()
 
     def quit(self):
