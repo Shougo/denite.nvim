@@ -96,8 +96,8 @@ EXAMPLES						*denite-examples*
 	\ ['rg', '--files'])
 
 	" Change mappings.
-	call denite#custom#map('_', '<C-j>', 'move_to_next_line')
-	call denite#custom#map('_', '<C-k>', 'move_to_prev_line')
+	call denite#custom#map('insert', '<C-j>', 'move_to_next_line')
+	call denite#custom#map('insert', '<C-k>', 'move_to_prev_line')
 
 	" Change matchers.
 	call denite#custom#source(
@@ -326,10 +326,10 @@ denite#custom#option({buffer-name}, {option-name}, {value})
 denite#custom#map({mode}, {key}, {mapping})
 		Set {key} keymapping to function {mapping} in {mode} mode.
 		{mapping} is denite key mapping name.
+		If {mode} is "_", it is all mode mapping.  But it does not
+		overwrite the mode specific mappings.
 		See |denite-key-mappings|.
 		Note: It is not related to Vim mappings.
-		Note: {key} must be one key code character like "<C-h>"
-		instead of <C-h>.
 		Note: Multiple key stroke mappings like "<C-h><C-b>" are not
 		supported.
 		Note: You cannot change <C-c> default mapping.
