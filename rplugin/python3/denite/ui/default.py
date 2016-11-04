@@ -14,10 +14,17 @@ import traceback
 import time
 
 
-def _safe_isprint(vim, c):
+# Port 'isprint' function from curses.ascii which is missing in Windows.
+# https://github.com/python/cpython/blob/3.5/Lib/curses/ascii.py#L62
+def isprint(c):
+    c = ord(c) if type(c) == type('') else c
+    return c >= 32 and c <= 126
+
+
+def _safe_isprint(c):
     if not c or c == '\0':
         return False
-    return vim.call('match', c, '\p') >= 0
+    return isprint(c)
 
 
 class Default(object):
@@ -342,8 +349,7 @@ class Default(object):
                     if ret:
                         break
                     continue
-            elif (self.__current_mode == 'insert' and
-                  _safe_isprint(self.__vim, key.char)):
+            elif (self.__current_mode == 'insert' and _safe_isprint(key.char)):
                 # Normal input string
                 self.__input_before += key.char
                 self.update_input()
