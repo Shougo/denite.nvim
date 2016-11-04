@@ -70,7 +70,7 @@ class Source(Base):
             'syntax region ' + self.syntax_name + ' start=// end=/$/ '
             'contains=deniteSource_grepHeader,deniteMatched contained')
         self.vim.command(
-            'syntax match deniteGrepInput /%s/ ' % input_str +
+            'syntax match deniteGrepInput /%s/ ' % input_str.replace('/', '\/') +
             'contained containedin=' + self.syntax_name)
         self.vim.command('highlight default link deniteGrepInput Function')
 
