@@ -34,12 +34,23 @@ class Kind(Base):
         target = context['targets'][0]
         path = target['action__path']
 
-        prev_id = self.vim.call('win_getid')
-        self.vim.call('denite#util#execute_path', 'pedit!', path)
-        self.vim.command('wincmd P')
-        self.__jump(context, target)
-        self.vim.call('win_gotoid', prev_id)
+        preview_window = self.get_preview_window()
+        if (preview_window is not None) and \
+           (preview_window.buffer.name == path):
+            self.vim.command('pclose!')
+        else:
+            prev_id = self.vim.call('win_getid')
+            self.vim.call('denite#util#execute_path', 'pedit!', path)
+            self.vim.command('wincmd P')
+            self.__jump(context, target)
+            self.vim.call('win_gotoid', prev_id)
         return True
+
+    def get_preview_window(self):
+        for id in range(0, len(self.vim.windows) - 1):
+            if self.vim.call('getwinvar', id + 1, '&pvw') == 1:
+                return self.vim.windows[id]
+        return None
 
     def __jump(self, context, target):
         line = int(target.get('action__line', 0))
