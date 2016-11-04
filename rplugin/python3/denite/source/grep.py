@@ -70,8 +70,8 @@ class Source(Base):
             'syntax region ' + self.syntax_name + ' start=// end=/$/ '
             'contains=deniteSource_grepHeader,deniteMatched contained')
         self.vim.command(
-            'syntax match deniteGrepInput /%s/ ' % input_str +
-            'contained containedin=' + escape_syntax(self.syntax_name))
+            'syntax match deniteGrepInput /%s/ ' % escape_syntax(input_str) +
+            'contained containedin=' + self.syntax_name)
         self.vim.command('highlight default link deniteGrepInput Function')
 
     def gather_candidates(self, context):
