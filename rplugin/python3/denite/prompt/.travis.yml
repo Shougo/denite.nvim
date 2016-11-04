@@ -1,0 +1,17 @@
+sudo: false
+language: python
+python:
+  - 3.3
+  - 3.4
+  - 3.5
+
+install:
+  - pip install coveralls
+  - git clone --depth 1 --single-branch -b ci-test https://github.com/lambdalisue/neovim-prompt ci-test
+
+script:
+  - cd ci-test
+  - sh ./scripts/test.sh
+
+after_success:
+  - coveralls
