@@ -204,6 +204,10 @@ COMMANDS 						*denite-commands*
 		Equivalent to |:Denite| except that it targets the word under
 		the cursor for the initial narrowing text.
 
+:DeniteProjectDir [{options}] {sources}			*:DeniteProjectDir*
+		Equivalent to |:Denite| except that it targets the project
+		directory.
+
 ------------------------------------------------------------------------------
 KEY MAPPINGS 						*denite-key-mappings*
 

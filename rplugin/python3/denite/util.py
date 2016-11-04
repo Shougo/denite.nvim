@@ -89,22 +89,8 @@ def path2dir(path):
     return path if os.path.isdir(path) else os.path.dirname(path)
 
 
-def path2project(path):
-    # Todo: other project files support
-    if path == '':
-        return ''
-
-    parent = path2dir(path)
-
-    while 1:
-        path = parent + '/.git'
-        if os.path.isdir(path) or os.path.isfile(path):
-            return parent
-        next = os.path.dirname(parent)
-        if next == parent:
-            return ''
-        parent = next
-
+def path2project(vim, path):
+    return vim.call('denite#util#path2project_directory', path)
 
 def parse_jump_line(cwd, line):
     m = re.search(r'^(.*):(\d+)(?::(\d+))?:(.*)$', line)
