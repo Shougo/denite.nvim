@@ -30,7 +30,6 @@ class Default(object):
         self.__win_cursor = 1
         self.__candidates = []
         self.__candidates_len = 0
-        self.__prev_candidates_len = 0
         self.__result = []
         self.__context = {}
         self.__current_mode = ''
@@ -204,9 +203,6 @@ class Default(object):
 
         self.__options['modified'] = False
 
-        if self.__prev_candidates_len > self.__candidates_len:
-            self.init_cursor()
-
         self.move_cursor()
 
     def check_empty(self):
@@ -217,7 +213,6 @@ class Default(object):
         pattern = ''
         sources = ''
         self.__candidates = []
-        self.__prev_candidates_len = self.__candidates_len
         for name, all, candidates in self.__denite.filter_candidates(
                 self.__context):
             self.__candidates += candidates
@@ -303,7 +298,7 @@ class Default(object):
         self.update_candidates()
         self.update_buffer()
         self.update_prompt()
-        self.__win_cursor = 1
+        self.init_cursor()
 
     def redraw(self):
         self.__context['is_redraw'] = True
@@ -430,16 +425,18 @@ class Default(object):
             self.__win_cursor += 1
         elif self.__win_cursor + self.__cursor < self.__candidates_len:
             self.__cursor += 1
+        else:
+            return
         self.update_buffer()
-        self.move_cursor()
 
     def move_to_prev_line(self):
         if self.__win_cursor > 1:
             self.__win_cursor -= 1
         elif self.__cursor >= 1:
             self.__cursor -= 1
+        else:
+            return
         self.update_buffer()
-        self.move_cursor()
 
     def input_command_line(self):
         self.__vim.command('redraw')
