@@ -7,7 +7,7 @@
 from os.path import isabs
 from .base import Base
 from fnmatch import fnmatch
-import re
+from re import match
 
 
 class Filter(Base):
@@ -32,7 +32,7 @@ class Filter(Base):
         for glob in self.vars['ignore_globs']:
             if not isabs(glob):
                 glob = '*/' + glob
-            if re.match('\./', glob):
+            if match('\./', glob):
                 glob = context['path'] + glob[1:]
             if glob[-1] == '/':
                 glob += '*'
