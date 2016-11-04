@@ -15,7 +15,7 @@ import time
 
 
 def _safe_isprint(vim, c):
-    if not c:
+    if not c or c == '\0':
         return False
     return vim.call('match', c, '\p') >= 0
 
