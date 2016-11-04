@@ -132,8 +132,7 @@ def expand(path):
 
 
 def convert2fuzzy_pattern(input):
-    return '\|'.join([re.sub(r'(.)(?!$)', r'\1[^\1]\{-}', x)
-                      for x in split_input(input)])
+    return '\|'.join([escape_fuzzy(x, True) for x in split_input(input)])
 
 
 def convert2regex_pattern(input):
