@@ -4,7 +4,6 @@
 # License: MIT license
 # ============================================================================
 
-from curses.ascii import isprint
 from denite.util import error, echo, debug, escape_syntax
 from ..prompt.key import Key
 from ..prompt.util import getchar
@@ -15,10 +14,10 @@ import traceback
 import time
 
 
-def _safe_isprint(c):
+def _safe_isprint(vim, c):
     if not c:
         return False
-    return isprint(c)
+    return vim.call('match', c, '\p') >= 0
 
 
 class Default(object):
@@ -343,7 +342,8 @@ class Default(object):
                     if ret:
                         break
                     continue
-            elif (self.__current_mode == 'insert' and _safe_isprint(key.char)):
+            elif (self.__current_mode == 'insert' and
+                  _safe_isprint(self.__vim, key.char)):
                 # Normal input string
                 self.__input_before += key.char
                 self.update_input()
