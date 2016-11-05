@@ -12,6 +12,7 @@ from .. import denite
 import re
 import traceback
 import time
+from itertools import filterfalse
 
 
 def _safe_isprint(vim, c):
@@ -217,13 +218,13 @@ class Default(object):
             self.__candidates += candidates
             sources += '{}({}/{}) '.format(name, len(candidates), len(all))
 
-            matchers = self.__denite.get_source(name).matchers
-            for filter in [self.__denite.get_filter(x) for x in matchers
-                           if self.__denite.get_filter(x)]:
-                pat = filter.convert_pattern(self.__context['input'])
-                if pat != '':
-                    pattern = pat
-                    break
+            if pattern == '':
+                matchers = self.__denite.get_source(name).matchers
+                pattern = next(filterfalse(
+                    lambda x: x == '',
+                    [self.__denite.get_filter(x).convert_pattern(
+                        self.__context['input']) for x in matchers
+                     if self.__denite.get_filter(x)]), '')
         self.__matched_pattern = pattern
         self.__candidates_len = len(self.__candidates)
 
