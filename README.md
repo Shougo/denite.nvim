@@ -31,5 +31,3 @@ you should read `:help provider-python`.
 * quickmatch feature
 
 * multiple candidates select
-
-* choose action

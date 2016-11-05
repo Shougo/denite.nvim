@@ -24,6 +24,10 @@ function! denite#helper#complete(arglead, cmdline, cursorpos) abort "{{{
 
   return uniq(sort(filter(_, 'stridx(v:val, a:arglead) == 0')))
 endfunction"}}}
+function! denite#helper#complete_actions(arglead, cmdline, cursorpos) abort "{{{
+  return uniq(sort(filter(g:denite#_actions,
+        \ 'stridx(v:val, a:arglead) == 0')))
+endfunction"}}}
 
 function! denite#helper#call_denite(command, args, line1, line2) abort "{{{
   let [args, context] = denite#helper#_parse_options_args(a:args)

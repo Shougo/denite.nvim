@@ -206,7 +206,12 @@ class Denite(object):
                 'denite.kind.' + name, path).load_module()
             self.__kinds[name] = module.Kind(self.__vim)
 
-    def do_action(self, context, kind_name, action_name, targets):
+    def do_action(self, context, action_name, targets):
+        if 'kind' in targets:
+            kind_name = targets['kind']
+        else:
+            kind_name = self.__sources[targets[0]['source']].kind
+
         if kind_name not in self.__kinds:
             self.error('Invalid kind: ' + kind_name)
             return True
@@ -224,6 +229,20 @@ class Denite(object):
         context['targets'] = targets
         func = getattr(kind, action_attr)
         return func(context)
+
+    def get_actions(self, context, targets):
+        if 'kind' in targets:
+            kind_name = targets['kind']
+        else:
+            kind_name = self.__sources[targets[0]['source']].kind
+
+        if kind_name not in self.__kinds:
+            self.error('Invalid kind: ' + kind_name)
+            return []
+
+        kind = self.__kinds[kind_name]
+        return ['default'] + [x.replace('action_', '') for x in dir(kind)
+                              if x.find('action_') == 0]
 
     def is_async(self):
         return len([x for x in self.__current_sources

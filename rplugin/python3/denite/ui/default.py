@@ -279,7 +279,7 @@ class Default(object):
         #     self.__vim.call('winrestview', self.__winsaveview)
 
     def update_prompt(self):
-        self.__vim.command('redraw')
+        self.__vim.command('redraw | echo')
         if self.__context['prompt'] != '':
             echo(self.__vim, self.__context['prompt_highlight'],
                  self.__context['prompt'] + ' ')
@@ -367,10 +367,6 @@ class Default(object):
             return
 
         candidate = self.__candidates[self.__cursor + self.__win_cursor - 1]
-        if 'kind' in candidate:
-            kind = candidate['kind']
-        else:
-            kind = self.__denite.get_source(candidate['source']).kind
 
         prev_id = self.__vim.call('win_getid')
         self.__vim.call('win_gotoid', self.__prev_winid)
@@ -384,7 +380,7 @@ class Default(object):
                 self.__vim.command('wincmd w')
         try:
             is_quit = not self.__denite.do_action(
-                self.__context, kind, action, [candidate])
+                self.__context, action, [candidate])
         except Exception:
             for line in traceback.format_exc().splitlines():
                 error(self.__vim, line)
@@ -406,6 +402,21 @@ class Default(object):
                 is_quit = False
         self.__result = [candidate]
         return is_quit
+
+    def choose_action(self):
+        if self.__cursor >= self.__candidates_len:
+            return
+
+        candidate = self.__candidates[self.__cursor + self.__win_cursor - 1]
+
+        self.__vim.vars['denite#_actions'] = self.__denite.get_actions(
+            self.__context, [candidate])
+        action = self.__vim.call('input', 'Action: ', '',
+                                 'customlist,denite#helper#complete_actions')
+        self.__vim.command('redraw | echo')
+        if action == '':
+            return
+        return self.do_action(action)
 
     def delete_backward_char(self):
         self.__input_before = re.sub('.$', '', self.__input_before)
@@ -443,7 +454,7 @@ class Default(object):
         self.update_buffer()
 
     def input_command_line(self):
-        self.__vim.command('redraw')
+        self.__vim.command('redraw | echo')
         input = self.__vim.call(
             'input', self.__context['prompt'] + ' ',
             self.__context['input'])
