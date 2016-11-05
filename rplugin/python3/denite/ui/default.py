@@ -238,7 +238,7 @@ class Default(object):
                         self.__context['cursor_highlight'],
                         [[self.__win_cursor, 1]])
         if self.__context['auto_preview']:
-            self.do_action(self.__context, 'preview')
+            self.do_action('preview')
 
     def change_mode(self, mode):
         custom = self.__context['custom']['map']
