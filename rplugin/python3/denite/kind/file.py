@@ -51,8 +51,8 @@ class Kind(Base):
 
     def __get_preview_window(self):
         return next(filterfalse(lambda x:
-                              not x.options['previewwindow'],
-                              self.vim.windows), None)
+                                not x.options['previewwindow'],
+                                self.vim.windows), None)
 
     def __jump(self, context, target):
         line = int(target.get('action__line', 0))
