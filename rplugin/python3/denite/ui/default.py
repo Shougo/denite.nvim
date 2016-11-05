@@ -391,6 +391,10 @@ class Default(object):
             error(self.__vim,
                   'The action ' + action + ' execution is failed.')
             return
+        now_id = self.__vim.call('win_getid')
+        if now_id != self.__prev_winid:
+            self.__prev_winid = now_id
+            self.__prev_bufnr = self.__vim.current.buffer.number
         self.__vim.call('win_gotoid', prev_id)
 
         if is_quit:
