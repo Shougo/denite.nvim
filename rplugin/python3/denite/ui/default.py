@@ -362,11 +362,15 @@ class Default(object):
         self.__result = []
         return True
 
-    def do_action(self, action):
+    def get_candidates(self):
         if self.__cursor >= self.__candidates_len:
-            return
+            return []
+        return [self.__candidates[self.__cursor + self.__win_cursor - 1]]
 
-        candidate = self.__candidates[self.__cursor + self.__win_cursor - 1]
+    def do_action(self, action):
+        candidates = self.get_current_candidates()
+        if not candidates:
+            return
 
         prev_id = self.__vim.call('win_getid')
         self.__vim.call('win_gotoid', self.__prev_winid)
@@ -380,7 +384,7 @@ class Default(object):
                 self.__vim.command('wincmd w')
         try:
             is_quit = not self.__denite.do_action(
-                self.__context, action, [candidate])
+                self.__context, action, candidates)
         except Exception:
             for line in traceback.format_exc().splitlines():
                 error(self.__vim, line)
@@ -400,17 +404,16 @@ class Default(object):
             else:
                 # Disable quit flag
                 is_quit = False
-        self.__result = [candidate]
+        self.__result = candidates
         return is_quit
 
     def choose_action(self):
-        if self.__cursor >= self.__candidates_len:
+        candidates = self.get_current_candidates()
+        if not candidates:
             return
 
-        candidate = self.__candidates[self.__cursor + self.__win_cursor - 1]
-
         self.__vim.vars['denite#_actions'] = self.__denite.get_actions(
-            self.__context, [candidate])
+            self.__context, candidates)
         action = self.__vim.call('input', 'Action: ', '',
                                  'customlist,denite#helper#complete_actions')
         self.__vim.command('redraw | echo')
