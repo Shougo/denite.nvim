@@ -37,9 +37,8 @@ class Kind(Base):
         target = context['targets'][0]
         path = target['action__path']
 
-        preview_window = self.get_preview_window()
-        if (preview_window is not None) and \
-           (preview_window.buffer.name == path):
+        preview_window = self.__get_preview_window()
+        if preview_window and preview_window.buffer.name == path:
             self.vim.command('pclose!')
         else:
             prev_id = self.vim.call('win_getid')
@@ -49,9 +48,9 @@ class Kind(Base):
             self.vim.call('win_gotoid', prev_id)
         return True
 
-    def get_preview_window(self):
+    def __get_preview_window(self):
         for id in range(0, len(self.vim.windows) - 1):
-            if self.vim.call('getwinvar', id + 1, '&pvw') == 1:
+            if self.vim.call('getwinvar', id + 1, '&previewwindow') == 1:
                 return self.vim.windows[id]
         return None
 
