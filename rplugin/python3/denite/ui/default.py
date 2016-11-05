@@ -279,7 +279,7 @@ class Default(object):
         #     self.__vim.call('winrestview', self.__winsaveview)
 
     def update_prompt(self):
-        self.__vim.command('redraw | echo')
+        self.__vim.command('redraw')
         if self.__context['prompt'] != '':
             echo(self.__vim, self.__context['prompt_highlight'],
                  self.__context['prompt'] + ' ')
@@ -362,7 +362,7 @@ class Default(object):
         self.__result = []
         return True
 
-    def get_candidates(self):
+    def get_current_candidates(self):
         if self.__cursor >= self.__candidates_len:
             return []
         return [self.__candidates[self.__cursor + self.__win_cursor - 1]]
