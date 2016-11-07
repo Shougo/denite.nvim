@@ -371,15 +371,8 @@ class Default(object):
                 self.__vim.command('topleft new')
             else:
                 self.__vim.command('wincmd w')
-        try:
-            is_quit = not self.__denite.do_action(
-                self.__context, action, candidates)
-        except Exception:
-            for line in traceback.format_exc().splitlines():
-                error(self.__vim, line)
-            error(self.__vim,
-                  'The action ' + action + ' execution is failed.')
-            return
+        is_quit = not self.__denite.do_action(
+            self.__context, action, candidates)
         now_id = self.__vim.call('win_getid')
         if now_id != self.__prev_winid:
             self.__prev_winid = now_id
