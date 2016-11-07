@@ -191,7 +191,7 @@ class Default(object):
         self.__vim.current.buffer.append(
             ['%s %s' % (
                 x['source'] if self.__is_multi else '',
-                x.get('abbr', x['word']))
+                x.get('abbr', x['word'])[:400])
              for x in self.__candidates[self.__cursor:
                                         self.__cursor + self.__winheight]])
         del self.__vim.current.buffer[0]
