@@ -36,7 +36,12 @@ function! denite#util#redir(cmd) abort "{{{
 endfunction"}}}
 
 function! denite#util#execute_path(command, path) abort "{{{
-  execute a:command fnameescape(a:path)
+  try
+    execute a:command fnameescape(a:path)
+  catch
+    call denite#util#print_error(v:throwpoint)
+    call denite#util#print_error(v:exception)
+  endtry
 endfunction"}}}
 function! denite#util#echo(color, string) abort "{{{
   execute 'echohl' a:color
