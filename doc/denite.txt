@@ -657,7 +657,10 @@ matcher_fuzzy
 					*denite-filter-matcher_ignore_globs*
 matcher_ignore_globs
 		A matcher which ignores the globs matched files.
-		Default globs: >
+
+		Source custom variables:
+		ignore_globs	the ignore globs pattern.
+		(default is: >
 		[
                  '*~', '*.o', '*.exe', '*.bak',
                  'DS_Store', '*.pyc', '*.sw[po]', '*.class',
@@ -665,6 +668,7 @@ matcher_ignore_globs
                  'tags', 'tags-*'
 		]
 <
+		)
 						*denite-filter-matcher_regexp*
 matcher_regexp
 		A matcher which filters the candidates with user given
