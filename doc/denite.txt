@@ -140,7 +140,7 @@ EXAMPLES						*denite-examples*
 	call denite#custom#var('grep', 'final_opts', [])
 	call denite#custom#var('grep', 'separator', ['--'])
 	call denite#custom#var('grep', 'default_opts',
-			\ ['--vimgrep', '--no-heading']
+			\ ['--vimgrep', '--no-heading'])
 
 	call denite#custom#source('file_mru', 'converters',
 	      \ ['converter_relative_word'])
