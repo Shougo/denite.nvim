@@ -302,12 +302,6 @@ class Default(object):
         self.update_buffer()
         self.__context['is_redraw'] = False
 
-    def debug(self, expr):
-        debug(self.__vim, expr)
-
-    def error(self, msg):
-        self.__vim.call('denite#util#print_error', '[denite]' + str(msg))
-
     def input_loop(self):
         self.__input_before = self.__context['input']
         self.__input_cursor = ''
