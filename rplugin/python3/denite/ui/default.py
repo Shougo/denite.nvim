@@ -4,7 +4,7 @@
 # License: MIT license
 # ============================================================================
 
-from denite.util import error, echo, debug, escape_syntax
+from denite.util import error, echo, escape_syntax
 from ..prompt.key import Key
 from ..prompt.util import getchar
 from .. import denite
