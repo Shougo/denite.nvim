@@ -25,10 +25,10 @@ class Process(object):
                                        cwd=cwd)
         self.__eof = False
         self.__context = context
-        self.__thread = Thread(target=self.enqueue_output)
-        self.__thread.start()
         self.__queue_out = Queue()
         self.__outs = []
+        self.__thread = Thread(target=self.enqueue_output)
+        self.__thread.start()
 
     def eof(self):
         return self.__eof
