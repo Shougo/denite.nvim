@@ -20,7 +20,7 @@ class Filter(Base):
         self.vars = {
             'ignore_globs': [
                '*~', '*.o', '*.exe', '*.bak',
-               'DS_Store', '*.pyc', '*.sw[po]', '*.class',
+               '.DS_Store', '*.pyc', '*.sw[po]', '*.class',
                '.hg/', '.git/', '.bzr/', '.svn/',
                'tags', 'tags-*'
             ]
