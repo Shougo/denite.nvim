@@ -86,6 +86,9 @@ function! denite#init#_variables() abort "{{{
         \ "j": 'move_to_next_line',
         \ "k": 'move_to_prev_line',
         \ "p": 'do_action:preview',
+        \ "d": 'do_action:delete',
+        \ "n": 'do_action:new',
+        \ "t": 'do_action:tabopen',
         \ "q": 'quit',
         \}
   for [char, value] in items(default_mode_mappings)
