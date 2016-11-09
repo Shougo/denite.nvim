@@ -539,6 +539,7 @@ grep		Gather grep results and nominates them.
 		"recursive_opts", {arguments}, "separator", "final_opts"]
 		command line.
 		Note: The command result must be "path:linenr:text" pattern.
+		Note: If the input contains the spaces, you must quote it.
 
 		Source arguments:
 		1. the search directory.
