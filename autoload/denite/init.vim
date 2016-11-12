@@ -85,6 +85,10 @@ function! denite#init#_variables() abort "{{{
         \ "i": 'enter_mode:insert',
         \ "j": 'move_to_next_line',
         \ "k": 'move_to_prev_line',
+        \ "<C-d>": 'scroll_window_downwards',
+        \ "<C-u>": 'scroll_window_upwards',
+        \ "<C-f>": 'scroll_page_forwards',
+        \ "<C-b>": 'scroll_page_backwards',
         \ "p": 'do_action:preview',
         \ "q": 'quit',
         \}
@@ -125,6 +129,7 @@ function! denite#init#_user_options() abort "{{{
         \ 'resume': v:false,
         \ 'statusline': v:true,
         \ 'winheight': 20,
+        \ 'scroll': 0,
         \}
 endfunction"}}}
 
