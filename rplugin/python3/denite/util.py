@@ -124,3 +124,9 @@ def convert2fuzzy_pattern(input):
 
 def convert2regex_pattern(input):
     return '\|'.join(split_input(input))
+
+
+def safe_isprint(vim, c):
+    if not c or c == '\0':
+        return False
+    return vim.call('match', c, '\p') >= 0

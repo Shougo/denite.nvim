@@ -4,7 +4,7 @@
 # License: MIT license
 # ============================================================================
 
-from denite.util import error, echo, escape_syntax
+from denite.util import error, echo, escape_syntax, safe_isprint
 from ..prompt.key import Key
 from ..prompt.util import getchar
 from .. import denite
@@ -13,12 +13,6 @@ import re
 import traceback
 import time
 from itertools import filterfalse
-
-
-def _safe_isprint(vim, c):
-    if not c or c == '\0':
-        return False
-    return vim.call('match', c, '\p') >= 0
 
 
 class Default(object):
@@ -338,7 +332,7 @@ class Default(object):
                         break
                     continue
             elif (self.__current_mode == 'insert' and
-                  _safe_isprint(self.__vim, key.char)):
+                  safe_isprint(self.__vim, key.char)):
                 # Normal input string
                 self.__input_before += key.char
                 self.update_input()
