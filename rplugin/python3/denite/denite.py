@@ -207,8 +207,11 @@ class Denite(object):
             self.__kinds[name] = module.Kind(self.__vim)
 
     def do_action(self, context, action_name, targets):
+        if not targets:
+            return True
+
         if 'kind' in targets:
-            kind_name = targets['kind']
+            kind_name = targets[0]['kind']
         else:
             kind_name = self.__sources[targets[0]['source']].kind
 
