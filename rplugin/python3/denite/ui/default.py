@@ -48,14 +48,16 @@ class Default(object):
             if self.__initialized and context['resume']:
                 # Skip the initialization
                 self.__current_mode = context['mode']
+                self.__context['immediately'] = context['immediately']
 
                 self.init_buffer()
                 self.change_mode(self.__current_mode)
-                if self.__context['select'] == '+1':
+                if context['select'] == '+1':
                     self.move_to_next_line()
-                elif self.__context['select'] == '-1':
+                elif context['select'] == '-1':
                     self.move_to_prev_line()
-                self.input_loop()
+                if self.check_empty():
+                    return self.__result
             else:
                 self.__context = context
                 self.__context['sources'] = sources
@@ -67,6 +69,8 @@ class Default(object):
 
                 self.__denite.start(self.__context)
                 self.__denite.on_init(self.__context)
+
+                self.__initialized = True
 
                 self.__denite.gather_candidates(self.__context)
                 self.update_candidates()
@@ -81,9 +85,7 @@ class Default(object):
 
                 self.change_mode(self.__current_mode)
 
-                self.__initialized = True
-
-                self.input_loop()
+            self.input_loop()
         except Exception:
             for line in traceback.format_exc().splitlines():
                 error(self.__vim, line)
@@ -211,6 +213,9 @@ class Default(object):
         self.move_cursor()
 
     def check_empty(self):
+        if self.__candidates and self.__context['immediately']:
+            self.do_action('default')
+            return True
         return not (self.__context['empty'] or
                     self.__denite.is_async() or self.__candidates)
 
@@ -372,23 +377,28 @@ class Default(object):
         if not candidates:
             return
 
-        prev_id = self.__vim.call('win_getid')
-        self.__vim.call('win_gotoid', self.__prev_winid)
-        now_id = self.__vim.call('win_getid')
-        if prev_id == now_id:
-            # The previous window search is failed.
-            # Jump to the other window.
-            if len(self.__vim.windows) == 1:
-                self.__vim.command('topleft new')
-            else:
-                self.__vim.command('wincmd w')
+        is_denite = self.__vim.eval('&filetype') == 'denite'
+        if is_denite:
+            prev_id = self.__vim.call('win_getid')
+            self.__vim.call('win_gotoid', self.__prev_winid)
+            now_id = self.__vim.call('win_getid')
+            if prev_id == now_id:
+                # The previous window search is failed.
+                # Jump to the other window.
+                if len(self.__vim.windows) == 1:
+                    self.__vim.command('topleft new')
+                else:
+                    self.__vim.command('wincmd w')
+
         is_quit = not self.__denite.do_action(
             self.__context, action, candidates)
-        now_id = self.__vim.call('win_getid')
-        if now_id != self.__prev_winid:
-            self.__prev_winid = now_id
-            self.__prev_bufnr = self.__vim.current.buffer.number
-        self.__vim.call('win_gotoid', prev_id)
+
+        if is_denite:
+            now_id = self.__vim.call('win_getid')
+            if now_id != self.__prev_winid:
+                self.__prev_winid = now_id
+                self.__prev_bufnr = self.__vim.current.buffer.number
+            self.__vim.call('win_gotoid', prev_id)
 
         if is_quit:
             self.__denite.on_close(self.__context)

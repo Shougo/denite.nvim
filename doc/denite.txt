@@ -460,6 +460,12 @@ OPTIONS							*denite-options*
 		Open any denite buffer if the candidate is empty.
 		Default: true
 
+						*denite-options-immediately*
+-immediately
+		If candidates are exists, it runs the default action
+		immediately.
+		Default: false
+
 							*denite-options-input*
 -input={input-text}
 		Specify an initial narrowing text.

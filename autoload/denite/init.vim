@@ -123,6 +123,7 @@ function! denite#init#_user_options() abort "{{{
         \ 'default_action': 'default',
         \ 'empty': v:true,
         \ 'ignorecase': v:true,
+        \ 'immediately': v:false,
         \ 'input': '',
         \ 'mode': 'insert',
         \ 'path': getcwd(),
