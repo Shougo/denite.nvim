@@ -488,6 +488,12 @@ OPTIONS							*denite-options*
 		previous buffers.
 		Default: false
 
+						*denite-options-select*
+-select={number}
+		Select {number} candidate.
+		Note: 0 is the first candidate.
+		Default: ''
+
 						*denite-options-statusline*
 -statusline
 		Enable statusline.

@@ -71,6 +71,9 @@ class Default(object):
 
                 self.init_buffer()
                 self.init_cursor()
+                if self.__context['select'].isnumeric():
+                    self.__win_cursor = int(self.__context['select']) + 1
+                    self.move_cursor()
 
                 self.change_mode(self.__current_mode)
 
