@@ -22,5 +22,6 @@ class Kind(Base):
         self.vim.command('lcd {}'.format(target['action__path']))
 
         if self.vim.current.buffer.options['filetype'] == 'vimshell':
-            # Change vimshell current directory
             self.vim.command('VimShellCurrentDir')
+        elif self.vim.call('exists', 't:deol'):
+            self.vim.call('deol#cd', self.vim.call('getcwd'))
