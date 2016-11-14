@@ -9,12 +9,15 @@ function! denite#helper#complete(arglead, cmdline, cursorpos) abort "{{{
 
   if a:arglead !~ ':'
     " Option names completion.
-    let _ += map(copy(denite#helper#options()), "'-' . v:val")
+    let bool_options = keys(filter(copy(denite#init#_user_options()),
+          \ 'type(v:val) == type(v:true) || type(v:val) == type(v:false)'))
+    let _ += map(copy(bool_options), "'-' . v:val")
+    let string_options = keys(filter(copy(denite#init#_user_options()),
+          \ 'type(v:val) != type(v:true) && type(v:val) != type(v:false)'))
+    let _ += map(copy(string_options), "'-' . v:val . '='")
 
     " Add "-no-" option names completion.
-    let _ += values(map(filter(copy(denite#init#_user_options()),
-          \ 'type(v:val) == type(v:true) || type(v:val) == type(v:false)'),
-          \ "'-no-' . tr(v:key, '_', '-')"))
+    let _ += map(copy(bool_options), "'-no-' . v:val")
 
     " Source name completion.
     let _ += map(globpath(&runtimepath,
