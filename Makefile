@@ -2,6 +2,7 @@ test: vim-themis
 	# ./vim-themis/bin/themis --reporter spec test
 	nosetests -v rplugin/python3
 	flake8 rplugin/ --exclude rplugin/python3/denite/prompt/docs/conf.py
+	mypy --silent-imports rplugin/python3/denite
 
 # Use existing vim-themis install from ~/.vim, or clone it.
 vim-themis:
