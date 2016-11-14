@@ -210,7 +210,7 @@ class Denite(object):
         if not targets:
             return True
 
-        if 'kind' in targets:
+        if 'kind' in targets[0]:
             kind_name = targets[0]['kind']
         else:
             kind_name = self.__sources[targets[0]['source']].kind
