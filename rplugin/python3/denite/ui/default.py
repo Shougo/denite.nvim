@@ -51,6 +51,10 @@ class Default(object):
 
                 self.init_buffer()
                 self.change_mode(self.__current_mode)
+                if self.__context['select'] == '+1':
+                    self.move_to_next_line()
+                elif self.__context['select'] == '-1':
+                    self.move_to_prev_line()
                 self.input_loop()
             else:
                 self.__context = context

@@ -491,6 +491,8 @@ OPTIONS							*denite-options*
 						*denite-options-select*
 -select={number}
 		Select {number} candidate.
+		If {number} is "+1" or "-1" when resume, selects the next or
+		previous candidate.
 		Note: 0 is the first candidate.
 		Default: ''
 
