@@ -49,6 +49,15 @@ class Kind(Base):
             self.vim.call('win_gotoid', prev_id)
         return True
 
+    def action_tabopen(self, context):
+        hidden = self.vim.options['hidden']
+        try:
+            self.vim.options['hidden'] = False
+            self.vim.command('tabnew')
+            self.action_open(context)
+        finally:
+            self.vim.options['hidden'] = hidden
+
     def __get_preview_window(self):
         return next(filterfalse(lambda x:
                                 not x.options['previewwindow'],

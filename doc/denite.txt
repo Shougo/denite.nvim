@@ -645,8 +645,11 @@ file		An interface to jump to the file position.
 			open (default)
 				Open the file.
 
-			preview (default)
+			preview
 				Preview the file.
+
+			tabopen
+				Open the file in the next tab.
 
 						*denite-kind-word*
 word		An interface to paste the text.
