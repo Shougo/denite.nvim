@@ -34,6 +34,7 @@ class Filter(Base):
         return sorted(context['candidates'],
                       key=lambda x: x['filter__rank'])
 
+
 BOUNDARY_CHARS = string.punctuation + string.whitespace
 
 
