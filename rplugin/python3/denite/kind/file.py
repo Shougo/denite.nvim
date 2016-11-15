@@ -34,6 +34,14 @@ class Kind(Base):
                 'denite#util#execute_path', 'buffer', path)
         self.__jump(context, target)
 
+    def action_split(self, context):
+        self.vim.command('split')
+        self.action_open(context)
+
+    def action_vsplit(self, context):
+        self.vim.command('vsplit')
+        self.action_open(context)
+
     def action_preview(self, context):
         target = context['targets'][0]
         path = target['action__path'].replace('/./', '/')
