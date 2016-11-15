@@ -36,8 +36,7 @@ class Source(Base):
 
     def gather_candidates(self, context):
         if self.__proc:
-            candidates = self.__async_gather_candidates(context, 0.5)
-            return candidates
+            return self.__async_gather_candidates(context, 0.5)
 
         if context['is_redraw']:
             self.__cache = {}

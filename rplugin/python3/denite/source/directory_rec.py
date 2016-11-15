@@ -7,6 +7,8 @@
 
 from .base import Base
 from denite.process import Process
+from os.path import relpath, isabs
+from copy import copy
 
 
 class Source(Base):
@@ -17,8 +19,10 @@ class Source(Base):
         self.name = 'directory_rec'
         self.kind = 'directory'
         self.vars = {
-            'command': []
+            'command': [],
+            'min_cache_files': 10000,
         }
+        self.__cache = {}
 
     def on_init(self, context):
         self.__proc = None
@@ -33,20 +37,48 @@ class Source(Base):
 
     def gather_candidates(self, context):
         if self.__proc:
-            return self.__async_gather_candidates(context)
+            return self.__async_gather_candidates(context, 0.5)
 
+        if context['is_redraw']:
+            self.__cache = {}
+
+        directory = context['__directory']
+
+        if directory in self.__cache:
+            return self.__cache[directory]
+
+        command = copy(self.vars['command'])
         if not self.vars['command']:
-            self.vars['command'] = [
+            if context['is_windows']:
+                return []
+
+            command = [
                 'find', '-L', context['__directory'],
                 '-path', '*/.git/*', '-prune', '-o',
                 '-type', 'l', '-print', '-o', '-type', 'd', '-print']
         else:
-            self.vars['command'].append(context['__directory'])
-        self.__proc = Process(self.vars['command'],
-                              context, context['__directory'])
-        return self.__async_gather_candidates(context)
+            command.append(directory)
+        self.__proc = Process(command, context, directory)
+        self.__current_candidates = []
+        return self.__async_gather_candidates(context, 2.0)
 
-    def __async_gather_candidates(self, context):
-        outs, errs = self.__proc.communicate(timeout=2.0)
+    def __async_gather_candidates(self, context, timeout):
+        outs, errs = self.__proc.communicate(timeout=timeout)
         context['is_async'] = not self.__proc.eof()
-        return [{'word': x + '/', 'action__path': x} for x in outs if x != '']
+        if self.__proc.eof():
+            self.__proc = None
+        if not outs:
+            return []
+        if isabs(outs[0]):
+            candidates = [{'word': relpath(x, start=context['__directory']),
+                           'action__path': x}
+                          for x in outs
+                          if x != '' and x != context['__directory']]
+        else:
+            candidates = [{'word': x, 'action__path':
+                           context['__directory'] + '/' + x}
+                          for x in outs if x != '' and x != '.']
+        self.__current_candidates += candidates
+        if len(self.__current_candidates) >= self.vars['min_cache_files']:
+            self.__cache[context['__directory']] = self.__current_candidates
+        return candidates
