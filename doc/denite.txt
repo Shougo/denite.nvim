@@ -665,6 +665,12 @@ file		An interface to jump to the file position.
 			tabopen
 				Open the file in the next tab.
 
+			split
+				open the file with 'split'.
+
+			vsplit
+				open the file with 'vsplit'.
+
 						*denite-kind-word*
 word		An interface to paste the text.
 
