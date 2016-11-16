@@ -68,6 +68,7 @@ class Default(object):
                 self.__is_multi = len(sources) > 1
 
                 self.__denite.start(self.__context)
+
                 self.__denite.on_init(self.__context)
 
                 self.__initialized = True
@@ -86,11 +87,11 @@ class Default(object):
                 self.change_mode(self.__current_mode)
 
             self.input_loop()
-        except Exception:
-            for line in traceback.format_exc().splitlines():
-                error(self.__vim, line)
-            error(self.__vim,
-                  'An error has occurred. Please execute :messages command.')
+        except Exception as e:
+            if str(e) != "b'Keyboard interrupt'":
+                for line in traceback.format_exc().splitlines():
+                    error(self.__vim, line)
+                error(self.__vim, 'Please execute :messages command.')
         return self.__result
 
     def init_buffer(self):
