@@ -504,12 +504,15 @@ class Default(object):
         if next(forward_sources, None) is None:  # if the cursor is on the last source
             self.__cursor = 0
             self.__win_cursor = 1
-        elif remaining_candidates >= self.__winheight:
-            self.__cursor += forward_times + self.__win_cursor - 1
-            self.__win_cursor = 1
-        else:
+        elif self.__candidates_len < self.__winheight:  # if there is a space under the candidates
+            self.__cursor = 0
+            self.__win_cursor += forward_times
+        elif remaining_candidates < self.__winheight:
             self.__cursor = self.__candidates_len - self.__winheight + 1
             self.__win_cursor = self.__winheight - remaining_candidates
+        else:
+            self.__cursor += forward_times + self.__win_cursor - 1
+            self.__win_cursor = 1
 
         self.update_buffer()
 
@@ -529,21 +532,27 @@ class Default(object):
                 reversed(self.__candidates)
             )
             len_last_source = len(list(last_source))
-            if len_last_source >= self.__winheight:
-                self.__cursor = self.__candidates_len - len_last_source
-                self.__win_cursor = 1
-            else:
+            if self.__candidates_len < self.__winheight:
+                self.__cursor = 0
+                self.__win_cursor = self.__candidates_len - len_last_source + 1
+            elif len_last_source < self.__winheight:
                 self.__cursor = self.__candidates_len - self.__winheight + 1
                 self.__win_cursor = self.__winheight - len_last_source
+            else:
+                self.__cursor = self.__candidates_len - len_last_source
+                self.__win_cursor = 1
         else:
             back_times = len(current_source) - 1 + len(prev_source)
             remaining_candidates = self.__candidates_len - current_line + back_times
-            if remaining_candidates >= self.__winheight:
-                self.__cursor -= back_times - self.__win_cursor + 1
-                self.__win_cursor = 1
-            else:
+            if self.__candidates_len < self.__winheight:
+                self.__cursor = 0
+                self.__win_cursor -= back_times
+            elif remaining_candidates < self.__winheight:
                 self.__cursor = self.__candidates_len - self.__winheight + 1
                 self.__win_cursor = self.__winheight - remaining_candidates
+            else:
+                self.__cursor -= back_times - self.__win_cursor + 1
+                self.__win_cursor = 1
 
         self.update_buffer()
 
