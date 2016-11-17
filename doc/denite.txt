@@ -252,6 +252,14 @@ move_to_next_line
 move_to_prev_line
 		Move to previous line.
 
+						*denite-map-jump_to_next_source*
+jump_to_next_source
+		Jump to the first candidate of the next source.
+
+						*denite-map-jump_to_prev_source*
+jump_to_prev_source
+		Jump to the first candidate of the previous source.
+
 					*denite-map-scroll_window_downwards*
 scroll_window_downwards
 		Scroll the window downwards.
