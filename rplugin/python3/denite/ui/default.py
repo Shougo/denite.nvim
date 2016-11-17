@@ -12,7 +12,7 @@ from .. import denite
 import re
 import traceback
 import time
-from itertools import filterfalse, groupby
+from itertools import filterfalse, groupby, takewhile
 
 
 class Default(object):
@@ -507,6 +507,37 @@ class Default(object):
         else:
             self.__cursor = self.__candidates_len - self.__winheight + 1
             self.__win_cursor = self.__winheight - remaining_candidates
+
+        self.update_buffer()
+
+    def jump_to_prev_source(self):
+        current_line = self.__cursor + self.__win_cursor - 1
+        backward_candidates = reversed(self.__candidates[:current_line + 1])
+        backward_sources = groupby(backward_candidates, lambda candidate: candidate['source'])
+        current_source = list(next(backward_sources)[1])
+        try:
+            prev_source = list(next(backward_sources)[1])
+        except StopIteration:  # if the cursor is on the first source
+            last_source = takewhile(
+                lambda candidate: candidate['source'] == self.__candidates[-1]['source'],
+                reversed(self.__candidates)
+            )
+            len_last_source = len(list(last_source))
+            if len_last_source >= self.__winheight:
+                self.__cursor = self.__candidates_len - len_last_source
+                self.__win_cursor = 1
+            else:
+                self.__cursor = self.__candidates_len - self.__winheight + 1
+                self.__win_cursor = self.__winheight - len_last_source
+        else:
+            back_times = len(current_source) - 1 + len(prev_source)
+            remaining_candidates = self.__candidates_len - current_line + back_times
+            if remaining_candidates >= self.__winheight:
+                self.__cursor -= back_times - self.__win_cursor + 1
+                self.__win_cursor = 1
+            else:
+                self.__cursor = self.__candidates_len - self.__winheight + 1
+                self.__win_cursor = self.__winheight - remaining_candidates
 
         self.update_buffer()
 
