@@ -12,7 +12,7 @@ from .. import denite
 import re
 import traceback
 import time
-from itertools import filterfalse
+from itertools import filterfalse, groupby
 
 
 class Default(object):
@@ -491,6 +491,23 @@ class Default(object):
             self.__cursor = max(self.__cursor - scroll, 0)
         else:
             return
+
+    def jump_to_next_source(self):
+        current_line = self.__cursor + self.__win_cursor - 1
+        forward_candidates = self.__candidates[current_line:]
+        forward_sources = groupby(forward_candidates, lambda candidate: candidate['source'])
+        forward_times = len(list(next(forward_sources)[1]))
+        remaining_candidates = self.__candidates_len - current_line - forward_times
+        if next(forward_sources, None) is None:  # if the cursor is on the last source
+            self.__cursor = 0
+            self.__win_cursor = 1
+        elif remaining_candidates >= self.__winheight:
+            self.__cursor += forward_times + self.__win_cursor - 1
+            self.__win_cursor = 1
+        else:
+            self.__cursor = self.__candidates_len - self.__winheight + 1
+            self.__win_cursor = self.__winheight - remaining_candidates
+
         self.update_buffer()
 
     def input_command_line(self):
