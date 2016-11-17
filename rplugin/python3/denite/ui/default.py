@@ -493,6 +493,9 @@ class Default(object):
             return
 
     def jump_to_next_source(self):
+        if len(self.__context['sources']) == 1:
+            return
+
         current_line = self.__cursor + self.__win_cursor - 1
         forward_candidates = self.__candidates[current_line:]
         forward_sources = groupby(forward_candidates, lambda candidate: candidate['source'])
@@ -511,6 +514,9 @@ class Default(object):
         self.update_buffer()
 
     def jump_to_prev_source(self):
+        if len(self.__context['sources']) == 1:
+            return
+
         current_line = self.__cursor + self.__win_cursor - 1
         backward_candidates = reversed(self.__candidates[:current_line + 1])
         backward_sources = groupby(backward_candidates, lambda candidate: candidate['source'])
