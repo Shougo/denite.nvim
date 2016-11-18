@@ -12,7 +12,7 @@ from .. import denite
 import re
 import traceback
 import time
-from itertools import filterfalse
+from itertools import filterfalse, groupby, takewhile
 
 
 class Default(object):
@@ -491,6 +491,80 @@ class Default(object):
             self.__cursor = max(self.__cursor - scroll, 0)
         else:
             return
+
+    def jump_to_next_source(self):
+        if len(self.__context['sources']) == 1:
+            return
+
+        current_index = self.__cursor + self.__win_cursor - 1
+        forward_candidates = self.__candidates[current_index:]
+        forward_sources = groupby(
+            forward_candidates,
+            lambda candidate: candidate['source']
+        )
+        forward_times = len(list(next(forward_sources)[1]))
+        remaining_candidates = self.__candidates_len - current_index \
+            - forward_times
+        if next(forward_sources, None) is None:
+            # If the cursor is on the last source
+            self.__cursor = 0
+            self.__win_cursor = 1
+        elif self.__candidates_len < self.__winheight:
+            # If there is a space under the candidates
+            self.__cursor = 0
+            self.__win_cursor += forward_times
+        elif remaining_candidates < self.__winheight:
+            self.__cursor = self.__candidates_len - self.__winheight + 1
+            self.__win_cursor = self.__winheight - remaining_candidates
+        else:
+            self.__cursor += forward_times + self.__win_cursor - 1
+            self.__win_cursor = 1
+
+        self.update_buffer()
+
+    def jump_to_prev_source(self):
+        if len(self.__context['sources']) == 1:
+            return
+
+        current_index = self.__cursor + self.__win_cursor - 1
+        backward_candidates = reversed(self.__candidates[:current_index + 1])
+        backward_sources = groupby(
+            backward_candidates,
+            lambda candidate: candidate['source']
+        )
+        current_source = list(next(backward_sources)[1])
+        try:
+            prev_source = list(next(backward_sources)[1])
+        except StopIteration:  # If the cursor is on the first source
+            last_source = takewhile(
+                lambda candidate:
+                    candidate['source'] == self.__candidates[-1]['source'],
+                reversed(self.__candidates)
+            )
+            len_last_source = len(list(last_source))
+            if self.__candidates_len < self.__winheight:
+                self.__cursor = 0
+                self.__win_cursor = self.__candidates_len - len_last_source + 1
+            elif len_last_source < self.__winheight:
+                self.__cursor = self.__candidates_len - self.__winheight + 1
+                self.__win_cursor = self.__winheight - len_last_source
+            else:
+                self.__cursor = self.__candidates_len - len_last_source
+                self.__win_cursor = 1
+        else:
+            back_times = len(current_source) - 1 + len(prev_source)
+            remaining_candidates = self.__candidates_len - current_index \
+                + back_times
+            if self.__candidates_len < self.__winheight:
+                self.__cursor = 0
+                self.__win_cursor -= back_times
+            elif remaining_candidates < self.__winheight:
+                self.__cursor = self.__candidates_len - self.__winheight + 1
+                self.__win_cursor = self.__winheight - remaining_candidates
+            else:
+                self.__cursor -= back_times - self.__win_cursor + 1
+                self.__win_cursor = 1
+
         self.update_buffer()
 
     def input_command_line(self):

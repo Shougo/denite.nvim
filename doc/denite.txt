@@ -245,6 +245,14 @@ input_command_line
 		Input characters by Vim command line.
 		You can input multibyte characters.
 
+						*denite-map-jump_to_next_source*
+jump_to_next_source
+		Jump to the first candidate of the next source.
+
+						*denite-map-jump_to_prev_source*
+jump_to_prev_source
+		Jump to the first candidate of the previous source.
+
 							*denite-map-leave_mode*
 leave_mode
 		Return to the previous mode or close current Denite buffer.
