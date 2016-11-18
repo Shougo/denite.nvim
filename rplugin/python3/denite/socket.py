@@ -57,8 +57,7 @@ class Socket(object):
     def enqueue_output(self):
         if not self.__queue_out:
             return
-        buffer = self.__sock.recv(2048) \
-                    .decode(self.__enc, errors='replace')
+        buffer = self.__sock.recv(2048).decode(self.__enc, errors='replace')
         buffering = True
         while buffering:
             if buffer.strip() == 'OK':
@@ -78,7 +77,7 @@ class Socket(object):
         return self.__eof
 
     def kill(self):
-        if not self.__sock is None:
+        if self.__sock is not None:
             self.__sock.close()
 
         self.__sock = None
