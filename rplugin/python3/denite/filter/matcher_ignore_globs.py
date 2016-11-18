@@ -6,8 +6,8 @@
 
 from os.path import isabs
 from .base import Base
-from fnmatch import fnmatch
-from re import match
+from fnmatch import translate
+from re import search
 
 
 class Filter(Base):
@@ -28,21 +28,14 @@ class Filter(Base):
 
     def filter(self, context):
         # Convert globs
-        globs = []
+        patterns = []
         for glob in self.vars['ignore_globs']:
             if not isabs(glob):
                 glob = '*/' + glob
-            if match('\./', glob):
+            if search('^\./', glob):
                 glob = context['path'] + glob[1:]
             if glob[-1] == '/':
                 glob += '*'
-            globs.append(glob)
-        return [x for x in context['candidates']
-                if filter_globs(globs, x['action__path'])]
-
-
-def filter_globs(globs, path):
-    for glob in globs:
-        if fnmatch(path, glob):
-            return False
-    return True
+            patterns.append(translate(glob))
+        pattern = '\|'.join(patterns)
+        return [x for x in context['candidates'] if not search(pattern, x)]
