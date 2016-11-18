@@ -7,7 +7,9 @@
 function! denite#helper#complete(arglead, cmdline, cursorpos) abort "{{{
   let _ = []
 
-  if a:arglead !~ ':'
+  if a:arglead =~ ':'
+    " Todo: source arguments completion.
+  elseif a:arglead =~ '^-'
     " Option names completion.
     let bool_options = keys(filter(copy(denite#init#_user_options()),
           \ 'type(v:val) == type(v:true) || type(v:val) == type(v:false)'))
@@ -18,7 +20,7 @@ function! denite#helper#complete(arglead, cmdline, cursorpos) abort "{{{
 
     " Add "-no-" option names completion.
     let _ += map(copy(bool_options), "'-no-' . v:val")
-
+  else
     " Source name completion.
     let _ += map(globpath(&runtimepath,
           \ 'rplugin/python3/denite/source/*.py', 1, 1),
