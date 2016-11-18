@@ -13,7 +13,7 @@ from collections import deque
 
 class Socket(object):
 
-    def __init__(self, host, port, command, context, timeout):
+    def __init__(self, host, port, commands, context, timeout):
         self.__enc = context.get('encoding', 'utf-8')
         self.__eof = False
         self.__outs = []
@@ -21,8 +21,8 @@ class Socket(object):
         self.__context = context
 
         self.__sock = self.connect(host, port, self.__timeout)
-        self.__welcome = self.__sock.recv(1024).decode(self.__enc)
-        self.__sock.sendall('{}\n'.format(command).encode(self.__enc))
+        self.__welcome = self.receive()
+        self.sendall(commands)
 
         self.__queue_out = Queue()
         self.__thread = Thread(target=self.enqueue_output)
@@ -54,10 +54,18 @@ class Socket(object):
                     raise ConnectionError(
                         'Socket: getaddrinfo returns an empty list')
 
+    def sendall(self, commands):
+        for command in commands:
+            self.__sock.sendall('{}\n'.format(command).encode(self.__enc))
+
+    def receive(self, bytes=1024):
+        return self.__sock.recv(bytes) \
+                .decode(self.__enc, errors='replace')
+
     def enqueue_output(self):
         if not self.__queue_out:
             return
-        buffer = self.__sock.recv(2048).decode(self.__enc, errors='replace')
+        buffer = self.receive(2048)
         buffering = True
         while buffering:
             if buffer.strip() == 'OK':
@@ -66,8 +74,7 @@ class Socket(object):
                 (line, buffer) = buffer.split('\n', 1)
                 self.__queue_out.put(line)
             else:
-                more = self.__sock.recv(1024) \
-                        .decode(self.__enc, errors='replace')
+                more = self.receive()
                 if not more:
                     buffering = False
                 else:
