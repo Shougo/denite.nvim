@@ -496,21 +496,21 @@ class Default(object):
         if len(self.__context['sources']) == 1:
             return
 
-        current_line = self.__cursor + self.__win_cursor - 1
-        forward_candidates = self.__candidates[current_line:]
+        current_index = self.__cursor + self.__win_cursor - 1
+        forward_candidates = self.__candidates[current_index:]
         forward_sources = groupby(
             forward_candidates,
             lambda candidate: candidate['source']
         )
         forward_times = len(list(next(forward_sources)[1]))
-        remaining_candidates = self.__candidates_len - current_line \
+        remaining_candidates = self.__candidates_len - current_index \
             - forward_times
         if next(forward_sources, None) is None:
-            # if the cursor is on the last source
+            # If the cursor is on the last source
             self.__cursor = 0
             self.__win_cursor = 1
         elif self.__candidates_len < self.__winheight:
-            # if there is a space under the candidates
+            # If there is a space under the candidates
             self.__cursor = 0
             self.__win_cursor += forward_times
         elif remaining_candidates < self.__winheight:
@@ -526,8 +526,8 @@ class Default(object):
         if len(self.__context['sources']) == 1:
             return
 
-        current_line = self.__cursor + self.__win_cursor - 1
-        backward_candidates = reversed(self.__candidates[:current_line + 1])
+        current_index = self.__cursor + self.__win_cursor - 1
+        backward_candidates = reversed(self.__candidates[:current_index + 1])
         backward_sources = groupby(
             backward_candidates,
             lambda candidate: candidate['source']
@@ -535,7 +535,7 @@ class Default(object):
         current_source = list(next(backward_sources)[1])
         try:
             prev_source = list(next(backward_sources)[1])
-        except StopIteration:  # if the cursor is on the first source
+        except StopIteration:  # If the cursor is on the first source
             last_source = takewhile(
                 lambda candidate:
                     candidate['source'] == self.__candidates[-1]['source'],
@@ -553,7 +553,7 @@ class Default(object):
                 self.__win_cursor = 1
         else:
             back_times = len(current_source) - 1 + len(prev_source)
-            remaining_candidates = self.__candidates_len - current_line \
+            remaining_candidates = self.__candidates_len - current_index \
                 + back_times
             if self.__candidates_len < self.__winheight:
                 self.__cursor = 0
