@@ -85,6 +85,8 @@ function! denite#init#_variables() abort "{{{
         \ "i": 'enter_mode:insert',
         \ "j": 'move_to_next_line',
         \ "k": 'move_to_prev_line',
+        \ "g": 'move_to_first_line',
+        \ "G": 'move_to_last_line',
         \ "<C-d>": 'scroll_window_downwards',
         \ "<C-u>": 'scroll_window_upwards',
         \ "<C-f>": 'scroll_page_forwards',
