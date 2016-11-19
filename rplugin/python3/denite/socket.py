@@ -51,12 +51,12 @@ class Socket(object):
                 if e is not None:
                     raise e
                 else:
-                    raise ConnectionError(
-                        'Socket: getaddrinfo returns an empty list')
+                    raise OSError('Socket: getaddrinfo returns an empty list')
 
     def sendall(self, commands):
         for command in commands:
             self.__sock.sendall('{}\n'.format(command).encode(self.__enc))
+        sleep(0.1)
 
     def receive(self, bytes=1024):
         return self.__sock.recv(bytes) \
