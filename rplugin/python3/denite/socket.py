@@ -68,9 +68,7 @@ class Socket(object):
         buffer = self.receive(2048)
         buffering = True
         while buffering:
-            if buffer.strip() == 'OK':
-                buffering = False
-            elif '\n' in buffer:
+            if '\n' in buffer:
                 (line, buffer) = buffer.split('\n', 1)
                 self.__queue_out.put(line)
             else:
