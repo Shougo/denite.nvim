@@ -1,3 +1,12 @@
+# ============================================================================
+# FILE: sorter_sublime.py
+# AUTHOR: Tomoki Ohno <wh11e7rue@icloud.com>
+# DESCRIPTION: Base code is from
+# https://github.com/forrestthewoods/lib_fts/blob/master/code/fts_fuzzy_match.js
+#              See explanation in
+#              http://bit.ly/reverse-engineering-sublime-text-s-fuzzy-match
+# License: MIT license
+# ============================================================================
 from .base import Base
 from unicodedata import category
 
@@ -24,8 +33,6 @@ class Filter(Base):
         )
 
 
-# This is porting of
-# https://github.com/forrestthewoods/lib_fts/blob/master/code/fts_fuzzy_match.js
 def get_score(pattern, candidate):
     # Score consts
     # bonus for adjacent matches
