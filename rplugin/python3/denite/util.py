@@ -130,3 +130,12 @@ def safe_isprint(vim, c):
     if not c or c == '\0':
         return False
     return vim.call('match', c, '\p') >= 0
+
+
+def parse_command(array, **kwargs):
+    def parse_arg(arg):
+        if (arg.startswith(":") and kwargs[arg[1:]]):
+            return kwargs[arg[1:]]
+        return arg
+
+    return map(parse_arg, array)
