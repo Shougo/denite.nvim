@@ -987,6 +987,13 @@ Q: Vimfiler will support denite?
 A: Denite file explorer interface should be implemented by another de-***
 plugin.  It is not vimfiler work.
 
+Q: ":UniteNext"/":UnitePrevious" like commands are available?
+
+A: >
+
+	:Denite -resume -select=+1 -immediately
+	:Denite -resume -select=-1 -immediately
+
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
 
