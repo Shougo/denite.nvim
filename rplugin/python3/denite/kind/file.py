@@ -43,19 +43,10 @@ class Kind(Base):
         self.action_open(context)
 
     def action_preview(self, context):
-        target = context['targets'][0]
-        path = target['action__path'].replace('/./', '/')
+        return self.__preview(context, False)
 
-        preview_window = self.__get_preview_window()
-        if preview_window and preview_window.buffer.name == path:
-            self.vim.command('pclose!')
-        else:
-            prev_id = self.vim.call('win_getid')
-            self.vim.call('denite#util#execute_path', 'silent pedit!', path)
-            self.vim.command('wincmd P')
-            self.__jump(context, target)
-            self.vim.call('win_gotoid', prev_id)
-        return True
+    def action_highlight(self, context):
+        return self.__preview(context, True)
 
     def action_tabopen(self, context):
         hidden = self.vim.options['hidden']
@@ -70,6 +61,28 @@ class Kind(Base):
         return next(filterfalse(lambda x:
                                 not x.options['previewwindow'],
                                 self.vim.windows), None)
+
+    def __preview(self, context, highlight):
+        target = context['targets'][0]
+        path = target['action__path'].replace('/./', '/')
+        line = int(target.get('action__line', 0))
+        col = int(target.get('action__col', 0))
+
+        preview_window = self.__get_preview_window()
+        if (preview_window and preview_window.buffer.name == path and
+                line == 0 and col == 0):
+            self.vim.command('pclose!')
+        else:
+            prev_id = self.vim.call('win_getid')
+            self.vim.call('denite#util#execute_path', 'silent pedit!', path)
+            self.vim.command('wincmd P')
+            self.__jump(context, target)
+            if highlight:
+                self.vim.call('clearmatches')
+                self.vim.call('matchaddpos', 'Search',
+                              [int(target.get('action__line', 0))])
+            self.vim.call('win_gotoid', prev_id)
+        return True
 
     def __jump(self, context, target):
         line = int(target.get('action__line', 0))

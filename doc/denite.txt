@@ -452,6 +452,12 @@ OPTIONS							*denite-options*
 		Note: If you use both {option-name} and -no-{option-name} in
 		the same denite buffer, it is undefined.
 
+						*denite-options-auto-highlight*
+-auto-highlight
+		When you select a candidate, it runs the "highlight" action
+		automatically.
+		Default: false
+
 						*denite-options-auto-preview*
 -auto-preview
 		When you select a candidate, it runs the "preview" action
@@ -674,6 +680,9 @@ file		An interface to jump to the file position.
 
 			preview
 				Preview the file.
+
+			highlight
+				Preview and highlight the file.
 
 			tabopen
 				Open the file in the next tab.
