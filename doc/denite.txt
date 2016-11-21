@@ -936,6 +936,9 @@ filter
 ==============================================================================
 EXTERNAL SOURCES				*denite-external-sources*
 
+vim-denite-ghq: "ghq" source
+https://github.com/Jagua/vim-denite-ghq
+
 ==============================================================================
 FAQ							*denite-faq*
 
