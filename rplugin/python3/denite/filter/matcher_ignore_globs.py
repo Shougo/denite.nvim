@@ -37,5 +37,7 @@ class Filter(Base):
             if glob[-1] == '/':
                 glob += '*'
             patterns.append(translate(glob))
-        pattern = '\|'.join(patterns)
-        return [x for x in context['candidates'] if not search(pattern, x)]
+        pattern = '|'.join(patterns)
+        self.debug(pattern)
+        return [x for x in context['candidates']
+                if not search(pattern, x['action__path'])]
