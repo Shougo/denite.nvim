@@ -1,4 +1,5 @@
 from .base import Base
+from unicodedata import category
 
 
 class Filter(Base):
@@ -112,7 +113,8 @@ def get_score(pattern, candidate):
 
         # Includes "clever" isLetter check.
         prev_lower = candidate_char == candidate_lower and candidate_lower != candidate_upper
-        prev_separator = candidate_char == '_' or candidate_char == ' '
+        prev_separator = category(candidate_char)[0] != 'L'
+        # Modified from the original. See http://www.fileformat.info/info/unicode/category/index.htm
 
         candidate_index += 1
 
