@@ -566,9 +566,25 @@ file_rec	Gather files recursive and nominates all file names under the
 		1. the search directory.
 
 		Source custom variables:
-		command		the default get files command
-				(default is used "find" command in Unix
-				environment)
+		command		the default get files command.
+				default uses "find" command in Unix
+				environments:
+
+				find -L <directory> \
+					-path "*/.git/*" -prune, -o \
+					-type l -print -o -type f -print
+
+				To customize the find command or any command
+				that does't expects the directory parameter as
+				it's last parameter one can use the positional
+				"directory" argument:
+
+				call dein#custom#var("file_rec", "command",
+					\ [ "find", "-L", ":directory",
+					\ "-path", "*/.svn/*", "-prune", "-o",
+					\ '-type', 'l', '-print', '-o',
+					\ '-type', 'f', '-print'])
+
 		min_cache_files	the minimum number of files that
 				it saves the caches.
 				(default is 10000)

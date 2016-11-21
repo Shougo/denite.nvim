@@ -8,6 +8,7 @@ from .base import Base
 from denite.process import Process
 from os.path import relpath, isabs
 from copy import copy
+from denite.util import parse_command
 
 
 class Source(Base):
@@ -56,7 +57,10 @@ class Source(Base):
                 '-path', '*/.git/*', '-prune', '-o',
                 '-type', 'l', '-print', '-o', '-type', 'f', '-print']
         else:
-            command.append(directory)
+            if ":directory" in command:
+                command = parse_command(command, directory=directory)
+            else:
+                command.append(directory)
         self.__proc = Process(command, context, directory)
         self.__current_candidates = []
         return self.__async_gather_candidates(context, 2.0)
