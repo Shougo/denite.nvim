@@ -13,10 +13,10 @@ function! denite#helper#complete(arglead, cmdline, cursorpos) abort "{{{
     " Option names completion.
     let bool_options = keys(filter(copy(denite#init#_user_options()),
           \ 'type(v:val) == type(v:true) || type(v:val) == type(v:false)'))
-    let _ += map(copy(bool_options), "'-' . v:val")
+    let _ += map(copy(bool_options), "'-' . tr(v:val, '_', '-')")
     let string_options = keys(filter(copy(denite#init#_user_options()),
           \ 'type(v:val) != type(v:true) && type(v:val) != type(v:false)'))
-    let _ += map(copy(string_options), "'-' . v:val . '='")
+    let _ += map(copy(string_options), "'-' . tr(v:val, '_', '-') . '='")
 
     " Add "-no-" option names completion.
     let _ += map(copy(bool_options), "'-no-' . v:val")
