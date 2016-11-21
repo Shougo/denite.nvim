@@ -38,6 +38,5 @@ class Filter(Base):
                 glob += '*'
             patterns.append(translate(glob))
         pattern = '|'.join(patterns)
-        self.debug(pattern)
         return [x for x in context['candidates']
                 if not search(pattern, x['action__path'])]
