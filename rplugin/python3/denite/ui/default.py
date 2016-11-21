@@ -493,6 +493,7 @@ class Default(object):
             self.__cursor = max(self.__cursor - scroll, 0)
         else:
             return
+        self.update_buffer()
 
     def jump_to_next_source(self):
         if len(self.__context['sources']) == 1:
