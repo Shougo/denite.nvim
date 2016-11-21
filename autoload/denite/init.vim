@@ -130,14 +130,16 @@ function! denite#init#_user_options() abort "{{{
         \ 'input': '',
         \ 'mode': 'insert',
         \ 'path': getcwd(),
+        \ 'previewheight': &previewheight,
         \ 'prompt': '#',
         \ 'prompt_highlight': 'Statement',
         \ 'quit': v:true,
         \ 'resume': v:false,
+        \ 'scroll': 0,
         \ 'select': '',
         \ 'statusline': v:true,
+        \ 'vertical_preview': v:false,
         \ 'winheight': 20,
-        \ 'scroll': 0,
         \}
 endfunction"}}}
 

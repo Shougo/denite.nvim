@@ -74,7 +74,7 @@ class Kind(Base):
             self.vim.command('pclose!')
         else:
             prev_id = self.vim.call('win_getid')
-            self.vim.call('denite#util#execute_path', 'silent pedit!', path)
+            self.vim.call('denite#helper#preview_file', context, path)
             self.vim.command('wincmd P')
             self.__jump(context, target)
             if highlight:

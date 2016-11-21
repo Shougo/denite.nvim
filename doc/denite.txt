@@ -540,6 +540,11 @@ OPTIONS							*denite-options*
 		Enable statusline.
 		Default: true
 
+					*denite-options-vertical-preview*
+-vertical-preview
+		Open the preview window vertically.
+		Default: false
+
 ==============================================================================
 SOURCES							*denite-sources*
 
