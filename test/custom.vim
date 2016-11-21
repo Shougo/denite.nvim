@@ -38,10 +38,10 @@ endfunction"}}}
 function! s:suite.custom_map() abort "{{{
   let custom = denite#custom#get().map
 
-  call denite#custom#map('_', "\<C-j>", 'move_to_next_line')
-  call denite#custom#map('_', "\<C-k>", 'move_to_prev_line')
+  call denite#custom#map('_', '<C-j>', 'move_to_next_line')
+  call denite#custom#map('_', '<C-k>', 'move_to_prev_line')
   call s:assert.equals(custom._,
-        \ { '10': 'move_to_next_line', '11': 'move_to_prev_line' })
+        \ { '<C-j>': 'move_to_next_line', '<C-k>': 'move_to_prev_line' })
 endfunction"}}}
 
 function! s:suite.custom_alias() abort "{{{
