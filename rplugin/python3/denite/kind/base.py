@@ -15,3 +15,10 @@ class Base(object):
 
     def debug(self, expr):
         denite.util.debug(self.vim, expr)
+
+    def action_yank(self, context):
+        target = context['targets'][0]
+        self.__yank(self.vim, target['word'])
+
+    def __yank(self, vim, word):
+        vim.call('setreg', '"', word, 'v')
