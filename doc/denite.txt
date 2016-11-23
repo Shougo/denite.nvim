@@ -674,6 +674,12 @@ menu		Gather custom menus.
 ==============================================================================
 KINDS							*denite-kinds*
 
+All candidates can support below actions.
+
+yank		Yank the candidate word.
+
+Kind Specific candidates can support below actions.
+
 						*denite-kind-command*
 command		An interface to execute the command.
 
