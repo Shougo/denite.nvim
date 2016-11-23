@@ -105,7 +105,7 @@ EXAMPLES						*denite-examples*
 	call denite#custom#source(
 	\ 'file_rec', 'matchers', ['matcher_cpsm'])
 
-	" Change soters.
+	" Change sorters.
 	call denite#custom#source(
 	\ 'file_rec', 'sorters', ['sorter_sublime'])
 
