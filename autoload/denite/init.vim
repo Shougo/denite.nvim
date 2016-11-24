@@ -136,6 +136,7 @@ function! denite#init#_user_options() abort "{{{
         \ 'prompt_highlight': 'Statement',
         \ 'quit': v:true,
         \ 'resume': v:false,
+        \ 'reversed': v:false,
         \ 'scroll': 0,
         \ 'select': '',
         \ 'statusline': v:true,

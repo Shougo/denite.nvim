@@ -532,6 +532,11 @@ OPTIONS							*denite-options*
 		previous buffers.
 		Default: false
 
+						*denite-options-reversed*
+-reversed
+		The candidates are reversed.
+		Default: false
+
 						*denite-options-select*
 -select={number}
 		Select {number} candidate.
