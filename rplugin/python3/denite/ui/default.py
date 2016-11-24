@@ -181,6 +181,8 @@ class Default(object):
 
     def init_cursor(self):
         if self.__context['reversed']:
+            self.__win_cursor = 1
+            self.__cursor = 0
             self.move_to_last_line()
         else:
             self.move_to_first_line()
