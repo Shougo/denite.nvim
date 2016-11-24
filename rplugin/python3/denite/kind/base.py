@@ -21,4 +21,4 @@ class Base(object):
         self.__yank(self.vim, target['word'])
 
     def __yank(self, vim, word):
-        vim.call('setreg', '"', word, 'v')
+        vim.call('setreg', self.vim.eval('v:register'), word, 'v')
