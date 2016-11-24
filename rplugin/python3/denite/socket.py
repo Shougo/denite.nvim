@@ -88,7 +88,6 @@ class Socket(object):
         self.__sock = None
         self.__queue_out = None
         self.__thread = None
-        self.__outs = None
 
     def communicate(self, timeout):
         if not self.__sock:
@@ -101,20 +100,12 @@ class Socket(object):
             outs.append(self.__queue_out.get_nowait())
 
         outs = list(outs)
-        if self.__outs:
-            outs = self.__outs + outs
-            self.__outs = None
 
         sleep(0.1)
-        if self.__thread.is_alive() or not self.__queue_out.empty():
-            if len(outs) < 5000:
-                # Skip the update
-                self.__outs = outs
-                return []
-            return outs
+        if not self.__thread.is_alive() or self.__queue_out.empty():
+            self.__eof = True
+            self.__sock = None
+            self.__thread = None
+            self.__queue = None
 
-        self.__eof = True
-        self.__sock = None
-        self.__thread = None
-        self.__queue = None
         return outs
