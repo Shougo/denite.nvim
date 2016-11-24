@@ -21,4 +21,6 @@ class Base(object):
         self.__yank(self.vim, target['word'])
 
     def __yank(self, vim, word):
-        vim.call('setreg', self.vim.eval('v:register'), word, 'v')
+        vim.call('setreg', '"', word, 'v')
+        if vim.eval('has("clipboard")') == 1:
+            vim.call('setreg', vim.eval('v:register'), word, 'v')
