@@ -124,6 +124,7 @@ function! denite#init#_user_options() abort "{{{
         \ 'cursor_highlight': 'Cursor',
         \ 'cursorline': v:true,
         \ 'default_action': 'default',
+        \ 'direction': 'botright',
         \ 'empty': v:true,
         \ 'ignorecase': v:true,
         \ 'immediately': v:false,

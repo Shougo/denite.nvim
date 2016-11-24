@@ -111,7 +111,8 @@ class Default(object):
             self.__vim.command('wincmd J')
         else:
             # Create new buffer
-            self.__vim.command('silent botright new denite')
+            self.__vim.command('silent ' +
+                               self.__context['direction'] + ' new denite')
         self.__vim.command('resize ' + str(self.__winheight))
         self.__vim.command('nnoremap <silent><buffer> <CR> ' +
                            ':<C-u>Denite -resume -buffer_name=' +

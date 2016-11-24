@@ -488,6 +488,11 @@ OPTIONS							*denite-options*
 		Specify the default action as {action}.
 		Default: "default"
 
+						*denite-options-direction*
+-direction={direction}
+		Specify the denite window direction as {direction}.
+		Default: "botright"
+
 						*denite-options-empty*
 -empty
 		Open any denite buffer if the candidate is empty.
