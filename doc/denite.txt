@@ -249,6 +249,10 @@ input_command_line
 		Input characters by Vim command line.
 		You can input multibyte characters.
 
+						*denite-map-insert_word*
+insert_word:{word}
+		Insert {word} characters.
+
 						*denite-map-jump_to_next_source*
 jump_to_next_source
 		Jump to the first candidate of the next source.
@@ -1010,6 +1014,14 @@ A: >
 	:Denite -resume -select=+1 -immediately
 	:Denite -resume -select=-1 -immediately
 
+Q: I want to move to normal mode by "jj".
+
+A: You can define the mode for it.
+>
+	call denite#custom#map('insert', 'j', 'enter_mode:j')
+	call denite#custom#map('j', 'j', 'enter_mode:normal')
+	call denite#custom#map('j', '<Space>', 'insert_word:j')
+>
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
 

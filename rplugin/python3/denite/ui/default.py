@@ -358,8 +358,7 @@ class Default(object):
             elif (self.__current_mode == 'insert' and
                   safe_isprint(self.__vim, key.char)):
                 # Normal input string
-                self.__input_before += key.char
-                self.update_input()
+                self.insert_word(key.char)
                 continue
 
             if is_async:
@@ -379,6 +378,10 @@ class Default(object):
         if self.__cursor >= self.__candidates_len:
             return []
         return [self.__candidates[self.__cursor + self.__win_cursor - 1]]
+
+    def insert_word(self, word):
+        self.__input_before += word
+        self.update_input()
 
     def do_action(self, action):
         candidates = self.get_current_candidates()
