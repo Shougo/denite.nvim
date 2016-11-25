@@ -281,6 +281,18 @@ move_to_first_line
 move_to_last_line
 		Move to last line.
 
+				*denite-map-paste_from_register*
+paste_from_register
+		Paste the text from unnamed register.
+
+				*denite-map-redraw*
+redraw
+		Clear the cache and redraw the candidates.
+
+							*denite-map-quit*
+quit
+		Close current Denite buffer.
+
 					*denite-map-scroll_window_downwards*
 scroll_window_downwards
 		Scroll the window downwards.
@@ -296,18 +308,6 @@ scroll_page_forwards
 					*denite-map-scroll_page_backwards*
 scroll_page_backwards
 		Scroll the page backwards.
-
-				*denite-map-paste_from_register*
-paste_from_register
-		Paste the text from unnamed register.
-
-				*denite-map-redraw*
-redraw
-		Clear the cache and redraw the candidates.
-
-							*denite-map-quit*
-quit
-		Close current Denite buffer.
 
 							*denite-map-suspend*
 suspend
