@@ -10,7 +10,7 @@ function! denite#custom#get() abort "{{{
     let s:custom.source = {}
     let s:custom.source._ = {}
     let s:custom.map = {}
-    let s:custom.map._ = {}
+    let s:custom.map._ = []
     let s:custom.alias_source = {}
     let s:custom.alias_filter = {}
     let s:custom.option = {}
@@ -58,13 +58,11 @@ endfunction"}}}
 
 function! denite#custom#map(mode, key, mapping, ...) abort "{{{
   let custom = denite#custom#get().map
-  " let options = get(a:000, 0, {})
+  let params = get(a:000, 0, '')
 
-  for key in denite#util#split(a:mode)
-    if !has_key(custom, key)
-      let custom[key] = {}
-    endif
-    let custom[key][a:key] = a:mapping
+  for mode in denite#util#split(a:mode)
+    let custom[mode] = get(custom, mode, [])
+    call add(custom[mode], [a:key, a:mapping, params])
   endfor
 endfunction"}}}
 
