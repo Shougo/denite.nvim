@@ -1,56 +1,74 @@
 def _redraw(prompt, params):
     return prompt.denite.redraw()
 
+
 def _quit(prompt, params):
     return prompt.denite.quit()
+
 
 def _do_action(prompt, params):
     return prompt.denite.do_action(params)
 
+
 def _choose_action(prompt, params):
     return prompt.denite.choose_action()
+
 
 def _move_to_next_line(prompt, params):
     return prompt.denite.move_to_next_line()
 
+
 def _move_to_prev_line(prompt, params):
     return prompt.denite.move_to_prev_line()
+
 
 def _move_to_first_line(prompt, params):
     return prompt.denite.move_to_first_line()
 
+
 def _move_to_last_line(prompt, params):
     return prompt.denite.move_to_last_line()
+
 
 def _scroll_window_upwards(prompt, params):
     return prompt.denite.scroll_window_upwards()
 
+
 def _scroll_window_downwards(prompt, params):
     return prompt.denite.scroll_window_downwards()
+
 
 def _scroll_page_forwards(prompt, params):
     return prompt.denite.scroll_page_forwards()
 
+
 def _scroll_page_backwards(prompt, params):
     return prompt.denite.scroll_page_backwards()
+
 
 def _scroll_up(prompt, params):
     return prompt.denite.scroll_up(int(params))
 
+
 def _scroll_down(prompt, params):
     return prompt.denite.scroll_down(int(params))
+
 
 def _jump_to_next_source(prompt, params):
     return prompt.denite.jump_to_next_source()
 
+
 def _jump_to_prev_source(prompt, params):
     return prompt.denite.jump_to_prev_source()
+
 
 def _enter_mode(prompt, params):
     return prompt.denite.enter_mode(params)
 
+
 def _leave_mode(prompt, params):
     return prompt.denite.leave_mode()
+
 
 def _suspend(prompt, params):
     return prompt.denite.suspend()

@@ -6,7 +6,7 @@
 import weakref
 from itertools import filterfalse, groupby, takewhile
 
-from denite.util import error, escape_syntax
+from denite.util import escape_syntax
 from .action import (
     DEFAULT_ACTION_KEYMAP,
     INSERT_ACTION_KEYMAP,
