@@ -1,9 +1,16 @@
 """Command-line history module."""
-import weakref
 
 
 class History:
-    """History class which manage a Vim's command-line history for input."""
+    """History class which manage a Vim's command-line history for input.
+
+    Note:
+        This class defines ``__slots__`` attribute so sub-class must override
+        the attribute to extend available attributes.
+
+    Attributes:
+        prompt (Prompt): The ``prompt.prompt.Prompt`` instance.
+    """
 
     __slots__ = ('prompt', '_index', '_cached', '_backward', '_threshold')
 
@@ -11,11 +18,9 @@ class History:
         """Constructor.
 
         Args:
-            prompt (Prompt): The ``prompt.prompt.Prompt`` instance. The
-                instance is used to initialize internal variables and never
-                stored.
+            prompt (Prompt): The ``prompt.prompt.Prompt`` instance.
         """
-        self.prompt = weakref.proxy(prompt)
+        self.prompt = prompt
         self._index = 0
         self._cached = prompt.text
         self._backward = prompt.caret.get_backward_text()

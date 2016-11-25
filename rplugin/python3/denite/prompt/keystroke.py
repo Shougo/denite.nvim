@@ -14,6 +14,7 @@ class Keystroke(tuple):
     __slots__ = ()
 
     def __str__(self):
+        """Return a string representation of the keystroke."""
         return ''.join(str(k) for k in self)
 
     def startswith(self, other):
@@ -31,7 +32,7 @@ class Keystroke(tuple):
 
     @classmethod
     def parse(cls, nvim, expr):
-        """Parse a keystroke expression and return a Keystroke instance.
+        r"""Parse a keystroke expression and return a Keystroke instance.
 
         Args:
             nvim (neovim.Nvim): A ``neovim.Nvim`` instance.
