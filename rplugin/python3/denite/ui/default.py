@@ -98,6 +98,8 @@ class Default(object):
 
             self.change_mode(self.__current_mode)
 
+        # Make sure that the caret position is ok
+        self.__prompt.caret.locus = self.__prompt.caret.tail
         self.__prompt.start()
         return self.__result
 
