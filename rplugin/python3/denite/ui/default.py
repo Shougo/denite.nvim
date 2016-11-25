@@ -180,12 +180,10 @@ class Default(object):
             source.highlight_syntax()
 
     def init_cursor(self):
+        self.__win_cursor = 1
+        self.__cursor = 0
         if self.__context['reversed']:
-            self.__win_cursor = 1
-            self.__cursor = 0
             self.move_to_last_line()
-        else:
-            self.move_to_first_line()
 
     def update_buffer(self):
         max = len(str(self.__candidates_len))
