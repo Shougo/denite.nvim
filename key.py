@@ -1,5 +1,4 @@
 """Key module."""
-from curses import ascii  # type: ignore
 from collections import namedtuple
 from .util import ensure_bytes, ensure_str, int2char
 
@@ -120,6 +119,7 @@ class Key(KeyBase):
     __cached = {}
 
     def __str__(self):
+        """Return string representation of the key."""
         return self.char
 
     @classmethod
@@ -135,7 +135,7 @@ class Key(KeyBase):
 
     @classmethod
     def parse(cls, nvim, expr):
-        """Parse a key expression and return a Key instance.
+        r"""Parse a key expression and return a Key instance.
 
         It returns a Key instance of a key expression. The instance is cached
         to individual expression so that the instance is exactly equal when
@@ -200,7 +200,7 @@ def _resolve_from_special_keys(nvim, inner):
     elif inner_upper.startswith(b'C-'):
         if len(inner) == 3:
             if inner_upper[-1] in b'@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_?':
-                return ascii.ctrl(inner[-1])
+                return inner[-1] & 0x1f
         return b''.join([
             CTRL_KEY,
             _resolve_from_special_keys(nvim, inner[2:]),
