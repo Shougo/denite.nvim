@@ -482,6 +482,11 @@ OPTIONS							*denite-options*
 		automatically.
 		Default: false
 
+						*denite-options-auto-resize*
+-auto-resize
+		Auto resize the denite window height automatically.
+		Default: false
+
 						*denite-options-buffer-name*
 -buffer-name={buffer-name}
 		Specify the name of denite buffer.

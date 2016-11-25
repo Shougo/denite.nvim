@@ -113,7 +113,7 @@ class Default(object):
             # Create new buffer
             self.__vim.command('silent ' +
                                self.__context['direction'] + ' new denite')
-        self.__vim.command('resize ' + str(self.__winheight))
+        self.resize_buffer()
         self.__vim.command('nnoremap <silent><buffer> <CR> ' +
                            ':<C-u>Denite -resume -buffer_name=' +
                            self.__context['buffer_name'] + '<CR>')
@@ -211,10 +211,18 @@ class Default(object):
              for x in self.__candidates[self.__cursor:
                                         self.__cursor + self.__winheight]])
         del self.__vim.current.buffer[0]
+        self.resize_buffer()
 
         self.__options['modified'] = False
 
         self.move_cursor()
+
+    def resize_buffer(self):
+        winheight = self.__winheight
+        if (self.__context['auto_resize'] and
+                self.__candidates_len < self.__winheight):
+            winheight = self.__candidates_len
+        self.__vim.command('resize ' + str(winheight))
 
     def check_empty(self):
         if self.__candidates and self.__context['immediately']:
