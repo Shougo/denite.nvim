@@ -396,9 +396,10 @@ class Default(object):
         if not candidates:
             return
 
+        prev_id = self.__vim.call('win_getid')
         is_denite = self.__vim.eval('&filetype') == 'denite'
+        self.__context['__prev_winid'] = prev_id
         if is_denite:
-            prev_id = self.__vim.call('win_getid')
             self.__vim.call('win_gotoid', self.__prev_winid)
             now_id = self.__vim.call('win_getid')
             if prev_id == now_id:

@@ -52,17 +52,21 @@ function! denite#helper#call_denite(command, args, line1, line2) abort "{{{
 endfunction"}}}
 
 function! denite#helper#preview_file(context, filename) abort "{{{
+  if has_key(a:context, '__prev_winid')
+    " Move to denite window
+    call win_gotoid(a:context.__prev_winid)
+  endif
+
   if a:context.vertical_preview
-    let denite_winwidth = winwidth(0)
-    call denite#util#execute_path('vertical pedit!', a:filename)
+    let denite_winwidth = &columns
+    call denite#util#execute_path('silent vertical pedit!', a:filename)
     wincmd P
-    let target_winwidth = (denite_winwidth + winwidth(0)) / 2
-    execute 'wincmd p | vert resize ' . target_winwidth
+    execute 'vert resize ' . (denite_winwidth / 2)
   else
     let previewheight_save = &previewheight
     try
       let &previewheight = a:context.previewheight
-      call denite#util#execute_path('pedit!', a:filename)
+      call denite#util#execute_path('silent pedit!', a:filename)
     finally
       let &previewheight = previewheight_save
     endtry
