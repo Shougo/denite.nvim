@@ -49,6 +49,7 @@ class Default(object):
                 # Skip the initialization
                 self.__current_mode = context['mode']
                 self.__context['immediately'] = context['immediately']
+                self.__context['cursor_wrap'] = context['cursor_wrap']
 
                 self.init_buffer()
                 self.change_mode(self.__current_mode)
