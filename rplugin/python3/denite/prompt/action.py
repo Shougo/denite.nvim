@@ -49,6 +49,31 @@ class Action:
         """
         self.registry[name] = callback
 
+    def unregister(self, name, fail_silently=False):
+        """Unregister a specified named action when exists.
+
+        Args:
+            name (str): An action name which follow
+                {namespace}:{action name}
+            fail_silently (bool): Do not raise KeyError even the name is
+                missing in a registry
+
+        Example:
+            >>> from .prompt import STATUS_ACCEPT
+            >>> action = Action()
+            >>> action.register(
+            ...     'prompt:accept', lambda prompt, params: STATUS_ACCEPT
+            ... )
+            >>> action.unregister(
+            ...     'prompt:accept',
+            ... )
+        """
+        try:
+            del self.registry[name]
+        except KeyError as e:
+            if not fail_silently:
+                raise e
+
     def register_from_rules(self, rules) -> None:
         """Register action callbacks from rules.
 
@@ -187,11 +212,67 @@ def _delete_word_before_caret(prompt, params):
     prompt.caret.locus -= len(original_backward_text) - len(backward_text)
 
 
+def _delete_char_after_caret(prompt, params):
+    if prompt.caret.locus == prompt.caret.tail:
+        return
+    prompt.text = ''.join([
+        prompt.caret.get_backward_text(),
+        prompt.caret.get_selected_text(),
+        prompt.caret.get_forward_text()[1:],
+    ])
+
+
+def _delete_word_after_caret(prompt, params):
+    if prompt.caret.locus == prompt.caret.tail:
+        return
+    # Use vim's substitute to respect 'iskeyword'
+    forward_text = prompt.nvim.call(
+        'substitute',
+        prompt.caret.get_forward_text(),
+        '^\s*\k\+', '', '',
+    )
+    prompt.text = ''.join([
+        prompt.caret.get_backward_text(),
+        prompt.caret.get_selected_text(),
+        forward_text
+    ])
+
+
 def _delete_char_under_caret(prompt, params):
     prompt.text = ''.join([
         prompt.caret.get_backward_text(),
         prompt.caret.get_forward_text(),
     ])
+
+
+def _delete_word_under_caret(prompt, params):
+    # Use vim's substitute to respect 'iskeyword'
+    if prompt.text == '':
+        return
+    if prompt.caret.get_selected_text() == ' ':
+        backward_text = prompt.caret.get_backward_text().rstrip()
+        forward_text = prompt.caret.get_forward_text().lstrip()
+    else:
+        backward_text = prompt.nvim.call(
+            'substitute',
+            prompt.caret.get_backward_text(),
+            '\k\+$', '', '',
+        )
+        forward_text = prompt.nvim.call(
+            'substitute',
+            prompt.caret.get_forward_text(),
+            '^\k\+', '', '',
+        )
+    prompt.text = ''.join([
+        backward_text,
+        forward_text,
+    ])
+    prompt.caret.locus = len(backward_text)
+
+
+def _delete_text_before_caret(prompt, params):
+    prompt.text = prompt.caret.get_forward_text()
+    prompt.caret.locus = prompt.caret.head
 
 
 def _delete_text_after_caret(prompt, params):
@@ -219,6 +300,14 @@ def _move_caret_to_one_word_left(prompt, params):
     prompt.caret.locus -= 1 if not offset else offset
 
 
+def _move_caret_to_left_anchor(prompt, params):
+    # Like 't' in normal mode
+    anchor = int2char(prompt.nvim, getchar(prompt.nvim))
+    index = prompt.caret.get_backward_text().rfind(anchor)
+    if index != -1:
+        prompt.caret.locus = index
+
+
 def _move_caret_to_right(prompt, params):
     prompt.caret.locus += 1
 
@@ -231,6 +320,18 @@ def _move_caret_to_one_word_right(prompt, params):
         original_text, '^\k\+', '', '',
     )
     prompt.caret.locus += 1 + len(original_text) - len(substituted_text)
+
+
+def _move_caret_to_right_anchor(prompt, params):
+    # Like 't' in normal mode
+    anchor = int2char(prompt.nvim, getchar(prompt.nvim))
+    index = prompt.caret.get_forward_text().find(anchor)
+    if index != -1:
+        prompt.caret.locus = sum([
+            len(prompt.caret.get_backward_text()),
+            len(prompt.caret.get_selected_text()),
+            index,
+        ])
 
 
 def _move_caret_to_head(prompt, params):
@@ -322,13 +423,19 @@ DEFAULT_ACTION = Action.from_rules([
     ('prompt:toggle_insert_mode', _toggle_insert_mode),
     ('prompt:delete_char_before_caret', _delete_char_before_caret),
     ('prompt:delete_word_before_caret', _delete_word_before_caret),
+    ('prompt:delete_char_after_caret', _delete_char_after_caret),
+    ('prompt:delete_word_after_caret', _delete_word_after_caret),
     ('prompt:delete_char_under_caret', _delete_char_under_caret),
+    ('prompt:delete_word_under_caret', _delete_word_under_caret),
+    ('prompt:delete_text_before_caret', _delete_text_before_caret),
     ('prompt:delete_text_after_caret', _delete_text_after_caret),
     ('prompt:delete_entire_text', _delete_entire_text),
     ('prompt:move_caret_to_left', _move_caret_to_left),
     ('prompt:move_caret_to_one_word_left', _move_caret_to_one_word_left),
+    ('prompt:move_caret_to_left_anchor', _move_caret_to_left_anchor),
     ('prompt:move_caret_to_right', _move_caret_to_right),
     ('prompt:move_caret_to_one_word_right', _move_caret_to_one_word_right),
+    ('prompt:move_caret_to_right_anchor', _move_caret_to_right_anchor),
     ('prompt:move_caret_to_head', _move_caret_to_head),
     ('prompt:move_caret_to_lead', _move_caret_to_lead),
     ('prompt:move_caret_to_tail', _move_caret_to_tail),
