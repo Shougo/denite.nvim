@@ -378,9 +378,9 @@ class Default(object):
                         break
         except self.__vim.error as e:
             # NOTE:
-            # neovim raise nvim.error instead of KeyboardInterrupt so check if the
-            # error is KeyboardInterrupt or not and quit denite when the error was
-            # KeyboardInterrupt
+            # neovim raise nvim.error instead of KeyboardInterrupt so check if
+            # the error is KeyboardInterrupt or not and quit denite when the
+            # error was KeyboardInterrupt
             if str(e) == "b'Keyboard interrupt'":
                 self.quit()
             else:
