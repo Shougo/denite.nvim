@@ -62,6 +62,13 @@ def _jump_to_prev_source(prompt, params):
     return prompt.denite.jump_to_prev_source()
 
 
+def _input_command_line(prompt, params):
+    from ..prompt.util import ESCAPE_ECHO
+    prompt.nvim.command('redraw | echo')
+    text = prompt.nvim.call('input', prompt.prefix)
+    prompt.update_text(text)
+
+
 def _enter_mode(prompt, params):
     return prompt.denite.enter_mode(params)
 
@@ -91,6 +98,7 @@ DEFAULT_ACTION_RULES = [
     ('denite:scroll_down', _scroll_down),
     ('denite:jump_to_next_source', _jump_to_next_source),
     ('denite:jump_to_prev_source', _jump_to_prev_source),
+    ('denite:input_command_line', _input_command_line),
     ('denite:enter_mode', _enter_mode),
     ('denite:leave_mode', _leave_mode),
     ('denite:suspend', _suspend),
@@ -141,7 +149,7 @@ INSERT_ACTION_KEYMAP = [
     ('<S-Tab>', '<denite:move_to_prev_line>', 'noremap'),
     ('<C-L>', '<denite:redraw>', 'noremap'),
     ('<C-O>', '<denite:enter_mode:normal>', 'noremap'),
-    ('<C-J>', '<denite:do_action:preview>', 'noremap'),
+    ('<C-J>', '<denite:input_command_line>', 'noremap'),
 ]
 
 NORMAL_ACTION_KEYMAP = [
