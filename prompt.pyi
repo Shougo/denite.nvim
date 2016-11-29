@@ -16,7 +16,7 @@ class Status(enum.Enum):
     progress = 0
     accept = 1
     cancel = 2
-    error = 3
+    interrupt = 3
 
 
 class InsertMode(enum.Enum):

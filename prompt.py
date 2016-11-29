@@ -5,7 +5,7 @@ import weakref
 from collections import namedtuple
 from datetime import timedelta
 from .action import ACTION_PATTERN
-from .util import ESCAPE_ECHO, build_echon_expr
+from .util import build_echon_expr
 
 
 ACTION_KEYSTROKE_PATTERN = re.compile(
@@ -16,7 +16,7 @@ ACTION_KEYSTROKE_PATTERN = re.compile(
 STATUS_PROGRESS = 0
 STATUS_ACCEPT = 1
 STATUS_CANCEL = 2
-STATUS_ERROR = 3
+STATUS_INTERRUPT = 3
 
 INSERT_MODE_INSERT = 1
 INSERT_MODE_REPLACE = 2
@@ -172,14 +172,16 @@ class Prompt:
                     callback=self.on_harvest,
                 )) or STATUS_PROGRESS
                 status = self.on_update(status) or status
+        except self.nvim.error as e:
+            # NOTE:
+            # neovim raise nvim.error instead of KeyboardInterrupt when Ctrl-C
+            # has pressed so treat it as a real KeyboardInterrupt exception.
+            if str(e) == "b'Keyboard interrupt'":
+                status = STATUS_INTERRUPT
+            else:
+                raise e
         except KeyboardInterrupt:
-            status = STATUS_CANCEL
-        except Exception as e:
-            self.nvim.command('|'.join([
-                'echoerr "%s"' % line.translate(ESCAPE_ECHO)
-                for line in str(e).splitlines()
-            ]))
-            status = STATUS_ERROR
+            status = STATUS_INTERRUPT
         self.nvim.command('redraw!')
         if self.text:
             self.nvim.call('histadd', 'input', self.text)
