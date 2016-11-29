@@ -450,7 +450,6 @@ All mode mappings (override by mode mappings).
 <C-Z>		<denite:suspend>
 <Tab>		<denite:choose_action>
 
-
 "insert" mode mappings.
 {key}		{mapping}
 --------	-----------------------------
@@ -605,6 +604,7 @@ denite#custom#map({mode}, {lhs}, {rhs}[, {params}])
 <
 		Note the posterior mappings have higher priority.
 		Note <Nop> cannot be used while <Nop> is equal to <C-J> in
+		Note <C-c> cannot be used in custom mapping.
 		neovim-prompt internally.
 		See |denite-key-mappings|.
 
