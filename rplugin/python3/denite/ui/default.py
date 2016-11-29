@@ -14,7 +14,7 @@ from .action import (
 )
 from .prompt import DenitePrompt
 from .. import denite
-from ..prompt.prompt import STATUS_ACCEPT
+from ..prompt.prompt import STATUS_ACCEPT, STATUS_INTERRUPT
 
 
 class Default(object):
@@ -100,7 +100,12 @@ class Default(object):
 
         # Make sure that the caret position is ok
         self.__prompt.caret.locus = self.__prompt.caret.tail
-        self.__prompt.start()
+        status = self.__prompt.start()
+        if status == STATUS_INTERRUPT:
+            # STATUS_INTERRUPT is returned when user hit <C-c> and the loop has
+            # interrupted.
+            # In this case, denite cancel any operation and close its window.
+            self.quit()
         return self.__result
 
     def init_buffer(self):
