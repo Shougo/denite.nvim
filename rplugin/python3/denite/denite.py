@@ -148,14 +148,16 @@ class Denite(object):
             'rplugin/python3/denite/source/base.py')
         rtps.extend(globruntime(context['runtimepath'],
                                 'rplugin/python3/denite/source/*.py'))
+        loaded_paths = [x.path for x in self.__sources.values()]
         for path in rtps:
-            name = os.path.basename(path)[: -3]
-            if name == 'base' or name in self.__sources:
+            name = os.path.splitext(os.path.basename(path))[0]
+            if name == 'base' or path in loaded_paths:
                 continue
 
             module = importlib.machinery.SourceFileLoader(
                 'denite.source.' + name, path).load_module()
             source = module.Source(self.__vim)
+            source.path = path
             self.__sources[source.name] = source
 
             if source.name in self.__custom['alias_source']:
@@ -174,14 +176,16 @@ class Denite(object):
             'rplugin/python3/denite/filter/base.py')
         rtps.extend(globruntime(context['runtimepath'],
                                 'rplugin/python3/denite/filter/*.py'))
+        loaded_paths = [x.path for x in self.__filters.values()]
         for path in rtps:
-            name = os.path.basename(path)[: -3]
-            if name == 'base' or name in self.__filters:
+            name = os.path.splitext(os.path.basename(path))[0]
+            if name == 'base' or path in loaded_paths:
                 continue
 
             module = importlib.machinery.SourceFileLoader(
                 'denite.filter.' + name, path).load_module()
             filter = module.Filter(self.__vim)
+            filter.path = path
             self.__filters[name] = filter
 
             if name in self.__custom['alias_filter']:
