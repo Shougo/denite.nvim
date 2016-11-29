@@ -60,7 +60,7 @@ def escape_fuzzy(string, camelcase):
         p = re.sub(r'([a-z])(?!$)',
                    (lambda pat: '['+pat.group(1)+pat.group(1).upper()+']'), p)
     p = re.sub(r'/(?!$)', r'/[^/]*', p)
-    p = re.sub(r'([a-zA-Z0-9_])\.\*', r'\1[^/\1]*', p)
+    p = re.sub(r'([a-zA-Z0-9_])\.\*', r'\1[^\1]*', p)
     return p
 
 
