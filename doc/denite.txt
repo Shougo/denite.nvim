@@ -335,13 +335,12 @@ All mode mappings.
 <C-w>		delete_backward_word
 <C-u>		delete_backward_line
 <C-g>		move_to_next_line
-<Tab>		move_to_next_line
 <C-t>		move_to_prev_line
-<S-Tab>		move_to_prev_line
 <C-j>		input_command_line
 <C-r>		paste_from_register
 <C-o>		enter_mode:normal
 <C-v>		do_action:preview
+<Tab>		choose_action
 
 "normal" mode mappings.
 {key}		{mapping}
