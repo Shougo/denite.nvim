@@ -265,9 +265,29 @@ are on the neovim-prompt's builtin actions/mappings.
 		Delete a word before the caret.
 		Note this is a neovim-prompt's builtin action.
 
+				*denite-map-delete_char_after_caret*
+<denite:delete_char_after_caret>
+		Delete a character after the caret.
+		Note this is a neovim-prompt's builtin action.
+
+				*denite-map-delete_word_after_caret*
+<denite:delete_word_after_caret>
+		Delete a word after the caret.
+		Note this is a neovim-prompt's builtin action.
+
 				*denite-map-delete_char_under_caret*
-<denite:delete_char_before_caret>
+<denite:delete_char_under_caret>
 		Delete a character under the caret.
+		Note this is a neovim-prompt's builtin action.
+
+				*denite-map-delete_word_under_caret*
+<denite:delete_word_under_caret>
+		Delete a word under the caret.
+		Note this is a neovim-prompt's builtin action.
+
+				*denite-map-delete_text_before_caret*
+<denite:delete_text_before_caret>
+		Delete a text before the caret.
 		Note this is a neovim-prompt's builtin action.
 
 				*denite-map-delete_text_after_caret*
@@ -330,6 +350,11 @@ are on the neovim-prompt's builtin actions/mappings.
 		Move the caret to a one word left.
 		Note this is a neovim-prompt's builtin action.
 
+				*denite-map-move_caret_to_left_anchor*
+<denite:move_caret_to_left_anchor>
+		Move the caret like |F| in Vim's normal mode.
+		Note this is a neovim-prompt's builtin action.
+
 				*denite-map-move_caret_to_right*
 <denite:move_caret_to_right>
 		Move the caret to a one character right
@@ -338,6 +363,11 @@ are on the neovim-prompt's builtin actions/mappings.
 				*denite-map-move_caret_to_one_word_right*
 <denite:move_caret_to_one_word_right>
 		Move the caret to a one word right
+		Note this is a neovim-prompt's builtin action.
+
+				*denite-map-move_caret_to_right_anchor*
+<denite:move_caret_to_right_anchor>
+		Move the caret like ||f| in Vim's normal mode.
 		Note this is a neovim-prompt's builtin action.
 
 				*denite-map-move_caret_to_head*
