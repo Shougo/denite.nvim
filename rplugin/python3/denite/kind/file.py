@@ -20,16 +20,17 @@ class Kind(Base):
     def action_open(self, context):
         target = context['targets'][0]
         path = target['action__path']
+        match_path = '^{0}$'.format(path)
 
         if re.match('^\w+://', path):
             # URI
             self.vim.call('denite#util#open', path)
             return
 
-        if self.vim.call('bufwinnr', path) <= 0:
+        if self.vim.call('bufwinnr', match_path) <= 0:
             self.vim.call(
                 'denite#util#execute_path', 'edit', path)
-        elif self.vim.call('bufwinnr', path) != self.vim.current.buffer:
+        elif self.vim.call('bufwinnr', match_path) != self.vim.current.buffer:
             self.vim.call(
                 'denite#util#execute_path', 'buffer', path)
         self.__jump(context, target)
