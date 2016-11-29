@@ -13,9 +13,12 @@ class DenitePrompt(Prompt):
     def __init__(self, vim, context, denite):
         self.context = context
         super().__init__(vim)
+        self.__previous_text = self.text
         self.denite = denite
         self.action.register_from_rules(DEFAULT_ACTION_RULES)
-        self.__previous_text = self.text
+        # Remove prompt:accept/prompt:cancel which would break denite
+        self.action.unregister('prompt:accept')
+        self.action.unregister('prompt:cancel')
 
     @property
     def text(self):
