@@ -308,6 +308,27 @@ are on the neovim-prompt's builtin actions/mappings.
 <denite:enter_mode:{mode}>
 		Enter to {mode} mode.
 
+				*denite-map-input_command_line*
+<denite:input_command_line>
+		Input a text through the Vim's native command-line.
+		The entered text will be inserted/overstriked at the caret
+		depends on the current insert mode.
+		See also |denite-map-toggle_insert_mode|.
+
+				*denite-map-insert_digraph*
+<denite:insert_digraph>
+		Insert a |digraph| at the caret.
+		Like |c_<C-K>| in a Vim's native command-line.
+		Note this is a neovim-prompt's builtin action.
+
+				*denite-map-insert_special*
+<denite:insert_special>
+		Insert a special character at the caret.
+		Like |c_<C-V>| in a Vim's native command-line.
+		Note this is a neovim-prompt's builtin action.
+
+				*denite-map-jump_to_next_source*
+<denite:jump_to_next_source>
 		Jump to the first candidate of the next source.
 
 				*denite-map-jump_to_prev_source*
@@ -381,6 +402,8 @@ are on the neovim-prompt's builtin actions/mappings.
 <denite:move_to_last_line>
 		Move to last line.
 
+				*denite-map-scroll_window_downwards*
+<denite:scroll_window_downwards>
 		Scroll the window downwards.
 
 				*denite-map-scroll_window_upwards*
@@ -395,6 +418,35 @@ are on the neovim-prompt's builtin actions/mappings.
 <denite:scroll_page_backwards>
 		Scroll the page backwards.
 
+				*denite-map-scroll_down*
+<denite:scroll_down>
+		Scroll down.
+
+				*denite-map-scroll_up*
+<denite:scroll_up>
+		Scroll up.
+
+				*denite-map-paste_from_register*
+<denite:paste_from_register>
+		Paste the text from a specified register.
+		Like |c_<C-R>| in a Vim's native command-line.
+		Note this is a neovim-prompt's builtin action.
+
+				*denite-map-paste_from_default_register*
+<denite:paste_from_default_register>
+		Paste the text from a default register (|v:register|).
+		Note this is a neovim-prompt's builtin action.
+
+				*denite-map-redraw*
+<denite:redraw>
+		Clear the cache and redraw the candidates.
+
+				*denite-map-quit*
+<denite:quit>
+		Close current Denite buffer.
+
+				*denite-map-suspend*
+<denite:suspend>
 		Suspend current Denite buffer.
 		You can resume the Denite buffer by <CR> mapping.
 
