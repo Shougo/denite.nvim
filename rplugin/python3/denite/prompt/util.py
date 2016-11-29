@@ -120,6 +120,8 @@ def getchar(nvim, *args):
         if isinstance(ret, int):
             return ret
         return ensure_bytes(nvim, ret)
+    except KeyboardInterrupt:
+        return 0x03
     except nvim.error as e:
         # NOTE:
         # Vim returns 0x03 when ^C is pressed but Neovim.
