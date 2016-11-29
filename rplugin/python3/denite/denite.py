@@ -157,14 +157,15 @@ class Denite(object):
             module = importlib.machinery.SourceFileLoader(
                 'denite.source.' + name, path).load_module()
             source = module.Source(self.__vim)
-            source.path = path
             self.__sources[source.name] = source
+            source.path = path
 
             if source.name in self.__custom['alias_source']:
                 # Load alias
                 for alias in self.__custom['alias_source'][source.name]:
                     self.__sources[alias] = module.Source(self.__vim)
                     self.__sources[alias].name = alias
+                    self.__sources[alias].path = path
 
     def get_filter(self, filter_name):
         return self.__filters.get(filter_name, None)
@@ -193,6 +194,7 @@ class Denite(object):
                 for alias in self.__custom['alias_filter'][name]:
                     self.__filters[alias] = module.Filter(self.__vim)
                     self.__filters[alias].name = alias
+                    self.__filters[alias].path = path
 
     def load_kinds(self, context):
         # Load kinds from runtimepath
