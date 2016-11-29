@@ -49,6 +49,7 @@ class Default(object):
                 # Skip the initialization
                 self.__current_mode = context['mode']
                 self.__context['immediately'] = context['immediately']
+                self.__context['cursor_wrap'] = context['cursor_wrap']
 
                 self.init_buffer()
                 self.change_mode(self.__current_mode)
@@ -466,6 +467,8 @@ class Default(object):
             self.__win_cursor += 1
         elif self.__win_cursor + self.__cursor < self.__candidates_len:
             self.__cursor += 1
+        elif self.__context['cursor_wrap']:
+            self.move_to_first_line()
         else:
             return
         self.update_buffer()
@@ -475,6 +478,8 @@ class Default(object):
             self.__win_cursor -= 1
         elif self.__cursor >= 1:
             self.__cursor -= 1
+        elif self.__context['cursor_wrap']:
+            self.move_to_last_line()
         else:
             return
         self.update_buffer()
