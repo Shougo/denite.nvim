@@ -140,6 +140,15 @@ def getchar(nvim, *args):
     try:
         ret = nvim.call('getchar', *args)
         if isinstance(ret, int):
+            if ret == 0x03:
+                # NOTE
+                # Vim/Neovim usually raise an exception when user hit Ctrl-C
+                # but sometime returns 0x03 (^C) instead.
+                # While user might override <Esc> or <CR> and accidentaly
+                # disable the way to exit neovim-prompt, Ctrl-C should be a
+                # final way to exit the prompt. So raise KeyboardInterrupt
+                # exception when 'ret' is 0x03 instead of returning 0x03.
+                raise KeyboardInterrupt
             return ret
         return ensure_bytes(nvim, ret)
     except nvim.error as e:
