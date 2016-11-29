@@ -96,8 +96,18 @@ EXAMPLES						*denite-examples*
 	\ ['rg', '--files', '--glob', '!.git'])
 
 	" Change mappings.
-	call denite#custom#map('insert', '<C-j>', 'move_to_next_line')
-	call denite#custom#map('insert', '<C-k>', 'move_to_prev_line')
+	call denite#custom#map(
+	      \ 'insert',
+	      \ '<C-j>',
+	      \ '<denite:move_to_next_line>',
+	      \ 'noremap'
+	      \)
+	call denite#custom#map(
+	      \ 'insert',
+	      \ '<C-k>',
+	      \ '<denite:move_to_previous_line>',
+	      \ 'noremap'
+	      \)
 
 	" Change matchers.
 	call denite#custom#source(
@@ -310,21 +320,22 @@ are on the neovim-prompt's builtin actions/mappings.
 
 				*denite-map-input_command_line*
 <denite:input_command_line>
-		Input a text through the Vim's native command-line.
-		The entered text will be inserted/overstriked at the caret
-		depends on the current insert mode.
+		Input or overstrike a text through the Vim's native
+		command-line.
 		See also |denite-map-toggle_insert_mode|.
 
 				*denite-map-insert_digraph*
 <denite:insert_digraph>
-		Insert a |digraph| at the caret.
+		Insert or overstrike a |digraph| at the caret.
 		Like |c_<C-K>| in a Vim's native command-line.
+		See also |denite-map-toggle_insert_mode|.
 		Note this is a neovim-prompt's builtin action.
 
 				*denite-map-insert_special*
 <denite:insert_special>
-		Insert a special character at the caret.
+		Insert or overstrike a special character at the caret.
 		Like |c_<C-V>| in a Vim's native command-line.
+		See also |denite-map-toggle_insert_mode|.
 		Note this is a neovim-prompt's builtin action.
 
 				*denite-map-jump_to_next_source*
@@ -357,17 +368,17 @@ are on the neovim-prompt's builtin actions/mappings.
 
 				*denite-map-move_caret_to_right*
 <denite:move_caret_to_right>
-		Move the caret to a one character right
+		Move the caret to a one character right.
 		Note this is a neovim-prompt's builtin action.
 
 				*denite-map-move_caret_to_one_word_right*
 <denite:move_caret_to_one_word_right>
-		Move the caret to a one word right
+		Move the caret to a one word right.
 		Note this is a neovim-prompt's builtin action.
 
 				*denite-map-move_caret_to_right_anchor*
 <denite:move_caret_to_right_anchor>
-		Move the caret like ||f| in Vim's normal mode.
+		Move the caret like |f| in Vim's normal mode.
 		Note this is a neovim-prompt's builtin action.
 
 				*denite-map-move_caret_to_head*
@@ -469,7 +480,7 @@ are on the neovim-prompt's builtin actions/mappings.
 						*denite_default_key_mappings*
 Following keymappings are the default keymappings.
 
-Note that when user hit <C-c>, denite stop any operation and quit its window.
+Note when user hit <C-c>, denite stop any operations and close its window.
 
 All mode mappings (override by mode mappings).
 {key}		{mapping}
@@ -563,7 +574,7 @@ denite#custom#map({mode}, {lhs}, {rhs}[, {params}])
 		Set {lhs} mapping to {rhs} in {mode} mode.
 		If {mode} is "_", the mapping is used in any mode with lower
 		priority than a mode specific mappings.
-		The {params} is a |String| which may contains
+		The {params} is a space separated |String| which may contain
 
 		"noremap"
 		Like a Vim's |noremap|. Without this param, {rhs} will
@@ -634,8 +645,8 @@ denite#custom#map({mode}, {lhs}, {rhs}[, {params}])
 <
 		Note the posterior mappings have higher priority.
 		Note <Nop> cannot be used while <Nop> is equal to <C-J> in
-		Note <C-c> cannot be used in custom mapping.
 		neovim-prompt internally.
+		Note <C-c> cannot be used in custom mapping.
 		See |denite-key-mappings|.
 
 						*denite#custom#source()*
@@ -726,11 +737,6 @@ OPTIONS							*denite-options*
 		automatically.
 		Default: false
 
-						*denite-options-auto-resize*
--auto-resize
-		Auto resize the denite window height automatically.
-		Default: false
-
 						*denite-options-buffer-name*
 -buffer-name={buffer-name}
 		Specify the name of denite buffer.
@@ -740,12 +746,6 @@ OPTIONS							*denite-options*
 -default-action={action}
 		Specify the default action as {action}.
 		Default: "default"
-
-						*denite-options-cursor-wrap*
--cursor-wrap
-		If you move when the cursor reaches the top or bottom edge,
-		the cursor moves to the opposite side.
-		Default: false
 
 						*denite-options-direction*
 -direction={direction}
@@ -872,13 +872,13 @@ file_rec	Gather files recursive and nominates all file names under the
 				that does't expects the directory parameter as
 				it's last parameter one can use the positional
 				"directory" argument:
-
+>
 				call dein#custom#var("file_rec", "command",
 					\ [ "find", "-L", ":directory",
 					\ "-path", "*/.svn/*", "-prune", "-o",
 					\ '-type', 'l', '-print', '-o',
 					\ '-type', 'f', '-print'])
-
+<
 		min_cache_files	the minimum number of files that
 				it saves the caches.
 				(default is 10000)
