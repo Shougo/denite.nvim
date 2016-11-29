@@ -467,11 +467,10 @@ class Default(object):
             self.__win_cursor += 1
         elif self.__win_cursor + self.__cursor < self.__candidates_len:
             self.__cursor += 1
+        elif self.__context['cursor_wrap']:
+            self.move_to_first_line()
         else:
-            if self.__context['cursor_wrap']:
-                self.move_to_first_line()
-            else:
-                return
+            return
         self.update_buffer()
 
     def move_to_prev_line(self):
@@ -479,11 +478,10 @@ class Default(object):
             self.__win_cursor -= 1
         elif self.__cursor >= 1:
             self.__cursor -= 1
+        elif self.__context['cursor_wrap']:
+            self.move_to_last_line()
         else:
-            if self.__context['cursor_wrap']:
-                self.move_to_last_line()
-            else:
-                return
+            return
         self.update_buffer()
 
     def move_to_first_line(self):
