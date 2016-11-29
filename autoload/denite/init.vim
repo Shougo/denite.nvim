@@ -67,8 +67,10 @@ function! denite#init#_user_options() abort "{{{
   return {
         \ 'auto_highlight': v:false,
         \ 'auto_preview': v:false,
+        \ 'auto_resize': v:false,
         \ 'buffer_name': 'default',
         \ 'cursor_highlight': 'Cursor',
+        \ 'cursor_wrap': v:false,
         \ 'cursorline': v:true,
         \ 'default_action': 'default',
         \ 'direction': 'botright',
