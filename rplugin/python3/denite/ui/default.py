@@ -289,7 +289,6 @@ class Default(object):
         self.update_buffer()
 
     def quit_buffer(self):
-        self.__vim.command('redraw | echo')
         self.__vim.command('pclose!')
 
         if not self.__vim.call('bufloaded', self.__bufnr):
@@ -349,6 +348,8 @@ class Default(object):
                     key = Key.parse(self.__vim, getchar(self.__vim, 0))
                 else:
                     key = Key.parse(self.__vim, getchar(self.__vim))
+
+                self.__vim.command('redraw | echo')
 
                 # Terminate input_loop when user hit <C-c>
                 if key.code == 0x03:
@@ -455,7 +456,6 @@ class Default(object):
             self.__context, candidates)
         action = self.__vim.call('input', 'Action: ', '',
                                  'customlist,denite#helper#complete_actions')
-        self.__vim.command('redraw | echo')
         if action == '':
             return
         return self.do_action(action)
@@ -622,7 +622,6 @@ class Default(object):
         self.update_buffer()
 
     def input_command_line(self):
-        self.__vim.command('redraw | echo')
         input = self.__vim.call(
             'input', self.__context['prompt'] + ' ',
             self.__context['input'])
