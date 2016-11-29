@@ -18,7 +18,7 @@ def _move_to_next_line(prompt, params):
     return prompt.denite.move_to_next_line()
 
 
-def _move_to_prev_line(prompt, params):
+def _move_to_previous_line(prompt, params):
     return prompt.denite.move_to_prev_line()
 
 
@@ -58,12 +58,11 @@ def _jump_to_next_source(prompt, params):
     return prompt.denite.jump_to_next_source()
 
 
-def _jump_to_prev_source(prompt, params):
+def _jump_to_previous_source(prompt, params):
     return prompt.denite.jump_to_prev_source()
 
 
 def _input_command_line(prompt, params):
-    from ..prompt.util import ESCAPE_ECHO
     prompt.nvim.command('redraw | echo')
     text = prompt.nvim.call('input', prompt.prefix)
     prompt.update_text(text)
@@ -87,7 +86,7 @@ DEFAULT_ACTION_RULES = [
     ('denite:do_action', _do_action),
     ('denite:choose_action', _choose_action),
     ('denite:move_to_next_line', _move_to_next_line),
-    ('denite:move_to_prev_line', _move_to_prev_line),
+    ('denite:move_to_previous_line', _move_to_previous_line),
     ('denite:move_to_first_line', _move_to_first_line),
     ('denite:move_to_last_line', _move_to_last_line),
     ('denite:scroll_window_upwards', _scroll_window_upwards),
@@ -97,7 +96,7 @@ DEFAULT_ACTION_RULES = [
     ('denite:scroll_up', _scroll_up),
     ('denite:scroll_down', _scroll_down),
     ('denite:jump_to_next_source', _jump_to_next_source),
-    ('denite:jump_to_prev_source', _jump_to_prev_source),
+    ('denite:jump_to_previous_source', _jump_to_previous_source),
     ('denite:input_command_line', _input_command_line),
     ('denite:enter_mode', _enter_mode),
     ('denite:leave_mode', _leave_mode),
@@ -124,7 +123,6 @@ INSERT_ACTION_KEYMAP = [
     ('<C-Q>', '<denite:insert_special>', 'noremap'),
     ('<C-R>', '<denite:paste_from_register>', 'noremap'),
     ('<C-U>', '<denite:delete_entire_text>', 'noremap'),
-    ('<C-V>', '<denite:insert_special>', 'noremap'),
     ('<C-W>', '<denite:delete_word_before_caret>', 'noremap'),
     ('<DEL>', '<denite:delete_char_under_caret>', 'noremap'),
     ('<Left>', '<denite:move_caret_to_left>', 'noremap'),
@@ -150,6 +148,7 @@ INSERT_ACTION_KEYMAP = [
     ('<C-L>', '<denite:redraw>', 'noremap'),
     ('<C-O>', '<denite:enter_mode:normal>', 'noremap'),
     ('<C-J>', '<denite:input_command_line>', 'noremap'),
+    ('<C-V>', '<denite:do_action:preview>', 'noremap'),
 ]
 
 NORMAL_ACTION_KEYMAP = [
