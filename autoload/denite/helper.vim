@@ -19,7 +19,7 @@ function! denite#helper#complete(arglead, cmdline, cursorpos) abort "{{{
     let _ += map(copy(string_options), "'-' . tr(v:val, '_', '-') . '='")
 
     " Add "-no-" option names completion.
-    let _ += map(copy(bool_options), "'-no-' . v:val")
+    let _ += map(copy(bool_options), "'-no-' . tr(v:val, '_', '-')")
   else
     " Source name completion.
     let _ += map(globpath(&runtimepath,
