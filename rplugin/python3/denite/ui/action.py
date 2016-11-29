@@ -143,8 +143,8 @@ INSERT_ACTION_KEYMAP = [
     # Denite specific actions
     ('<C-G>', '<denite:move_to_next_line>', 'noremap'),
     ('<Tab>', '<denite:move_to_next_line>', 'noremap'),
-    ('<C-T>', '<denite:move_to_prev_line>', 'noremap'),
-    ('<S-Tab>', '<denite:move_to_prev_line>', 'noremap'),
+    ('<C-T>', '<denite:move_to_previous_line>', 'noremap'),
+    ('<S-Tab>', '<denite:move_to_previous_line>', 'noremap'),
     ('<C-L>', '<denite:redraw>', 'noremap'),
     ('<C-O>', '<denite:enter_mode:normal>', 'noremap'),
     ('<C-J>', '<denite:input_command_line>', 'noremap'),
@@ -154,7 +154,7 @@ INSERT_ACTION_KEYMAP = [
 NORMAL_ACTION_KEYMAP = [
     ('i', '<denite:enter_mode:insert>', 'noremap'),
     ('j', '<denite:move_to_next_line>', 'noremap'),
-    ('k', '<denite:move_to_prev_line>', 'noremap'),
+    ('k', '<denite:move_to_previous_line>', 'noremap'),
     ('gg', '<denite:move_to_first_line>', 'noremap'),
     ('G', '<denite:move_to_last_line>', 'noremap'),
     ('<C-U>', '<denite:scroll_window_upwards>', 'noremap'),
