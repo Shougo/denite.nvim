@@ -144,12 +144,10 @@ def getchar(nvim, *args):
         return ensure_bytes(nvim, ret)
     except nvim.error as e:
         # NOTE:
-        # Vim returns 0x03 when ^C is pressed but Neovim.
-        # Additionally, KeyboardInterrupt is not raised but
-        # A general nvim.error and only the following dirty
-        # implementation works.
+        # neovim raise nvim.error instead of KeyboardInterrupt when Ctrl-C has
+        # pressed so convert it to a real KeyboardInterrupt exception.
         if str(e) == "b'Keyboard interrupt'":
-            return 0x03  # ^C
+            raise KeyboardInterrupt
         raise e
 
 
