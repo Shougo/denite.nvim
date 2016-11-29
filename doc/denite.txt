@@ -220,142 +220,293 @@ COMMANDS 						*denite-commands*
 ------------------------------------------------------------------------------
 KEY MAPPINGS 						*denite-key-mappings*
 
-					*denite-map-choose_action*
-choose_action
+The denite use the lambdalisue/neovim-prompt to provide a rich command-line
+like interface.
+Report issues to https://github.com/lambdalisue/neovim-prompt when the issues
+are on the neovim-prompt's builtin actions/mappings.
+
+				*denite-map-assign_next_matched_text*
+<denite:assign_next_matched_text>
+		Recall next command-line from history that matches pattern in
+		front of the cursor.
+		Like |c_<Down>| in a native Vim's command-line.
+		Note this is a neovim-prompt's builtin action.
+
+				*denite-map-assign_next_text*
+<denite:assign_next_text>
+		Recall next command-line from history.
+		Like |c_<S-Down>| in a native Vim's command-line.
+		Note this is a neovim-prompt's builtin action.
+
+				*denite-map-assign_previous_matched_text*
+<denite:assign_previous_matched_text>
+		Recall previous command-line from history that matches
+		pattern in front of the cursor.
+		Like |c_<Up>| in a native Vim's command-line.
+		Note this is a neovim-prompt's builtin action.
+
+				*denite-map-assign_previous_text*
+<denite:assign_previous_text>
+		Recall previous command-line from history.
+		Like |c_<S-Up>| in a native Vim's command-line.
+		Note this is a neovim-prompt's builtin action.
+
+				*denite-map-choose_action*
+<denite:choose_action>
 		Choose and fire the action.
 
-					*denite-map-delete_backward_char*
-delete_backward_char
-		Delete current character and move to backward.
+				*denite-map-delete_char_before_caret*
+<denite:delete_char_before_caret>
+		Delete a character before the caret.
+		Note this is a neovim-prompt's builtin action.
 
-					*denite-map-delete_backward_line*
-delete_backward_line
-		Delete the text before the cursor and move to backward.
+				*denite-map-delete_word_before_caret*
+<denite:delete_word_before_caret>
+		Delete a word before the caret.
+		Note this is a neovim-prompt's builtin action.
 
-					*denite-map-delete_backward_word*
-delete_backward_word
-		Delete current word and move to backward.
+				*denite-map-delete_char_under_caret*
+<denite:delete_char_before_caret>
+		Delete a character under the caret.
+		Note this is a neovim-prompt's builtin action.
 
-							*denite-map-do_action*
-do_action:{action}
+				*denite-map-delete_text_after_caret*
+<denite:delete_text_after_caret>
+		Delete a text after the caret.
+		Note this is a neovim-prompt's builtin action.
+
+				*denite-map-delete_entire_text*
+<denite:delete_entire_text>
+		Delete an entire text.
+		Note this is a neovim-prompt's builtin action.
+
+				*denite-map-do_action*
+<denite:do_action:{action}>
 		Close current Denite buffer and fire {action} action.
 
-							*denite-map-enter_mode*
-enter_mode:{mode}
+				*denite-map-enter_mode*
+<denite:enter_mode:{mode}>
 		Enter to {mode} mode.
 
-					*denite-map-input_command_line*
-input_command_line
-		Input characters by Vim command line.
-		You can input multibyte characters.
+				*denite-map-input_command_line*
+<denite:input_command_line>
+		Input a text through the Vim's native command-line.
+		The entered text will be inserted/overstriked at the caret
+		depends on the current insert mode.
+		See also |denite-map-toggle_insert_mode|.
 
-						*denite-map-jump_to_next_source*
-jump_to_next_source
+				*denite-map-insert_digraph*
+<denite:insert_digraph>
+		Insert a |digraph| at the caret.
+		Like |c_<C-K>| in a Vim's native command-line.
+		Note this is a neovim-prompt's builtin action.
+
+				*denite-map-insert_special*
+<denite:insert_special>
+		Insert a special character at the caret.
+		Like |c_<C-V>| in a Vim's native command-line.
+		Note this is a neovim-prompt's builtin action.
+
+				*denite-map-jump_to_next_source*
+<denite:jump_to_next_source>
 		Jump to the first candidate of the next source.
 
-						*denite-map-jump_to_prev_source*
-jump_to_prev_source
+				*denite-map-jump_to_prev_source*
+				*denite-map-jump_to_previous_source*
+<denite:jump_to_previous_source>
 		Jump to the first candidate of the previous source.
 
-							*denite-map-leave_mode*
-leave_mode
+				*denite-map-leave_mode*
+<denite:leave_mode>
 		Return to the previous mode or close current Denite buffer.
 
-						*denite-map-move_to_next_line*
-move_to_next_line
+				*denite-map-move_caret_to_left*
+<denite:move_caret_to_left>
+		Move the caret to a one character left.
+		Note this is a neovim-prompt's builtin action.
+
+				*denite-map-move_caret_to_one_word_left*
+<denite:move_caret_to_one_word_left>
+		Move the caret to a one word left.
+		Note this is a neovim-prompt's builtin action.
+
+				*denite-map-move_caret_to_right*
+<denite:move_caret_to_right>
+		Move the caret to a one character right
+		Note this is a neovim-prompt's builtin action.
+
+				*denite-map-move_caret_to_one_word_right*
+<denite:move_caret_to_one_word_right>
+		Move the caret to a one word right
+		Note this is a neovim-prompt's builtin action.
+
+				*denite-map-move_caret_to_head*
+<denite:move_caret_to_head>
+		Move the caret to the head (a start of the text.)
+		Note this is a neovim-prompt's builtin action.
+
+				*denite-map-move_caret_to_lead*
+<denite:move_caret_to_lead>
+		Move the caret to the lead (a first printable character.)
+		Note this is a neovim-prompt's builtin action.
+
+				*denite-map-move_caret_to_tail*
+<denite:move_caret_to_tail>
+		Move the caret to the tail (a end of the text.)
+		Note this is a neovim-prompt's builtin action.
+
+				*denite-map-move_to_next_line*
+<denite:move_to_next_line>
 		Move to next line.
 
-						*denite-map-move_to_prev_line*
-move_to_prev_line
+				*denite-map-move_to_prev_line*
+				*denite-map-move_to_previous_line*
+<denite:move_to_previous_line>
 		Move to previous line.
 
-						*denite-map-move_to_first_line*
-move_to_first_line
+				*denite-map-move_to_first_line*
+<denite:move_to_first_line>
 		Move to first line.
 
-						*denite-map-move_to_last_line*
-move_to_last_line
+				*denite-map-move_to_last_line*
+<denite:move_to_last_line>
 		Move to last line.
 
-					*denite-map-scroll_window_downwards*
-scroll_window_downwards
+				*denite-map-scroll_window_downwards*
+<denite:scroll_window_downwards>
 		Scroll the window downwards.
 
-					*denite-map-scroll_window_upwards*
-scroll_window_upwards
+				*denite-map-scroll_window_upwards*
+<denite:scroll_window_upwards>
 		Scroll the window upwards.
 
-					*denite-map-scroll_page_forwards*
-scroll_page_forwards
+				*denite-map-scroll_page_forwards*
+<denite:scroll_page_forwards>
 		Scroll the page forwards.
 
-					*denite-map-scroll_page_backwards*
-scroll_page_backwards
+				*denite-map-scroll_page_backwards*
+<denite:scroll_page_backwards>
 		Scroll the page backwards.
 
+				*denite-map-scroll_down*
+<denite:scroll_down>
+		Scroll down.
+
+				*denite-map-scroll_up*
+<denite:scroll_up>
+		Scroll up.
+
 				*denite-map-paste_from_register*
-paste_from_register
-		Paste the text from unnamed register.
+<denite:paste_from_register>
+		Paste the text from a specified register.
+		Like |c_<C-R>| in a Vim's native command-line.
+		Note this is a neovim-prompt's builtin action.
+
+				*denite-map-paste_from_default_register*
+<denite:paste_from_default_register>
+		Paste the text from a default register (|v:register|).
+		Note this is a neovim-prompt's builtin action.
 
 				*denite-map-redraw*
-redraw
+<denite:redraw>
 		Clear the cache and redraw the candidates.
 
-							*denite-map-quit*
-quit
+				*denite-map-quit*
+<denite:quit>
 		Close current Denite buffer.
 
-							*denite-map-suspend*
-suspend
+				*denite-map-suspend*
+<denite:suspend>
 		Suspend current Denite buffer.
 		You can resume the Denite buffer by <CR> mapping.
+
+				*denite-map-toggle_insert_mode*
+<denite:toggle_insert_mode>
+		Toggle insert mode (insert or overstrike).
+		Like |c_<Insert>| in a Vim's native command-line.
+		Note this is a neovim-prompt's builtin action.
+
+				*denite-map-yank_to_register*
+<denite:yank_to_register>
+		Yank a text into a specified register.
+		Note this is a neovim-prompt's builtin action.
+
+				*denite-map-yank_to_default_register*
+<denite:yank_to_default_register>
+		Yank a text into a default register (|v:register|).
+		Note this is a neovim-prompt's builtin action.
 
 						*denite_default_key_mappings*
 Following keymappings are the default keymappings.
 
-All mode mappings.
+Note that when user hit <C-c>, denite stop any operation and quit its window.
+
+All mode mappings (override by mode mappings).
 {key}		{mapping}
 --------	-----------------------------
-<Esc>		leave_mode
-<C-c>		quit
-<CR>		do_action:default
-<C-z>		suspend
+<Esc>		<denite:leave_mode>
+<CR>		<denite:do_action:default>
+<C-M>		<denite:do_action:default>
+<C-Z>		<denite:suspend>
+<Tab>		<denite:choose_action>
 
-<Esc>		quit
 
 "insert" mode mappings.
 {key}		{mapping}
 --------	-----------------------------
-<C-h>		delete_backward_char
-<BS>		delete_backward_char
-<C-w>		delete_backward_word
-<C-u>		delete_backward_line
-<C-g>		move_to_next_line
-<Tab>		move_to_next_line
-<C-t>		move_to_prev_line
-<S-Tab>		move_to_prev_line
-<C-j>		input_command_line
-<C-r>		paste_from_register
-<C-o>		enter_mode:normal
-<C-v>		do_action:preview
+<C-B>		<denite:move_caret_to_head>
+<C-E>		<denite:move_caret_to_tail>
+<BS>		<denite:delete_char_before_caret>
+<C-H>		<denite:delete_char_before_caret>
+<C-K>		<denite:insert_digraph>
+<C-N>		<denite:assign_next_text>
+<C-P>		<denite:assign_previous_text>
+<C-Q>		<denite:insert_special>
+<C-R>		<denite:paste_from_register>
+<C-U>		<denite:delete_entire_text>
+<C-W>		<denite:delete_word_before_caret>
+<DEL>		<denite:delete_word_under_caret>
+<Left>		<denite:move_caret_to_left>
+<S-Left>	<denite:move_caret_to_one_word_left>
+<C-Left>	<denite:move_caret_to_one_word_left>
+<Right>		<denite:move_caret_to_right>
+<S-Right>	<denite:move_caret_to_one_word_right>
+<C-Right>	<denite:move_caret_to_one_word_right>
+<Up>		<denite:assign_previous_matched_text>
+<S-Up>		<denite:assign_previous_text>
+<Down>		<denite:assign_next_matched_text>
+<S-Down>	<denite:assign_next_text>
+<Home>		<denite:move_caret_to_head>
+<End>		<denite:move_caret_to_tail>
+<PageDown>	<denite:assign_next_text>
+<PageUp>	<denite:assign_previous_text>
+<Insert>	<denite:toggle_insert_mode>
+<C-G>		<denite:move_to_next_line>
+<C-T>		<denite:move_to_previous_line>
+<Tab>		<denite:move_to_next_line>
+<S-Tab>		<denite:move_to_previous_line>
+<C-L>		<denite:redraw>
+<C-O>		<denite:enter_mode:normal>
+<C-J>		<denite:input_command_line>
+<C-V>		<denite:do_action:preview>
 
 "normal" mode mappings.
 {key}		{mapping}
 --------	-----------------------------
-i		enter_mode:insert
-j		move_to_next_line
-k		move_to_prev_line
-g		move_to_first_line
-G		move_to_last_line
-<C-d>		scroll_window_downwards
-<C-u>		scroll_window_upwards
-<C-f>		scroll_page_forwards
-<C-b>		scroll_page_backwards
-p		do_action:preview
-q		quit
-<Tab>		choose_action
-
-Note: You cannot change <C-c> default mapping.
+i		<denite:enter_mode:insert>
+j		<denite:move_to_next_line>
+k		<denite:move_to_previous_line>
+gg		<denite:move_to_first_line>
+G		<denite:move_to_last_line>
+<C-U>		<denite:scroll_window_upwards>
+<C-D>		<denite:scroll_window_downwards>
+<C-F>		<denite:scroll_page_forwards>
+<C-B>		<denite:scroll_page_backwards>
+p		<denite:do_action:preview>
+d		<denite:do_action:delete>
+n		<denite:do_action:new>
+t		<denite:do_action:tabopen>
+q		<denite:quit>
 
 ------------------------------------------------------------------------------
 FUNCTIONS						*denite-functions*
@@ -379,16 +530,83 @@ denite#custom#option({buffer-name}, {option-name}, {value})
 		substituted to "_", and "-" prefix is removed.
 
 							*denite#custom#map()*
-denite#custom#map({mode}, {key}, {mapping})
-		Set {key} keymapping to function {mapping} in {mode} mode.
-		{mapping} is denite key mapping name.
-		If {mode} is "_", it is all mode mapping.  But it does not
-		overwrite the mode specific mappings.
+denite#custom#map({mode}, {lhs}, {rhs}[, {params}])
+		Set {lhs} mapping to {rhs} in {mode} mode.
+		If {mode} is "_", the mapping is used in any mode with lower
+		priority than a mode specific mappings.
+		The {params} is a |String| which may contains
+
+		"noremap"
+		Like a Vim's |noremap|. Without this param, {rhs} will
+		recursively solved.
+
+		"expr"
+		Like a Vim's |:map-<expr>|, {rhs} is assumed as an expression.
+		The expression is evaluated to obtain an actual {rhs}.
+
+		"nowait"
+		Like a Vim's |:map-<nowait>|, return {rhs} immediately when
+		the mapping has registered with "nowait" params.
+
+		The followings are example usages:
+>
+		" Use existing map to define a custom map
+		call denite#custom#map('insert', '<C-a>', '<Home>')
+		call denite#custom#map('insert', '<C-e>', '<End>')
+		call denite#custom#map('insert', '<C-f>', '<Right>')
+		call denite#custom#map('insert', '<C-b>', '<Left>')
+
+		" Use mapping action directly
+		call denite#custom#map(
+		      \ 'insert',
+		      \ '<C-d>',
+		      \ '<denite:delete_char_under_caret>',
+		      \ 'noremap'
+		      \)
+
+		" Insert a current date by expr mapping
+		function! Date() abort
+		  return strftime("%Y-%m-%d %a")
+		endfunction
+		call denite#custom#map(
+		      \ 'insert',
+		      \ '<F12>',
+		      \ 'Date()',
+		      \ 'noremap expr'
+		      \)
+
+		" <C-w><C-w> become 'Ctrl-wCtrl-w' instead of 'Fail'
+		" <C-y><C-y> become 'Success' instead of 'Ctrl-yCtrl-y'
+		" Because of 'nowait'
+		call denite#custom#map(
+		      \ 'insert',
+		      \ '<C-w>',
+		      \ 'Ctrl-w',
+		      \ 'noremap nowait'
+		      \)
+		call denite#custom#map(
+		      \ 'insert',
+		      \ '<C-w><C-w>',
+		      \ 'Fail',
+		      \ 'noremap'
+		      \)
+		call denite#custom#map(
+		      \ 'insert',
+		      \ '<C-y>',
+		      \ 'Ctrl-y',
+		      \ 'noremap'
+		      \)
+		call denite#custom#map(
+		      \ 'insert',
+		      \ '<C-y><C-y>',
+		      \ 'Success',
+		      \ 'noremap'
+		      \)
+<
+		Note the posterior mappings have higher priority.
+		Note <Nop> cannot be used while <Nop> is equal to <C-J> in
+		neovim-prompt internally.
 		See |denite-key-mappings|.
-		Note: It is not related to Vim mappings.
-		Note: Multiple key stroke mappings like "<C-h><C-b>" are not
-		supported.
-		Note: You cannot change <C-c> default mapping.
 
 						*denite#custom#source()*
 denite#custom#source({source-name}, {option-name}, {value})
