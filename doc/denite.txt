@@ -737,6 +737,11 @@ OPTIONS							*denite-options*
 		automatically.
 		Default: false
 
+						*denite-options-auto-resize*
+-auto-resize
+		Auto resize the denite window height automatically.
+		Default: false
+
 						*denite-options-buffer-name*
 -buffer-name={buffer-name}
 		Specify the name of denite buffer.
@@ -746,6 +751,12 @@ OPTIONS							*denite-options*
 -default-action={action}
 		Specify the default action as {action}.
 		Default: "default"
+
+						*denite-options-cursor-wrap*
+-cursor-wrap
+		If you move when the cursor reaches the top or bottom edge,
+		the cursor moves to the opposite side.
+		Default: false
 
 						*denite-options-direction*
 -direction={direction}
