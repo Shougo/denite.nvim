@@ -338,6 +338,15 @@ are on the neovim-prompt's builtin actions/mappings.
 		See also |denite-map-toggle_insert_mode|.
 		Note this is a neovim-prompt's builtin action.
 
+				*denite-map-insert_word*
+<denite:insert_word:{word}>
+		Insert {word} characters. Use this mapping action to define
+		a mode independent mapping. If you need a mapping which insert
+		{word} only in insert mode, directly assign {word} like:
+>
+		call denite#custom#map('insert', '<F4>', 'hello!', 'noremap')
+<
+
 				*denite-map-jump_to_next_source*
 <denite:jump_to_next_source>
 		Jump to the first candidate of the next source.
@@ -494,40 +503,6 @@ All mode mappings (override by mode mappings).
 "insert" mode mappings.
 {key}		{mapping}
 --------	-----------------------------
-<C-B>		<denite:move_caret_to_head>
-<C-E>		<denite:move_caret_to_tail>
-<BS>		<denite:delete_char_before_caret>
-<C-H>		<denite:delete_char_before_caret>
-<C-K>		<denite:insert_digraph>
-<C-N>		<denite:assign_next_text>
-<C-P>		<denite:assign_previous_text>
-<C-Q>		<denite:insert_special>
-<C-R>		<denite:paste_from_register>
-<C-U>		<denite:delete_entire_text>
-<C-W>		<denite:delete_word_before_caret>
-<DEL>		<denite:delete_word_under_caret>
-<Left>		<denite:move_caret_to_left>
-<S-Left>	<denite:move_caret_to_one_word_left>
-<C-Left>	<denite:move_caret_to_one_word_left>
-<Right>		<denite:move_caret_to_right>
-<S-Right>	<denite:move_caret_to_one_word_right>
-<C-Right>	<denite:move_caret_to_one_word_right>
-<Up>		<denite:assign_previous_matched_text>
-<S-Up>		<denite:assign_previous_text>
-<Down>		<denite:assign_next_matched_text>
-<S-Down>	<denite:assign_next_text>
-<Home>		<denite:move_caret_to_head>
-<End>		<denite:move_caret_to_tail>
-<PageDown>	<denite:assign_next_text>
-<PageUp>	<denite:assign_previous_text>
-<Insert>	<denite:toggle_insert_mode>
-<C-G>		<denite:move_to_next_line>
-<C-T>		<denite:move_to_previous_line>
-<C-L>		<denite:redraw>
-<C-O>		<denite:enter_mode:normal>
-<C-J>		<denite:input_command_line>
-<C-V>		<denite:do_action:preview>
-
 "normal" mode mappings.
 {key}		{mapping}
 --------	-----------------------------

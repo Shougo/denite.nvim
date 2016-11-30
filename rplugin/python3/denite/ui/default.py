@@ -310,7 +310,6 @@ class Default(object):
         self.update_buffer()
 
     def quit_buffer(self):
-        self.__vim.command('redraw | echo')
         self.__vim.command('pclose!')
 
         if not self.__vim.call('bufloaded', self.__bufnr):
@@ -397,7 +396,6 @@ class Default(object):
             self.__context, candidates)
         action = self.__vim.call('input', 'Action: ', '',
                                  'customlist,denite#helper#complete_actions')
-        self.__vim.command('redraw | echo')
         if action == '':
             return
         return self.do_action(action)

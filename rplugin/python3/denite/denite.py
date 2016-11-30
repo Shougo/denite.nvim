@@ -148,21 +148,24 @@ class Denite(object):
             'rplugin/python3/denite/source/base.py')
         rtps.extend(globruntime(context['runtimepath'],
                                 'rplugin/python3/denite/source/*.py'))
+        loaded_paths = [x.path for x in self.__sources.values()]
         for path in rtps:
-            name = os.path.basename(path)[: -3]
-            if name == 'base' or name in self.__sources:
+            name = os.path.splitext(os.path.basename(path))[0]
+            if name == 'base' or path in loaded_paths:
                 continue
 
             module = importlib.machinery.SourceFileLoader(
                 'denite.source.' + name, path).load_module()
             source = module.Source(self.__vim)
             self.__sources[source.name] = source
+            source.path = path
 
             if source.name in self.__custom['alias_source']:
                 # Load alias
                 for alias in self.__custom['alias_source'][source.name]:
                     self.__sources[alias] = module.Source(self.__vim)
                     self.__sources[alias].name = alias
+                    self.__sources[alias].path = path
 
     def get_filter(self, filter_name):
         return self.__filters.get(filter_name, None)
@@ -174,14 +177,16 @@ class Denite(object):
             'rplugin/python3/denite/filter/base.py')
         rtps.extend(globruntime(context['runtimepath'],
                                 'rplugin/python3/denite/filter/*.py'))
+        loaded_paths = [x.path for x in self.__filters.values()]
         for path in rtps:
-            name = os.path.basename(path)[: -3]
-            if name == 'base' or name in self.__filters:
+            name = os.path.splitext(os.path.basename(path))[0]
+            if name == 'base' or path in loaded_paths:
                 continue
 
             module = importlib.machinery.SourceFileLoader(
                 'denite.filter.' + name, path).load_module()
             filter = module.Filter(self.__vim)
+            filter.path = path
             self.__filters[name] = filter
 
             if name in self.__custom['alias_filter']:
@@ -189,6 +194,7 @@ class Denite(object):
                 for alias in self.__custom['alias_filter'][name]:
                     self.__filters[alias] = module.Filter(self.__vim)
                     self.__filters[alias].name = alias
+                    self.__filters[alias].path = path
 
     def load_kinds(self, context):
         # Load kinds from runtimepath
