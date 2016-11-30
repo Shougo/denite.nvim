@@ -30,7 +30,7 @@ function! denite#helper#complete(arglead, cmdline, cursorpos) abort "{{{
   return uniq(sort(filter(_, 'stridx(v:val, a:arglead) == 0')))
 endfunction"}}}
 function! denite#helper#complete_actions(arglead, cmdline, cursorpos) abort "{{{
-  return uniq(sort(filter(g:denite#_actions,
+  return uniq(sort(filter(copy(g:denite#_actions),
         \ 'stridx(v:val, a:arglead) == 0')))
 endfunction"}}}
 
