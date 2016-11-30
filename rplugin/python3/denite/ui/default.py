@@ -7,11 +7,7 @@ import weakref
 from itertools import filterfalse, groupby, takewhile
 
 from denite.util import escape_syntax
-from .action import (
-    DEFAULT_ACTION_KEYMAP,
-    INSERT_ACTION_KEYMAP,
-    NORMAL_ACTION_KEYMAP,
-)
+from .action import DEFAULT_ACTION_KEYMAP
 from .prompt import DenitePrompt
 from .. import denite
 from ..prompt.prompt import STATUS_ACCEPT, STATUS_INTERRUPT
@@ -292,20 +288,23 @@ class Default(object):
         # Apply mode independent mappings
         self.__prompt.keymap.register_from_rules(
             self.__vim,
-            DEFAULT_ACTION_KEYMAP + custom.get('_', [])
+            DEFAULT_ACTION_KEYMAP.get('_', [])
+        )
+        self.__prompt.keymap.register_from_rules(
+            self.__vim,
+            custom.get('_', [])
         )
 
         # Apply mode depend mappings
-        if self.__current_mode == 'insert':
-            self.__prompt.keymap.register_from_rules(
-                self.__vim,
-                INSERT_ACTION_KEYMAP + custom.get('insert', [])
-            )
-        else:
-            self.__prompt.keymap.register_from_rules(
-                self.__vim,
-                NORMAL_ACTION_KEYMAP + custom.get('normal', [])
-            )
+        mode = self.__current_mode
+        self.__prompt.keymap.register_from_rules(
+            self.__vim,
+            DEFAULT_ACTION_KEYMAP.get(mode, [])
+        )
+        self.__prompt.keymap.register_from_rules(
+            self.__vim,
+            custom.get(mode, [])
+        )
 
         # Update mode indicator
         self.update_buffer()

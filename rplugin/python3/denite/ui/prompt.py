@@ -5,6 +5,7 @@ from ..prompt.prompt import (
 )
 
 
+# Denite pre-defined modes
 DENITE_MODE_INSERT = 'insert'
 DENITE_MODE_NORMAL = 'normal'
 
