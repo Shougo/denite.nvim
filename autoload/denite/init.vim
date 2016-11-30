@@ -90,6 +90,7 @@ function! denite#init#_variables() abort "{{{
         \ "<C-u>": 'scroll_window_upwards',
         \ "<C-f>": 'scroll_page_forwards',
         \ "<C-b>": 'scroll_page_backwards',
+        \ "<C-l>": 'redraw',
         \ "p": 'do_action:preview',
         \ "d": 'do_action:delete',
         \ "n": 'do_action:new',

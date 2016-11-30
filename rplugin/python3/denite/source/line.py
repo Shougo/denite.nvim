@@ -19,12 +19,14 @@ class Source(Base):
 
     def on_init(self, context):
         context['__linenr'] = self.vim.current.window.cursor[0]
-        context['__lines'] = self.vim.current.buffer[:]
-        context['__buffer'] = self.vim.current.buffer.name
+        context['__bufname'] = self.vim.current.buffer.name
+        context['__bufnr'] = self.vim.current.buffer.number
 
     def gather_candidates(self, context):
         lines = [{'word': x,
-                  'action__path': context['__buffer'],
+                  'action__path': context['__bufname'],
                   'action__line': (i + 1)}
-                 for [i, x] in enumerate(context['__lines'])]
+                 for [i, x] in
+                 enumerate(self.vim.call(
+                     'getbufline', context['__bufnr'], 1, '$'))]
         return lines[context['__linenr']-1:] + lines[:context['__linenr']-1]
