@@ -523,8 +523,6 @@ All mode mappings (override by mode mappings).
 <Insert>	<denite:toggle_insert_mode>
 <C-G>		<denite:move_to_next_line>
 <C-T>		<denite:move_to_previous_line>
-<Tab>		<denite:move_to_next_line>
-<S-Tab>		<denite:move_to_previous_line>
 <C-L>		<denite:redraw>
 <C-O>		<denite:enter_mode:normal>
 <C-J>		<denite:input_command_line>
