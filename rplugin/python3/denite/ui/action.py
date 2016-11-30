@@ -68,6 +68,10 @@ def _input_command_line(prompt, params):
     prompt.update_text(text)
 
 
+def _insert_word(prompt, params):
+    prompt.update_text(params)
+
+
 def _enter_mode(prompt, params):
     return prompt.denite.enter_mode(params)
 
@@ -98,6 +102,7 @@ DEFAULT_ACTION_RULES = [
     ('denite:jump_to_next_source', _jump_to_next_source),
     ('denite:jump_to_previous_source', _jump_to_previous_source),
     ('denite:input_command_line', _input_command_line),
+    ('denite:insert_word', _insert_word),
     ('denite:enter_mode', _enter_mode),
     ('denite:leave_mode', _leave_mode),
     ('denite:suspend', _suspend),

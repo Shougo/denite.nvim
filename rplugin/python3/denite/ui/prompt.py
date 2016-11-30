@@ -1,13 +1,9 @@
 from .action import DEFAULT_ACTION_RULES
 from ..prompt.prompt import (
+    ACTION_KEYSTROKE_PATTERN,
     Prompt,
     STATUS_CANCEL,
 )
-
-
-# Denite pre-defined modes
-DENITE_MODE_INSERT = 'insert'
-DENITE_MODE_NORMAL = 'normal'
 
 
 class DenitePrompt(Prompt):
@@ -45,11 +41,6 @@ class DenitePrompt(Prompt):
     def highlight_cursor(self):
         return self.context.get('cursor_highlight', 'Cursor')
 
-    def update_text(self, text):
-        # DO NOT UPDATE text when the mode is not INSERT mode.
-        if self.denite.current_mode == DENITE_MODE_INSERT:
-            super().update_text(text)
-
     def on_update(self, status):
         if self.__previous_text != self.text:
             self.__previous_text = self.text
@@ -66,3 +57,11 @@ class DenitePrompt(Prompt):
         if self.denite.is_async:
             self.denite.update_candidates()
             self.denite.update_buffer()
+
+    def on_keypress(self, keystroke):
+        m = ACTION_KEYSTROKE_PATTERN.match(str(keystroke))
+        if m:
+            return self.action.call(self, m.group('action'))
+        elif self.denite.current_mode == 'insert':
+            # Updating text from a keystroke is a feature of 'insert' mode
+            self.update_text(str(keystroke))

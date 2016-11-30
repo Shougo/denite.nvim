@@ -344,10 +344,6 @@ class Default(object):
         self.__result = []
         return STATUS_ACCEPT
 
-    def insert_word(self, word):
-        self.__input_before += word
-        self.update_input()
-
     def do_action(self, action):
         candidates = self.get_current_candidates()
         if not candidates:

@@ -346,7 +346,6 @@ are on the neovim-prompt's builtin actions/mappings.
 >
 		call denite#custom#map('insert', '<F4>', 'hello!', 'noremap')
 <
-
 				*denite-map-jump_to_next_source*
 <denite:jump_to_next_source>
 		Jump to the first candidate of the next source.
