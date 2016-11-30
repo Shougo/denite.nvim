@@ -9,7 +9,7 @@ from importlib import find_loader
 
 if not find_loader('vim'):
     import neovim
-    from denite.ui.default import Default
+    from denite.ui.bridge import Bridge
 
     @neovim.plugin
     class DeniteHandlers(object):
@@ -26,5 +26,5 @@ if not find_loader('vim'):
         def start(self, args):
             buffer_name = args[1]['buffer_name']
             if buffer_name not in self.__uis:
-                self.__uis[buffer_name] = Default(self.__vim)
+                self.__uis[buffer_name] = Bridge(self.__vim)
             return self.__uis[buffer_name].start(args[0], args[1])
