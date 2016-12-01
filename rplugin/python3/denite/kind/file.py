@@ -22,7 +22,7 @@ class Kind(Base):
         path = target['action__path']
         match_path = '^{0}$'.format(path)
 
-        if re.match('^\w+://', path):
+        if re.match('^(?!dav|fetch|ftp|http|rcp|rsync|scp|sftp)\w+://', path):
             # URI
             self.vim.call('denite#util#open', path)
             return
