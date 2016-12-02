@@ -14,8 +14,8 @@ class DenitePrompt(Prompt):
         self.denite = denite
         self.action.register_from_rules(DEFAULT_ACTION_RULES)
         # Remove prompt:accept/prompt:cancel which would break denite
-        self.action.unregister('prompt:accept')
-        self.action.unregister('prompt:cancel')
+        self.action.unregister('prompt:accept', fail_silently=True)
+        self.action.unregister('prompt:cancel', fail_silently=True)
 
     @property
     def text(self):
