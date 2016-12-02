@@ -55,12 +55,11 @@ def escape_syntax(expr):
 
 def escape_fuzzy(string, camelcase):
     # Escape string for python regexp.
-    p = re.sub(r'([a-zA-Z0-9_])(?!$)', r'\1.*', string)
+    p = re.sub(r'([a-zA-Z0-9_-])(?!$)', r'\1[^\1]*', string)
     if camelcase and re.search(r'[A-Z](?!$)', string):
         p = re.sub(r'([a-z])(?!$)',
                    (lambda pat: '['+pat.group(1)+pat.group(1).upper()+']'), p)
     p = re.sub(r'/(?!$)', r'/[^/]*', p)
-    p = re.sub(r'([a-zA-Z0-9_])\.\*', r'\1[^\1]*', p)
     return p
 
 
