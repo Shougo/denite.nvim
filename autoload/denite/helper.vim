@@ -22,9 +22,10 @@ function! denite#helper#complete(arglead, cmdline, cursorpos) abort "{{{
     let _ += map(copy(bool_options), "'-no-' . tr(v:val, '_', '-')")
   else
     " Source name completion.
-    let _ += map(globpath(&runtimepath,
-          \ 'rplugin/python3/denite/source/*.py', 1, 1),
-          \ "fnamemodify(v:val, ':t:r')")
+    let _ += filter(map(globpath(&runtimepath,
+          \             'rplugin/python3/denite/source/*.py', 1, 1),
+          \             "fnamemodify(v:val, ':t:r')"),
+          \         "v:val != 'base'")
   endif
 
   return uniq(sort(filter(_, 'stridx(v:val, a:arglead) == 0')))
