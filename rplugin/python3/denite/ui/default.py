@@ -3,6 +3,7 @@
 # AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
 # License: MIT license
 # ============================================================================
+import re
 import weakref
 from itertools import filterfalse, groupby, takewhile
 
@@ -213,13 +214,18 @@ class Default(object):
         self.__vim.command('silent! syntax clear deniteMatchedChar')
         if self.__matched_pattern != '':
             self.__vim.command(
-                'silent! syntax match deniteMatched /' +
-                escape_syntax(self.__matched_pattern) + '/ contained')
-            self.__vim.command(
-                'silent! syntax match deniteMatchedChar /[' +
-                re.sub(r'([[\]\\^-])', r'\\\1',
-                       self.__context['input'].replace(' ', '')) +
-                ']/ containedin=deniteMatched')
+                'silent! syntax match deniteMatched /%s/ contained' % (
+                    escape_syntax(self.__matched_pattern),
+                )
+            )
+            self.__vim.command((
+                'silent! syntax match deniteMatchedChar /[%s]/ '
+                'containedin=deniteMatched'
+            ) % re.sub(
+                r'([[\]\\^-])',
+                r'\\\1',
+                self.__context['input'].replace(' ', '')
+            ))
 
         del self.__vim.current.buffer[:]
         self.__vim.current.buffer.append(
