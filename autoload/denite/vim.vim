@@ -28,8 +28,6 @@ import denite.ui.default
 denite__uis = {}
 EOF
 
-  call denite#init#_variables()
-
   let g:denite#_channel_id = getpid()
 endfunction"}}}
 
