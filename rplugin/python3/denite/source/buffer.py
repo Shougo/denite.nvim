@@ -57,7 +57,8 @@ class Source(Base):
                 str(buffer_attr['number']).rjust(
                     len('{}'.format(len(self.vim.buffers))) + 1, ' '),
                 buffer_attr['status'],
-                self.vim.call('fnamemodify', buffer_attr['name'], ':~:.'),
+                self.vim.call('fnamemodify', buffer_attr['name'], ':~:.')
+                if buffer_attr['name'] != '' else 'No Name',
                 ' [{}]'.format(
                     buffer_attr['filetype']
                 ) if buffer_attr['filetype'] != '' else '',
