@@ -4,12 +4,13 @@
 # License: MIT license
 # ============================================================================
 
-from .base import Base
-from itertools import filterfalse
 import re
+from itertools import filterfalse
+
+from .openable import Kind as Openable
 
 
-class Kind(Base):
+class Kind(Openable):
 
     def __init__(self, vim):
         super().__init__(vim)
@@ -35,28 +36,11 @@ class Kind(Base):
                 'denite#util#execute_path', 'buffer', path)
         self.__jump(context, target)
 
-    def action_split(self, context):
-        self.vim.command('split')
-        self.action_open(context)
-
-    def action_vsplit(self, context):
-        self.vim.command('vsplit')
-        self.action_open(context)
-
     def action_preview(self, context):
         return self.__preview(context, False)
 
     def action_highlight(self, context):
         return self.__preview(context, True)
-
-    def action_tabopen(self, context):
-        hidden = self.vim.options['hidden']
-        try:
-            self.vim.options['hidden'] = False
-            self.vim.command('tabnew')
-            self.action_open(context)
-        finally:
-            self.vim.options['hidden'] = hidden
 
     def __get_preview_window(self):
         return next(filterfalse(lambda x:
