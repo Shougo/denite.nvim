@@ -25,7 +25,7 @@ class Source(Base):
         super().__init__(vim)
 
         self.name = 'buffer'
-        self.kind = 'command'
+        self.kind = 'buffer'
         self.syntax_name = 'deniteSource_buffer'
         self.vars = {
             'date_format': '%d %b %Y %H:%M:%S',
@@ -75,7 +75,7 @@ class Source(Base):
     def _convert(self, buffer_attr):
         return {
             'bufnr': buffer_attr['number'],
-            'word': '{0}{1} {2}{3} ({4}) '.format(
+            'word': '{0}{1} {2}{3} ({4})'.format(
                 str(buffer_attr['number']).rjust(
                     len('{}'.format(len(self.vim.buffers))) + 1, ' '),
                 buffer_attr['status'],
@@ -87,7 +87,7 @@ class Source(Base):
                 strftime(self.vars['date_format'],
                          localtime(buffer_attr['timestamp']))
             ),
-            'action__command': 'buffer {0}'.format(buffer_attr['number']),
+            'action__bufnr': buffer_attr['number'],
             'timestamp': buffer_attr['timestamp']
         }
 

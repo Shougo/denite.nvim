@@ -966,6 +966,17 @@ yank		Yank the candidate word.
 
 Kind Specific candidates can support below actions.
 
+						*denite-kind-buffer*
+buffer		An interface to open the buffer.
+		It extends |denite-kind-openable|.
+
+			action__bufnr		(Number)	(Required)
+				The buffer number.
+
+						*denite-kind-buffer-actions*
+			open (default)
+				Open the buffer.
+
 						*denite-kind-command*
 command		An interface to execute the command.
 
@@ -990,6 +1001,7 @@ directory	An interface to change directory.
 
 						*denite-kind-file*
 file		An interface to jump to the file position.
+		It extends |denite-kind-openable|.
 
 			action__path		(String)	(Required)
 				The path of the file that you'll jump into.
@@ -1011,14 +1023,22 @@ file		An interface to jump to the file position.
 			highlight
 				Preview and highlight the file.
 
+						*denite-kind-file*
+file		An interface to open the object.
+		Note: It is the abstract kind.
+
+						*denite-kind-openable-actions*
+			open (default)
+				Open the object.
+
 			tabopen
-				Open the file in the next tab.
+				Open the object in the next tab.
 
 			split
-				open the file with 'split'.
+				open the object with 'split'.
 
 			vsplit
-				open the file with 'vsplit'.
+				open the object with 'vsplit'.
 
 						*denite-kind-word*
 word		An interface to paste the text.
