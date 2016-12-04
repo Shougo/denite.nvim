@@ -344,7 +344,7 @@ class Default(object):
         #     self.__vim.call('winrestview', self.__winsaveview)
 
     def get_current_candidates(self):
-        if self.__cursor + self.__win_cursor >= self.__candidates_len:
+        if self.__cursor + self.__win_cursor > self.__candidates_len:
             return []
         return [self.__candidates[self.__cursor + self.__win_cursor - 1]]
 
