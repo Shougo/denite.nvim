@@ -53,59 +53,6 @@ function! denite#init#_initialize() abort "{{{
           \ 'Please execute :UpdateRemotePlugins command and restart Neovim.')
     return 1
   endtry
-
-  call denite#init#_variables()
-endfunction"}}}
-
-function! denite#init#_variables() abort "{{{
-  " Default mappings
-  let g:denite#_default_mappings = {'_': {}, 'normal': {}, 'insert': {}}
-  let default_mode_mappings = {
-        \ "<Esc>": 'leave_mode',
-        \ "<CR>":  'do_action:default',
-        \ "<C-z>":  'suspend',
-        \ "<Tab>": 'choose_action',
-        \}
-  let insert_mode_mappings = {
-        \ "<C-h>": 'delete_backward_char',
-        \ "<BS>": 'delete_backward_char',
-        \ "<C-w>": 'delete_backward_word',
-        \ "<C-u>": 'delete_backward_line',
-        \ "<C-g>": 'move_to_next_line',
-        \ "<C-t>": 'move_to_prev_line',
-        \ "<Tab>": 'choose_action',
-        \ "<C-j>": 'input_command_line',
-        \ "<C-r>": 'paste_from_register',
-        \ "<C-l>": 'redraw',
-        \ "<C-o>": 'enter_mode:normal',
-        \ "<C-v>": 'do_action:preview',
-        \}
-  let normal_mode_mappings = {
-        \ "i": 'enter_mode:insert',
-        \ "j": 'move_to_next_line',
-        \ "k": 'move_to_prev_line',
-        \ "g": 'move_to_first_line',
-        \ "G": 'move_to_last_line',
-        \ "<C-d>": 'scroll_window_downwards',
-        \ "<C-u>": 'scroll_window_upwards',
-        \ "<C-f>": 'scroll_page_forwards',
-        \ "<C-b>": 'scroll_page_backwards',
-        \ "<C-l>": 'redraw',
-        \ "p": 'do_action:preview',
-        \ "d": 'do_action:delete',
-        \ "n": 'do_action:new',
-        \ "t": 'do_action:tabopen',
-        \ "q": 'quit',
-        \}
-  for [char, value] in items(default_mode_mappings)
-    let g:denite#_default_mappings._[char] = value
-  endfor
-  for [char, value] in items(insert_mode_mappings)
-    let g:denite#_default_mappings.insert[char] = value
-  endfor
-  for [char, value] in items(normal_mode_mappings)
-    let g:denite#_default_mappings.normal[char] = value
-  endfor
 endfunction"}}}
 
 function! denite#init#_context() abort "{{{

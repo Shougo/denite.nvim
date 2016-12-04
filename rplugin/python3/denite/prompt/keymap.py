@@ -1,8 +1,8 @@
 """Keymap."""
 import time
 from collections import namedtuple
-from operator import itemgetter
 from datetime import datetime
+from operator import itemgetter
 from .key import Key
 from .keystroke import Keystroke
 from .util import getchar
@@ -23,6 +23,7 @@ class Definition(DefinitionBase):
     __slots__ = ()
 
     def __new__(cls, lhs, rhs, noremap=False, nowait=False, expr=False):
+        """Create a new instance of the definition."""
         if expr and not isinstance(rhs, str):
             raise AttributeError(
                 '"rhs" of "expr" mapping requires to be a str.'
@@ -63,6 +64,10 @@ class Keymap:
     def __init__(self):
         """Constructor."""
         self.registry = {}
+
+    def clear(self):
+        """Clear registered keymaps."""
+        self.registry.clear()
 
     def register(self, definition):
         """Register a keymap.
@@ -298,7 +303,7 @@ class Keymap:
             return rhs
         return self.resolve(nvim, rhs, nowait=True)
 
-    def harvest(self, nvim, timeoutlen):
+    def harvest(self, nvim, timeoutlen=None, callback=None):
         """Harvest a keystroke from getchar in Vim and return resolved.
 
         It reads 'timeout' and 'timeoutlen' options in Vim and harvest a
@@ -313,6 +318,10 @@ class Keymap:
 
         Args:
             nvim (neovim.Nvim): A ``neovim.Nvim`` instance.
+            timeoutlen (datetime.timedelta): A timedelta instance which
+                indicate the timeout.
+            callback (Callable): A callback function which is called every
+                before the internal getchar() has called.
 
         Returns:
             Keystroke: A resolved keystroke.
@@ -322,7 +331,8 @@ class Keymap:
         while True:
             code = _getcode(
                 nvim,
-                datetime.now() + timeoutlen if timeoutlen else None
+                datetime.now() + timeoutlen if timeoutlen else None,
+                callback=callback,
             )
             if code is None and previous is None:
                 # timeout without input
@@ -369,12 +379,14 @@ class Keymap:
         return keymap
 
 
-def _getcode(nvim, timeout):
+def _getcode(nvim, timeout, callback=None, sleep=0.005):
     while not timeout or timeout > datetime.now():
+        if callback:
+            callback()
         code = getchar(nvim, False)
         if code != 0:
             return code
-        time.sleep(0.01)
+        time.sleep(sleep)
     return None
 
 

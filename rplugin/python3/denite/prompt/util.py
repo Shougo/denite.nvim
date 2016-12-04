@@ -1,6 +1,27 @@
 """Utility module."""
+import re
 
 _cached_encoding = None
+
+ESCAPE_ECHO = str.maketrans({
+    '"': '\\"',
+    '\\': '\\\\',
+})
+
+IMPRINTABLE_REPRESENTS = {
+    '\a': '^G',
+    '\b': '^H',             # NOTE: Neovim: <BS>, Vim: ^H. Follow Vim.
+    '\t': '^I',
+    '\n': '^J',
+    '\v': '^K',
+    '\f': '^L',
+    '\r': '^M',
+    '\udc80\udcffX': '^@',  # NOTE: ^0 representation in Vim.
+}
+
+IMPRINTABLE_PATTERN = re.compile(r'(%s)' % '|'.join(
+    IMPRINTABLE_REPRESENTS.keys()
+))
 
 
 def get_encoding(nvim):
@@ -99,6 +120,7 @@ def int2char(nvim, code):
 
 
 def int2repr(nvim, code):
+    """Return a string representation of a key with specified key code."""
     from .key import Key
     if isinstance(code, int):
         return int2char(nvim, code)
@@ -118,25 +140,49 @@ def getchar(nvim, *args):
     try:
         ret = nvim.call('getchar', *args)
         if isinstance(ret, int):
+            if ret == 0x03:
+                # NOTE
+                # Vim/Neovim usually raise an exception when user hit Ctrl-C
+                # but sometime returns 0x03 (^C) instead.
+                # While user might override <Esc> or <CR> and accidentaly
+                # disable the way to exit neovim-prompt, Ctrl-C should be a
+                # final way to exit the prompt. So raise KeyboardInterrupt
+                # exception when 'ret' is 0x03 instead of returning 0x03.
+                raise KeyboardInterrupt
             return ret
         return ensure_bytes(nvim, ret)
     except nvim.error as e:
         # NOTE:
-        # Vim returns 0x03 when ^C is pressed but Neovim.
-        # Additionally, KeyboardInterrupt is not raised but
-        # A general nvim.error and only the following dirty
-        # implementation works.
+        # neovim raise nvim.error instead of KeyboardInterrupt when Ctrl-C has
+        # pressed so convert it to a real KeyboardInterrupt exception.
         if str(e) == "b'Keyboard interrupt'":
-            return 0x03  # ^C
+            raise KeyboardInterrupt
         raise e
 
 
-def safeget(l, index, default=None):
-    """Return an index item of list or default."""
-    try:
-        return l[index]
-    except IndexError:
-        return default
+def build_echon_expr(text, hl='None'):
+    """Build 'echon' expression.
+
+    Imprintable characters (e.g. '^M') are replaced to a corresponding
+    representations used in Vim's command-line interface.
+
+    Args:
+        text (str): A text to be echon.
+        hl (str): A highline name. Default is 'None'.
+
+    Return:
+        str: A Vim's command expression for 'echon'.
+    """
+    if not IMPRINTABLE_PATTERN.search(text):
+        return 'echohl %s|echon "%s"' % (
+            hl, text.translate(ESCAPE_ECHO)
+        )
+    p = 'echohl %s|echon "%%s"' % hl
+    i = 'echohl %s|echon "%%s"' % ('SpecialKey' if hl == 'None' else hl)
+    return '|'.join(
+        p % term if index % 2 == 0 else i % IMPRINTABLE_REPRESENTS[term]
+        for index, term in enumerate(IMPRINTABLE_PATTERN.split(text))
+    )
 
 
 # http://python-3-patterns-idioms-test.readthedocs.io/en/latest/Metaprogramming.html
@@ -145,7 +191,7 @@ class Singleton(type):
 
     instance = None
 
-    def __call__(cls, *args, **kwargs):
+    def __call__(cls, *args, **kwargs):  # noqa
         if not cls.instance:
             cls.instance = super().__call__(*args, **kwargs)
         return cls.instance

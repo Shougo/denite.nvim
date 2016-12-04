@@ -3,19 +3,25 @@
 # AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
 # License: MIT license
 # ============================================================================
-
-from denite.util import error, echo, escape_syntax, safe_isprint
-from ..prompt.key import Key
-from ..prompt.util import getchar
-from .. import denite
-
 import re
-import traceback
-import time
+import weakref
 from itertools import filterfalse, groupby, takewhile
+
+from denite.util import escape_syntax
+from .action import DEFAULT_ACTION_KEYMAP
+from .prompt import DenitePrompt
+from .. import denite
+from ..prompt.prompt import STATUS_ACCEPT, STATUS_INTERRUPT
 
 
 class Default(object):
+    @property
+    def is_async(self):
+        return self.__denite.is_async()
+
+    @property
+    def current_mode(self):
+        return self.__current_mode
 
     def __init__(self, vim):
         self.__vim = vim
@@ -42,57 +48,62 @@ class Default(object):
         self.__is_multi = False
         self.__matched_pattern = ''
         self.__statusline_sources = ''
+        self.__prompt = DenitePrompt(
+            self.__vim,
+            self.__context,
+            weakref.proxy(self)
+        )
 
     def start(self, sources, context):
-        try:
-            if self.__initialized and context['resume']:
-                # Skip the initialization
-                self.__current_mode = context['mode']
-                self.__context['immediately'] = context['immediately']
-                self.__context['cursor_wrap'] = context['cursor_wrap']
+        if self.__initialized and context['resume']:
+            # Skip the initialization
+            self.__current_mode = context['mode']
+            self.__context['immediately'] = context['immediately']
+            self.__context['cursor_wrap'] = context['cursor_wrap']
 
-                self.init_buffer()
-                self.change_mode(self.__current_mode)
-                if context['select'] == '+1':
-                    self.move_to_next_line()
-                elif context['select'] == '-1':
-                    self.move_to_prev_line()
-                if self.check_empty():
-                    return self.__result
-            else:
-                self.__context = context
-                self.__context['sources'] = sources
-                self.__context['is_redraw'] = False
-                self.__default_mappings = self.__vim.eval(
-                    'g:denite#_default_mappings')
-                self.__current_mode = context['mode']
-                self.__is_multi = len(sources) > 1
+            self.init_buffer()
+            self.change_mode(self.__current_mode)
+            if context['select'] == '+1':
+                self.move_to_next_line()
+            elif context['select'] == '-1':
+                self.move_to_prev_line()
+            if self.check_empty():
+                return self.__result
+        else:
+            self.__context.clear()
+            self.__context.update(context)
+            self.__context['sources'] = sources
+            self.__context['is_redraw'] = False
+            self.__current_mode = context['mode']
+            self.__is_multi = len(sources) > 1
 
-                self.__denite.start(self.__context)
+            self.__denite.start(self.__context)
 
-                self.__denite.on_init(self.__context)
+            self.__denite.on_init(self.__context)
 
-                self.__initialized = True
+            self.__initialized = True
 
-                self.__denite.gather_candidates(self.__context)
-                self.update_candidates()
-                if self.check_empty():
-                    return self.__result
+            self.__denite.gather_candidates(self.__context)
+            self.update_candidates()
+            if self.check_empty():
+                return self.__result
 
-                self.init_buffer()
-                self.init_cursor()
-                if self.__context['select'].isnumeric():
-                    self.__win_cursor = int(self.__context['select']) + 1
-                    self.move_cursor()
+            self.init_buffer()
+            self.init_cursor()
+            if self.__context['select'].isnumeric():
+                self.__win_cursor = int(self.__context['select']) + 1
+                self.move_cursor()
 
-                self.change_mode(self.__current_mode)
+            self.change_mode(self.__current_mode)
 
-            self.input_loop()
-        except Exception as e:
-            if str(e) != "b'Keyboard interrupt'":
-                for line in traceback.format_exc().splitlines():
-                    error(self.__vim, line)
-                error(self.__vim, 'Please execute :messages command.')
+        # Make sure that the caret position is ok
+        self.__prompt.caret.locus = self.__prompt.caret.tail
+        status = self.__prompt.start()
+        if status == STATUS_INTERRUPT:
+            # STATUS_INTERRUPT is returned when user hit <C-c> and the loop has
+            # interrupted.
+            # In this case, denite cancel any operation and close its window.
+            self.quit()
         return self.__result
 
     def init_buffer(self):
@@ -203,13 +214,18 @@ class Default(object):
         self.__vim.command('silent! syntax clear deniteMatchedChar')
         if self.__matched_pattern != '':
             self.__vim.command(
-                'silent! syntax match deniteMatched /' +
-                escape_syntax(self.__matched_pattern) + '/ contained')
-            self.__vim.command(
-                'silent! syntax match deniteMatchedChar /[' +
-                re.sub(r'([[\]\\^-])', r'\\\1',
-                       self.__context['input'].replace(' ', '')) +
-                ']/ containedin=deniteMatched')
+                'silent! syntax match deniteMatched /%s/ contained' % (
+                    escape_syntax(self.__matched_pattern),
+                )
+            )
+            self.__vim.command((
+                'silent! syntax match deniteMatchedChar /[%s]/ '
+                'containedin=deniteMatched'
+            ) % re.sub(
+                r'([[\]\\^-])',
+                r'\\\1',
+                self.__context['input'].replace(' ', '')
+            ))
 
         del self.__vim.current.buffer[:]
         self.__vim.current.buffer.append(
@@ -276,23 +292,34 @@ class Default(object):
             self.do_action('highlight')
 
     def change_mode(self, mode):
+        self.__current_mode = mode
         custom = self.__context['custom']['map']
 
-        self.__current_mode = mode
+        # Clear current keymap
+        self.__prompt.keymap.registry.clear()
 
-        raw_mappings = self.__default_mappings['_'].copy()
-        if '_' in custom:
-            raw_mappings.update(custom['_'])
+        # Apply mode independent mappings
+        self.__prompt.keymap.register_from_rules(
+            self.__vim,
+            DEFAULT_ACTION_KEYMAP.get('_', [])
+        )
+        self.__prompt.keymap.register_from_rules(
+            self.__vim,
+            custom.get('_', [])
+        )
 
-        if mode in self.__default_mappings:
-            raw_mappings.update(self.__default_mappings[mode])
-        if mode in custom:
-            raw_mappings.update(custom[mode])
+        # Apply mode depend mappings
+        mode = self.__current_mode
+        self.__prompt.keymap.register_from_rules(
+            self.__vim,
+            DEFAULT_ACTION_KEYMAP.get(mode, [])
+        )
+        self.__prompt.keymap.register_from_rules(
+            self.__vim,
+            custom.get(mode, [])
+        )
 
-        self.__current_mappings = {
-            Key.parse(self.__vim, k).code: v
-            for k, v in raw_mappings.items()
-        }
+        # Update mode indicator
         self.update_buffer()
 
     def quit_buffer(self):
@@ -312,26 +339,10 @@ class Default(object):
         # if self.__vim.current.buffer.number == self.__prev_bufnr:
         #     self.__vim.call('winrestview', self.__winsaveview)
 
-    def update_prompt(self):
-        self.__vim.command('redraw')
-        if self.__context['prompt'] != '':
-            echo(self.__vim, self.__context['prompt_highlight'],
-                 self.__context['prompt'] + ' ')
-        echo(self.__vim, 'Normal',
-             self.__input_before)
-        echo(self.__vim, self.__context['cursor_highlight'],
-             self.__input_cursor)
-        echo(self.__vim, 'Normal',
-             self.__input_after)
-
-    def update_input(self):
-        self.__context['input'] = self.__input_before
-        self.__context['input'] += self.__input_cursor
-        self.__context['input'] += self.__input_after
-        self.update_candidates()
-        self.update_buffer()
-        self.update_prompt()
-        self.init_cursor()
+    def get_current_candidates(self):
+        if self.__cursor >= self.__candidates_len:
+            return []
+        return [self.__candidates[self.__cursor + self.__win_cursor - 1]]
 
     def redraw(self):
         self.__context['is_redraw'] = True
@@ -340,80 +351,11 @@ class Default(object):
         self.update_buffer()
         self.__context['is_redraw'] = False
 
-    def input_loop(self):
-        self.__input_before = self.__context['input']
-        self.__input_cursor = ''
-        self.__input_after = ''
-
-        try:
-            while True:
-                self.update_prompt()
-
-                is_async = self.__denite.is_async()
-                if is_async:
-                    time.sleep(0.005)
-                    key = Key.parse(self.__vim, getchar(self.__vim, 0))
-                else:
-                    key = Key.parse(self.__vim, getchar(self.__vim))
-
-                self.__vim.command('redraw | echo')
-
-                # Terminate input_loop when user hit <C-c>
-                if key.code == 0x03:
-                    self.quit()
-                    break
-
-                mapping = self.__current_mappings.get(key.code, None)
-                if mapping:
-                    map_args = re.split(':', mapping)
-                    arg = ':'.join(map_args[1:])
-                    if hasattr(self, map_args[0]):
-                        func = getattr(self, map_args[0])
-                        ret = func() if len(map_args) == 1 else func(arg)
-                        if ret:
-                            break
-                        continue
-                elif (self.__current_mode == 'insert' and
-                        safe_isprint(self.__vim, key.char)):
-                    # Normal input string
-                    self.insert_word(key.char)
-                    continue
-
-                if is_async:
-                    self.update_candidates()
-                    self.update_buffer()
-                    if self.check_empty():
-                        self.quit()
-                        break
-        except self.__vim.error as e:
-            # NOTE:
-            # neovim raise nvim.error instead of KeyboardInterrupt so check if
-            # the error is KeyboardInterrupt or not and quit denite when the
-            # error was KeyboardInterrupt
-            if str(e) == "b'Keyboard interrupt'":
-                self.quit()
-            else:
-                raise e
-        except KeyboardInterrupt:
-            # NOTE
-            # KeyboardInterrupt may raised during the loop in Vim.
-            # In that case, simply quit the denite.
-            self.quit()
-
     def quit(self):
         self.__denite.on_close(self.__context)
         self.quit_buffer()
         self.__result = []
-        return True
-
-    def get_current_candidates(self):
-        if self.__cursor >= self.__candidates_len:
-            return []
-        return [self.__candidates[self.__cursor + self.__win_cursor - 1]]
-
-    def insert_word(self, word):
-        self.__input_before += word
-        self.update_input()
+        return STATUS_ACCEPT
 
     def do_action(self, action):
         candidates = self.get_current_candidates()
@@ -452,7 +394,7 @@ class Default(object):
                 # Disable quit flag
                 is_quit = False
         self.__result = candidates
-        return is_quit
+        return STATUS_ACCEPT if is_quit else None
 
     def choose_action(self):
         candidates = self.get_current_candidates()
@@ -466,22 +408,6 @@ class Default(object):
         if action == '':
             return
         return self.do_action(action)
-
-    def delete_backward_char(self):
-        self.__input_before = re.sub('.$', '', self.__input_before)
-        self.update_input()
-
-    def delete_backward_word(self):
-        self.__input_before = re.sub('[^/ ]*.$', '', self.__input_before)
-        self.update_input()
-
-    def delete_backward_line(self):
-        self.__input_before = ''
-        self.update_input()
-
-    def paste_from_register(self):
-        self.__input_before += re.sub(r'\n', '', self.__vim.eval('@"'))
-        self.update_input()
 
     def move_to_next_line(self):
         if (self.__win_cursor < self.__candidates_len and
@@ -628,15 +554,6 @@ class Default(object):
 
         self.update_buffer()
 
-    def input_command_line(self):
-        input = self.__vim.call(
-            'input', self.__context['prompt'] + ' ',
-            self.__context['input'])
-        self.__input_before = input
-        self.__input_cursor = ''
-        self.__input_after = ''
-        self.update_input()
-
     def enter_mode(self, mode):
         self.__mode_stack.append(self.__current_mode)
         self.change_mode(mode)
@@ -651,4 +568,4 @@ class Default(object):
 
     def suspend(self):
         self.__options['modifiable'] = False
-        return True
+        return STATUS_ACCEPT

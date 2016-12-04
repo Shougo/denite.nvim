@@ -1,10 +1,11 @@
-from .context import Context
+from .prompt import Prompt
 
 
 class Caret:
-    context = ... # type: Context
+    prompt = ... # type: Prompt
+    _locus = ... # type: int
 
-    def __init__(self, context: Context) -> None: ...
+    def __init__(self, prompt: Prompt, locus: int) -> None: ...
 
     @property
     def locus(self) -> int: ...

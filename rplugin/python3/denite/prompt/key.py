@@ -119,6 +119,7 @@ class Key(KeyBase):
     __cached = {}
 
     def __str__(self):
+        """Return string representation of the key."""
         return self.char
 
     @classmethod
@@ -134,7 +135,7 @@ class Key(KeyBase):
 
     @classmethod
     def parse(cls, nvim, expr):
-        """Parse a key expression and return a Key instance.
+        r"""Parse a key expression and return a Key instance.
 
         It returns a Key instance of a key expression. The instance is cached
         to individual expression so that the instance is exactly equal when
