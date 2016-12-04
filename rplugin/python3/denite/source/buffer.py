@@ -9,6 +9,15 @@ from os.path import getatime, exists
 from time import localtime, strftime, time
 from sys import maxsize
 
+BUFFER_HIGHLIGHT_SYNTAX = [
+    {'name': 'Name',     'link': 'Function',  're': '[^/ \[\]]\+\s'},
+    {'name': 'Prefix',   'link': 'Constant',  're': '\d\+\s\+\%(\S\+\)\?'},
+    {'name': 'Info',     'link': 'PreProc',   're': '\[.\{-}\] '},
+    {'name': 'Modified', 'link': 'Statement', 're': '\[.\{-}+\]'},
+    {'name': 'NoFile',   'link': 'Function',  're': '\[nofile\]'},
+    {'name': 'Time',     'link': 'Statement', 're': '(.\{-}) '},
+]
+
 
 class Source(Base):
 
@@ -17,6 +26,7 @@ class Source(Base):
 
         self.name = 'buffer'
         self.kind = 'command'
+        self.syntax_name = 'deniteSource_buffer'
         self.vars = {
             'date_format': '%d %b %Y %H:%M:%S',
             'exclude_unlisted': 1,
@@ -28,6 +38,18 @@ class Source(Base):
             '!' not in context['args'] and self.vars['exclude_unlisted']
         self.__caller_bufnr = context['bufnr']
         self.__alter_bufnr = self.vim.call('bufnr', '#')
+
+    def highlight_syntax(self):
+        for syn in BUFFER_HIGHLIGHT_SYNTAX:
+            self.vim.command(
+                'syntax match {0}_{1} /{2}/ contained containedin={0}'.format(
+                    self.syntax_name, syn['name'], syn['re']))
+            self.vim.command(
+                'highlight default link {0}_{1} {2}'.format(
+                    self.syntax_name, syn['name'], syn['link']))
+        self.vim.command(
+            'syntax region ' + self.syntax_name + ' start=// end=/$/ '
+            'contains=deniteMatched contained')
 
     def gather_candidates(self, context):
         candidates = [
@@ -53,7 +75,7 @@ class Source(Base):
     def _convert(self, buffer_attr):
         return {
             'bufnr': buffer_attr['number'],
-            'word': '{0}{1} {2}{3} ({4})'.format(
+            'word': '{0}{1} {2}{3} ({4}) '.format(
                 str(buffer_attr['number']).rjust(
                     len('{}'.format(len(self.vim.buffers))) + 1, ' '),
                 buffer_attr['status'],
