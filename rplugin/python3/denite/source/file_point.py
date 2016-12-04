@@ -47,9 +47,9 @@ class Source(Base):
 
 
 def checkhost(path):
-    if not match(r'^\w+://', path):
+    if not match(r'https?://', path):
         return ''
     try:
-        return gethostbyname(sub(r'^\w+://', '', path))
+        return gethostbyname(sub(r'/.*$', '', sub(r'^\w+://', '', path)))
     except:
         return ''
