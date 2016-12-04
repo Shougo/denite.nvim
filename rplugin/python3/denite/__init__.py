@@ -31,7 +31,7 @@ if not find_loader('vim'):
                 if buffer_name not in self.__uis:
                     self.__uis[buffer_name] = Default(self.__vim)
                 return self.__uis[buffer_name].start(args[0], args[1])
-            except Exception as e:
+            except Exception:
                 for line in traceback.format_exc().splitlines():
                     error(self.__vim, line)
                 error(self.__vim, 'Please execute :messages command.')

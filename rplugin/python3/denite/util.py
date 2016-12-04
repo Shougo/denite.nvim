@@ -44,8 +44,10 @@ def error(vim, expr):
     else:
         vim.call('denite#util#print_error', expr)
 
+
 def clear_cmdline(vim):
     vim.command('redraw | echo')
+
 
 def escape(expr):
     return expr.replace("'", "''")
