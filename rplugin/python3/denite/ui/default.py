@@ -207,7 +207,8 @@ class Default(object):
                 escape_syntax(self.__matched_pattern) + '/ contained')
             self.__vim.command(
                 'silent! syntax match deniteMatchedChar /[' +
-                re.sub(r'([\[\]\\-])', r'\\\1', self.__context['input']) +
+                re.sub(r'([[\]\\^-])', r'\\\1',
+                       self.__context['input'].replace(' ', '')) +
                 ']/ containedin=deniteMatched')
 
         del self.__vim.current.buffer[:]
