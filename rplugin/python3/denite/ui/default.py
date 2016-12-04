@@ -157,7 +157,7 @@ class Default(object):
         self.__vim.command('highlight default link ' +
                            self.__context['cursor_highlight'] + ' Normal')
         self.__vim.command('highlight default link deniteMode ModeMsg')
-        self.__vim.command('highlight default link deniteMatched Search')
+        self.__vim.command('highlight default link deniteMatched Underlined')
         self.__vim.command('highlight default link ' +
                            'deniteStatusLinePath Comment')
         self.__vim.command('highlight default link ' +
