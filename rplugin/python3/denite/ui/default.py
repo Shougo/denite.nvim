@@ -7,7 +7,7 @@ import re
 import weakref
 from itertools import filterfalse, groupby, takewhile
 
-from denite.util import escape_syntax
+from denite.util import escape_syntax, clear_cmdline
 from .action import DEFAULT_ACTION_KEYMAP
 from .prompt import DenitePrompt
 from .. import denite
@@ -403,6 +403,7 @@ class Default(object):
 
         self.__vim.vars['denite#_actions'] = self.__denite.get_actions(
             self.__context, candidates)
+        clear_cmdline(self.__vim)
         action = self.__vim.call('input', 'Action: ', '',
                                  'customlist,denite#helper#complete_actions')
         if action == '':
