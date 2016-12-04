@@ -889,8 +889,8 @@ file_rec	Gather files recursive and nominates all file names under the
 				that does't expects the directory parameter as
 				it's last parameter one can use the positional
 				"directory" argument:
->
-				call dein#custom#var("file_rec", "command",
+
+				call denite#custom#var("file_rec", "command",
 					\ [ "find", "-L", ":directory",
 					\ "-path", "*/.svn/*", "-prune", "-o",
 					\ '-type', 'l', '-print', '-o',

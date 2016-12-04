@@ -39,3 +39,5 @@ you should read `:help provider-python`.
 * restart feature
 
 * narrow action
+
+* -no-split, -tab option

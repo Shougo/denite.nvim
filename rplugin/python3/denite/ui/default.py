@@ -167,7 +167,8 @@ class Default(object):
         self.__vim.command('highlight default link ' +
                            self.__context['cursor_highlight'] + ' Normal')
         self.__vim.command('highlight default link deniteMode ModeMsg')
-        self.__vim.command('highlight default link deniteMatched Search')
+        self.__vim.command('highlight default link deniteMatched Underlined')
+        self.__vim.command('highlight default link deniteMatchedChar Search')
         self.__vim.command('highlight default link ' +
                            'deniteStatusLinePath Comment')
         self.__vim.command('highlight default link ' +
@@ -209,10 +210,16 @@ class Default(object):
         self.__bufvars['denite_statusline_linenr'] = linenr
 
         self.__vim.command('silent! syntax clear deniteMatched')
+        self.__vim.command('silent! syntax clear deniteMatchedChar')
         if self.__matched_pattern != '':
             self.__vim.command(
                 'silent! syntax match deniteMatched /' +
                 escape_syntax(self.__matched_pattern) + '/ contained')
+            self.__vim.command(
+                'silent! syntax match deniteMatchedChar /[' +
+                re.sub(r'([[\]\\^-])', r'\\\1',
+                       self.__context['input'].replace(' ', '')) +
+                ']/ containedin=deniteMatched')
 
         del self.__vim.current.buffer[:]
         self.__vim.current.buffer.append(
