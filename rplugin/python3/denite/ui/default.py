@@ -7,7 +7,7 @@ import re
 import weakref
 from itertools import filterfalse, groupby, takewhile
 
-from denite.util import escape_syntax, clear_cmdline
+from denite.util import escape_syntax, clear_cmdline, echo
 from .action import DEFAULT_ACTION_KEYMAP
 from .prompt import DenitePrompt
 from .. import denite
@@ -251,6 +251,10 @@ class Default(object):
     def check_empty(self):
         if self.__candidates and self.__context['immediately']:
             self.do_action('default')
+            candidate = self.get_current_candidates()[0]
+            echo(self.__vim, 'Normal', '[{0}/{1}] {2}]'.format(
+                self.__cursor + self.__win_cursor, self.__candidates_len,
+                candidate.get('abbr', candidate['word'])))
             return True
         return not (self.__context['empty'] or
                     self.__denite.is_async() or self.__candidates)
@@ -340,7 +344,7 @@ class Default(object):
         #     self.__vim.call('winrestview', self.__winsaveview)
 
     def get_current_candidates(self):
-        if self.__cursor >= self.__candidates_len:
+        if self.__cursor + self.__win_cursor >= self.__candidates_len:
             return []
         return [self.__candidates[self.__cursor + self.__win_cursor - 1]]
 
