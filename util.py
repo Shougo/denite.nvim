@@ -1,7 +1,10 @@
 """Utility module."""
 import re
+from collections import namedtuple
 
 _cached_encoding = None
+
+_cached_keyword_pattern_set = {}
 
 ESCAPE_ECHO = str.maketrans({
     '"': '\\"',
@@ -22,6 +25,11 @@ IMPRINTABLE_REPRESENTS = {
 IMPRINTABLE_PATTERN = re.compile(r'(%s)' % '|'.join(
     IMPRINTABLE_REPRESENTS.keys()
 ))
+
+PatternSet = namedtuple('PatternSet', [
+    'pattern',
+    'inverse',
+])
 
 
 def get_encoding(nvim):
@@ -183,6 +191,44 @@ def build_echon_expr(text, hl='None'):
         p % term if index % 2 == 0 else i % IMPRINTABLE_REPRESENTS[term]
         for index, term in enumerate(IMPRINTABLE_PATTERN.split(text))
     )
+
+
+def build_keyword_pattern_set(nvim):
+    """Build a keyword pattern set from current 'iskeyword'.
+
+    The result is cached by the value of 'iskeyword'.
+
+    Args:
+        nvim (neovim.Nvim): A ``neovim.Nvim`` instance.
+
+    Returns:
+        PatternSet
+    """
+    # NOTE:
+    # iskeyword is similar to isfname and in Vim's help, isfname always
+    # include multi-byte characters so only ASCII characters need to be
+    # considered
+    #
+    # > Multi-byte characters 256 and above are always included, only the
+    # > characters up to 255 are specified with this option.
+    iskeyword = nvim.current.buffer.options['iskeyword']
+    if iskeyword not in _cached_keyword_pattern_set:
+        source = frozenset(chr(c) for c in range(0x20, 0xff))
+        non_keyword_set = frozenset(nvim.call(
+            'substitute',
+            ''.join(source),
+            r'\k\+',
+            '', 'g'
+        ))
+        keyword_set = source - non_keyword_set
+        # Convert frozenset to str and remove whitespaces
+        keyword = re.sub(r'\s+', '', ''.join(keyword_set))
+        non_keyword = re.sub(r'\s+', '', ''.join(non_keyword_set))
+        _cached_keyword_pattern_set[iskeyword] = PatternSet(
+            pattern=r'[%s]' % re.escape(keyword),
+            inverse=r'[%s]' % re.escape(non_keyword),
+        )
+    return _cached_keyword_pattern_set[iskeyword]
 
 
 # http://python-3-patterns-idioms-test.readthedocs.io/en/latest/Metaprogramming.html
