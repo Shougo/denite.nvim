@@ -220,7 +220,7 @@ class Default(object):
             )
             self.__vim.command((
                 'silent! syntax match deniteMatchedChar /[%s]/ '
-                'containedin=deniteMatched'
+                'containedin=deniteMatched contained'
             ) % re.sub(
                 r'([[\]\\^-])',
                 r'\\\1',
