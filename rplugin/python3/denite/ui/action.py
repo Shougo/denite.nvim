@@ -163,10 +163,12 @@ DEFAULT_ACTION_KEYMAP = {
         ('<C-D>', '<denite:scroll_window_downwards>', 'noremap'),
         ('<C-F>', '<denite:scroll_page_forwards>', 'noremap'),
         ('<C-B>', '<denite:scroll_page_backwards>', 'noremap'),
+        # Denite specific actions
         ('p', '<denite:do_action:preview>', 'noremap'),
         ('d', '<denite:do_action:delete>', 'noremap'),
         ('n', '<denite:do_action:new>', 'noremap'),
         ('t', '<denite:do_action:tabopen>', 'noremap'),
         ('q', '<denite:quit>', 'noremap'),
+        ('<C-L>', '<denite:redraw>', 'noremap'),
     ],
 }

@@ -553,6 +553,7 @@ d		<denite:do_action:delete>
 n		<denite:do_action:new>
 t		<denite:do_action:tabopen>
 q		<denite:quit>
+<C-L>		<denite:redraw>
 
 ------------------------------------------------------------------------------
 FUNCTIONS						*denite-functions*
