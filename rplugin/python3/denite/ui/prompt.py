@@ -57,6 +57,11 @@ class DenitePrompt(Prompt):
         if self.denite.is_async:
             self.denite.update_candidates()
             self.denite.update_buffer()
+            # NOTE
+            # Redraw prompt to update the buffer.
+            # Without 'redraw_prompt', the buffer is not updated often enough
+            # for 'async' source.
+            self.redraw_prompt()
 
     def on_keypress(self, keystroke):
         m = ACTION_KEYSTROKE_PATTERN.match(str(keystroke))
