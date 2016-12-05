@@ -1,5 +1,12 @@
-from typing import Any, AnyStr, Union
+from typing import Any, AnyStr, Union, NamedTuple
+
 from neovim import Nvim
+
+
+PatternSet = NamedTuple('PatternSet', [
+    ('pattern', str),
+    ('inverse', str),
+])
 
 
 def get_encoding(nvim: Nvim) -> str: ...
@@ -21,6 +28,9 @@ def getchar(nvim: Nvim, *args) -> Union[int, bytes]: ...
 
 
 def build_echon_expr(text: str, hl: str) -> str: ...
+
+
+def build_keyword_pattern_set(nvim: Nvim) -> PatternSet: ...
 
 
 class Singleton(type):

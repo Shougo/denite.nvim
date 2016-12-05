@@ -1,7 +1,7 @@
 """Prompt action module."""
 import re
 from .digraph import Digraph
-from .util import getchar, int2char, int2repr
+from .util import getchar, int2char, int2repr, build_keyword_pattern_set
 
 
 ACTION_PATTERN = re.compile(
@@ -196,14 +196,15 @@ def _delete_char_before_caret(prompt, params):
 
 
 def _delete_word_before_caret(prompt, params):
+    # NOTE: Respect the behavior of 'b' in Normal mode.
     if prompt.caret.locus == 0:
         return
-    # Use vim's substitute to respect 'iskeyword'
-    original_backward_text = prompt.caret.get_backward_text()
-    backward_text = prompt.nvim.call(
-        'substitute',
-        original_backward_text, '\k\+\s*$', '', '',
+    pattern_set = build_keyword_pattern_set(prompt.nvim)
+    pattern = re.compile(
+        r'(?:|%s+|%s+|[^\s\x20-\xff]+)\s*$' % pattern_set,
     )
+    original_backward_text = prompt.caret.get_backward_text()
+    backward_text = pattern.sub('', original_backward_text)
     prompt.text = ''.join([
         backward_text,
         prompt.caret.get_selected_text(),
@@ -223,14 +224,14 @@ def _delete_char_after_caret(prompt, params):
 
 
 def _delete_word_after_caret(prompt, params):
+    # NOTE: Respect the behavior of 'w' in Normal mode.
     if prompt.caret.locus == prompt.caret.tail:
         return
-    # Use vim's substitute to respect 'iskeyword'
-    forward_text = prompt.nvim.call(
-        'substitute',
-        prompt.caret.get_forward_text(),
-        '^\s*\k\+', '', '',
+    pattern_set = build_keyword_pattern_set(prompt.nvim)
+    pattern = re.compile(
+        r'^(?:%s+|%s+|[^\s\x20-\xff]+|)\s*' % pattern_set
     )
+    forward_text = pattern.sub('', prompt.caret.get_forward_text())
     prompt.text = ''.join([
         prompt.caret.get_backward_text(),
         prompt.caret.get_selected_text(),
@@ -246,23 +247,32 @@ def _delete_char_under_caret(prompt, params):
 
 
 def _delete_word_under_caret(prompt, params):
-    # Use vim's substitute to respect 'iskeyword'
+    # NOTE: Respect the behavior of 'diw' in Normal mode.
     if prompt.text == '':
         return
-    if prompt.caret.get_selected_text() == ' ':
-        backward_text = prompt.caret.get_backward_text().rstrip()
-        forward_text = prompt.caret.get_forward_text().lstrip()
+    pattern_set = build_keyword_pattern_set(prompt.nvim)
+    pattern = re.compile(pattern_set.pattern)
+    inverse = re.compile(pattern_set.inverse)
+    non_ascii = re.compile(r'[^\s\x20-\xff]')
+    selected_text = prompt.caret.get_selected_text()
+    if selected_text == '':
+        # The caret is at the end of the text
+        pattern_b = re.compile(r'.$')
+        pattern_a = re.compile('')
+    elif pattern.match(selected_text):
+        pattern_b = re.compile(r'%s+$' % pattern_set.pattern)
+        pattern_a = re.compile(r'^%s+' % pattern_set.pattern)
+    elif inverse.match(selected_text):
+        pattern_b = re.compile(r'%s+$' % pattern_set.inverse)
+        pattern_a = re.compile(r'^%s+' % pattern_set.inverse)
+    elif non_ascii.match(selected_text):
+        pattern_b = re.compile(r'[^\s\x20-\xff]+$')
+        pattern_a = re.compile(r'^[^\s\x20-\xff]+')
     else:
-        backward_text = prompt.nvim.call(
-            'substitute',
-            prompt.caret.get_backward_text(),
-            '\k\+$', '', '',
-        )
-        forward_text = prompt.nvim.call(
-            'substitute',
-            prompt.caret.get_forward_text(),
-            '^\k\+', '', '',
-        )
+        pattern_b = re.compile(r'\s+$')
+        pattern_a = re.compile(r'^\s+')
+    backward_text = pattern_b.sub('', prompt.caret.get_backward_text())
+    forward_text = pattern_a.sub('', prompt.caret.get_forward_text())
     prompt.text = ''.join([
         backward_text,
         forward_text,
@@ -290,12 +300,13 @@ def _move_caret_to_left(prompt, params):
 
 
 def _move_caret_to_one_word_left(prompt, params):
-    # Use vim's substitute to respect 'iskeyword'
+    # NOTE:
+    # At least Neovim 0.2.0 or Vim 8.0, <S-Left> in command line does not
+    # respect 'iskeyword' and a definition of the 'word' seems a chunk of
+    # printable characters.
+    pattern = re.compile('\S+\s?$')
     original_text = prompt.caret.get_backward_text()
-    substituted_text = prompt.nvim.call(
-        'substitute',
-        original_text, '\k\+\s\?$', '', '',
-    )
+    substituted_text = pattern.sub('', original_text)
     offset = len(original_text) - len(substituted_text)
     prompt.caret.locus -= 1 if not offset else offset
 
@@ -313,12 +324,13 @@ def _move_caret_to_right(prompt, params):
 
 
 def _move_caret_to_one_word_right(prompt, params):
-    # Use vim's substitute to respect 'iskeyword'
+    # NOTE:
+    # At least Neovim 0.2.0 or Vim 8.0, <S-Left> in command line does not
+    # respect 'iskeyword' and a definition of the 'word' seems a chunk of
+    # printable characters.
+    pattern = re.compile('^\S+')
     original_text = prompt.caret.get_forward_text()
-    substituted_text = prompt.nvim.call(
-        'substitute',
-        original_text, '^\k\+', '', '',
-    )
+    substituted_text = pattern.sub('', original_text)
     prompt.caret.locus += 1 + len(original_text) - len(substituted_text)
 
 
