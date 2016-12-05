@@ -124,7 +124,7 @@ class Default(object):
         else:
             # Create new buffer
             self.__vim.command('silent ' +
-                               self.__context['direction'] + ' new denite')
+                               self.__context['direction'] + ' new [denite]')
         self.resize_buffer()
         self.__vim.command('nnoremap <silent><buffer> <CR> ' +
                            ':<C-u>Denite -resume -buffer_name=' +
