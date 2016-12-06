@@ -17,6 +17,7 @@ class Kind(Openable):
 
         self.name = 'file'
         self.default_action = 'open'
+        self.persist_actions += ['preview', 'highlight']
 
     def action_open(self, context):
         target = context['targets'][0]
