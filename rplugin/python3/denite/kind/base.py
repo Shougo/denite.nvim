@@ -12,6 +12,7 @@ class Base(object):
     def __init__(self, vim):
         self.vim = vim
         self.name = 'base'
+        self.persist_actions = ['yank']
 
     def debug(self, expr):
         denite.util.debug(self.vim, expr)
