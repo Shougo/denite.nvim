@@ -245,7 +245,7 @@ class Denite(object):
         return {
             'name': action_name,
             'func': getattr(kind, action_attr),
-            'is_quit': (action_name in kind.persist_actions)
+            'is_quit': (action_name not in kind.persist_actions)
         }
 
     def get_actions(self, context, targets):

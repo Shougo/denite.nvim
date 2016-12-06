@@ -53,11 +53,6 @@ function! denite#helper#call_denite(command, args, line1, line2) abort "{{{
 endfunction"}}}
 
 function! denite#helper#preview_file(context, filename) abort "{{{
-  if has_key(a:context, '__prev_winid')
-    " Move to denite window
-    call win_gotoid(a:context.__prev_winid)
-  endif
-
   if a:context.vertical_preview
     let denite_winwidth = &columns
     call denite#util#execute_path('silent vertical pedit!', a:filename)

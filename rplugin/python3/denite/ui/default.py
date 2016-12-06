@@ -145,6 +145,7 @@ class Default(object):
         self.__window_options['relativenumber'] = False
         self.__window_options['foldenable'] = False
         self.__window_options['foldcolumn'] = 0
+        self.__window_options['winfixheight'] = True
 
         self.__bufvars = self.__vim.current.buffer.vars
         self.__bufnr = self.__vim.current.buffer.number
@@ -375,42 +376,29 @@ class Default(object):
         self.update_candidates()
         self.update_buffer()
 
-    def do_action(self, action):
+    def do_action(self, action_name):
         candidates = self.get_current_candidates()
         if not candidates:
             return
 
-        prev_id = self.__vim.call('win_getid')
-        is_denite = self.__vim.eval('&filetype') == 'denite'
-        self.__context['__prev_winid'] = prev_id
-        if is_denite:
-            self.__vim.call('win_gotoid', self.__prev_winid)
-            now_id = self.__vim.call('win_getid')
-            if prev_id == now_id:
-                # The previous window search is failed.
-                # Jump to the other window.
-                if len(self.__vim.windows) == 1:
-                    self.__vim.command('topleft new')
-                else:
-                    self.__vim.command('wincmd w')
-
-        is_quit = not self.__denite.do_action(
-            self.__context, action, candidates)
-
-        if is_denite:
-            now_id = self.__vim.call('win_getid')
-            if now_id != self.__prev_winid:
-                self.__prev_winid = now_id
-                self.__prev_bufnr = self.__vim.current.buffer.number
-            self.__vim.call('win_gotoid', prev_id)
-
+        action = self.__denite.get_action(
+            self.__context, action_name, candidates)
+        if not action:
+            return
+        is_quit = action['is_quit']
         if is_quit:
             self.__denite.on_close(self.__context)
-            if self.__context['quit']:
-                self.quit_buffer()
-            else:
-                # Disable quit flag
-                is_quit = False
+            self.quit_buffer()
+
+        self.__denite.do_action(self.__context, action_name, candidates)
+
+        if is_quit and not self.__context['quit']:
+            # Re-open denite buffer
+            self.init_buffer()
+            self.update_buffer()
+            # Disable quit flag
+            is_quit = False
+
         self.__result = candidates
         return STATUS_ACCEPT if is_quit else None
 
