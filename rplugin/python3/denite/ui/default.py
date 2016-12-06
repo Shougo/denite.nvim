@@ -28,6 +28,7 @@ class Default(object):
         self.__denite = denite.Denite(vim)
         self.__cursor = 0
         self.__win_cursor = 1
+        self.__selected_candidates = []
         self.__candidates = []
         self.__candidates_len = 0
         self.__result = []
@@ -189,8 +190,9 @@ class Default(object):
                 ' Type'
             )
 
-            syntax_line = 'syntax match %s /^%s/ nextgroup=%s keepend' % (
+            syntax_line = 'syntax match %s /^[ %s]%s/ nextgroup=%s keepend' % (
                 'deniteSourceLine_' + name,
+                self.__context['selected_icon'],
                 escape_syntax(source_name),
                 source.syntax_name,
             )
@@ -235,12 +237,14 @@ class Default(object):
         del self.__vim.current.buffer[:]
         self.__vim.current.buffer.append(
             ['%s %s' % (
+                (self.__context['selected_icon']
+                 if i in self.__selected_candidates else ' ') +
                 (re.sub(r'([a-zA-Z])[a-zA-Z]+', r'\1', x['source'])
                  if self.__context['short_source_names']
                  else x['source']) if self.__is_multi else '',
                 x.get('abbr', x['word'])[:400])
-             for x in self.__candidates[self.__cursor:
-                                        self.__cursor + self.__winheight]])
+             for i, x in enumerate(self.__candidates[
+                     self.__cursor: self.__cursor + self.__winheight])])
         del self.__vim.current.buffer[0]
         self.resize_buffer()
 
@@ -258,7 +262,7 @@ class Default(object):
     def check_empty(self):
         if self.__candidates and self.__context['immediately']:
             self.do_action('default')
-            candidate = self.get_current_candidates()[0]
+            candidate = self.get_cursor_candidate()
             echo(self.__vim, 'Normal', '[{0}/{1}] {2}]'.format(
                 self.__cursor + self.__win_cursor, self.__candidates_len,
                 candidate.get('abbr', candidate['word'])))
@@ -269,6 +273,7 @@ class Default(object):
     def update_candidates(self):
         pattern = ''
         sources = ''
+        self.__selected_candidates = []
         self.__candidates = []
         for name, all, candidates in self.__denite.filter_candidates(
                 self.__context):
@@ -350,10 +355,23 @@ class Default(object):
         # if self.__vim.current.buffer.number == self.__prev_bufnr:
         #     self.__vim.call('winrestview', self.__winsaveview)
 
-    def get_current_candidates(self):
+    def get_cursor_candidate(self):
         if self.__cursor + self.__win_cursor > self.__candidates_len:
-            return []
-        return [self.__candidates[self.__cursor + self.__win_cursor - 1]]
+            return {}
+        return self.__candidates[self.__cursor + self.__win_cursor - 1]
+
+    def get_selected_candidates(self):
+        if not self.__selected_candidates:
+            return [self.get_cursor_candidate()
+                    ] if self.get_cursor_candidate() else []
+        return [self.__candidates[x] for x in self.__selected_candidates]
+
+    def toggle_select_cursor_candidate(self):
+        index = self.__cursor + self.__win_cursor - 1
+        if index in self.__selected_candidates:
+            self.__selected_candidates.remove(index)
+        else:
+            self.__selected_candidates.append(index)
 
     def redraw(self):
         self.__context['is_redraw'] = True
@@ -377,7 +395,7 @@ class Default(object):
         self.update_buffer()
 
     def do_action(self, action_name):
-        candidates = self.get_current_candidates()
+        candidates = self.get_selected_candidates()
         if not candidates:
             return
 
@@ -403,7 +421,7 @@ class Default(object):
         return STATUS_ACCEPT if is_quit else None
 
     def choose_action(self):
-        candidates = self.get_current_candidates()
+        candidates = self.get_selected_candidates()
         if not candidates:
             return
 
