@@ -827,6 +827,11 @@ OPTIONS							*denite-options*
 		Note: 0 is the first candidate.
 		Default: ''
 
+					*denite-options-short-source-names*
+-short-source-names
+		Use short source names if multiple sources.
+		Default: false
+
 						*denite-options-statusline*
 -statusline
 		Enable statusline.

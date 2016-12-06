@@ -88,6 +88,7 @@ function! denite#init#_user_options() abort "{{{
         \ 'reversed': v:false,
         \ 'scroll': 0,
         \ 'select': '',
+        \ 'short_source_names': v:false,
         \ 'statusline': v:true,
         \ 'vertical_preview': v:false,
         \ 'winheight': 20,
