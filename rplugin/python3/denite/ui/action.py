@@ -84,27 +84,32 @@ def _suspend(prompt, params):
     return prompt.denite.suspend()
 
 
+def _restart(prompt, params):
+    return prompt.denite.restart()
+
+
 DEFAULT_ACTION_RULES = [
-    ('denite:redraw', _redraw),
-    ('denite:quit', _quit),
-    ('denite:do_action', _do_action),
     ('denite:choose_action', _choose_action),
-    ('denite:move_to_next_line', _move_to_next_line),
-    ('denite:move_to_previous_line', _move_to_previous_line),
-    ('denite:move_to_first_line', _move_to_first_line),
-    ('denite:move_to_last_line', _move_to_last_line),
-    ('denite:scroll_window_upwards', _scroll_window_upwards),
-    ('denite:scroll_window_downwards', _scroll_window_downwards),
-    ('denite:scroll_page_forwards', _scroll_page_forwards),
-    ('denite:scroll_page_backwards', _scroll_page_backwards),
-    ('denite:scroll_up', _scroll_up),
-    ('denite:scroll_down', _scroll_down),
-    ('denite:jump_to_next_source', _jump_to_next_source),
-    ('denite:jump_to_previous_source', _jump_to_previous_source),
+    ('denite:do_action', _do_action),
+    ('denite:enter_mode', _enter_mode),
     ('denite:input_command_line', _input_command_line),
     ('denite:insert_word', _insert_word),
-    ('denite:enter_mode', _enter_mode),
+    ('denite:jump_to_next_source', _jump_to_next_source),
+    ('denite:jump_to_previous_source', _jump_to_previous_source),
     ('denite:leave_mode', _leave_mode),
+    ('denite:move_to_first_line', _move_to_first_line),
+    ('denite:move_to_last_line', _move_to_last_line),
+    ('denite:move_to_next_line', _move_to_next_line),
+    ('denite:move_to_previous_line', _move_to_previous_line),
+    ('denite:quit', _quit),
+    ('denite:redraw', _redraw),
+    ('denite:restart', _restart),
+    ('denite:scroll_down', _scroll_down),
+    ('denite:scroll_page_backwards', _scroll_page_backwards),
+    ('denite:scroll_page_forwards', _scroll_page_forwards),
+    ('denite:scroll_up', _scroll_up),
+    ('denite:scroll_window_downwards', _scroll_window_downwards),
+    ('denite:scroll_window_upwards', _scroll_window_upwards),
     ('denite:suspend', _suspend),
 ]
 
@@ -170,5 +175,6 @@ DEFAULT_ACTION_KEYMAP = {
         ('t', '<denite:do_action:tabopen>', 'noremap'),
         ('q', '<denite:quit>', 'noremap'),
         ('<C-L>', '<denite:redraw>', 'noremap'),
+        ('<C-R>', '<denite:restart>', 'noremap'),
     ],
 }

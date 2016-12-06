@@ -456,13 +456,17 @@ are on the neovim-prompt's builtin actions/mappings.
 		Paste the text from a default register (|v:register|).
 		Note this is a neovim-prompt's builtin action.
 
+				*denite-map-quit*
+<denite:quit>
+		Close current Denite buffer.
+
 				*denite-map-redraw*
 <denite:redraw>
 		Clear the cache and redraw the candidates.
 
-				*denite-map-quit*
-<denite:quit>
-		Close current Denite buffer.
+				*denite-map-restart*
+<denite:restart>
+		Restart Denite buffer.
 
 				*denite-map-suspend*
 <denite:suspend>
@@ -554,6 +558,7 @@ n		<denite:do_action:new>
 t		<denite:do_action:tabopen>
 q		<denite:quit>
 <C-L>		<denite:redraw>
+<C-R>		<denite:restart>
 
 ------------------------------------------------------------------------------
 FUNCTIONS						*denite-functions*

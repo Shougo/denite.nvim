@@ -362,6 +362,14 @@ class Default(object):
         self.__result = []
         return STATUS_ACCEPT
 
+    def restart(self):
+        self.quit_buffer()
+        self.__denite.on_init(self.__context)
+        self.__denite.gather_candidates(self.__context)
+        self.init_buffer()
+        self.update_candidates()
+        self.update_buffer()
+
     def do_action(self, action):
         candidates = self.get_current_candidates()
         if not candidates:
