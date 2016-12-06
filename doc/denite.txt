@@ -866,8 +866,13 @@ directory_rec	Gather directories recursive and nominates all directory names
 				(default is used "find" command in Unix
 				environment)
 
+						*denite-source-file_old*
+file_old
+		Gather files from |v:oldfiles|.
+
 						*denite-source-file_point*
 file_point
+		Gather current line of "file:line" format as candidates.
 
 						*denite-source-file_rec*
 file_rec	Gather files recursive and nominates all file names under the
