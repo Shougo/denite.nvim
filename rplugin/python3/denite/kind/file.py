@@ -68,7 +68,6 @@ class Kind(Openable):
                 self.vim.call('matchaddpos', 'Search',
                               [int(target.get('action__line', 0))])
             self.vim.call('win_gotoid', prev_id)
-        return True
 
     def __jump(self, context, target):
         line = int(target.get('action__line', 0))
