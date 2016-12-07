@@ -108,7 +108,8 @@ function! s:parse_options(cmdline) abort "{{{
       let value = (arg_key =~ '=$') ? arg[len(arg_key) :] : 1
     endif
 
-    if index(keys(denite#init#_user_options()), name) >= 0
+    if index(keys(denite#init#_user_options())
+          \ + keys(denite#init#_deprecated_options()), name) >= 0
       let options[name] = value
     else
       call add(args, arg)
