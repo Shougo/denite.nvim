@@ -6,7 +6,7 @@
 
 from .base import Base
 from denite.process import Process
-from os.path import relpath, isabs
+from os.path import relpath, isabs, isdir
 from copy import copy
 from denite.util import parse_command
 
@@ -43,6 +43,8 @@ class Source(Base):
             self.__cache = {}
 
         directory = context['__directory']
+        if not isdir(directory):
+            return []
 
         if directory in self.__cache:
             return self.__cache[directory]
