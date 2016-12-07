@@ -63,7 +63,7 @@ class Default(object):
             self.__context['cursor_wrap'] = context['cursor_wrap']
 
             self.init_buffer()
-            self.change_mode(self.__current_mode)
+
             if context['cursor_pos'] == '+1':
                 self.move_to_next_line()
             elif context['cursor_pos'] == '-1':
@@ -91,11 +91,12 @@ class Default(object):
 
             self.init_buffer()
             self.init_cursor()
-            if self.__context['cursor_pos'].isnumeric():
-                self.__win_cursor = int(self.__context['cursor_pos']) + 1
-                self.move_cursor()
 
-            self.change_mode(self.__current_mode)
+        if self.__context['cursor_pos'].isnumeric():
+            self.__win_cursor = int(self.__context['cursor_pos']) + 1
+            self.move_cursor()
+
+        self.change_mode(self.__current_mode)
 
         # Make sure that the caret position is ok
         self.__prompt.caret.locus = self.__prompt.caret.tail
@@ -297,6 +298,8 @@ class Default(object):
         self.__statusline_sources = sources
 
     def move_cursor(self):
+        if self.__win_cursor > self.__vim.call('line', '$'):
+            self.__win_cursor = self.__vim.call('line', '$')
         self.__vim.call('cursor', [self.__win_cursor, 1])
         self.__vim.call('clearmatches')
         self.__vim.call('matchaddpos',
