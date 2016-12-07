@@ -11,12 +11,20 @@ function! denite#start(sources, ...) abort "{{{
   let user_context = get(a:000, 0, {})
   let buffer_name = get(user_context, 'buffer_name', 'default')
 
-  let context = extend(denite#init#_context(), denite#init#_user_options())
+  let context = denite#init#_context()
+  call extend(context, denite#init#_user_options())
   let context.custom = denite#custom#get()
   if has_key(context.custom.option, buffer_name)
     call extend(context, context.custom.option[buffer_name])
   endif
   call extend(context, user_context)
+
+  " For compatibility(deprecated variables)
+  for [old_option, new_option] in filter(items(
+        \ denite#init#_deprecated_options()),
+        \ "has_key(context, v:val[0])")
+    let context[new_option] = context[old_option]
+  endfor
 
   if denite#initialize()
     return

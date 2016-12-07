@@ -64,9 +64,9 @@ class Default(object):
 
             self.init_buffer()
             self.change_mode(self.__current_mode)
-            if context['select'] == '+1':
+            if context['cursor_pos'] == '+1':
                 self.move_to_next_line()
-            elif context['select'] == '-1':
+            elif context['cursor_pos'] == '-1':
                 self.move_to_prev_line()
             if self.check_empty():
                 return self.__result
@@ -91,8 +91,8 @@ class Default(object):
 
             self.init_buffer()
             self.init_cursor()
-            if self.__context['select'].isnumeric():
-                self.__win_cursor = int(self.__context['select']) + 1
+            if self.__context['cursor_pos'].isnumeric():
+                self.__win_cursor = int(self.__context['cursor_pos']) + 1
                 self.move_cursor()
 
             self.change_mode(self.__current_mode)

@@ -764,6 +764,14 @@ OPTIONS							*denite-options*
 		Specify the default action as {action}.
 		Default: "default"
 
+						*denite-options-cursor-pos*
+-cursor-pos={number}
+		Select {number} candidate.
+		If {number} is "+1" or "-1" when resume, selects the next or
+		previous candidate.
+		Note: 0 is the first candidate.
+		Default: ''
+
 						*denite-options-cursor-wrap*
 -cursor-wrap
 		If you move when the cursor reaches the top or bottom edge,
@@ -818,14 +826,6 @@ OPTIONS							*denite-options*
 -reversed
 		The candidates are reversed.
 		Default: false
-
-						*denite-options-select*
--select={number}
-		Select {number} candidate.
-		If {number} is "+1" or "-1" when resume, selects the next or
-		previous candidate.
-		Note: 0 is the first candidate.
-		Default: ''
 
 						*denite-options-selected-icon*
 -selected-icon={icon-character}
@@ -1336,7 +1336,7 @@ COMPATIBILITY						*denite-compatibility*
 	Users need to follow the migration-note below.
 	https://github.com/Shougo/denite.nvim/wiki/From-v0.1.0-to-v0.5.0-dev
 
-2016.12.??
+2016.12.08
 	-select option is deprecated option.  Please use -cursor-pos option
 	instead.
 

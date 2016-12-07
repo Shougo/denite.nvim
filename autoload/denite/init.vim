@@ -70,6 +70,7 @@ function! denite#init#_user_options() abort "{{{
         \ 'auto_resize': v:false,
         \ 'buffer_name': 'default',
         \ 'cursor_highlight': 'Cursor',
+        \ 'cursor_pos': '',
         \ 'cursor_wrap': v:false,
         \ 'cursorline': v:true,
         \ 'default_action': 'default',
@@ -87,12 +88,16 @@ function! denite#init#_user_options() abort "{{{
         \ 'resume': v:false,
         \ 'reversed': v:false,
         \ 'scroll': 0,
-        \ 'select': '',
         \ 'selected_icon': '*',
         \ 'short_source_names': v:false,
         \ 'statusline': v:true,
         \ 'vertical_preview': v:false,
         \ 'winheight': 20,
+        \}
+endfunction"}}}
+function! denite#init#_deprecated_options() abort "{{{
+  return {
+        \ 'select': 'cursor_pos',
         \}
 endfunction"}}}
 
