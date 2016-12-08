@@ -25,5 +25,3 @@ command! -nargs=* -range -complete=customlist,denite#helper#complete
       \ DeniteProjectDir
       \ call denite#helper#call_denite('DeniteProjectDir',
       \                                <q-args>, <line1>, <line2>)
-
-" vim: foldmethod=marker
