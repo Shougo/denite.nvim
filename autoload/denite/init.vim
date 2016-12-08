@@ -70,13 +70,13 @@ function! denite#init#_user_options() abort
         \ 'auto_preview': v:false,
         \ 'auto_resize': v:false,
         \ 'buffer_name': 'default',
-        \ 'cursor_highlight': 'Cursor',
         \ 'cursor_pos': '',
         \ 'cursor_wrap': v:false,
         \ 'cursorline': v:true,
         \ 'default_action': 'default',
         \ 'direction': 'botright',
         \ 'empty': v:true,
+        \ 'highlight_cursor': 'Cursor',
         \ 'ignorecase': v:true,
         \ 'immediately': v:false,
         \ 'input': '',
@@ -97,6 +97,7 @@ function! denite#init#_user_options() abort
 endfunction
 function! denite#init#_deprecated_options() abort
   return {
+        \ 'cursor_highlight': 'highlight_cursor',
         \ 'select': 'cursor_pos',
         \}
 endfunction
