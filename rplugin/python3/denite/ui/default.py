@@ -170,7 +170,7 @@ class Default(object):
     def __init_syntax(self):
         self.__vim.command('syntax case ignore')
         self.__vim.command('highlight default link ' +
-                           self.__context['cursor_highlight'] + ' Normal')
+                           self.__context['highlight_cursor'] + ' Normal')
         self.__vim.command('highlight default link deniteMode ModeMsg')
         self.__vim.command('highlight default link deniteMatched Underlined')
         self.__vim.command('highlight default link deniteMatchedChar Search')
@@ -303,7 +303,7 @@ class Default(object):
         self.__vim.call('cursor', [self.__win_cursor, 1])
         self.__vim.call('clearmatches')
         self.__vim.call('matchaddpos',
-                        self.__context['cursor_highlight'],
+                        self.__context['highlight_cursor'],
                         [[self.__win_cursor, 1]])
         if self.__context['auto_preview']:
             self.do_action('preview')
