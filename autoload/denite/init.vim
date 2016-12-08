@@ -77,6 +77,7 @@ function! denite#init#_user_options() abort
         \ 'direction': 'botright',
         \ 'empty': v:true,
         \ 'highlight_cursor': 'Cursor',
+        \ 'highlight_matched_char': 'Search',
         \ 'ignorecase': v:true,
         \ 'immediately': v:false,
         \ 'input': '',
@@ -97,7 +98,6 @@ function! denite#init#_user_options() abort
 endfunction
 function! denite#init#_deprecated_options() abort
   return {
-        \ 'cursor_highlight': 'highlight_cursor',
         \ 'select': 'cursor_pos',
         \}
 endfunction
