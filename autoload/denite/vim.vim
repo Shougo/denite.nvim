@@ -7,7 +7,7 @@
 let s:denite_path = fnamemodify(expand('<sfile>'), ':p:h:h:h')
       \ . '/rplugin/python3'
 
-function! denite#vim#_initialize() abort "{{{
+function! denite#vim#_initialize() abort
   if v:version < 800 || !has('python3')
     call denite#util#print_error(
           \ 'denite.nvim does not work with this version.')
@@ -25,9 +25,9 @@ sys.path.insert(0, vim.eval('s:denite_path'))
 denite__uis = {}
 EOF
   let g:denite#_channel_id = getpid()
-endfunction"}}}
+endfunction
 
-function! denite#vim#_start(sources, context) abort "{{{
+function! denite#vim#_start(sources, context) abort
   python3 << EOF
 def _temporary_scope():
     import traceback
@@ -52,6 +52,4 @@ _temporary_scope()
 del _temporary_scope
 EOF
   return []
-endfunction"}}}
-
-" vim: foldmethod=marker
+endfunction

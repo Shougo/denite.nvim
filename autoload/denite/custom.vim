@@ -4,7 +4,7 @@
 " License: MIT license
 "=============================================================================
 
-function! denite#custom#get() abort "{{{
+function! denite#custom#get() abort
   if !exists('s:custom')
     let s:custom = {}
     let s:custom.source = {}
@@ -18,9 +18,9 @@ function! denite#custom#get() abort "{{{
   endif
 
   return s:custom
-endfunction"}}}
+endfunction
 
-function! denite#custom#source(source_name, option_name, value) abort "{{{
+function! denite#custom#source(source_name, option_name, value) abort
   let custom = denite#custom#get().source
 
   for key in denite#util#split(a:source_name)
@@ -29,9 +29,9 @@ function! denite#custom#source(source_name, option_name, value) abort "{{{
     endif
     let custom[key][a:option_name] = a:value
   endfor
-endfunction"}}}
+endfunction
 
-function! denite#custom#filter(filter_name, var_name, value) abort "{{{
+function! denite#custom#filter(filter_name, var_name, value) abort
   let custom = denite#custom#get().filter
 
   for key in denite#util#split(a:filter_name)
@@ -40,9 +40,9 @@ function! denite#custom#filter(filter_name, var_name, value) abort "{{{
     endif
     let custom[key][a:var_name] = a:value
   endfor
-endfunction"}}}
+endfunction
 
-function! denite#custom#var(source_name, var_name, value) abort "{{{
+function! denite#custom#var(source_name, var_name, value) abort
   let custom = denite#custom#get().source
 
   for key in denite#util#split(a:source_name)
@@ -54,9 +54,9 @@ function! denite#custom#var(source_name, var_name, value) abort "{{{
     endif
     let custom[key].vars[a:var_name] = a:value
   endfor
-endfunction"}}}
+endfunction
 
-function! denite#custom#map(mode, key, mapping, ...) abort "{{{
+function! denite#custom#map(mode, key, mapping, ...) abort
   let custom = denite#custom#get().map
   let params = get(a:000, 0, '')
 
@@ -64,9 +64,9 @@ function! denite#custom#map(mode, key, mapping, ...) abort "{{{
     let custom[mode] = get(custom, mode, [])
     call add(custom[mode], [a:key, a:mapping, params])
   endfor
-endfunction"}}}
+endfunction
 
-function! denite#custom#alias(type, name, base) abort "{{{
+function! denite#custom#alias(type, name, base) abort
   if a:type ==# 'source'
     let custom = denite#custom#get().alias_source
   elseif a:type ==# 'filter'
@@ -79,9 +79,9 @@ function! denite#custom#alias(type, name, base) abort "{{{
     let custom[a:base] = []
   endif
   let custom[a:base] = uniq(sort(add(custom[a:base], a:name)))
-endfunction"}}}
+endfunction
 
-function! denite#custom#option(buffer_name, option_name, value) abort "{{{
+function! denite#custom#option(buffer_name, option_name, value) abort
   let custom = denite#custom#get().option
 
   for key in denite#util#split(a:buffer_name)
@@ -90,6 +90,4 @@ function! denite#custom#option(buffer_name, option_name, value) abort "{{{
     endif
     let custom[key][a:option_name] = a:value
   endfor
-endfunction"}}}
-
-" vim: foldmethod=marker
+endfunction

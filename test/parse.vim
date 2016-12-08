@@ -5,7 +5,7 @@ let s:assert = themis#helper('assert')
 
 let s:path = tempname()
 
-function! s:suite.parse_options_args() abort "{{{
+function! s:suite.parse_options_args() abort
   call s:assert.equals(denite#helper#_parse_options_args(
         \ 'foo:bar bar:baz'), [[
         \ {'name': 'foo', 'args': ['bar']},
@@ -16,6 +16,4 @@ function! s:suite.parse_options_args() abort "{{{
         \ 'foo:bar\:baz'), [[
         \ {'name': 'foo', 'args': ['bar:baz']},
         \ ], {}])
-endfunction"}}}
-
-" vim:foldmethod=marker:fen:
+endfunction

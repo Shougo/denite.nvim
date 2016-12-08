@@ -8,11 +8,11 @@ if !exists('s:is_enabled')
   let s:is_enabled = 0
 endif
 
-function! s:is_initialized() abort "{{{
+function! s:is_initialized() abort
   return exists('g:denite#_channel_id')
-endfunction"}}}
+endfunction
 
-function! denite#init#_initialize() abort "{{{
+function! denite#init#_initialize() abort
   if s:is_initialized()
     return
   endif
@@ -53,17 +53,17 @@ function! denite#init#_initialize() abort "{{{
           \ 'Please execute :UpdateRemotePlugins command and restart Neovim.')
     return 1
   endtry
-endfunction"}}}
+endfunction
 
-function! denite#init#_context() abort "{{{
+function! denite#init#_context() abort
   return {
         \ 'runtimepath': &runtimepath,
         \ 'encoding': &encoding,
         \ 'is_windows': has('win32') || has('win64'),
         \ 'mode': 'insert',
         \}
-endfunction"}}}
-function! denite#init#_user_options() abort "{{{
+endfunction
+function! denite#init#_user_options() abort
   return {
         \ 'auto_highlight': v:false,
         \ 'auto_preview': v:false,
@@ -94,11 +94,9 @@ function! denite#init#_user_options() abort "{{{
         \ 'vertical_preview': v:false,
         \ 'winheight': 20,
         \}
-endfunction"}}}
-function! denite#init#_deprecated_options() abort "{{{
+endfunction
+function! denite#init#_deprecated_options() abort
   return {
         \ 'select': 'cursor_pos',
         \}
-endfunction"}}}
-
-" vim: foldmethod=marker
+endfunction
