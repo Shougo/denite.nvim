@@ -827,12 +827,6 @@ OPTIONS							*denite-options*
 		The candidates are reversed.
 		Default: false
 
-						*denite-options-selected-icon*
--selected-icon={icon-character}
-		Selected candidate icon.
-		Note: It must be 1 character.
-		Default: '*'
-
 					*denite-options-short-source-names*
 -short-source-names
 		Use short source names if multiple sources.
