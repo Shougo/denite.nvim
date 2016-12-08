@@ -61,6 +61,7 @@ function! denite#init#_context() abort
         \ 'encoding': &encoding,
         \ 'is_windows': has('win32') || has('win64'),
         \ 'mode': 'insert',
+        \ 'selected_icon': '*',
         \}
 endfunction
 function! denite#init#_user_options() abort
@@ -88,7 +89,6 @@ function! denite#init#_user_options() abort
         \ 'resume': v:false,
         \ 'reversed': v:false,
         \ 'scroll': 0,
-        \ 'selected_icon': '*',
         \ 'short_source_names': v:false,
         \ 'statusline': v:true,
         \ 'vertical_preview': v:false,
