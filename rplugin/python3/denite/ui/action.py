@@ -98,7 +98,6 @@ def _toggle_select_up(prompt, params):
     return prompt.denite.move_to_prev_line()
 
 
-
 DEFAULT_ACTION_RULES = [
     ('denite:choose_action', _choose_action),
     ('denite:do_action', _do_action),
