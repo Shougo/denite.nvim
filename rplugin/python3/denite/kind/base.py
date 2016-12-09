@@ -18,8 +18,8 @@ class Base(object):
         denite.util.debug(self.vim, expr)
 
     def action_yank(self, context):
-        target = context['targets'][0]
-        self.__yank(self.vim, target['word'])
+        self.__yank(self.vim, "\n".join(
+            [x['word'] for x in context['targets']]))
 
     def __yank(self, vim, word):
         vim.call('setreg', '"', word, 'v')
