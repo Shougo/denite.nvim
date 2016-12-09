@@ -88,6 +88,17 @@ def _restart(prompt, params):
     return prompt.denite.restart()
 
 
+def _toggle_select_down(prompt, params):
+    prompt.denite.toggle_select_cursor_candidate()
+    return prompt.denite.move_to_next_line()
+
+
+def _toggle_select_up(prompt, params):
+    prompt.denite.toggle_select_cursor_candidate()
+    return prompt.denite.move_to_prev_line()
+
+
+
 DEFAULT_ACTION_RULES = [
     ('denite:choose_action', _choose_action),
     ('denite:do_action', _do_action),
@@ -111,6 +122,8 @@ DEFAULT_ACTION_RULES = [
     ('denite:scroll_window_downwards', _scroll_window_downwards),
     ('denite:scroll_window_upwards', _scroll_window_upwards),
     ('denite:suspend', _suspend),
+    ('denite:toggle_select_down', _toggle_select_down),
+    ('denite:toggle_select_up', _toggle_select_up),
 ]
 
 DEFAULT_ACTION_KEYMAP = {
@@ -176,5 +189,7 @@ DEFAULT_ACTION_KEYMAP = {
         ('q', '<denite:quit>', 'noremap'),
         ('<C-L>', '<denite:redraw>', 'noremap'),
         ('<C-R>', '<denite:restart>', 'noremap'),
+        ('<Space>', '<denite:toggle_select_down>', 'noremap'),
+        ('<S-Space>', '<denite:toggle_select_up>', 'noremap'),
     ],
 }
