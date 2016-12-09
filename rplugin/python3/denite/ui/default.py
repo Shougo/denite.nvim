@@ -148,6 +148,8 @@ class Default(object):
         self.__window_options['foldenable'] = False
         self.__window_options['foldcolumn'] = 0
         self.__window_options['winfixheight'] = True
+        self.__window_options['conceallevel'] = 3
+        self.__window_options['concealcursor'] = 'n'
 
         self.__bufvars = self.__vim.current.buffer.vars
         self.__bufnr = self.__vim.current.buffer.number
@@ -177,6 +179,15 @@ class Default(object):
                            'deniteStatusLinePath Comment')
         self.__vim.command('highlight default link ' +
                            'deniteStatusLineNumber LineNR')
+        self.__vim.command('highlight default link ' +
+                           'deniteSelectedLine Statement')
+
+        self.__vim.command(('syntax match deniteSelectedLine /^[%s].*/' +
+                            ' contains=deniteSelectedMark') % (
+                                self.__context['selected_icon']))
+        self.__vim.command(('syntax match deniteSelectedMark /^[ %s]/' +
+                            ' conceal contained') % (
+                                self.__context['selected_icon']))
 
         for source in [x for x in self.__denite.get_current_sources()]:
             name = source.name.replace('/', '_')
@@ -190,9 +201,9 @@ class Default(object):
                 ' Type'
             )
 
-            syntax_line = 'syntax match %s /^[ %s]%s/ nextgroup=%s keepend' % (
+            syntax_line = ('syntax match %s /^ %s/ nextgroup=%s keepend' +
+                           ' contains=deniteSelectedMark') % (
                 'deniteSourceLine_' + name,
-                self.__context['selected_icon'],
                 escape_syntax(source_name),
                 source.syntax_name,
             )
