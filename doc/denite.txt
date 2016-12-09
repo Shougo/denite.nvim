@@ -445,6 +445,14 @@ are on the neovim-prompt's builtin actions/mappings.
 <denite:scroll_up>
 		Scroll up.
 
+				*denite-map-toggle_select_down*
+<denite:toggle_select_down>
+		Toggle cursor candidate select and move to next line.
+
+				*denite-map-toggle_select_up*
+<denite:toggle_select_up>
+		Toggle cursor candidate select and move to previous line.
+
 				*denite-map-paste_from_register*
 <denite:paste_from_register>
 		Paste the text from a specified register.
@@ -559,6 +567,8 @@ t		<denite:do_action:tabopen>
 q		<denite:quit>
 <C-L>		<denite:redraw>
 <C-R>		<denite:restart>
+<Space>		<denite:toggle_select_down>
+<S-Space>	<denite:toggle_select_up>
 
 ------------------------------------------------------------------------------
 FUNCTIONS						*denite-functions*
