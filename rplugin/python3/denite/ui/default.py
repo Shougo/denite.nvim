@@ -7,7 +7,7 @@ import re
 import weakref
 from itertools import filterfalse, groupby, takewhile
 
-from denite.util import escape_syntax, clear_cmdline, echo
+from denite.util import escape_syntax, clear_cmdline, echo, debug
 from .action import DEFAULT_ACTION_KEYMAP
 from .prompt import DenitePrompt
 from .. import denite
@@ -92,11 +92,11 @@ class Default(object):
             self.init_buffer()
             self.init_cursor()
 
+        self.change_mode(self.__current_mode)
+
         if self.__context['cursor_pos'].isnumeric():
             self.__win_cursor = int(self.__context['cursor_pos']) + 1
             self.move_cursor()
-
-        self.change_mode(self.__current_mode)
 
         # Make sure that the caret position is ok
         self.__prompt.caret.locus = self.__prompt.caret.tail
