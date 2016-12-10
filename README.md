@@ -30,8 +30,6 @@ you should read `:help provider-python`.
 
 * quickmatch feature
 
-* multiple candidates select
-
 * file and file/new source
 
 * live grep feature
