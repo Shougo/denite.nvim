@@ -189,6 +189,5 @@ DEFAULT_ACTION_KEYMAP = {
         ('<C-L>', '<denite:redraw>', 'noremap'),
         ('<C-R>', '<denite:restart>', 'noremap'),
         ('<Space>', '<denite:toggle_select_down>', 'noremap'),
-        ('<S-Space>', '<denite:toggle_select_up>', 'noremap'),
     ],
 }

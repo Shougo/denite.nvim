@@ -568,7 +568,6 @@ q		<denite:quit>
 <C-L>		<denite:redraw>
 <C-R>		<denite:restart>
 <Space>		<denite:toggle_select_down>
-<S-Space>	<denite:toggle_select_up>
 
 ------------------------------------------------------------------------------
 FUNCTIONS						*denite-functions*
