@@ -23,14 +23,6 @@ class Default(object):
     def current_mode(self):
         return self.__current_mode
 
-    @property
-    def __selected_icon(self):
-        return self.__context['selected_icon']
-
-    @property
-    def __short_source_names(self):
-        return self.__context['short_source_names']
-
     def __init__(self, vim):
         self.__vim = vim
         self.__denite = denite.Denite(vim)
@@ -269,9 +261,9 @@ class Default(object):
         candidate = self.__candidates[index]
         terms = []
         if index in self.__selected_candidates:
-            terms.append(self.__selected_icon)
+            terms.append(self.__context['selected_icon'])
         if self.__is_multi:
-            if self.__short_source_names:
+            if self.__context['short_source_names']:
                 terms.append(
                     re.sub(r'([a-zA-Z])[a-zA-Z]+', r'\1', candidate['source'])
                 )
