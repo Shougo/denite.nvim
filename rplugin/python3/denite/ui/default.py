@@ -246,22 +246,31 @@ class Default(object):
             ))
 
         del self.__vim.current.buffer[:]
-        self.__vim.current.buffer.append(
-            ['%s %s' % (
-                (self.__context['selected_icon']
-                 if i in self.__selected_candidates else ' ') +
-                (re.sub(r'([a-zA-Z])[a-zA-Z]+', r'\1', x['source'])
-                 if self.__context['short_source_names']
-                 else x['source']) if self.__is_multi else '',
-                x.get('abbr', x['word'])[:400])
-             for i, x in enumerate(self.__candidates[
-                     self.__cursor: self.__cursor + self.__winheight])])
+        self.__vim.current.buffer.append([
+            self.__get_candidate_display_text(i)
+            for i in range(self.__cursor, self.__cursor + self.__winheight)
+        ])
         del self.__vim.current.buffer[0]
         self.resize_buffer()
 
         self.__options['modified'] = False
 
         self.move_cursor()
+
+    def __get_candidate_display_text(self, index):
+        candidate = self.__candidates[index]
+        terms = []
+        if index in self.__selected_candidates:
+            terms.append(self.__context['selected_icon'])
+        if self.__is_multi:
+            if self.__context['short_source_names']:
+                terms.append(
+                    re.sub(r'([a-zA-Z])[a-zA-Z]+', r'\1', candidate['source'])
+                )
+            else:
+                terms.append(candidate['source'])
+        terms.append(candidate.get('abbr', candidate['word'])[:400])
+        return ' '.join(terms)
 
     def resize_buffer(self):
         winheight = self.__winheight
