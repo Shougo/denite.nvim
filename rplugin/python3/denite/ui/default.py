@@ -183,9 +183,9 @@ class Default(object):
                            'deniteSelectedLine Statement')
 
         self.__vim.command(('syntax match deniteSelectedLine /^[%s].*/' +
-                            ' contains=deniteSelectedMark') % (
+                            ' contains=deniteConcealedMark') % (
                                 self.__context['selected_icon']))
-        self.__vim.command(('syntax match deniteSelectedMark /^[ %s]/' +
+        self.__vim.command(('syntax match deniteConcealedMark /^[ %s]/' +
                             ' conceal contained') % (
                                 self.__context['selected_icon']))
 
@@ -202,7 +202,7 @@ class Default(object):
             )
 
             syntax_line = ('syntax match %s /^ %s/ nextgroup=%s keepend' +
-                           ' contains=deniteSelectedMark') % (
+                           ' contains=deniteConcealedMark') % (
                 'deniteSourceLine_' + name,
                 escape_syntax(source_name),
                 source.syntax_name,
@@ -262,8 +262,6 @@ class Default(object):
     def __get_candidate_display_text(self, index):
         candidate = self.__candidates[index]
         terms = []
-        if index in self.__selected_candidates:
-            terms.append(self.__context['selected_icon'])
         if self.__is_multi:
             if self.__context['short_source_names']:
                 terms.append(
@@ -272,7 +270,9 @@ class Default(object):
             else:
                 terms.append(candidate['source'])
         terms.append(candidate.get('abbr', candidate['word'])[:400])
-        return ' '.join(terms)
+        return (self.__context['selected_icon']
+                if index in self.__selected_candidates
+                else ' ') + ' '.join(terms)
 
     def resize_buffer(self):
         winheight = self.__winheight
