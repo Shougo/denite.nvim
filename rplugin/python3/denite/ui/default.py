@@ -248,7 +248,9 @@ class Default(object):
         del self.__vim.current.buffer[:]
         self.__vim.current.buffer.append([
             self.__get_candidate_display_text(i)
-            for i in range(self.__cursor, self.__cursor + self.__winheight)
+            for i in range(self.__cursor,
+                           min(self.__candidates_len,
+                               self.__cursor + self.__winheight))
         ])
         del self.__vim.current.buffer[0]
         self.resize_buffer()
