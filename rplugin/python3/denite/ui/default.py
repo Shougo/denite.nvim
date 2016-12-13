@@ -95,8 +95,7 @@ class Default(object):
         self.change_mode(self.__current_mode)
 
         if self.__context['cursor_pos'].isnumeric():
-            self.__win_cursor = int(self.__context['cursor_pos']) + 1
-            self.move_cursor()
+            self.move_to_pos(int(self.__context['cursor_pos']))
 
         # Make sure that the caret position is ok
         self.__prompt.caret.locus = self.__prompt.caret.tail
@@ -457,6 +456,13 @@ class Default(object):
         if action == '':
             return
         return self.do_action(action)
+
+    def move_to_pos(self, pos):
+        current_pos = self.__win_cursor + self.__cursor - 1
+        if current_pos < pos:
+            self.scroll_down(pos - current_pos)
+        else:
+            self.scroll_up(current_pos - pos)
 
     def move_to_next_line(self):
         if (self.__win_cursor < self.__candidates_len and
