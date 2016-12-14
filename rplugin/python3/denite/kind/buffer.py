@@ -16,5 +16,5 @@ class Kind(Openable):
         self.default_action = 'open'
 
     def action_open(self, context):
-        target = context['targets'][0]
-        self.vim.command('buffer {0}'.format(target['action__bufnr']))
+        for target in context['targets']:
+            self.vim.command('buffer {0}'.format(target['action__bufnr']))

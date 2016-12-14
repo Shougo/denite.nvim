@@ -445,6 +445,14 @@ are on the neovim-prompt's builtin actions/mappings.
 <denite:scroll_up>
 		Scroll up.
 
+				*denite-map-toggle_select_down*
+<denite:toggle_select_down>
+		Toggle cursor candidate select and move to next line.
+
+				*denite-map-toggle_select_up*
+<denite:toggle_select_up>
+		Toggle cursor candidate select and move to previous line.
+
 				*denite-map-paste_from_register*
 <denite:paste_from_register>
 		Paste the text from a specified register.
@@ -559,6 +567,7 @@ t		<denite:do_action:tabopen>
 q		<denite:quit>
 <C-L>		<denite:redraw>
 <C-R>		<denite:restart>
+<Space>		<denite:toggle_select_down>
 
 ------------------------------------------------------------------------------
 FUNCTIONS						*denite-functions*
@@ -764,6 +773,14 @@ OPTIONS							*denite-options*
 		Specify the default action as {action}.
 		Default: "default"
 
+						*denite-options-cursor-pos*
+-cursor-pos={number}
+		Select {number} candidate.
+		If {number} is "+1" or "-1" when resume, selects the next or
+		previous candidate.
+		Note: 0 is the first candidate.
+		Default: ''
+
 						*denite-options-cursor-wrap*
 -cursor-wrap
 		If you move when the cursor reaches the top or bottom edge,
@@ -779,6 +796,11 @@ OPTIONS							*denite-options*
 -empty
 		Open any denite buffer if the candidate is empty.
 		Default: true
+
+					*denite-options-highlight-matched-char*
+-highlight-matched-char
+		Matched characters highlight.
+		Default: 'Search'
 
 						*denite-options-immediately*
 -immediately
@@ -818,14 +840,6 @@ OPTIONS							*denite-options*
 -reversed
 		The candidates are reversed.
 		Default: false
-
-						*denite-options-select*
--select={number}
-		Select {number} candidate.
-		If {number} is "+1" or "-1" when resume, selects the next or
-		previous candidate.
-		Note: 0 is the first candidate.
-		Default: ''
 
 					*denite-options-short-source-names*
 -short-source-names
@@ -1329,6 +1343,10 @@ COMPATIBILITY						*denite-compatibility*
 	neovim-prompt implementation has been merged.
 	Users need to follow the migration-note below.
 	https://github.com/Shougo/denite.nvim/wiki/From-v0.1.0-to-v0.5.0-dev
+
+2016.12.08
+	-select option is deprecated option.  Please use -cursor-pos option
+	instead.
 
 ==============================================================================
 vim:tw=78:ts=8:ft=help:norl:noet:fen:

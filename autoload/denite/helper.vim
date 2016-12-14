@@ -4,7 +4,7 @@
 " License: MIT license
 "=============================================================================
 
-function! denite#helper#complete(arglead, cmdline, cursorpos) abort "{{{
+function! denite#helper#complete(arglead, cmdline, cursorpos) abort
   let _ = []
 
   if a:arglead =~ ':'
@@ -29,13 +29,13 @@ function! denite#helper#complete(arglead, cmdline, cursorpos) abort "{{{
   endif
 
   return uniq(sort(filter(_, 'stridx(v:val, a:arglead) == 0')))
-endfunction"}}}
-function! denite#helper#complete_actions(arglead, cmdline, cursorpos) abort "{{{
+endfunction
+function! denite#helper#complete_actions(arglead, cmdline, cursorpos) abort
   return uniq(sort(filter(copy(g:denite#_actions),
         \ 'stridx(v:val, a:arglead) == 0')))
-endfunction"}}}
+endfunction
 
-function! denite#helper#call_denite(command, args, line1, line2) abort "{{{
+function! denite#helper#call_denite(command, args, line1, line2) abort
   let [args, context] = denite#helper#_parse_options_args(a:args)
 
   let context.firstline = a:line1
@@ -50,14 +50,9 @@ function! denite#helper#call_denite(command, args, line1, line2) abort "{{{
   endif
 
   call denite#start(args, context)
-endfunction"}}}
+endfunction
 
-function! denite#helper#preview_file(context, filename) abort "{{{
-  if has_key(a:context, '__prev_winid')
-    " Move to denite window
-    call win_gotoid(a:context.__prev_winid)
-  endif
-
+function! denite#helper#preview_file(context, filename) abort
   if a:context.vertical_preview
     let denite_winwidth = &columns
     call denite#util#execute_path('silent vertical pedit!', a:filename)
@@ -72,13 +67,13 @@ function! denite#helper#preview_file(context, filename) abort "{{{
       let &previewheight = previewheight_save
     endtry
   endif
-endfunction"}}}
+endfunction
 
-function! denite#helper#options() abort "{{{
+function! denite#helper#options() abort
   return map(keys(denite#init#_user_options()), "tr(v:val, '_', '-')")
-endfunction"}}}
+endfunction
 
-function! denite#helper#_parse_options_args(cmdline) abort "{{{
+function! denite#helper#_parse_options_args(cmdline) abort
   let _ = []
   let [args, options] = s:parse_options(a:cmdline)
   for arg in args
@@ -92,8 +87,8 @@ function! denite#helper#_parse_options_args(cmdline) abort "{{{
   endfor
 
   return [_, options]
-endfunction"}}}
-function! s:parse_options(cmdline) abort "{{{
+endfunction
+function! s:parse_options(cmdline) abort
   let args = []
   let options = {}
 
@@ -113,7 +108,8 @@ function! s:parse_options(cmdline) abort "{{{
       let value = (arg_key =~ '=$') ? arg[len(arg_key) :] : 1
     endif
 
-    if index(keys(denite#init#_user_options()), name) >= 0
+    if index(keys(denite#init#_user_options())
+          \ + keys(denite#init#_deprecated_options()), name) >= 0
       let options[name] = value
     else
       call add(args, arg)
@@ -121,8 +117,8 @@ function! s:parse_options(cmdline) abort "{{{
   endfor
 
   return [args, options]
-endfunction"}}}
-function! s:eval_cmdline(cmdline) abort "{{{
+endfunction
+function! s:eval_cmdline(cmdline) abort
   let cmdline = ''
   let prev_match = 0
   let match = match(a:cmdline, '\\\@<!`.\{-}\\\@<!`')
@@ -141,6 +137,4 @@ function! s:eval_cmdline(cmdline) abort "{{{
   endif
 
   return cmdline
-endfunction"}}}
-
-" vim: foldmethod=marker
+endfunction

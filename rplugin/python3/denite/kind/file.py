@@ -17,24 +17,26 @@ class Kind(Openable):
 
         self.name = 'file'
         self.default_action = 'open'
+        self.persist_actions += ['preview', 'highlight']
 
     def action_open(self, context):
-        target = context['targets'][0]
-        path = target['action__path']
-        match_path = '^{0}$'.format(path)
+        for target in context['targets']:
+            path = target['action__path']
+            match_path = '^{0}$'.format(path)
 
-        if re.match('https?://', path):
-            # URI
-            self.vim.call('denite#util#open', path)
-            return
+            if re.match('https?://', path):
+                # URI
+                self.vim.call('denite#util#open', path)
+                return
 
-        if self.vim.call('bufwinnr', match_path) <= 0:
-            self.vim.call(
-                'denite#util#execute_path', 'edit', path)
-        elif self.vim.call('bufwinnr', match_path) != self.vim.current.buffer:
-            self.vim.call(
-                'denite#util#execute_path', 'buffer', path)
-        self.__jump(context, target)
+            if self.vim.call('bufwinnr', match_path) <= 0:
+                self.vim.call(
+                    'denite#util#execute_path', 'edit', path)
+            elif self.vim.call('bufwinnr',
+                               match_path) != self.vim.current.buffer:
+                self.vim.call(
+                    'denite#util#execute_path', 'buffer', path)
+            self.__jump(context, target)
 
     def action_preview(self, context):
         return self.__preview(context, False)
@@ -67,7 +69,6 @@ class Kind(Openable):
                 self.vim.call('matchaddpos', 'Search',
                               [int(target.get('action__line', 0))])
             self.vim.call('win_gotoid', prev_id)
-        return True
 
     def __jump(self, context, target):
         line = int(target.get('action__line', 0))

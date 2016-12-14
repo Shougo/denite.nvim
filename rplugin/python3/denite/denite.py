@@ -213,17 +213,33 @@ class Denite(object):
             self.__kinds[name] = module.Kind(self.__vim)
 
     def do_action(self, context, action_name, targets):
-        if not targets:
+        action = self.get_action(context, action_name, targets)
+        if not action:
             return True
 
-        if 'kind' in targets[0]:
-            kind_name = targets[0]['kind']
-        else:
-            kind_name = self.__sources[targets[0]['source']].kind
+        context['targets'] = targets
+        return action['func'](context)
+
+    def get_action(self, context, action_name, targets):
+        if not targets:
+            return {}
+
+        kinds = set()
+        for target in targets:
+            if 'kind' in targets:
+                kind_name = target['kind']
+            else:
+                kind_name = self.__sources[target['source']].kind
+            kinds.add(kind_name)
+        if len(kinds) != 1:
+            self.error('Multiple kinds are detected')
+            return {}
+
+        kind_name = kinds.pop()
 
         if kind_name not in self.__kinds:
             self.error('Invalid kind: ' + kind_name)
-            return True
+            return {}
 
         kind = self.__kinds[kind_name]
         if action_name == 'default':
@@ -233,11 +249,12 @@ class Denite(object):
         action_attr = 'action_' + action_name
         if not hasattr(kind, action_attr):
             self.error('Invalid action: ' + action_name)
-            return True
-
-        context['targets'] = targets
-        func = getattr(kind, action_attr)
-        return func(context)
+            return {}
+        return {
+            'name': action_name,
+            'func': getattr(kind, action_attr),
+            'is_quit': (action_name not in kind.persist_actions)
+        }
 
     def get_actions(self, context, targets):
         if 'kind' in targets:

@@ -39,7 +39,7 @@ class DenitePrompt(Prompt):
 
     @property
     def highlight_cursor(self):
-        return self.context.get('cursor_highlight', 'Cursor')
+        return self.context.get('highlight_cursor', 'Cursor')
 
     def on_update(self, status):
         if self.__previous_text != self.text:

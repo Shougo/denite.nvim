@@ -28,6 +28,7 @@ class Default(object):
         self.__denite = denite.Denite(vim)
         self.__cursor = 0
         self.__win_cursor = 1
+        self.__selected_candidates = []
         self.__candidates = []
         self.__candidates_len = 0
         self.__result = []
@@ -62,10 +63,10 @@ class Default(object):
             self.__context['cursor_wrap'] = context['cursor_wrap']
 
             self.init_buffer()
-            self.change_mode(self.__current_mode)
-            if context['select'] == '+1':
+
+            if context['cursor_pos'] == '+1':
                 self.move_to_next_line()
-            elif context['select'] == '-1':
+            elif context['cursor_pos'] == '-1':
                 self.move_to_prev_line()
             if self.check_empty():
                 return self.__result
@@ -90,11 +91,11 @@ class Default(object):
 
             self.init_buffer()
             self.init_cursor()
-            if self.__context['select'].isnumeric():
-                self.__win_cursor = int(self.__context['select']) + 1
-                self.move_cursor()
 
-            self.change_mode(self.__current_mode)
+        self.change_mode(self.__current_mode)
+
+        if self.__context['cursor_pos'].isnumeric():
+            self.move_to_pos(int(self.__context['cursor_pos']))
 
         # Make sure that the caret position is ok
         self.__prompt.caret.locus = self.__prompt.caret.tail
@@ -145,6 +146,9 @@ class Default(object):
         self.__window_options['relativenumber'] = False
         self.__window_options['foldenable'] = False
         self.__window_options['foldcolumn'] = 0
+        self.__window_options['winfixheight'] = True
+        self.__window_options['conceallevel'] = 3
+        self.__window_options['concealcursor'] = 'n'
 
         self.__bufvars = self.__vim.current.buffer.vars
         self.__bufnr = self.__vim.current.buffer.number
@@ -166,15 +170,23 @@ class Default(object):
 
     def __init_syntax(self):
         self.__vim.command('syntax case ignore')
-        self.__vim.command('highlight default link ' +
-                           self.__context['cursor_highlight'] + ' Normal')
         self.__vim.command('highlight default link deniteMode ModeMsg')
         self.__vim.command('highlight default link deniteMatched Underlined')
-        self.__vim.command('highlight default link deniteMatchedChar Search')
+        self.__vim.command('highlight default link deniteMatchedChar ' +
+                           self.__context['highlight_matched_char'])
         self.__vim.command('highlight default link ' +
                            'deniteStatusLinePath Comment')
         self.__vim.command('highlight default link ' +
                            'deniteStatusLineNumber LineNR')
+        self.__vim.command('highlight default link ' +
+                           'deniteSelectedLine Statement')
+
+        self.__vim.command(('syntax match deniteSelectedLine /^[%s].*/' +
+                            ' contains=deniteConcealedMark') % (
+                                self.__context['selected_icon']))
+        self.__vim.command(('syntax match deniteConcealedMark /^[ %s]/' +
+                            ' conceal contained') % (
+                                self.__context['selected_icon']))
 
         for source in [x for x in self.__denite.get_current_sources()]:
             name = source.name.replace('/', '_')
@@ -188,7 +200,8 @@ class Default(object):
                 ' Type'
             )
 
-            syntax_line = 'syntax match %s /^%s/ nextgroup=%s keepend' % (
+            syntax_line = ('syntax match %s /^ %s/ nextgroup=%s keepend' +
+                           ' contains=deniteConcealedMark') % (
                 'deniteSourceLine_' + name,
                 escape_syntax(source_name),
                 source.syntax_name,
@@ -232,20 +245,33 @@ class Default(object):
             ))
 
         del self.__vim.current.buffer[:]
-        self.__vim.current.buffer.append(
-            ['%s %s' % (
-                (re.sub(r'([a-zA-Z])[a-zA-Z]+', r'\1', x['source'])
-                 if self.__context['short_source_names']
-                 else x['source']) if self.__is_multi else '',
-                x.get('abbr', x['word'])[:400])
-             for x in self.__candidates[self.__cursor:
-                                        self.__cursor + self.__winheight]])
+        self.__vim.current.buffer.append([
+            self.__get_candidate_display_text(i)
+            for i in range(self.__cursor,
+                           min(self.__candidates_len,
+                               self.__cursor + self.__winheight))
+        ])
         del self.__vim.current.buffer[0]
         self.resize_buffer()
 
         self.__options['modified'] = False
 
         self.move_cursor()
+
+    def __get_candidate_display_text(self, index):
+        candidate = self.__candidates[index]
+        terms = []
+        if self.__is_multi:
+            if self.__context['short_source_names']:
+                terms.append(
+                    re.sub(r'([a-zA-Z])[a-zA-Z]+', r'\1', candidate['source'])
+                )
+            else:
+                terms.append(candidate['source'])
+        terms.append(candidate.get('abbr', candidate['word'])[:400])
+        return (self.__context['selected_icon']
+                if index in self.__selected_candidates
+                else ' ') + ' '.join(terms)
 
     def resize_buffer(self):
         winheight = self.__winheight
@@ -257,7 +283,7 @@ class Default(object):
     def check_empty(self):
         if self.__candidates and self.__context['immediately']:
             self.do_action('default')
-            candidate = self.get_current_candidates()[0]
+            candidate = self.get_cursor_candidate()
             echo(self.__vim, 'Normal', '[{0}/{1}] {2}]'.format(
                 self.__cursor + self.__win_cursor, self.__candidates_len,
                 candidate.get('abbr', candidate['word'])))
@@ -268,6 +294,7 @@ class Default(object):
     def update_candidates(self):
         pattern = ''
         sources = ''
+        self.__selected_candidates = []
         self.__candidates = []
         for name, all, candidates in self.__denite.filter_candidates(
                 self.__context):
@@ -291,10 +318,12 @@ class Default(object):
         self.__statusline_sources = sources
 
     def move_cursor(self):
+        if self.__win_cursor > self.__vim.call('line', '$'):
+            self.__win_cursor = self.__vim.call('line', '$')
         self.__vim.call('cursor', [self.__win_cursor, 1])
         self.__vim.call('clearmatches')
         self.__vim.call('matchaddpos',
-                        self.__context['cursor_highlight'],
+                        self.__context['highlight_cursor'],
                         [[self.__win_cursor, 1]])
         if self.__context['auto_preview']:
             self.do_action('preview')
@@ -349,10 +378,23 @@ class Default(object):
         # if self.__vim.current.buffer.number == self.__prev_bufnr:
         #     self.__vim.call('winrestview', self.__winsaveview)
 
-    def get_current_candidates(self):
+    def get_cursor_candidate(self):
         if self.__cursor + self.__win_cursor > self.__candidates_len:
-            return []
-        return [self.__candidates[self.__cursor + self.__win_cursor - 1]]
+            return {}
+        return self.__candidates[self.__cursor + self.__win_cursor - 1]
+
+    def get_selected_candidates(self):
+        if not self.__selected_candidates:
+            return [self.get_cursor_candidate()
+                    ] if self.get_cursor_candidate() else []
+        return [self.__candidates[x] for x in self.__selected_candidates]
+
+    def toggle_select_cursor_candidate(self):
+        index = self.__cursor + self.__win_cursor - 1
+        if index in self.__selected_candidates:
+            self.__selected_candidates.remove(index)
+        else:
+            self.__selected_candidates.append(index)
 
     def redraw(self):
         self.__context['is_redraw'] = True
@@ -375,47 +417,34 @@ class Default(object):
         self.update_candidates()
         self.update_buffer()
 
-    def do_action(self, action):
-        candidates = self.get_current_candidates()
+    def do_action(self, action_name):
+        candidates = self.get_selected_candidates()
         if not candidates:
             return
 
-        prev_id = self.__vim.call('win_getid')
-        is_denite = self.__vim.eval('&filetype') == 'denite'
-        self.__context['__prev_winid'] = prev_id
-        if is_denite:
-            self.__vim.call('win_gotoid', self.__prev_winid)
-            now_id = self.__vim.call('win_getid')
-            if prev_id == now_id:
-                # The previous window search is failed.
-                # Jump to the other window.
-                if len(self.__vim.windows) == 1:
-                    self.__vim.command('topleft new')
-                else:
-                    self.__vim.command('wincmd w')
-
-        is_quit = not self.__denite.do_action(
-            self.__context, action, candidates)
-
-        if is_denite:
-            now_id = self.__vim.call('win_getid')
-            if now_id != self.__prev_winid:
-                self.__prev_winid = now_id
-                self.__prev_bufnr = self.__vim.current.buffer.number
-            self.__vim.call('win_gotoid', prev_id)
-
+        action = self.__denite.get_action(
+            self.__context, action_name, candidates)
+        if not action:
+            return
+        is_quit = action['is_quit']
         if is_quit:
             self.__denite.on_close(self.__context)
-            if self.__context['quit']:
-                self.quit_buffer()
-            else:
-                # Disable quit flag
-                is_quit = False
+            self.quit_buffer()
+
+        self.__denite.do_action(self.__context, action_name, candidates)
+
+        if is_quit and not self.__context['quit']:
+            # Re-open denite buffer
+            self.init_buffer()
+            self.update_buffer()
+            # Disable quit flag
+            is_quit = False
+
         self.__result = candidates
         return STATUS_ACCEPT if is_quit else None
 
     def choose_action(self):
-        candidates = self.get_current_candidates()
+        candidates = self.get_selected_candidates()
         if not candidates:
             return
 
@@ -427,6 +456,13 @@ class Default(object):
         if action == '':
             return
         return self.do_action(action)
+
+    def move_to_pos(self, pos):
+        current_pos = self.__win_cursor + self.__cursor - 1
+        if current_pos < pos:
+            self.scroll_down(pos - current_pos)
+        else:
+            self.scroll_up(current_pos - pos)
 
     def move_to_next_line(self):
         if (self.__win_cursor < self.__candidates_len and

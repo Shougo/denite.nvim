@@ -16,8 +16,8 @@ class Kind(Base):
         self.default_action = 'append'
 
     def action_append(self, context):
-        target = context['targets'][0]
-        paste(self.vim, target['action__text'], 'p', 'v')
+        for target in context['targets']:
+            paste(self.vim, target['action__text'], 'p', 'v')
 
 
 def paste(vim, word, command, regtype):

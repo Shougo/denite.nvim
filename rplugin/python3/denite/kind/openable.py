@@ -5,6 +5,7 @@
 # ============================================================================
 
 from abc import abstractmethod
+from copy import copy
 
 from .base import Base
 
@@ -22,18 +23,30 @@ class Kind(Base):
         pass
 
     def action_split(self, context):
-        self.vim.command('split')
-        self.action_open(context)
+        for target in context['targets']:
+            new_context = copy(context)
+            new_context['targets'] = [target]
+
+            self.vim.command('split')
+            self.action_open(new_context)
 
     def action_vsplit(self, context):
-        self.vim.command('vsplit')
-        self.action_open(context)
+        for target in context['targets']:
+            new_context = copy(context)
+            new_context['targets'] = [target]
+
+            self.vim.command('vsplit')
+            self.action_open(new_context)
 
     def action_tabopen(self, context):
         hidden = self.vim.options['hidden']
         try:
             self.vim.options['hidden'] = False
-            self.vim.command('tabnew')
-            self.action_open(context)
+            for target in context['targets']:
+                new_context = copy(context)
+                new_context['targets'] = [target]
+
+                self.vim.command('tabnew')
+                self.action_open(new_context)
         finally:
             self.vim.options['hidden'] = hidden
