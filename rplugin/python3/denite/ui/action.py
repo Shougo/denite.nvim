@@ -88,6 +88,10 @@ def _restart(prompt, params):
     return prompt.denite.restart()
 
 
+def _toggle_select(prompt, params):
+    return prompt.denite.toggle_select_cursor_candidate()
+
+
 def _toggle_select_down(prompt, params):
     prompt.denite.toggle_select_cursor_candidate()
     return prompt.denite.move_to_next_line()
@@ -121,6 +125,7 @@ DEFAULT_ACTION_RULES = [
     ('denite:scroll_window_downwards', _scroll_window_downwards),
     ('denite:scroll_window_upwards', _scroll_window_upwards),
     ('denite:suspend', _suspend),
+    ('denite:toggle_select', _toggle_select),
     ('denite:toggle_select_down', _toggle_select_down),
     ('denite:toggle_select_up', _toggle_select_up),
 ]
