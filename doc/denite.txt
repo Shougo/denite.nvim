@@ -1299,7 +1299,7 @@ FAQ							*denite-faq*
 
 Q: denite can support Vim8?
 
-A: Yes.  But it is experimental.
+A: Yes.
 
 Q: I want to change the cursor line color in denite buffer.
 
