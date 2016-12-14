@@ -81,6 +81,7 @@ function! denite#init#_user_options() abort
         \ 'ignorecase': v:true,
         \ 'immediately': v:false,
         \ 'input': '',
+        \ 'max_candidate_width': 200,
         \ 'mode': 'insert',
         \ 'path': getcwd(),
         \ 'previewheight': &previewheight,

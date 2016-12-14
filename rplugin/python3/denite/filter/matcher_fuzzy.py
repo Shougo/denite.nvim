@@ -21,16 +21,17 @@ class Filter(Base):
         if context['input'] == '':
             return context['candidates']
         candidates = context['candidates']
+        max = context['max_candidate_width']
         for pattern in split_input(context['input']):
             if context['ignorecase']:
                 pattern = pattern.lower()
             p = re.compile(escape_fuzzy(re.escape(pattern), True))
             if context['ignorecase']:
                 candidates = [x for x in candidates
-                              if p.search(x['word'].lower())]
+                              if p.search(x['word'][:max].lower())]
             else:
                 candidates = [x for x in candidates
-                              if p.search(x['word'])]
+                              if p.search(x['word'][:max])]
         return candidates
 
     def convert_pattern(self, input_str):

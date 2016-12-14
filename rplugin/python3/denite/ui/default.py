@@ -268,7 +268,8 @@ class Default(object):
                 )
             else:
                 terms.append(candidate['source'])
-        terms.append(candidate.get('abbr', candidate['word'])[:400])
+        word = candidate['word'][:self.__context['max_candidate_width']]
+        terms.append(candidate.get('abbr', word))
         return (self.__context['selected_icon']
                 if index in self.__selected_candidates
                 else ' ') + ' '.join(terms)

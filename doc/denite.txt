@@ -817,6 +817,12 @@ OPTIONS							*denite-options*
 		Specify an initial narrowing text.
 		Default: ""
 
+					*denite-options-max-candidate-width*
+-max-candidate-width={mode}
+		Specify the max candidate width.
+		Note: Denite skip the match after the width.
+		Default: 200
+
 							*denite-options-mode*
 -mode={mode}
 		Specify the default mode.
