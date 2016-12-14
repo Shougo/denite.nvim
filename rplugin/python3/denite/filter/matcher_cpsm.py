@@ -43,7 +43,7 @@ class Filter(Base):
 
         import cpsm_py
         candidates = context['candidates']
-        ispath = ('action__path' in context['candidates'][0])
+        ispath = (os.path.exists(context['candidates'][0]['word']))
         for pattern in split_input(context['input']):
             cpsm_result = cpsm_py.ctrlp_match(
                 (d['word'] for d in candidates),
