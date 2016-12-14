@@ -14,7 +14,7 @@ class Source(Base):
         Base.__init__(self, vim)
 
         self.name = 'menu'
-        self.kind = 'file'
+        self.kind = 'command'
 
         # self.matchers = []
         # self.sorters = []
@@ -68,11 +68,11 @@ class Source(Base):
         else:
             # Display all the registered menus
             lines.extend([
-                {'word': candidate,
+                {'word': '{} - {}'.format(menu, candidate.get('description')),
                  'kind': 'command',
-                 'action__command': 'Denite menu:' + candidate,
+                 'action__command': 'Denite menu:' + menu,
                  }
-                for candidate in menus
+                for menu, candidate in menus.items()
             ])
 
         return lines
