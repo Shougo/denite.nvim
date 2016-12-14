@@ -54,8 +54,9 @@ class Source(Base):
             directory = context['path']
         context['__arguments'] = context['args'][1:]
         context['__directory'] = self.vim.call('expand', directory)
-        context['__input'] = self.vim.call('input',
-                                           'Pattern: ', context['input'])
+        context['__input'] = context['input']
+        if not context['__input']:
+            context['__input'] = self.vim.call('input', 'Pattern: ')
 
     def on_close(self, context):
         if self.__proc:
