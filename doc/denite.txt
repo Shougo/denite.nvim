@@ -445,6 +445,10 @@ are on the neovim-prompt's builtin actions/mappings.
 <denite:scroll_up>
 		Scroll up.
 
+				*denite-map-toggle_select*
+<denite:toggle_select>
+		Toggle cursor candidate select.
+
 				*denite-map-toggle_select_down*
 <denite:toggle_select_down>
 		Toggle cursor candidate select and move to next line.
