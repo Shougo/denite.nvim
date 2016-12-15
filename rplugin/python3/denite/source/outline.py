@@ -1,11 +1,18 @@
 # ============================================================================
-# FILE: buffer.py
+# FILE: outlint.py
 # AUTHOR: Yasumasa Tamura (tamura.yasumasa _at_ gmail.com)
 # License: MIT license
 # ============================================================================
 
 from .base import Base
 from subprocess import check_output, CalledProcessError
+
+OUTLINE_HIGHLIGHT_SYNTAX = [
+    {'name': 'Line', 'link': 'Constant',   're': '\d\+'},
+    {'name': 'Name', 'link': 'Identifier', 're': '\s\S\+\%(\s\+\[\)\@='},
+    {'name': 'Type', 'link': 'Type',       're': '\[.\{-}\]'},
+    {'name': 'Ref',  'link': 'Comment',    're': '\s\s.\+'}
+]
 
 
 class Source(Base):
@@ -15,20 +22,38 @@ class Source(Base):
 
         self.name = 'outline'
         self.kind = 'file'
+        self.syntax_name = 'deniteSource_outline'
         self.vars = {
-            'encode': ['utf-8'],
-            'sort': ['no'],
-            'ignore_types': []
+            'command': ['ctags'],
+            'options': ['-x'],
+            'ignore_types': [],
+            'encode': 'utf-8'
         }
 
     def on_init(self, context):
-        context['__bufname'] = context['args'][0] if len(
+        context['__path'] = context['args'][0] if len(
             context['args']) > 0 else self.vim.current.buffer.name
 
+    def highlight_syntax(self):
+        for syn in OUTLINE_HIGHLIGHT_SYNTAX:
+            self.vim.command(
+                'syntax match {0}_{1} /{2}/ contained containedin={0}'.format(
+                    self.syntax_name, syn['name'], syn['re']))
+            self.vim.command(
+                'highlight default link {0}_{1} {2}'.format(
+                    self.syntax_name, syn['name'], syn['link']))
+        self.vim.command(
+            'syntax region ' + self.syntax_name + ' start=// end=/$/ '
+            'contains=deniteMatched contained')
+
     def gather_candidates(self, context):
-        command = ['ctags', '-x', context['__bufname'], '--sort=no']
+        command = []
+        command += self.vars['command']
+        command += self.vars['options']
+        command += [context['__path']]
+
         try:
-            outline = check_output(command).decode(self.vars['encode'][0])
+            outline = check_output(command).decode(self.vars['encode'])
         except CalledProcessError:
             return []
 
@@ -37,8 +62,8 @@ class Source(Base):
             info = self._parse_outline_info(line)
             if info['type'] not in self.vars['ignore_types']:
                 candidates.append({
-                    'word': '{line} {name} {type} :: {decl}'.format(**info),
-                    'action__path': context['__bufname'],
+                    'word': '{line} {name} [{type}]  {ref}'.format(**info),
+                    'action__path': context['__path'],
                     'action__line': info['line']
                 })
         return candidates
@@ -50,5 +75,5 @@ class Source(Base):
             'type': elem[1],
             'line': int(elem[2]),
             'file': elem[3],
-            'decl': ' '.join(elem[4:])
+            'ref': ' '.join(elem[4:])
         }
