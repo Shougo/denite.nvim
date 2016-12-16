@@ -13,7 +13,7 @@ class Base(object):
     def __init__(self, vim):
         self.vim = vim
         self.name = 'base'
-        self.syntax_name = 'deniteSource_base'
+        self.syntax_name = ''
         self.kind = 'base'
         self.matchers = ['matcher_fuzzy']
         self.sorters = ['sorter_rank']
@@ -21,7 +21,10 @@ class Base(object):
         self.context = {}
         self.vars = {}
 
-    def highlight_syntax(self):
+    def highlight(self):
+        pass
+
+    def define_syntax(self):
         self.vim.command(
             'syntax region ' + self.syntax_name + ' start=// end=/$/ '
             'contains=deniteMatched contained')

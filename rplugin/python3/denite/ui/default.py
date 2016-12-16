@@ -207,7 +207,8 @@ class Default(object):
                 source.syntax_name,
             )
             self.__vim.command(syntax_line)
-            source.highlight_syntax()
+            source.highlight()
+            source.define_syntax()
 
     def init_cursor(self):
         self.__win_cursor = 1

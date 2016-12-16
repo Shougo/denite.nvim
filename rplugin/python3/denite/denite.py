@@ -159,6 +159,9 @@ class Denite(object):
             source = module.Source(self.__vim)
             self.__sources[source.name] = source
             source.path = path
+            if not source.syntax_name:
+                source.syntax_name = 'deniteSource_'
+                source.syntax_name += source.name.replace('/', '_')
 
             if source.name in self.__custom['alias_source']:
                 # Load alias
