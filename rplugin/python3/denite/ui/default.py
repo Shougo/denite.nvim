@@ -323,10 +323,7 @@ class Default(object):
         if self.__win_cursor > self.__vim.call('line', '$'):
             self.__win_cursor = self.__vim.call('line', '$')
         self.__vim.call('cursor', [self.__win_cursor, 1])
-        self.__vim.call('clearmatches')
-        self.__vim.call('matchaddpos',
-                        self.__context['highlight_cursor'],
-                        [[self.__win_cursor, 1]])
+
         if self.__context['auto_preview']:
             self.do_action('preview')
         if self.__context['auto_highlight']:
