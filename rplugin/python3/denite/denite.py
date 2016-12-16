@@ -226,7 +226,7 @@ class Denite(object):
 
         kinds = set()
         for target in targets:
-            if 'kind' in targets:
+            if 'kind' in target:
                 kind_name = target['kind']
             else:
                 kind_name = self.__sources[target['source']].kind
