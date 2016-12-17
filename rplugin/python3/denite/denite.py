@@ -169,6 +169,7 @@ class Denite(object):
                     self.__sources[alias] = module.Source(self.__vim)
                     self.__sources[alias].name = alias
                     self.__sources[alias].path = path
+                    self.__sources[alias].syntax_name = source.syntax_name
 
     def get_filter(self, filter_name):
         return self.__filters.get(filter_name, None)
