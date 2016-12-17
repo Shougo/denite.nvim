@@ -21,13 +21,15 @@ class Filter(Base):
         if context['input'] == '':
             return context['candidates']
         candidates = context['candidates']
+        max = context['max_candidate_width']
         for pattern in split_input(context['input']):
             try:
                 p = re.compile(pattern, flags=re.IGNORECASE
                                if context['ignorecase'] else 0)
             except Exception:
                 return []
-            candidates = [x for x in candidates if p.search(x['word'])]
+            candidates = [x for x in candidates
+                          if p.search(x['word'][:max])]
         return candidates
 
     def convert_pattern(self, input_str):

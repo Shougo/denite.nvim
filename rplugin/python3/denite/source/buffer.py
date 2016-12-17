@@ -26,7 +26,6 @@ class Source(Base):
 
         self.name = 'buffer'
         self.kind = 'buffer'
-        self.syntax_name = 'deniteSource_buffer'
         self.vars = {
             'date_format': '%d %b %Y %H:%M:%S',
             'exclude_unlisted': 1,
@@ -39,7 +38,7 @@ class Source(Base):
         self.__caller_bufnr = context['bufnr']
         self.__alter_bufnr = self.vim.call('bufnr', '#')
 
-    def highlight_syntax(self):
+    def highlight(self):
         for syn in BUFFER_HIGHLIGHT_SYNTAX:
             self.vim.command(
                 'syntax match {0}_{1} /{2}/ contained containedin={0}'.format(
@@ -47,9 +46,6 @@ class Source(Base):
             self.vim.command(
                 'highlight default link {0}_{1} {2}'.format(
                     self.syntax_name, syn['name'], syn['link']))
-        self.vim.command(
-            'syntax region ' + self.syntax_name + ' start=// end=/$/ '
-            'contains=deniteMatched contained')
 
     def gather_candidates(self, context):
         candidates = [

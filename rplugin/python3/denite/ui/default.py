@@ -207,7 +207,8 @@ class Default(object):
                 source.syntax_name,
             )
             self.__vim.command(syntax_line)
-            source.highlight_syntax()
+            source.highlight()
+            source.define_syntax()
 
     def init_cursor(self):
         self.__win_cursor = 1
@@ -268,7 +269,8 @@ class Default(object):
                 )
             else:
                 terms.append(candidate['source'])
-        terms.append(candidate.get('abbr', candidate['word'])[:400])
+        word = candidate['word'][:self.__context['max_candidate_width']]
+        terms.append(candidate.get('abbr', word))
         return (self.__context['selected_icon']
                 if index in self.__selected_candidates
                 else ' ') + ' '.join(terms)
@@ -321,10 +323,7 @@ class Default(object):
         if self.__win_cursor > self.__vim.call('line', '$'):
             self.__win_cursor = self.__vim.call('line', '$')
         self.__vim.call('cursor', [self.__win_cursor, 1])
-        self.__vim.call('clearmatches')
-        self.__vim.call('matchaddpos',
-                        self.__context['highlight_cursor'],
-                        [[self.__win_cursor, 1]])
+
         if self.__context['auto_preview']:
             self.do_action('preview')
         if self.__context['auto_highlight']:

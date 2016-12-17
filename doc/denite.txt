@@ -817,6 +817,12 @@ OPTIONS							*denite-options*
 		Specify an initial narrowing text.
 		Default: ""
 
+					*denite-options-max-candidate-width*
+-max-candidate-width={mode}
+		Specify the max candidate width.
+		Note: Denite skip the match after the width.
+		Default: 200
+
 							*denite-options-mode*
 -mode={mode}
 		Specify the default mode.
@@ -1162,6 +1168,12 @@ __init__	(Function)
 name		(String)			(Required)
 		The name of a source.
 
+					*denite-source-attribute-syntax_name*
+syntax_name		(String)			(Optional)
+		The source syntax highlight name.
+
+		If you omit it, "deniteSource_{source-name}" is used.
+
 					*denite-source-attribute-matchers*
 matchers	(List)				(Optional)
 		Source default matchers list.
@@ -1196,6 +1208,16 @@ gather_candidates
 		candidates, user cannot filter the candidates by fuzzy match.
 		Note: If the asynchronous gather is done, you must set
 		"context['is_async']" to "False"
+
+				*denite-source-attribute-define-syntax*
+define_syntax
+		(Function)			(Optional)
+		Define the source specific syntax.
+
+				*denite-source-attribute-highlight*
+highlight
+		(Function)			(Optional)
+		Apply the source specific syntax highlight.
 
 					*denite-source-attribute-on_init*
 on_init		(Function)			(Optional)
@@ -1299,7 +1321,7 @@ FAQ							*denite-faq*
 
 Q: denite can support Vim8?
 
-A: Yes.  But it is experimental.
+A: Yes.
 
 Q: I want to change the cursor line color in denite buffer.
 
@@ -1342,6 +1364,10 @@ A: >
 
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
+
+2016.12.17
+	"highlight_syntax" is splitted to "highlight" and "define_syntax".
+	The sources don't have to define source syntax name.
 
 2016.12.02
 	neovim-prompt implementation has been merged.
