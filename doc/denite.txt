@@ -995,7 +995,21 @@ menu		Gather custom menus.
 				include menus previously defined in Unite
 				configurations.
 
+						*denite-source-outline*
+outline		Gather outline and jump to the target.
 
+		Source arguments:
+		1. filename (use current buffer path if omitted)
+
+		Source custom variables:
+		command 	the default command to get outline
+				(default: ['ctags'])
+		options 	the default options for command
+				(default: ['-x'])
+		ignore_types 	the list of ignore types
+				(default: [])
+		encode 		the encode
+				(default: 'utf-8')
 
 ==============================================================================
 KINDS							*denite-kinds*
