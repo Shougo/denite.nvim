@@ -10,12 +10,12 @@ from time import localtime, strftime, time
 from sys import maxsize
 
 BUFFER_HIGHLIGHT_SYNTAX = [
-    {'name': 'Name',     'link': 'Function',  're': '[^/ \[\]]\+\s'},
-    {'name': 'Prefix',   'link': 'Constant',  're': '\d\+\s\+\%(\S\+\)\?'},
-    {'name': 'Info',     'link': 'PreProc',   're': '\[.\{-}\] '},
-    {'name': 'Modified', 'link': 'Statement', 're': '\[.\{-}+\]'},
-    {'name': 'NoFile',   'link': 'Function',  're': '\[nofile\]'},
-    {'name': 'Time',     'link': 'Statement', 're': '(.\{-})$'},
+    {'name': 'Name',     'link': 'Function',  're': r'[^/ \[\]]\+\s'},
+    {'name': 'Prefix',   'link': 'Constant',  're': r'\d\+\s\+\%(\S\+\)\?'},
+    {'name': 'Info',     'link': 'PreProc',   're': r'\[.\{-}\] '},
+    {'name': 'Modified', 'link': 'Statement', 're': r'\[.\{-}+\]'},
+    {'name': 'NoFile',   'link': 'Function',  're': r'\[nofile\]'},
+    {'name': 'Time',     'link': 'Statement', 're': r'(.\{-})$'},
 ]
 
 
