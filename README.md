@@ -22,8 +22,6 @@ you should read `:help provider-python`.
 
 ## Future works (not implemented yet)
 
-* source kind support
-
 * source completion support: completion(args, arglead)
 
 * matcher_hide_hidden_files
@@ -33,8 +31,6 @@ you should read `:help provider-python`.
 * file and file/new source
 
 * live grep feature
-
-* restart feature
 
 * narrow action
 
