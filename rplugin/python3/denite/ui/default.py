@@ -333,13 +333,13 @@ class Default(object):
     def change_mode(self, mode):
         self.__current_mode = mode
         custom = self.__context['custom']['map']
-        use_default_mapping = self.__context['use_default_mapping']
+        use_default_mappings = self.__context['use_default_mappings']
 
         # Clear current keymap
         self.__prompt.keymap.registry.clear()
 
         # Apply mode independent mappings
-        if use_default_mapping:
+        if use_default_mappings:
             self.__prompt.keymap.register_from_rules(
                 self.__vim,
                 DEFAULT_ACTION_KEYMAP.get('_', [])
@@ -351,7 +351,7 @@ class Default(object):
 
         # Apply mode depend mappings
         mode = self.__current_mode
-        if use_default_mapping:
+        if use_default_mappings:
             self.__prompt.keymap.register_from_rules(
                 self.__vim,
                 DEFAULT_ACTION_KEYMAP.get(mode, [])

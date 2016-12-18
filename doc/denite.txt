@@ -855,9 +855,9 @@ OPTIONS							*denite-options*
 		Enable statusline.
 		Default: true
 
-					*denite-options-use-default-mapping*
--use-default-mapping
-		Enable default key mapping.
+					*denite-options-use-default-mappings*
+-use-default-mappings
+		Enable default key mappings.
 
 		Note that fundemental mappings including <Esc> or <Enter> are
 		also provided by the default key mappings. So disabling this
