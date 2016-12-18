@@ -861,6 +861,18 @@ OPTIONS							*denite-options*
 		Enable statusline.
 		Default: true
 
+					*denite-options-use-default-mappings*
+-use-default-mappings
+		Enable default key mappings.
+
+		Note that fundemental mappings including <Esc> or <Enter> are
+		also provided by the default key mappings. So disabling this
+		option without proper custom mappings would make denite
+		useless. Use <C-c> to quit the denite if you accidentally
+		disable this option.
+
+		Default: true
+
 					*denite-options-vertical-preview*
 -vertical-preview
 		Open the preview window vertically.
