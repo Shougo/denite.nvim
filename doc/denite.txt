@@ -1180,6 +1180,10 @@ __init__	(Function)
 name		(String)			(Required)
 		The name of a source.
 
+					*denite-source-attribute-kind*
+kind		(String) or (Kind)		(Optional)
+		The candidates kind name or source specific Kind object.
+
 					*denite-source-attribute-syntax_name*
 syntax_name		(String)			(Optional)
 		The source syntax highlight name.

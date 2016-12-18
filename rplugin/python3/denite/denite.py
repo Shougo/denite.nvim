@@ -230,22 +230,25 @@ class Denite(object):
 
         kinds = set()
         for target in targets:
-            if 'kind' in target:
-                kind_name = target['kind']
-            else:
-                kind_name = self.__sources[target['source']].kind
-            kinds.add(kind_name)
+            k = target['kind'] if 'kind' in target else (
+                self.__sources[target['source']].kind)
+            kinds.add(k)
         if len(kinds) != 1:
             self.error('Multiple kinds are detected')
             return {}
 
-        kind_name = kinds.pop()
+        k = kinds.pop()
 
-        if kind_name not in self.__kinds:
-            self.error('Invalid kind: ' + kind_name)
-            return {}
+        if isinstance(k, str):
+            # k is kind name
+            if k not in self.__kinds:
+                self.error('Invalid kind: ' + k)
+                return {}
 
-        kind = self.__kinds[kind_name]
+            kind = self.__kinds[k]
+        else:
+            kind = k
+
         if action_name == 'default':
             action_name = context['default_action']
             if action_name == 'default':
