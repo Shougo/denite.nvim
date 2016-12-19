@@ -1,11 +1,23 @@
-test: vim-themis
-	# ./vim-themis/bin/themis --reporter spec test
-	nosetests -v rplugin/python3
-	flake8 rplugin/ --exclude rplugin/python3/denite/prompt/docs/conf.py
+install:
+	pip install neovim --upgrade
+	pip install pytest --upgrade
+	pip install flake8 --upgrade
+	pip install mypy-lang --upgrade
+	pip install vim-vint --upgrade
+
+lint:
+	vint --version
+	vint plugin
+	vint autoload
+	flake8 --version
+	flake8 rplugin/python3/denite
+	mypy --version
 	mypy --silent-imports rplugin/python3/denite
 
-# Use existing vim-themis install from ~/.vim, or clone it.
-vim-themis:
-	git clone https://github.com/thinca/vim-themis vim-themis; \
+test:
+	./vim-themis/bin/themis --version
+	./vim-themis/bin/themis test/autoload/*
+	pytest --version
+	pytest rplugin/python3/denite
 
-.PHONY: test
+.PHONY: install lint test
