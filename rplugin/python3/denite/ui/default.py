@@ -7,7 +7,7 @@ import re
 import weakref
 from itertools import filterfalse, groupby, takewhile
 
-from denite.util import escape_syntax, clear_cmdline, echo
+from denite.util import escape_syntax, clear_cmdline, echo, debug
 from .action import DEFAULT_ACTION_KEYMAP
 from .prompt import DenitePrompt
 from .. import denite
@@ -467,11 +467,11 @@ class Default(object):
             self.scroll_up(current_pos - pos)
 
     def move_to_next_line(self):
-        if (self.__win_cursor < self.__candidates_len and
-                self.__win_cursor < self.__winheight):
-            self.__win_cursor += 1
-        elif self.__win_cursor + self.__cursor < self.__candidates_len:
-            self.__cursor += 1
+        if self.__win_cursor + self.__cursor < self.__candidates_len:
+            if self.__win_cursor < self.__winheight:
+                self.__win_cursor += 1
+            else:
+                self.__cursor += 1
         elif self.__context['cursor_wrap']:
             self.move_to_first_line()
         else:
@@ -516,13 +516,16 @@ class Default(object):
         self.scroll_down(self.__winheight - 1)
 
     def scroll_down(self, scroll):
-        if (self.__win_cursor < self.__candidates_len and
-                self.__win_cursor < self.__winheight):
-            self.__win_cursor = min(self.__win_cursor + scroll,
-                                    self.__candidates_len, self.__winheight)
-        elif self.__win_cursor + self.__cursor < self.__candidates_len:
-            self.__cursor = min(self.__cursor + scroll,
-                                self.__candidates_len - self.__win_cursor)
+        if self.__win_cursor + self.__cursor < self.__candidates_len:
+            if self.__win_cursor < self.__winheight:
+                self.__win_cursor = min(
+                    self.__win_cursor + scroll,
+                    self.__candidates_len,
+                    self.__winheight)
+            else:
+                self.__cursor = min(
+                    self.__cursor + scroll,
+                    self.__candidates_len - self.__win_cursor)
         else:
             return
         self.update_buffer()
