@@ -94,6 +94,9 @@ class Source(Base):
         commands += self.vars['separator']
         commands += shlex.split(context['__input'])
         commands += self.vars['final_opts']
+        if context['is_windows']:
+            # Windows needs to specify the directory.
+            commands += context['__directory']
 
         self.__proc = Process(commands, context, context['__directory'])
         return self.__async_gather_candidates(context, 2.0)

@@ -159,9 +159,9 @@ class Denite(object):
             source = module.Source(self.__vim)
             self.__sources[source.name] = source
             source.path = path
+            syntax_name = 'deniteSource_' + source.name.replace('/', '_')
             if not source.syntax_name:
-                source.syntax_name = 'deniteSource_'
-                source.syntax_name += source.name.replace('/', '_')
+                source.syntax_name = syntax_name
 
             if source.name in self.__custom['alias_source']:
                 # Load alias
@@ -169,6 +169,7 @@ class Denite(object):
                     self.__sources[alias] = module.Source(self.__vim)
                     self.__sources[alias].name = alias
                     self.__sources[alias].path = path
+                    self.__sources[alias].syntax_name = syntax_name
 
     def get_filter(self, filter_name):
         return self.__filters.get(filter_name, None)
@@ -229,22 +230,25 @@ class Denite(object):
 
         kinds = set()
         for target in targets:
-            if 'kind' in target:
-                kind_name = target['kind']
-            else:
-                kind_name = self.__sources[target['source']].kind
-            kinds.add(kind_name)
+            k = target['kind'] if 'kind' in target else (
+                self.__sources[target['source']].kind)
+            kinds.add(k)
         if len(kinds) != 1:
             self.error('Multiple kinds are detected')
             return {}
 
-        kind_name = kinds.pop()
+        k = kinds.pop()
 
-        if kind_name not in self.__kinds:
-            self.error('Invalid kind: ' + kind_name)
-            return {}
+        if isinstance(k, str):
+            # k is kind name
+            if k not in self.__kinds:
+                self.error('Invalid kind: ' + k)
+                return {}
 
-        kind = self.__kinds[kind_name]
+            kind = self.__kinds[k]
+        else:
+            kind = k
+
         if action_name == 'default':
             action_name = context['default_action']
             if action_name == 'default':
