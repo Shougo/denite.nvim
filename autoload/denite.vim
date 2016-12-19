@@ -22,7 +22,7 @@ function! denite#start(sources, ...) abort
   " For compatibility(deprecated variables)
   for [old_option, new_option] in filter(items(
         \ denite#init#_deprecated_options()),
-        \ "has_key(context, v:val[0])")
+        \ 'has_key(context, v:val[0])')
     let context[new_option] = context[old_option]
   endfor
 
