@@ -16,10 +16,8 @@ lint:
 	mypy --silent-imports rplugin/python3/denite
 
 test:
-	export THEMIS_VIM="nvim"
-	export THEMIS_ARGS="-e -s --headless"
 	./vim-themis/bin/themis --version
-	./vim-themis/bin/themis test/autoload/*
+	THEMIS_VIM="nvim" THEMIS_ARGS="-e -s --headless" ./vim-themis/bin/themis test/autoload/*
 	pytest --version
 	pytest rplugin/python3/denite
 
