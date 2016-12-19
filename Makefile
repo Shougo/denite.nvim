@@ -17,7 +17,7 @@ lint:
 
 test:
 	./vim-themis/bin/themis --version
-	THEMIS_VIM="nvim" THEMIS_ARGS="-e -s --headless" ./vim-themis/bin/themis test/autoload/*
+	THEMIS_HOME="./vim-themis" THEMIS_VIM="nvim" THEMIS_ARGS="-e -s --headless" ./vim-themis/bin/themis test/autoload/*
 	pytest --version
 	pytest rplugin/python3/denite
 
