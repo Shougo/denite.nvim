@@ -7,7 +7,7 @@ import re
 import weakref
 from itertools import filterfalse, groupby, takewhile
 
-from denite.util import escape_syntax, clear_cmdline, echo, debug
+from denite.util import escape_syntax, clear_cmdline, echo
 from .action import DEFAULT_ACTION_KEYMAP
 from .prompt import DenitePrompt
 from .. import denite
