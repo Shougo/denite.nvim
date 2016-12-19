@@ -28,9 +28,8 @@ install:
   - git clone --depth 1 --single-branch -b ci-test https://github.com/lambdalisue/neovim-prompt ci-test
 
 script:
-  - export PATH="$HOME/neovim/bin:$PATH"
   - cd ci-test
-  - sh ./scripts/test.sh
+  - PATH="$HOME/neovim/bin:$PATH" sh ./scripts/test.sh
 
 after_success:
   - coveralls
