@@ -1020,7 +1020,7 @@ outline		Gather outline and jump to the target.
 				(default: ['-x'])
 		ignore_types 	the list of ignore types
 				(default: [])
-		encode 		the encode
+		encoding 	the text encoding
 				(default: 'utf-8')
 
 ==============================================================================

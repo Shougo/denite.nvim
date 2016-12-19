@@ -22,19 +22,18 @@ class Source(Base):
 
         self.name = 'outline'
         self.kind = 'file'
-        self.syntax_name = 'deniteSource_outline'
         self.vars = {
             'command': ['ctags'],
             'options': ['-x'],
             'ignore_types': [],
-            'encode': 'utf-8'
+            'encoding': 'utf-8'
         }
 
     def on_init(self, context):
         context['__path'] = context['args'][0] if len(
             context['args']) > 0 else self.vim.current.buffer.name
 
-    def highlight_syntax(self):
+    def highlight(self):
         for syn in OUTLINE_HIGHLIGHT_SYNTAX:
             self.vim.command(
                 'syntax match {0}_{1} /{2}/ contained containedin={0}'.format(
@@ -42,9 +41,6 @@ class Source(Base):
             self.vim.command(
                 'highlight default link {0}_{1} {2}'.format(
                     self.syntax_name, syn['name'], syn['link']))
-        self.vim.command(
-            'syntax region ' + self.syntax_name + ' start=// end=/$/ '
-            'contains=deniteMatched contained')
 
     def gather_candidates(self, context):
         command = []
@@ -53,7 +49,7 @@ class Source(Base):
         command += [context['__path']]
 
         try:
-            outline = check_output(command).decode(self.vars['encode'])
+            outline = check_output(command).decode(self.vars['encoding'])
         except CalledProcessError:
             return []
 
