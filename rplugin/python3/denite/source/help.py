@@ -17,14 +17,14 @@ class Source(Base):
         self.kind = 'command'
 
     def gather_candidates(self, context):
-        helpDocs = {}
+        help_docs = {}
         for file in globruntime(context['runtimepath'], 'doc/tags'):
             with open(file, 'r') as ins:
                 for line in ins:
                     name = line.split("\t", 1)[0]
-                    helpDocs[name] = {
+                    help_docs[name] = {
                         'word': name,
                         'action__command': 'help ' + name
                     }
 
-        return sorted(helpDocs.values(), key=lambda value: value['word'])
+        return sorted(help_docs.values(), key=lambda value: value['word'])
