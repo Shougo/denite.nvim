@@ -8,8 +8,11 @@ python:
     - 3.5
 
 install:
+    # Install Neovim via Gist
+    # https://gist.github.com/lambdalisue/0f461f6a91743895394e63a9a1c65232
+    - curl -sL git.io/v18DU | bash
     - make install
 
 script:
-    - make test
+    - PATH="$HOME/neovim/bin:$PATH" make test
     - make lint

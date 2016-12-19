@@ -1,4 +1,5 @@
 install: vim-themis
+
 	pip install neovim --upgrade
 	pip install pytest --upgrade
 	pip install flake8 --upgrade
@@ -15,6 +16,8 @@ lint:
 	mypy --silent-imports rplugin/python3/denite
 
 test:
+	export THEMIS_VIM="nvim"
+	export THEMIS_ARGS="-e -s --headless"
 	./vim-themis/bin/themis --version
 	./vim-themis/bin/themis test/autoload/*
 	pytest --version
