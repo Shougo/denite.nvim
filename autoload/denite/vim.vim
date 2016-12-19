@@ -49,7 +49,8 @@ def _temporary_scope():
             error(nvim, line)
         error(nvim, 'Please execute :messages command.')
 _temporary_scope()
-del _temporary_scope
+if _temporary_scope in dir():
+    del _temporary_scope
 EOF
   return []
 endfunction
