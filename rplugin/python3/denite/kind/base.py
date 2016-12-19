@@ -35,6 +35,9 @@ def _yank(vim, word):
 
 
 def _ex(vim, word):
-    expr = vim.call('input', ':', word, 'command')
+    # NOTE:
+    # <C-b> (\x02) in a command-line move the caret to the beginning.
+    # Somehow the key above works in 'input()' function as well.
+    expr = vim.call('input', ':', ' %s\x02' % word, 'command')
     if expr:
         vim.command(expr)
