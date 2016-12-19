@@ -18,10 +18,26 @@ class Base(object):
         denite.util.debug(self.vim, expr)
 
     def action_yank(self, context):
-        self.__yank(self.vim, "\n".join(
-            [x['word'] for x in context['targets']]))
+        _yank(self.vim, "\n".join([
+            x['word'] for x in context['targets']
+        ]))
 
-    def __yank(self, vim, word):
-        vim.call('setreg', '"', word, 'v')
-        if vim.call('has', 'clipboard'):
-            vim.call('setreg', vim.eval('v:register'), word, 'v')
+    def action_ex(self, context):
+        _ex(self.vim, "\n".join([
+            x['word'] for x in context['targets']
+        ]))
+
+
+def _yank(vim, word):
+    vim.call('setreg', '"', word, 'v')
+    if vim.call('has', 'clipboard'):
+        vim.call('setreg', vim.eval('v:register'), word, 'v')
+
+
+def _ex(vim, word):
+    # NOTE:
+    # <C-b> (\x02) in a command-line move the caret to the beginning.
+    # Somehow the key above works in 'input()' function as well.
+    expr = vim.call('input', ':', ' %s\x02' % word, 'command')
+    if expr:
+        vim.command(expr)
