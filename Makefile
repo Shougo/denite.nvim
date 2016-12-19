@@ -1,6 +1,7 @@
 PATH := ./vim-themis/bin:$(PATH)
 export THEMIS_VIM  := nvim
 export THEMIS_ARGS := -e -s --headless
+export THEMIS_HOME := ./vim-themis
 
 
 install: vim-themis
