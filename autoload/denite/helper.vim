@@ -82,7 +82,7 @@ function! denite#helper#_parse_options_args(cmdline) abort
     let source_arg = arg[len(source_name)+1 :]
     let source_args = source_arg  ==# '' ? [] :
           \  map(split(source_arg, '\\\@<!:', 1),
-          \      'substitute(v:val, ''\\\(.\)'', ''\\1'', ''g'')')
+          \      'substitute(v:val, ''\\\(.\)'', "\\1", ''g'')')
     call add(_, { 'name': source_name, 'args': source_args })
   endfor
 
