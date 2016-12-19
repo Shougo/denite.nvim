@@ -1,4 +1,4 @@
-install:
+install: vim-themis
 	pip install neovim --upgrade
 	pip install pytest --upgrade
 	pip install flake8 --upgrade
@@ -19,5 +19,9 @@ test:
 	./vim-themis/bin/themis test/autoload/*
 	pytest --version
 	pytest rplugin/python3/denite
+
+vim-themis:
+	git clone https://github.com/thinca/vim-themis vim-themis; \
+
 
 .PHONY: install lint test
