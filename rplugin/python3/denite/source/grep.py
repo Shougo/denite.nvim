@@ -5,7 +5,7 @@
 # ============================================================================
 
 from .base import Base
-from denite.util import parse_jump_line, escape_syntax
+from denite.util import parse_jump_line, escape_syntax, input
 from denite.process import Process
 import os
 import shlex
@@ -56,7 +56,7 @@ class Source(Base):
         context['__directory'] = self.vim.call('expand', directory)
         context['__input'] = context['input']
         if not context['__input']:
-            context['__input'] = self.vim.call('input', 'Pattern: ')
+            context['__input'] = input(self.vim, context, 'Pattern: ')
 
     def on_close(self, context):
         if context['__proc']:

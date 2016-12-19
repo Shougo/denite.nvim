@@ -138,3 +138,21 @@ def parse_command(array, **kwargs):
         return arg
 
     return [parse_arg(i) for i in array]
+
+
+def input(vim, context, prompt='', text='', completion=''):
+    try:
+        if completion != '':
+            return vim.call('input', prompt, text, completion)
+        else:
+            return vim.call('input', prompt, text)
+    except vim.error as e:
+        # NOTE:
+        # neovim raise nvim.error instead of KeyboardInterrupt when Ctrl-C
+        # has pressed so treat it as a real KeyboardInterrupt exception.
+        if str(e) != "b'Keyboard interrupt'":
+            raise e
+    except KeyboardInterrupt:
+        pass
+    # Ignore the interrupt
+    return ''
