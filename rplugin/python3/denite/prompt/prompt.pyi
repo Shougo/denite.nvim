@@ -1,6 +1,6 @@
 import enum
 from datetime import timedelta
-from typing import Optional, Union, Tuple, NamedTuple
+from typing import Optional, Union, Tuple, NamedTuple, Pattern
 from neovim import Nvim
 from .key import Key
 from .keystroke import Keystroke
@@ -9,21 +9,31 @@ from .context import Context
 KeystrokeType = Tuple[Key, ...]
 KeystrokeExpr = Union[KeystrokeType, bytes, str]
 
+ACTION_KEYSTROKE_PATTERN = ...  # type: Pattern
+
+STATUS_PROGRESS = ...  # type: int
+STATUS_ACCEPT = ...  # type: int
+STATUS_CANCEL = ...  # type: int
+STATUS_INTERRUPT = ...  # type: int
+
+INSERT_MODE_INSERT = ...  # type: int
+INSERT_MODE_REPLACE = ...  # type: int
+
 
 class Status(enum.Enum):
     """A prompt status enum class."""
 
-    progress = 0
-    accept = 1
-    cancel = 2
-    interrupt = 3
+    progress = STATUS_PROGRESS
+    accept = STATUS_ACCEPT
+    cancel = STATUS_CANCEL
+    interrupt = STATUS_INTERRUPT
 
 
 class InsertMode(enum.Enum):
     """A insert mode enum class."""
 
-    insert = 1
-    replace = 2
+    insert = INSERT_MODE_INSERT
+    replace = INSERT_MODE_REPLACE
 
 
 Condition = NamedTuple('Condition', [
