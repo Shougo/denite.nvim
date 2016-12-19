@@ -1,3 +1,8 @@
+PATH := ./vim-themis/bin:$(PATH)
+export THEMIS_VIM  := nvim
+export THEMIS_ARGS := -e -s --headless
+
+
 install: vim-themis
 
 	pip install neovim --upgrade
@@ -16,8 +21,8 @@ lint:
 	mypy --silent-imports rplugin/python3/denite
 
 test:
-	./vim-themis/bin/themis --version
-	THEMIS_HOME="./vim-themis" THEMIS_VIM="nvim" THEMIS_ARGS="-e -s --headless" ./vim-themis/bin/themis test/autoload/*
+	themis --version
+	themis test/autoload/*
 	pytest --version
 	pytest rplugin/python3/denite
 
