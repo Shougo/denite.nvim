@@ -15,7 +15,7 @@ BUFFER_HIGHLIGHT_SYNTAX = [
     {'name': 'Info',     'link': 'PreProc',   're': '\[.\{-}\] '},
     {'name': 'Modified', 'link': 'Statement', 're': '\[.\{-}+\]'},
     {'name': 'NoFile',   'link': 'Function',  're': '\[nofile\]'},
-    {'name': 'Time',     'link': 'Statement', 're': '(.\{-}) '},
+    {'name': 'Time',     'link': 'Statement', 're': '(.\{-})$'},
 ]
 
 
