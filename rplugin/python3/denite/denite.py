@@ -55,6 +55,7 @@ class Denite(object):
         for source in self.__current_sources:
             ctx = source.context
             ctx['input'] = context['input']
+            ctx['mode'] = context['mode']
             ctx['is_redraw'] = context['is_redraw']
             all = ctx['all_candidates']
             if ctx['is_async']:

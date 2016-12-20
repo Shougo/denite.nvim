@@ -360,6 +360,9 @@ class Default(object):
             custom.get(mode, [])
         )
 
+        # Update mode context
+        self.__context['mode'] = mode
+
         # Update mode indicator
         self.update_buffer()
 
