@@ -33,10 +33,10 @@ class Source(Base):
         }
 
     def on_init(self, context):
-        self.__exclude_unlisted = \
+        context['__exclude_unlisted'] = \
             '!' not in context['args'] and self.vars['exclude_unlisted']
-        self.__caller_bufnr = context['bufnr']
-        self.__alter_bufnr = self.vim.call('bufnr', '#')
+        context['__caller_bufnr'] = context['bufnr']
+        context['__alter_bufnr'] = self.vim.call('bufnr', '#')
 
     def highlight(self):
         for syn in BUFFER_HIGHLIGHT_SYNTAX:
@@ -51,18 +51,19 @@ class Source(Base):
         candidates = [
             self._convert(ba) for ba in [
                 bufattr for bufattr in [
-                    self._get_attributes(buf) for buf in self.vim.buffers
-                ] if not self._is_excluded(bufattr)
+                    self._get_attributes(context, buf)
+                    for buf in self.vim.buffers
+                ] if not self._is_excluded(context, bufattr)
             ]
         ]
         return sorted(candidates, key=(
             lambda x:
-            maxsize if self.__caller_bufnr == x['bufnr']
-            else -maxsize if self.__alter_bufnr == x['bufnr']
+            maxsize if context['__caller_bufnr'] == x['bufnr']
+            else -maxsize if context['__alter_bufnr'] == x['bufnr']
             else x['timestamp']))
 
-    def _is_excluded(self, buffer_attr):
-        if self.__exclude_unlisted and buffer_attr['status'][0] == 'u':
+    def _is_excluded(self, context, buffer_attr):
+        if context['__exclude_unlisted'] and buffer_attr['status'][0] == 'u':
             return True
         if buffer_attr['filetype'] in self.vars['exclude_filetypes']:
             return True
@@ -87,7 +88,7 @@ class Source(Base):
             'timestamp': buffer_attr['timestamp']
         }
 
-    def _get_attributes(self, buf):
+    def _get_attributes(self, context, buf):
         attr = {
             'number': buf.number,
             'name': buf.name
@@ -99,8 +100,9 @@ class Source(Base):
                 attr['name']) if exists(attr['name']) else time(),
             'status': '{0}{1}{2}{3}'.format(
                 ' ' if self.vim.call('buflisted', attr['number']) else 'u',
-                '%' if attr['number'] == self.__caller_bufnr
-                    else '#' if attr['number'] == self.__alter_bufnr else ' ',
+                '%' if attr['number'] == context['__caller_bufnr']
+                    else '#' if attr['number'] == context['__alter_bufnr']
+                    else ' ',
                 'a' if self.vim.call('bufwinnr', attr['number']) > 0
                     else 'h' if self.vim.call('bufloaded',
                                               attr['number']) != 0 else ' ',

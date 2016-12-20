@@ -46,7 +46,7 @@ class Source(Base):
         self.matchers = ['matcher_ignore_globs', 'matcher_regexp']
 
     def on_init(self, context):
-        self.__proc = None
+        context['__proc'] = None
         directory = ''
         if context['args']:
             directory = context['args'][0]
@@ -59,9 +59,9 @@ class Source(Base):
             context['__input'] = self.vim.call('input', 'Pattern: ')
 
     def on_close(self, context):
-        if self.__proc:
-            self.__proc.kill()
-            self.__proc = None
+        if context['__proc']:
+            context['__proc'].kill()
+            context['__proc'] = None
 
     def highlight(self):
         self.vim.command(GREP_HEADER_SYNTAX)
@@ -81,7 +81,7 @@ class Source(Base):
             'contained containedin=' + self.syntax_name)
 
     def gather_candidates(self, context):
-        if self.__proc:
+        if context['__proc']:
             return self.__async_gather_candidates(context, 0.5)
 
         if context['__input'] == '':
@@ -99,14 +99,14 @@ class Source(Base):
             # Windows needs to specify the directory.
             commands += context['__directory']
 
-        self.__proc = Process(commands, context, context['__directory'])
+        context['__proc'] = Process(commands, context, context['__directory'])
         return self.__async_gather_candidates(context, 2.0)
 
     def __async_gather_candidates(self, context, timeout):
-        outs, errs = self.__proc.communicate(timeout=timeout)
-        context['is_async'] = not self.__proc.eof()
-        if self.__proc.eof():
-            self.__proc = None
+        outs, errs = context['__proc'].communicate(timeout=timeout)
+        context['is_async'] = not context['__proc'].eof()
+        if context['__proc'].eof():
+            context['__proc'] = None
 
         candidates = []
 
