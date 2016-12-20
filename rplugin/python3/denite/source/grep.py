@@ -10,20 +10,21 @@ from denite.process import Process
 import os
 import shlex
 
-GREP_HEADER_SYNTAX = '''
-syntax match deniteSource_grepHeader /\\v[^:]*:\d+(:\d+)? / contained keepend
-'''.strip()
+GREP_HEADER_SYNTAX = (
+    'syntax match deniteSource_grepHeader '
+    r'/\v[^:]*:\d+(:\d+)? / '
+    'contained keepend')
 
 GREP_FILE_SYNTAX = (
     'syntax match deniteSource_grepFile '
-    '/[^:]*:/ contained '
-    'containedin=deniteSource_grepHeader '
+    r'/[^:]*:/ '
+    'contained containedin=deniteSource_grepHeader '
     'nextgroup=deniteSource_grepLineNR')
 GREP_FILE_HIGHLIGHT = 'highlight default link deniteSource_grepFile Comment'
 
 GREP_LINE_SYNTAX = (
     'syntax match deniteSource_grepLineNR '
-    '/\d\+\(:\d\+\)\?/ '
+    r'/\d\+\(:\d\+\)\?/ '
     'contained containedin=deniteSource_grepHeader')
 GREP_LINE_HIGHLIGHT = 'highlight default link deniteSource_grepLineNR LineNR'
 
