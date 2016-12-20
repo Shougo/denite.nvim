@@ -43,12 +43,12 @@ class Source(Base):
         if os.path.exists(cfile):
             return [{'word': cfile,
                      'action__path': os.path.abspath(cfile)}]
-        if checkhost(cfile):
+        if _checkhost(cfile):
             return [{'word': cfile, 'action__path': cfile}]
         return []
 
 
-def checkhost(path):
+def _checkhost(path):
     if not match(r'https?://', path):
         return ''
     try:
