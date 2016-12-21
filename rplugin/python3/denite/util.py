@@ -132,9 +132,8 @@ def convert2regex_pattern(input):
 
 def parse_command(array, **kwargs):
     def parse_arg(arg):
-        arg = arg[1:]
-        if arg.startswith(":") and arg in kwargs:
-            return kwargs[arg]
+        if arg.startswith(':') and arg[1:] in kwargs:
+            return kwargs[arg[1:]]
         return arg
 
     return [parse_arg(i) for i in array]
