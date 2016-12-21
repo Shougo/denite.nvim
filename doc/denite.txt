@@ -1106,6 +1106,22 @@ openable	An interface to open the object.
 			vsplit
 				open the object with 'vsplit'.
 
+			switch
+				Switch to the window that is opening the
+				object.
+
+			tabswitch
+				Switch to the window that is opening the
+				object. If it isn't opened, fallback tabopen.
+
+			splitswitch
+				Switch to the window that is opening the
+				object. If it isn't opened, fallback split.
+
+			vsplitswitch
+				Switch to the window that is opening the
+				object. If it isn't opened, fallback vsplit.
+
 						*denite-kind-word*
 word		An interface to paste the text.
 
