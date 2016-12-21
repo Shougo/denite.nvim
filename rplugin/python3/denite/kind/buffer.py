@@ -18,3 +18,7 @@ class Kind(Openable):
     def action_open(self, context):
         for target in context['targets']:
             self.vim.command('buffer {0}'.format(target['action__bufnr']))
+
+    def __winid(self, target):
+        winids = self.vim.call('win_findbuf', target['action__bufnr'])
+        return None if len(winids) == 0 else winids[0]
