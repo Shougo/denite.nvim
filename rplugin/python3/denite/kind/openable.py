@@ -50,3 +50,23 @@ class Kind(Base):
                 self.action_open(new_context)
         finally:
             self.vim.options['hidden'] = hidden
+
+    def action_switch(self, context):
+        self.__action_switch(context, self.action_open)
+
+    def action_tabswitch(self, context):
+        self.__action_switch(context, self.action_tabopen)
+
+    def action_splitswitch(self, context):
+        self.__action_switch(context, self.action_split)
+
+    def action_vsplitswitch(self, context):
+        self.__action_switch(context, self.action_vsplit)
+
+    def __action_switch(self, context, fallback):
+        for target in context['targets']:
+            winid = self.__winid(target)
+            if winid:
+                self.vim.call('win_gotoid', winid)
+            else:
+                fallback(context)
