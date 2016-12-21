@@ -7,7 +7,6 @@
 from .base import Base
 from denite.process import Process
 from os.path import relpath, isabs, isdir, join
-from copy import copy
 from denite.util import parse_command
 
 
@@ -25,6 +24,12 @@ class Source(Base):
         self.__cache = {}
 
     def on_init(self, context):
+        if not context['is_windows'] and not self.vars['command']:
+            self.vars['command'] = [
+                'find', '-L', ':directory',
+                '-path', '*/.git/*', '-prune', '-o',
+                '-type', 'l', '-print', '-o', '-type', 'f', '-print']
+
         context['__proc'] = None
         directory = context['args'][0] if len(
             context['args']) > 0 else context['path']
@@ -49,20 +54,11 @@ class Source(Base):
         if directory in self.__cache:
             return self.__cache[directory]
 
-        command = copy(self.vars['command'])
-        if not command:
-            if context['is_windows']:
-                return []
-
-            command = [
-                'find', '-L', directory,
-                '-path', '*/.git/*', '-prune', '-o',
-                '-type', 'l', '-print', '-o', '-type', 'f', '-print']
+        if ':directory' in self.vars['command']:
+            command = parse_command(
+                self.vars['command'], directory=directory)
         else:
-            if ":directory" in command:
-                command = parse_command(command, directory=directory)
-            else:
-                command.append(directory)
+            command = self.vars['command'] + [directory]
         context['__proc'] = Process(command, context, directory)
         context['__current_candidates'] = []
         return self.__async_gather_candidates(context, 2.0)

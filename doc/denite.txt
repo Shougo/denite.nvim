@@ -903,7 +903,7 @@ colorscheme	Gather colorschemes and change the colorscheme.
 
 						*denite-source-directory_rec*
 directory_rec	Gather directories recursive and nominates all directory names
-		under the search directory (argument 1) or the current directory
+		under the search directory (argument 0) or the current directory
 		(if argument is omitted) as candidates.
 
 		Source args:
@@ -924,7 +924,7 @@ file_point
 
 						*denite-source-file_rec*
 file_rec	Gather files recursive and nominates all file names under the
-		search directory (argument 1) or the current directory (if
+		search directory (argument 0) or the current directory (if
 		argument is omitted) as candidates.
 
 		Source args:
