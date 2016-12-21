@@ -4,11 +4,13 @@
 # License: MIT license
 # ============================================================================
 
-from .base import Base
-from denite.util import parse_jump_line, escape_syntax, input
-from denite.process import Process
 import os
 import shlex
+
+from denite import util, process
+
+from .base import Base
+
 
 GREP_HEADER_SYNTAX = (
     'syntax match deniteSource_grepHeader '
@@ -29,6 +31,19 @@ GREP_LINE_SYNTAX = (
 GREP_LINE_HIGHLIGHT = 'highlight default link deniteSource_grepLineNR LineNR'
 
 
+def _candidate(result, path):
+    return {
+        'word': '{0}:{1}{2} {3}'.format(
+            path,
+            result[1],
+            (':' + result[2] if result[2] != '0' else ''),
+            result[3]),
+        'action__path': result[0],
+        'action__line': result[1],
+        'action__col': result[2],
+    }
+
+
 class Source(Base):
 
     def __init__(self, vim):
@@ -40,6 +55,7 @@ class Source(Base):
             'command': ['grep'],
             'default_opts': ['-inH'],
             'recursive_opts': ['-r'],
+            'pattern_opt': ['-e'],
             'separator': ['--'],
             'final_opts': ['.'],
         }
@@ -47,16 +63,48 @@ class Source(Base):
 
     def on_init(self, context):
         context['__proc'] = None
-        directory = ''
-        if context['args']:
-            directory = context['args'][0]
-        if not directory:
-            directory = context['path']
-        context['__arguments'] = context['args'][1:]
-        context['__directory'] = self.vim.call('expand', directory)
-        context['__input'] = context['input']
-        if not context['__input']:
-            context['__input'] = input(self.vim, context, 'Pattern: ')
+
+        # Backwards compatibility for `ack`
+        if len(self.vars['command']) >= 1 and \
+                self.vars['command'][0] == 'ack' and \
+                self.vars['pattern_opt'] == ['-e']:
+            self.vars['pattern_opt'] = ['--match']
+
+        args = dict(enumerate(context['args']))
+
+        # paths
+        arg = args.get(0, [])
+        if arg:
+            if isinstance(arg, str):
+                arg = [self.vim.call('expand', arg)]
+            elif not isinstance(arg, list):
+                raise AttributeError('`args[0]` needs to be a `str` or `list`')
+        # Windows needs to specify the directory.
+        elif context['is_windows']:
+            arg = [context['path']]
+        context['__paths'] = arg
+
+        # arguments
+        arg = args.get(1, [])
+        if arg:
+            if isinstance(arg, str):
+                arg = shlex.split(arg)
+            elif not isinstance(arg, list):
+                raise AttributeError('`args[1]` needs to be a `str` or `list`')
+        context['__arguments'] = arg
+
+        # patterns
+        arg = args.get(2, [])
+        if arg:
+            if isinstance(arg, str):
+                arg = [arg]
+            elif not isinstance(arg, list):
+                raise AttributeError('`args[2]` needs to be a `str` or `list`')
+        else:
+            pattern = util.input(self.vim, context, 'Pattern: ')
+            if pattern:
+                arg = [pattern]
+        context['__patterns'] = arg
 
     def on_close(self, context):
         if context['__proc']:
@@ -72,19 +120,20 @@ class Source(Base):
         self.vim.command('highlight default link deniteGrepInput Function')
 
     def define_syntax(self):
-        input_str = self.context['__input']
         self.vim.command(
             'syntax region ' + self.syntax_name + ' start=// end=/$/ '
             'contains=deniteSource_grepHeader,deniteMatched contained')
         self.vim.command(
-            'syntax match deniteGrepInput /%s/ ' % escape_syntax(input_str) +
+            'syntax match deniteGrepPatterns ' +
+            r'/%s/ ' % r'\|'.join(util.escape_syntax(pattern)
+                                  for pattern in self.context['__patterns']) +
             'contained containedin=' + self.syntax_name)
 
     def gather_candidates(self, context):
         if context['__proc']:
             return self.__async_gather_candidates(context, 0.5)
 
-        if context['__input'] == '':
+        if not context['__patterns']:
             return []
 
         commands = []
@@ -92,14 +141,15 @@ class Source(Base):
         commands += self.vars['default_opts']
         commands += self.vars['recursive_opts']
         commands += context['__arguments']
+        for pattern in context['__patterns']:
+            commands += self.vars['pattern_opt'] + [pattern]
         commands += self.vars['separator']
-        commands += shlex.split(context['__input'])
-        commands += self.vars['final_opts']
-        if context['is_windows']:
-            # Windows needs to specify the directory.
-            commands += context['__directory']
+        if context['__paths']:
+            commands += context['__paths']
+        else:
+            commands += self.vars['final_opts']
 
-        context['__proc'] = Process(commands, context, context['__directory'])
+        context['__proc'] = process.Process(commands, context, context['path'])
         return self.__async_gather_candidates(context, 2.0)
 
     def __async_gather_candidates(self, context, timeout):
@@ -111,17 +161,19 @@ class Source(Base):
         candidates = []
 
         for line in outs:
-            result = parse_jump_line(context['__directory'], line)
-            if result:
-                candidates.append({
-                    'word': '{0}:{1}{2} {3}'.format(
-                        os.path.relpath(result[0],
-                                        start=context['__directory']),
-                        result[1],
-                        (':' + result[2] if result[2] != '0' else ''),
-                        result[3]),
-                    'action__path': result[0],
-                    'action__line': result[1],
-                    'action__col': result[2],
-                })
+            if context['__paths']:
+                if len(context['__paths']) == 1:
+                    result = util.parse_jump_line(context['__paths'][0], line)
+                    if result:
+                        candidates.append(_candidate(result, os.path.relpath(
+                            result[0], start=context['__paths'][0])))
+                else:
+                    result = util.parse_jump_line('', line)
+                    if result:
+                        candidates.append(_candidate(result, result[0]))
+            else:
+                result = util.parse_jump_line(context['path'], line)
+                if result:
+                    candidates.append(_candidate(result, os.path.relpath(
+                        result[0], start=context['path'])))
         return candidates
