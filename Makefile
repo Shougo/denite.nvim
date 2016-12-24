@@ -5,7 +5,6 @@ export THEMIS_HOME := ./vim-themis
 
 
 install: vim-themis
-
 	pip install neovim --upgrade
 	pip install pytest --upgrade
 	pip install flake8 --upgrade
