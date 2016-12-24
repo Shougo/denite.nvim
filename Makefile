@@ -30,5 +30,4 @@ test:
 vim-themis:
 	git clone https://github.com/thinca/vim-themis vim-themis; \
 
-
 .PHONY: install lint test
