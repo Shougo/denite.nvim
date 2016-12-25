@@ -142,7 +142,7 @@ class Source(Base):
         commands += self.vars['recursive_opts']
         commands += context['__arguments']
         for pattern in context['__patterns']:
-            commands += self.vars['pattern_opt'] + [pattern]
+            commands += self.vars['pattern_opt'] + shlex.split(pattern)
         commands += self.vars['separator']
         if context['__paths']:
             commands += context['__paths']
