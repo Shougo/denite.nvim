@@ -167,7 +167,7 @@ def find_rplugins(context, source, loaded_paths):
     for runtime in context.get('runtimepath', '').split(','):
         for path in glob.iglob(os.path.join(runtime, src)):
             name = os.path.splitext(os.path.basename(path))[0]
-            if (name == 'base' or name == '__init__'
-                    or path in loaded_paths):
+            if (name == 'base' or name == '__init__' or
+                    path in loaded_paths):
                 continue
             yield path, name
