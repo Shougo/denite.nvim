@@ -155,3 +155,19 @@ def input(vim, context, prompt='', text='', completion=''):
         pass
     # Ignore the interrupt
     return ''
+
+
+def find_rplugins(context, source, loaded_paths):
+    """Search for *.py
+
+    Searches $VIMRUNTIME/*/rplugin/python3/denite/$source/
+    """
+
+    src = os.path.join('rplugin/python3/denite', source, '*.py')
+    for runtime in context.get('runtimepath', '').split(','):
+        for path in glob.iglob(os.path.join(runtime, src)):
+            name = os.path.splitext(os.path.basename(path))[0]
+            if (name == 'base' or name == '__init__'
+                    or path in loaded_paths):
+                continue
+            yield path, name
