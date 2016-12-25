@@ -30,6 +30,8 @@ GREP_LINE_SYNTAX = (
     'contained containedin=deniteSource_grepHeader')
 GREP_LINE_HIGHLIGHT = 'highlight default link deniteSource_grepLineNR LineNR'
 
+GREP_PATTERNS_HIGHLIGHT = 'highlight default link deniteGrepPatterns Function'
+
 
 def _candidate(result, path):
     return {
@@ -117,7 +119,7 @@ class Source(Base):
         self.vim.command(GREP_FILE_HIGHLIGHT)
         self.vim.command(GREP_LINE_SYNTAX)
         self.vim.command(GREP_LINE_HIGHLIGHT)
-        self.vim.command('highlight default link deniteGrepInput Function')
+        self.vim.command(GREP_PATTERNS_HIGHLIGHT)
 
     def define_syntax(self):
         self.vim.command(
