@@ -152,7 +152,7 @@ class Denite(object):
         loaded_paths = [x.path for x in self.__sources.values()]
         for path in rtps:
             name = os.path.splitext(os.path.basename(path))[0]
-            if name == 'base' or path in loaded_paths:
+            if name == 'base' or name == '__init__' or path in loaded_paths:
                 continue
 
             module = importlib.machinery.SourceFileLoader(
@@ -185,7 +185,7 @@ class Denite(object):
         loaded_paths = [x.path for x in self.__filters.values()]
         for path in rtps:
             name = os.path.splitext(os.path.basename(path))[0]
-            if name == 'base' or path in loaded_paths:
+            if name == 'base' or name == '__init__' or path in loaded_paths:
                 continue
 
             module = importlib.machinery.SourceFileLoader(
@@ -208,14 +208,17 @@ class Denite(object):
             'rplugin/python3/denite/kind/base.py')
         rtps.extend(globruntime(context['runtimepath'],
                                 'rplugin/python3/denite/kind/*.py'))
+        loaded_paths = [x.path for x in self.__kinds.values()]
         for path in rtps:
             name = os.path.basename(path)[: -3]
-            if name == 'base' or name in self.__kinds:
+            if name == 'base' or name == '__init__' or path in loaded_paths:
                 continue
 
             module = importlib.machinery.SourceFileLoader(
                 'denite.kind.' + name, path).load_module()
-            self.__kinds[name] = module.Kind(self.__vim)
+            kind = module.Kind(self.__vim)
+            kind.path = path
+            self.__kinds[name] = kind
 
     def do_action(self, context, action_name, targets):
         action = self.get_action(context, action_name, targets)
