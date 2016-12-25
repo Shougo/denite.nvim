@@ -36,9 +36,6 @@ class Default(object):
         self.__current_mode = ''
         self.__mode_stack = []
         self.__current_mappings = {}
-        self.__input_before = ''
-        self.__input_cursor = ''
-        self.__input_after = ''
         self.__bufnr = -1
         self.__winid = -1
         self.__winrestcmd = ''

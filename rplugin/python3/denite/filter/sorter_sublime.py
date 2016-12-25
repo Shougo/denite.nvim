@@ -10,6 +10,20 @@
 from .base import Base
 from unicodedata import category
 
+# Score consts
+# bonus for adjacent matches
+ADJACENCY_BONUS = 5
+# bonus if match occurs after a separato
+SEPARATOR_BONUS = 10
+# bonus if match is uppercase and prev is lower
+CAMEL_BONUS = 10
+# penalty applied for every letter in str before the first match
+LEADING_LETTER_PENALTY = -3
+# maximum penalty for leading letters
+MAX_LEADING_LETTER_PENALTY = -9
+# penalty for every letter that doesn't matter
+UNMATCHED_LETTER_PENALTY = -1
+
 
 class Filter(Base):
     def __init__(self, vim):
@@ -34,20 +48,6 @@ class Filter(Base):
 
 
 def get_score(pattern, candidate):
-    # Score consts
-    # bonus for adjacent matches
-    ADJACENCY_BONUS = 5
-    # bonus if match occurs after a separato
-    SEPARATOR_BONUS = 10
-    # bonus if match is uppercase and prev is lower
-    CAMEL_BONUS = 10
-    # penalty applied for every letter in str before the first match
-    LEADING_LETTER_PENALTY = -3
-    # maximum penalty for leading letters
-    MAX_LEADING_LETTER_PENALTY = -9
-    # penalty for every letter that doesn't matter
-    UNMATCHED_LETTER_PENALTY = -1
-
     # Loop variables
     score = 0
     pattern_index = 0
