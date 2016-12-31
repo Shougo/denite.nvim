@@ -127,7 +127,7 @@ class Source(Base):
             'contains=deniteSource_grepHeader,deniteMatched contained')
         self.vim.command(
             'syntax match deniteGrepPatterns ' +
-            r'/%s/ ' % r'\|'.join(util.escape_syntax(pattern)
+            r'/%s/ ' % r'\|'.join(util.regex_convert_str_vim(pattern)
                                   for pattern in self.context['__patterns']) +
             'contained containedin=' + self.syntax_name)
 
