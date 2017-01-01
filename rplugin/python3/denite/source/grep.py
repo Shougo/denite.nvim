@@ -67,9 +67,9 @@ class Source(Base):
         context['__proc'] = None
 
         # Backwards compatibility for `ack`
-        if len(self.vars['command']) >= 1 and \
-                self.vars['command'][0] == 'ack' and \
-                self.vars['pattern_opt'] == ['-e']:
+        if (self.vars['command'] and
+                self.vars['command'][0] == 'ack' and
+                self.vars['pattern_opt'] == ['-e']):
             self.vars['pattern_opt'] = ['--match']
 
         args = dict(enumerate(context['args']))
