@@ -7,7 +7,8 @@ import re
 import weakref
 from itertools import filterfalse, groupby, takewhile
 
-from denite.util import escape_syntax, clear_cmdline, echo
+from denite.util import clear_cmdline, echo, \
+    regex_convert_py_vim, regex_convert_str_vim
 from .action import DEFAULT_ACTION_KEYMAP
 from .prompt import DenitePrompt
 from .. import denite
@@ -200,7 +201,7 @@ class Default(object):
             syntax_line = ('syntax match %s /^ %s/ nextgroup=%s keepend' +
                            ' contains=deniteConcealedMark') % (
                 'deniteSourceLine_' + name,
-                escape_syntax(source_name),
+                regex_convert_str_vim(source_name),
                 source.syntax_name,
             )
             self.__vim.command(syntax_line)
@@ -230,7 +231,7 @@ class Default(object):
         if self.__matched_pattern != '':
             self.__vim.command(
                 'silent! syntax match deniteMatched /%s/ contained' % (
-                    re.sub(r'([/])', r'\\\1', self.__matched_pattern),
+                    regex_convert_py_vim(self.__matched_pattern),
                 )
             )
             self.__vim.command((
