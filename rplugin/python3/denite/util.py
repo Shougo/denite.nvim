@@ -53,8 +53,12 @@ def escape(expr):
     return expr.replace("'", "''")
 
 
-def escape_syntax(expr):
-    return re.sub(r'([\^$.*\/~\[\]])', r'\\\1', expr)
+def regex_convert_str_vim(string):
+    return re.sub(r'([\^$.*\\/~\[\]])', r'\\\1', string)
+
+
+def regex_convert_py_vim(expr):
+    return re.sub(r'([/~])', r'\\\1', expr)
 
 
 def escape_fuzzy(string, camelcase):
