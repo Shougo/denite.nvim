@@ -56,7 +56,6 @@ class Default(object):
     def start(self, sources, context):
         if self.__initialized and context['resume']:
             # Skip the initialization
-            self.__current_mode = context['mode']
             self.__context['immediately'] = context['immediately']
             self.__context['cursor_wrap'] = context['cursor_wrap']
 
