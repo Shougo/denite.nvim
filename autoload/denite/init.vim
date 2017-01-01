@@ -60,7 +60,6 @@ function! denite#init#_context() abort
         \ 'runtimepath': &runtimepath,
         \ 'encoding': &encoding,
         \ 'is_windows': has('win32') || has('win64'),
-        \ 'mode': 'insert',
         \ 'selected_icon': '*',
         \}
 endfunction
@@ -82,7 +81,7 @@ function! denite#init#_user_options() abort
         \ 'immediately': v:false,
         \ 'input': '',
         \ 'max_candidate_width': 200,
-        \ 'mode': 'insert',
+        \ 'mode': '',
         \ 'path': getcwd(),
         \ 'previewheight': &previewheight,
         \ 'prompt': '#',

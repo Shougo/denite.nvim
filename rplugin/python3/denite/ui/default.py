@@ -56,7 +56,8 @@ class Default(object):
     def start(self, sources, context):
         if self.__initialized and context['resume']:
             # Skip the initialization
-            self.__current_mode = context['mode']
+            if context['mode']:
+                self.__current_mode = context['mode']
             self.__context['immediately'] = context['immediately']
             self.__context['cursor_wrap'] = context['cursor_wrap']
 
@@ -69,6 +70,10 @@ class Default(object):
             if self.check_empty():
                 return self.__result
         else:
+            if not context['mode']:
+                # Default mode
+                context['mode'] = 'insert'
+
             self.__context.clear()
             self.__context.update(context)
             self.__context['sources'] = sources
