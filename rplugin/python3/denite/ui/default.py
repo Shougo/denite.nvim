@@ -230,7 +230,7 @@ class Default(object):
         if self.__matched_pattern != '':
             self.__vim.command(
                 'silent! syntax match deniteMatched /%s/ contained' % (
-                    escape_syntax(self.__matched_pattern),
+                    re.sub(r'([/])', r'\\\1', self.__matched_pattern),
                 )
             )
             self.__vim.command((
