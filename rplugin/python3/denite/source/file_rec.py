@@ -41,6 +41,9 @@ class Source(Base):
             context['__proc'] = None
 
     def gather_candidates(self, context):
+        if not self.vars['command']:
+            return []
+
         if context['__proc']:
             return self.__async_gather_candidates(context, 0.5)
 
