@@ -90,8 +90,8 @@ def load_external_module(file, module):
     sys.path.insert(0, module_dir)
 
 
-def split_input(input):
-    return [x for x in re.split(r'\s+', input) if x != '']
+def split_input(text):
+    return [x for x in re.split(r'\s+', text) if x != '']
 
 
 def path2dir(path):
@@ -127,12 +127,12 @@ def expand(path):
     return os.path.expandvars(os.path.expanduser(path))
 
 
-def convert2fuzzy_pattern(input):
-    return '\|'.join([escape_fuzzy(x, True) for x in split_input(input)])
+def convert2fuzzy_pattern(text):
+    return '\|'.join([escape_fuzzy(x, True) for x in split_input(text)])
 
 
-def convert2regex_pattern(input):
-    return '\|'.join(split_input(input))
+def convert2regex_pattern(text):
+    return '\|'.join(split_input(text))
 
 
 def parse_command(array, **kwargs):
@@ -144,6 +144,7 @@ def parse_command(array, **kwargs):
     return [parse_arg(i) for i in array]
 
 
+# XXX: It override the builtin 'input()' function.
 def input(vim, context, prompt='', text='', completion=''):
     try:
         if completion != '':

@@ -220,8 +220,8 @@ class Default(object):
             self.move_to_last_line()
 
     def update_buffer(self):
-        max = len(str(self.__candidates_len))
-        linenr = ('{:'+str(max)+'}/{:'+str(max)+'}').format(
+        max_len = len(str(self.__candidates_len))
+        linenr = ('{:'+str(max_len)+'}/{:'+str(max_len)+'}').format(
             self.__cursor + self.__win_cursor,
             self.__candidates_len)
         mode = '-- ' + self.__current_mode.upper() + ' -- '
@@ -301,10 +301,10 @@ class Default(object):
         sources = ''
         self.__selected_candidates = []
         self.__candidates = []
-        for name, all, candidates in self.__denite.filter_candidates(
+        for name, entire, partial in self.__denite.filter_candidates(
                 self.__context):
-            self.__candidates += candidates
-            sources += '{}({}/{}) '.format(name, len(candidates), len(all))
+            self.__candidates += partial
+            sources += '{}({}/{}) '.format(name, len(partial), len(entire))
 
             if pattern == '':
                 matchers = self.__denite.get_source(name).matchers

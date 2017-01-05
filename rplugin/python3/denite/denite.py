@@ -56,31 +56,31 @@ class Denite(object):
             ctx['input'] = context['input']
             ctx['mode'] = context['mode']
             ctx['is_redraw'] = context['is_redraw']
-            all = ctx['all_candidates']
+            entire = ctx['all_candidates']
             if ctx['is_async']:
-                all += source.gather_candidates(ctx)
-            if not all:
+                entire += source.gather_candidates(ctx)
+            if not entire:
                 continue
-            candidates = []
-            for i in range(0, len(all), 1000):
-                ctx['candidates'] = all[i:i+1000]
+            partial = []
+            for i in range(0, len(entire), 1000):
+                ctx['candidates'] = entire[i:i+1000]
                 for matcher in [self.__filters[x]
                                 for x in source.matchers
                                 if x in self.__filters]:
                     ctx['candidates'] = matcher.filter(ctx)
-                candidates += ctx['candidates']
-                if len(candidates) >= 1000:
+                partial += ctx['candidates']
+                if len(partial) >= 1000:
                     break
-            ctx['candidates'] = candidates
-            for filter in [self.__filters[x]
-                           for x in source.sorters + source.converters
-                           if x in self.__filters]:
-                ctx['candidates'] = filter.filter(ctx)
-            candidates = ctx['candidates']
-            for c in candidates:
+            ctx['candidates'] = partial
+            for f in [self.__filters[x]
+                      for x in source.sorters + source.converters
+                      if x in self.__filters]:
+                ctx['candidates'] = f.filter(ctx)
+            partial = ctx['candidates']
+            for c in partial:
                 c['source'] = source.name
             ctx['candidates'] = []
-            yield source.name, all, candidates
+            yield source.name, entire, partial
 
     def on_init(self, context):
         self.__current_sources = []
@@ -171,9 +171,9 @@ class Denite(object):
         for path, name in find_rplugins(context, 'filter', loaded_paths):
             module = importlib.machinery.SourceFileLoader(
                 'denite.filter.' + name, path).load_module()
-            filter = module.Filter(self.__vim)
-            filter.path = path
-            self.__filters[name] = filter
+            f = module.Filter(self.__vim)
+            f.path = path
+            self.__filters[name] = f
 
             if name in self.__custom['alias_filter']:
                 # Load alias
