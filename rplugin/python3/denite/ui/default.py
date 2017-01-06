@@ -448,6 +448,10 @@ class Default(object):
             # Disable quit flag
             is_quit = False
 
+        is_redraw = action['is_redraw']
+        if is_redraw:
+            self.redraw()
+
         self.__result = candidates
         return STATUS_ACCEPT if is_quit else None
 

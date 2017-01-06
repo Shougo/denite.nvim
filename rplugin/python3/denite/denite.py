@@ -235,6 +235,7 @@ class Denite(object):
             return {}
         return {
             'name': action_name,
+            'is_redraw': action_name == 'delete',
             'func': getattr(kind, action_attr),
             'is_quit': (action_name not in kind.persist_actions)
         }
