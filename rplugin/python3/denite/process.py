@@ -67,10 +67,6 @@ class Process(object):
 
         sleep(0.1)
         if self.__thread.is_alive() or not self.__queue_out.empty():
-            if len(outs) < 1000:
-                # Skip the update
-                self.__outs = outs
-                return ([], [])
             return (outs, [])
 
         _, errs = self.__proc.communicate(timeout=timeout)
