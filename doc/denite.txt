@@ -813,6 +813,13 @@ OPTIONS							*denite-options*
 		Matched range highlight.
 		Default: 'Underlined'
 
+					*denite-options-highlight-mode-{mode}*
+-highlight-mode-{mode}
+		Change |hl-CursorLine| in {mode}.
+		Default:
+		'CursorLine' in "insert" mode
+		'WildMenu' in "normal" mode
+
 						*denite-options-immediately*
 -immediately
 		If candidates are exists, it runs the default action

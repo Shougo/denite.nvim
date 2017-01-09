@@ -343,6 +343,11 @@ class Default(object):
         custom = self.__context['custom']['map']
         use_default_mappings = self.__context['use_default_mappings']
 
+        highlight = 'highlight_mode_' + mode
+        if highlight in self.__context:
+            self.__vim.command('highlight! link CursorLine ' +
+                               self.__context[highlight])
+
         # Clear current keymap
         self.__prompt.keymap.registry.clear()
 
