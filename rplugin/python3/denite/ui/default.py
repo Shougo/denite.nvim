@@ -144,6 +144,7 @@ class Default(object):
         self.__options['filetype'] = 'denite'
         self.__options['swapfile'] = False
         self.__options['modifiable'] = True
+        self.__options['buflisted'] = False
 
         self.__window_options = self.__vim.current.window.options
         if self.__context['cursorline']:
@@ -446,6 +447,7 @@ class Default(object):
 
         self.__denite.do_action(self.__context, action_name, candidates)
 
+        is_redraw = action['is_redraw']
         if is_quit and not self.__context['quit']:
             # Re-open denite buffer
             self.init_buffer()
@@ -453,8 +455,7 @@ class Default(object):
             # Disable quit flag
             is_quit = False
 
-        is_redraw = action['is_redraw']
-        if is_redraw:
+        if not is_quit and is_redraw:
             self.redraw()
 
         self.__result = candidates

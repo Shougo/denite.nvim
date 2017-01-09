@@ -138,3 +138,7 @@ function! s:eval_cmdline(cmdline) abort
 
   return cmdline
 endfunction
+
+function! denite#helper#_set_oldfiles(oldfiles) abort
+  let v:oldfiles = a:oldfiles
+endfunction

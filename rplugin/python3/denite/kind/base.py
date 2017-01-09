@@ -13,6 +13,7 @@ class Base(object):
         self.vim = vim
         self.name = 'base'
         self.persist_actions = []
+        self.redraw_actions = []
 
     def debug(self, expr):
         denite.util.debug(self.vim, expr)
