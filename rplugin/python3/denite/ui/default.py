@@ -8,7 +8,7 @@ import weakref
 from itertools import filterfalse, groupby, takewhile
 
 from denite.util import clear_cmdline, echo, \
-    regex_convert_py_vim, regex_convert_str_vim, debug
+    regex_convert_py_vim, regex_convert_str_vim
 from .action import DEFAULT_ACTION_KEYMAP
 from .prompt import DenitePrompt
 from .. import denite
@@ -178,7 +178,8 @@ class Default(object):
     def __init_syntax(self):
         self.__vim.command('syntax case ignore')
         self.__vim.command('highlight default link deniteMode ModeMsg')
-        self.__vim.command('highlight default link deniteMatched Underlined')
+        self.__vim.command('highlight default link deniteMatchedRange ' +
+                           self.__context['highlight_matched_range'])
         self.__vim.command('highlight default link deniteMatchedChar ' +
                            self.__context['highlight_matched_char'])
         self.__vim.command('highlight default link ' +
@@ -235,17 +236,17 @@ class Default(object):
             '[' + self.__context['path'] + ']')
         self.__bufvars['denite_statusline_linenr'] = linenr
 
-        self.__vim.command('silent! syntax clear deniteMatched')
+        self.__vim.command('silent! syntax clear deniteMatchedRange')
         self.__vim.command('silent! syntax clear deniteMatchedChar')
         if self.__matched_pattern != '':
             self.__vim.command(
-                'silent! syntax match deniteMatched /%s/ contained' % (
+                'silent! syntax match deniteMatchedRange /%s/ contained' % (
                     regex_convert_py_vim(self.__matched_pattern),
                 )
             )
             self.__vim.command((
                 'silent! syntax match deniteMatchedChar /[%s]/ '
-                'containedin=deniteMatched contained'
+                'containedin=deniteMatchedRange contained'
             ) % re.sub(
                 r'([[\]\\^-])',
                 r'\\\1',

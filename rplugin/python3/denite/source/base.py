@@ -27,7 +27,7 @@ class Base(object):
     def define_syntax(self):
         self.vim.command(
             'syntax region ' + self.syntax_name + ' start=// end=/$/ '
-            'contains=deniteMatched contained')
+            'contains=deniteMatchedRange contained')
 
     @abstractmethod
     def gather_candidate(self, context):

@@ -76,6 +76,7 @@ function! denite#init#_user_options() abort
         \ 'direction': 'botright',
         \ 'empty': v:true,
         \ 'highlight_cursor': 'Cursor',
+        \ 'highlight_matched_range': 'Underlined',
         \ 'highlight_matched_char': 'Search',
         \ 'ignorecase': v:true,
         \ 'immediately': v:false,

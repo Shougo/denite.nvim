@@ -808,6 +808,11 @@ OPTIONS							*denite-options*
 		Matched characters highlight.
 		Default: 'Search'
 
+					*denite-options-highlight-matched-range*
+-highlight-matched-range
+		Matched range highlight.
+		Default: 'Underlined'
+
 						*denite-options-immediately*
 -immediately
 		If candidates are exists, it runs the default action

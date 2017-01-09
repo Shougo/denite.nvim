@@ -124,7 +124,7 @@ class Source(Base):
     def define_syntax(self):
         self.vim.command(
             'syntax region ' + self.syntax_name + ' start=// end=/$/ '
-            'contains=deniteSource_grepHeader,deniteMatched contained')
+            'contains=deniteSource_grepHeader,deniteMatchedRange contained')
         self.vim.command(
             'syntax match deniteGrepPatterns ' +
             r'/%s/ ' % r'\|'.join(util.regex_convert_str_vim(pattern)
