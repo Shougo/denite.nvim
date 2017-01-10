@@ -4,7 +4,7 @@ from .key import Key
 from .util import ensure_bytes
 
 
-KEYS_PATTERN = re.compile(rb'(?:<[^>]+>|\x80.{2}|\S|\s)')
+KEYS_PATTERN = re.compile(rb'(?:<[^>]+>|\x80\xfc.{2}|\x80.{2}|\S|\s)')
 
 
 class Keystroke(tuple):

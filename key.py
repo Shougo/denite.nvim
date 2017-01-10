@@ -9,11 +9,12 @@ ESCAPE_QUOTE = str.maketrans({
 
 CTRL_KEY = b'\x80\xfc\x04'
 META_KEY = b'\x80\xfc\x08'
+CTRL_SHIFT_KEY = b'\x80\xfc\x06'
 
 # :help key-notation
 SPECIAL_KEYS = {
-    'NUL': 10,
     'C-@': b'\x80\xffX',    # Vim internally use <80><ff>X for <C-@>
+    'NUL': 10,
     'BS': b'\x80kb',
     'TAB': 9,
     'S-TAB': b'\x80kB',
@@ -22,7 +23,6 @@ SPECIAL_KEYS = {
     'CR': 13,
     'ESC': 27,
     'SPACE': 32,
-    'C-SPACE': b'\x80\xfc',
     'LT': 60,
     'BSLASH': 92,
     'BAR': 124,
@@ -94,14 +94,14 @@ SPECIAL_KEYS = {
 SPECIAL_KEYS_REVRESE = {v: k for k, v in SPECIAL_KEYS.items()}
 
 # Add aliases used in Vim. This requires to be AFTER making swap dictionary
-SPECIAL_KEYS.update(dict(
-    NOP=SPECIAL_KEYS['NUL'],
-    RETURN=SPECIAL_KEYS['CR'],
-    ENTER=SPECIAL_KEYS['CR'],
-    BACKSPACE=SPECIAL_KEYS['BS'],
-    DELETE=SPECIAL_KEYS['DEL'],
-    INS=SPECIAL_KEYS['INSERT'],
-))
+SPECIAL_KEYS.update({
+    'NOP': SPECIAL_KEYS['NUL'],
+    'RETURN': SPECIAL_KEYS['CR'],
+    'ENTER': SPECIAL_KEYS['CR'],
+    'BACKSPACE': SPECIAL_KEYS['BS'],
+    'DELETE': SPECIAL_KEYS['DEL'],
+    'INS': SPECIAL_KEYS['INSERT'],
+})
 
 
 KeyBase = namedtuple('KeyBase', ['code', 'char'])
@@ -199,18 +199,23 @@ def _resolve_from_special_keys(nvim, inner):
     inner_upper_str = ensure_str(nvim, inner_upper)
     if inner_upper_str in SPECIAL_KEYS:
         return SPECIAL_KEYS[inner_upper_str]
+    elif inner_upper.startswith(b'C-S-') or inner_upper.startswith(b'S-C-'):
+        return b''.join([
+            CTRL_SHIFT_KEY,
+            _resolve_from_special_keys_inner(nvim, inner[4:]),
+        ])
     elif inner_upper.startswith(b'C-'):
         if len(inner) == 3:
             if inner_upper[-1] in b'@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_?':
                 return inner[-1] & 0x1f
         return b''.join([
             CTRL_KEY,
-            _resolve_from_special_keys(nvim, inner[2:]),
+            _resolve_from_special_keys_inner(nvim, inner[2:]),
         ])
     elif inner_upper.startswith(b'M-') or inner_upper.startswith(b'A-'):
         return b''.join([
             META_KEY,
-            _resolve_from_special_keys(nvim, inner[2:]),
+            _resolve_from_special_keys_inner(nvim, inner[2:]),
         ])
     elif inner_upper == b'LEADER':
         leader = nvim.vars['mapleader']
@@ -221,3 +226,10 @@ def _resolve_from_special_keys(nvim, inner):
         leader = ensure_bytes(nvim, leader)
         return _resolve(nvim, leader)
     return inner
+
+
+def _resolve_from_special_keys_inner(nvim, inner):
+    code = _resolve_from_special_keys(nvim, inner)
+    if isinstance(code, int):
+        return ensure_bytes(nvim, int2char(nvim, code))
+    return ensure_bytes(nvim, code)
