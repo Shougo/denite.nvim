@@ -13,6 +13,7 @@ META_KEY = b'\x80\xfc\x08'
 # :help key-notation
 SPECIAL_KEYS = {
     'NUL': 10,
+    'C-@': b'\x80\xffX',    # Vim internally use <80><ff>X for <C-@>
     'BS': b'\x80kb',
     'TAB': 9,
     'S-TAB': b'\x80kB',
@@ -21,6 +22,7 @@ SPECIAL_KEYS = {
     'CR': 13,
     'ESC': 27,
     'SPACE': 32,
+    'C-SPACE': b'\x80\xfc',
     'LT': 60,
     'BSLASH': 92,
     'BAR': 124,
