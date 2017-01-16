@@ -200,7 +200,7 @@ class Denite(object):
         context['targets'] = targets
         return action['func'](context)
 
-    def get_action(self, context, action_name, targets):
+    def get_kind(self, context, targets):
         if not targets:
             return {}
 
@@ -225,6 +225,13 @@ class Denite(object):
         else:
             kind = k
 
+        return kind
+
+    def get_action(self, context, action_name, targets):
+        kind = self.get_kind(context, targets)
+        if not kind:
+            return {}
+
         if action_name == 'default':
             action_name = context['default_action']
             if action_name == 'default':
@@ -241,19 +248,9 @@ class Denite(object):
         }
 
     def get_actions(self, context, targets):
-        if 'kind' in targets:
-            kind_name = targets['kind']
-        else:
-            kind_name = self.__sources[targets[0]['source']].kind
-
-        if not isinstance(kind_name, str):
-            kind_name = kind_name.name
-
-        if kind_name not in self.__kinds:
-            self.error('Invalid kind: ' + kind_name)
+        kind = self.get_kind(context, targets)
+        if not kind:
             return []
-
-        kind = self.__kinds[kind_name]
         return ['default'] + [x.replace('action_', '') for x in dir(kind)
                               if x.find('action_') == 0]
 
