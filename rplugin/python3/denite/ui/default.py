@@ -447,8 +447,7 @@ class Default(object):
             return
         is_quit = action['is_quit']
         if is_quit:
-            self.__denite.on_close(self.__context)
-            self.quit_buffer()
+            self.quit()
 
         self.__denite.do_action(self.__context, action_name, candidates)
 
