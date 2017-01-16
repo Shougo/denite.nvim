@@ -7,8 +7,8 @@ import re
 import weakref
 from itertools import filterfalse, groupby, takewhile
 
-from denite.util import clear_cmdline, echo, \
-    regex_convert_py_vim, regex_convert_str_vim
+from denite.util import (
+    clear_cmdline, echo, regex_convert_py_vim, regex_convert_str_vim)
 from .action import DEFAULT_ACTION_KEYMAP
 from .prompt import DenitePrompt
 from .. import denite
@@ -570,8 +570,8 @@ class Default(object):
             lambda candidate: candidate['source']
         )
         forward_times = len(list(next(forward_sources)[1]))
-        remaining_candidates = self.__candidates_len - current_index \
-            - forward_times
+        remaining_candidates = (self.__candidates_len - current_index
+                                - forward_times)
         if next(forward_sources, None) is None:
             # If the cursor is on the last source
             self.__cursor = 0
@@ -620,8 +620,8 @@ class Default(object):
                 self.__win_cursor = 1
         else:
             back_times = len(current_source) - 1 + len(prev_source)
-            remaining_candidates = self.__candidates_len - current_index \
-                + back_times
+            remaining_candidates = (self.__candidates_len - current_index
+                                    + back_times)
             if self.__candidates_len < self.__winheight:
                 self.__cursor = 0
                 self.__win_cursor -= back_times

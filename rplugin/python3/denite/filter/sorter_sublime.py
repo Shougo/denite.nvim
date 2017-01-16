@@ -30,16 +30,15 @@ class Filter(Base):
         super().__init__(vim)
 
         self.name = 'sorter_sublime'
-        self.description = \
-            'sorter for fuzzy matching like sublime text based on lib_fts'
+        self.description = 'sorter for fuzzy matching like sublime text'
 
     def filter(self, context):
         if len(context['input']) == 0:
             return context['candidates']
 
         for candidate in context['candidates']:
-            candidate['filter__rank'] = \
-                get_score(context['input'], candidate['word'])
+            candidate['filter__rank'] = get_score(
+                context['input'], candidate['word'])
 
         return sorted(
             context['candidates'],
@@ -68,12 +67,12 @@ def get_score(pattern, candidate):
 
     # Loop over strings
     while candidate_index != candidate_length:
-        pattern_char = \
-            pattern[pattern_index] if pattern_index != pattern_length else None
+        pattern_char = pattern[pattern_index] if (pattern_index !=
+                                                  pattern_length) else None
         candidate_char = candidate[candidate_index]
 
-        pattern_lower = \
-            pattern_char.lower() if pattern_char is not None else None
+        pattern_lower = pattern_char.lower() if (pattern_char is not
+                                                 None) else None
         candidate_lower = candidate_char.lower()
         candidate_upper = candidate_char.upper()
 
@@ -81,8 +80,8 @@ def get_score(pattern, candidate):
         rematch = best_letter and best_lower == candidate_lower
 
         advanced = next_match and best_letter
-        pattern_repeat = \
-            best_letter and pattern_char and best_lower == pattern_lower
+        pattern_repeat = (best_letter and pattern_char and
+                          best_lower == pattern_lower)
         if advanced or pattern_repeat:
             score += best_letter_score
             matched_indices.append(best_letter_index)

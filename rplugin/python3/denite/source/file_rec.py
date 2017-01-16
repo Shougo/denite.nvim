@@ -82,8 +82,8 @@ class Source(Base):
                            join(context['__directory'], x)}
                           for x in outs if x != '']
         context['__current_candidates'] += candidates
-        if len(context['__current_candidates']) >= \
-                self.vars['min_cache_files']:
-            self.__cache[context['__directory']] = \
-                context['__current_candidates']
+        if (len(context['__current_candidates']) >=
+                self.vars['min_cache_files']):
+            self.__cache[context['__directory']] = context[
+                '__current_candidates']
         return candidates

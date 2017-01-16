@@ -33,8 +33,8 @@ class Source(Base):
         }
 
     def on_init(self, context):
-        context['__exclude_unlisted'] = \
-            '!' not in context['args'] and self.vars['exclude_unlisted']
+        context['__exclude_unlisted'] = ('!' not in context['args'] and
+                                         self.vars['exclude_unlisted'])
         context['__caller_bufnr'] = context['bufnr']
         context['__alter_bufnr'] = self.vim.call('bufnr', '#')
 

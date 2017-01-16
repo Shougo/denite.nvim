@@ -59,8 +59,8 @@ class Socket(object):
         sleep(0.1)
 
     def receive(self, bytes=1024):
-        return self.__sock.recv(bytes) \
-                .decode(self.__enc, errors='replace')
+        return self.__sock.recv(bytes).decode(
+            self.__enc, errors='replace')
 
     def enqueue_output(self):
         if not self.__queue_out:

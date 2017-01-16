@@ -80,8 +80,8 @@ def find_end_of_match(to_match, chars, first_index):
                 last_type = 'boundary'
                 score += 1
         # Same for camel case
-        elif char in string.ascii_uppercase and \
-                to_match[index - 1] in string.ascii_lowercase:
+        elif (char in string.ascii_uppercase and
+              to_match[index - 1] in string.ascii_lowercase):
             if last_type != 'camelcase':
                 last_type = 'camelcase'
                 score += 1
