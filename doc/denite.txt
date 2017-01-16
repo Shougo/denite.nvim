@@ -1108,6 +1108,10 @@ file		An interface to jump to the file position.
 			highlight
 				Preview and highlight the file.
 
+			quickfix
+				Set the quickfix list and open the quickfix
+				window.
+
 						*denite-kind-openable*
 openable	An interface to open the object.
 		Note: It is the abstract kind.

@@ -44,6 +44,15 @@ class Kind(Openable):
     def action_highlight(self, context):
         return self.__preview(context, True)
 
+    def action_quickfix(self, context):
+        qflist = [{
+            'filename': x['action__path'],
+            'lnum': x['action__line'],
+            'text': x.get('abbr', x['word']),
+        } for x in context['targets'] if 'action__line' in x]
+        self.vim.call('setqflist', qflist)
+        self.vim.command('copen')
+
     def __get_preview_window(self):
         return next(filterfalse(lambda x:
                                 not x.options['previewwindow'],
