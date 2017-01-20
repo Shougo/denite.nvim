@@ -293,8 +293,8 @@ class Default(object):
                     self.__candidates_len <
                     int(self.__context['winminheight'])):
                 winheight = self.__context['winminheight']
-            elif (self.__candidate_len < self.__winheight):
-                winheight = self.__candidate_len
+            elif (self.__candidates_len < self.__winheight):
+                winheight = self.__candidates_len
 
         self.__vim.command('resize ' + str(winheight))
 
