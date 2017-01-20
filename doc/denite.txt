@@ -460,6 +460,10 @@ are on the neovim-prompt's builtin actions/mappings.
 <denite:toggle_select>
 		Toggle cursor candidate select.
 
+				*denite-map-toggle_select_all*
+<denite:toggle_select_all>
+		Toggle all candidates.
+
 				*denite-map-toggle_select_down*
 <denite:toggle_select_down>
 		Toggle cursor candidate select and move to next line.
@@ -583,6 +587,7 @@ q		<denite:quit>
 <C-L>		<denite:redraw>
 <C-R>		<denite:restart>
 <Space>		<denite:toggle_select_down>
+*		<denite:toggle_select_all>
 
 ------------------------------------------------------------------------------
 FUNCTIONS						*denite-functions*

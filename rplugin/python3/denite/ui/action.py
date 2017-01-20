@@ -89,16 +89,22 @@ def _restart(prompt, params):
 
 
 def _toggle_select(prompt, params):
-    return prompt.denite.toggle_select_cursor_candidate()
+    prompt.denite.toggle_select_cursor_candidate()
+    return prompt.denite.update_buffer()
+
+
+def _toggle_select_all(prompt, params):
+    prompt.denite.toggle_select_all_candidates()
+    return prompt.denite.update_buffer()
 
 
 def _toggle_select_down(prompt, params):
-    prompt.denite.toggle_select_cursor_candidate()
+    _toggle_select(prompt, params)
     return prompt.denite.move_to_next_line()
 
 
 def _toggle_select_up(prompt, params):
-    prompt.denite.toggle_select_cursor_candidate()
+    _toggle_select(prompt, params)
     return prompt.denite.move_to_prev_line()
 
 
@@ -128,6 +134,7 @@ DEFAULT_ACTION_RULES = [
     ('denite:toggle_select', _toggle_select),
     ('denite:toggle_select_down', _toggle_select_down),
     ('denite:toggle_select_up', _toggle_select_up),
+    ('denite:toggle_select_all', _toggle_select_all),
 ]
 
 DEFAULT_ACTION_KEYMAP = {
@@ -194,5 +201,6 @@ DEFAULT_ACTION_KEYMAP = {
         ('<C-L>', '<denite:redraw>', 'noremap'),
         ('<C-R>', '<denite:restart>', 'noremap'),
         ('<Space>', '<denite:toggle_select_down>', 'noremap'),
+        ('*', '<denite:toggle_select_all>', 'noremap'),
     ],
 }

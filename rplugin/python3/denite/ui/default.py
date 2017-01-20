@@ -415,6 +415,14 @@ class Default(object):
                     ] if self.get_cursor_candidate() else []
         return [self.__candidates[x] for x in self.__selected_candidates]
 
+    def toggle_select_all_candidates(self):
+        for index in range(0, self.__candidates_len):
+            if index in self.__selected_candidates:
+                self.__selected_candidates.remove(index)
+            else:
+                self.__selected_candidates.append(index)
+        self.update_buffer()
+
     def toggle_select_cursor_candidate(self):
         index = self.__cursor + self.__win_cursor - 1
         if index in self.__selected_candidates:
