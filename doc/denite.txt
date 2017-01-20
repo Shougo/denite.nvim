@@ -93,7 +93,7 @@ EXAMPLES						*denite-examples*
 	" For ripgrep
 	" Note: It is slower than ag
 	call denite#custom#var('file_rec', 'command',
-	\ ['rg', '--files', '--glob', '!.git'])
+	\ ['rg', '--files', '--glob', '!.git', ''])
 
 	" Change mappings.
 	call denite#custom#map(
