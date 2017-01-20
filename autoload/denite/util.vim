@@ -38,6 +38,8 @@ endfunction
 function! denite#util#execute_path(command, path) abort
   try
     execute a:command fnameescape(a:path)
+  catch /^Vim\%((\a\+)\)\=:E325/
+    " Ignore swap file error
   catch
     call denite#util#print_error(v:throwpoint)
     call denite#util#print_error(v:exception)
