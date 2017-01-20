@@ -389,6 +389,7 @@ class Default(object):
 
     def quit_buffer(self):
         self.__vim.command('pclose!')
+        self.__vim.command('highlight! link CursorLine CursorLine')
 
         if not self.__vim.call('bufloaded', self.__bufnr):
             return
@@ -662,4 +663,5 @@ class Default(object):
 
     def suspend(self):
         self.__options['modifiable'] = False
+        self.__vim.command('highlight! link CursorLine CursorLine')
         return STATUS_ACCEPT
