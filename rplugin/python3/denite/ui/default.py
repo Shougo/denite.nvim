@@ -421,7 +421,6 @@ class Default(object):
                 self.__selected_candidates.remove(index)
             else:
                 self.__selected_candidates.append(index)
-        self.update_buffer()
 
     def toggle_select_cursor_candidate(self):
         index = self.__cursor + self.__win_cursor - 1
