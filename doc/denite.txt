@@ -93,7 +93,11 @@ EXAMPLES						*denite-examples*
 	" For ripgrep
 	" Note: It is slower than ag
 	call denite#custom#var('file_rec', 'command',
-	\ ['rg', '--files', '--glob', '!.git'])
+	\ ['rg', '--files', '--glob', '!.git', ''])
+	" For Pt(the platinum searcher)
+	" NOTE: It also supports windows.
+	call denite#custom#var('file_rec', 'command',
+	\ ['pt', '--follow', '--nocolor', '--nogroup', '-g:', ''])
 
 	" Change mappings.
 	call denite#custom#map(
@@ -157,6 +161,11 @@ EXAMPLES						*denite-examples*
 	call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
 	call denite#custom#var('grep', 'separator', ['--'])
 	call denite#custom#var('grep', 'final_opts', [])
+	" Pt command on grep source
+	call denite#custom#var('grep', 'command',
+	\ ['pt', '--nogroup', '--nocolor', '--smart-case', '--hidden'])
+	call denite#custom#var('grep', 'default_opts', [])
+	call denite#custom#var('grep', 'recursive_opts', [])
 
 	call denite#custom#source('file_mru', 'converters',
 	      \ ['converter_relative_word'])
