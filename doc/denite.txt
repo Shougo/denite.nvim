@@ -892,6 +892,21 @@ OPTIONS							*denite-options*
 		Open the preview window vertically.
 		Default: false
 
+						*denite-options-winheight*
+-winheight={window-height}
+		Set the height of the Denite window. If auto-resize is set,
+		|denite-options-winheight| is the maximum size of the window.
+
+		Default: 20
+
+						*denite-options-winminheight*
+-winminheight={window-height}
+		Set the minimum height of an auto-resize window.
+		Note: a value of -1 for |denite-options-winminheight| leaves
+		the minimum height unset.
+		
+		Default: -1
+
 ==============================================================================
 SOURCES							*denite-sources*
 
