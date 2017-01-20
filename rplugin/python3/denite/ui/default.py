@@ -43,6 +43,7 @@ class Default(object):
         self.__winsaveview = {}
         self.__initialized = False
         self.__winheight = 0
+        self.__winminheight = -1
         self.__scroll = 0
         self.__is_multi = False
         self.__matched_pattern = ''
@@ -286,9 +287,15 @@ class Default(object):
 
     def resize_buffer(self):
         winheight = self.__winheight
-        if (self.__context['auto_resize'] and
-                self.__candidates_len < self.__winheight):
-            winheight = self.__candidates_len
+
+        if self.__context['auto_resize']:
+            if (self.__context['winminheight'] is not -1 and
+                    self.__candidates_len <
+                    int(self.__context['winminheight'])):
+                winheight = self.__context['winminheight']
+            elif (self.__candidates_len < self.__winheight):
+                winheight = self.__candidates_len
+
         self.__vim.command('resize ' + str(winheight))
 
     def check_empty(self):

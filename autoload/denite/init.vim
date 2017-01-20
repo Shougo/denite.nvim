@@ -98,6 +98,7 @@ function! denite#init#_user_options() abort
         \ 'use_default_mappings': v:true,
         \ 'vertical_preview': v:false,
         \ 'winheight': 20,
+		\ 'winminheight': -1,
         \}
 endfunction
 function! denite#init#_deprecated_options() abort
