@@ -1055,6 +1055,9 @@ menu		Gather custom menus.
 				include menus previously defined in Unite
 				configurations.
 
+						*denite-source-register*
+register	Gather the registers.
+
 						*denite-source-outline*
 outline		Gather outline and jump to the target.
 

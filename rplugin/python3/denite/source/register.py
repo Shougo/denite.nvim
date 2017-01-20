@@ -1,0 +1,38 @@
+# ============================================================================
+# FILE: register.py
+# AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
+# License: MIT license
+# ============================================================================
+
+from .base import Base
+import re
+
+
+class Source(Base):
+
+    def __init__(self, vim):
+        Base.__init__(self, vim)
+
+        self.name = 'register'
+        self.kind = 'word'
+
+    def gather_candidates(self, context):
+        candidates = []
+
+        for reg in [
+           '"',
+           '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+           'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
+           'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+           'u', 'v', 'w', 'x', 'y', 'z',
+           '-', '.', ':', '#', '%', '/', '=',
+        ] + (['+', '*'] if self.vim.call('has', 'clipboard') else []):
+
+            register = self.vim.call('getreg', reg, 1)
+            if register:
+                candidates.append({
+                    'word': reg + ': ' + re.sub(
+                        r'\n', r'\\n', register)[:200],
+                    'action__text': register,
+                })
+        return candidates
