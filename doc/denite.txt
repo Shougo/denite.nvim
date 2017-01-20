@@ -1180,6 +1180,10 @@ word		An interface to paste the text.
 				Insert the candidate word or text after the
 				cursor.
 
+			replace
+				Replace the selected text to the candidate
+				word.
+
 ==============================================================================
 FILTERS							*denite-filters*
 

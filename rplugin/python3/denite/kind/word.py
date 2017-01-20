@@ -15,6 +15,10 @@ class Kind(Base):
         self.name = 'word'
         self.default_action = 'append'
 
+    def action_replace(self, context):
+        self.vim.command('normal! gv')
+        self.action_append(context)
+
     def action_append(self, context):
         for target in context['targets']:
             paste(self.vim, target['action__text'], 'p', 'v')
