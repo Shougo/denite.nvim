@@ -387,10 +387,14 @@ class Default(object):
         # Update mode indicator
         self.update_buffer()
 
-    def quit_buffer(self):
+    def cleanup(self):
+        self.__options['modifiable'] = False
         self.__vim.command('pclose!')
         self.__vim.command('highlight! link CursorLine CursorLine')
+        self.__vim.command('doautocmd ColorScheme')
 
+    def quit_buffer(self):
+        self.cleanup()
         if not self.__vim.call('bufloaded', self.__bufnr):
             return
 
@@ -662,6 +666,5 @@ class Default(object):
         self.change_mode(self.__current_mode)
 
     def suspend(self):
-        self.__options['modifiable'] = False
-        self.__vim.command('highlight! link CursorLine CursorLine')
+        self.cleanup()
         return STATUS_ACCEPT
