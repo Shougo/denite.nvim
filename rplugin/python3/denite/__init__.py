@@ -15,12 +15,12 @@ if not find_loader('vim'):
     @neovim.plugin
     class DeniteHandlers(object):
         def __init__(self, vim):
-            self.__vim = vim
+            self._vim = vim
 
         @neovim.function('_denite_init', sync=True)
         def init_python(self, args):
-            self.__uis = {}
-            self.__vim.vars['denite#_channel_id'] = self.__vim.channel_id
+            self._uis = {}
+            self._vim.vars['denite#_channel_id'] = self._vim.channel_id
             return
 
         @neovim.function('_denite_start', sync=True)
@@ -28,10 +28,10 @@ if not find_loader('vim'):
             from denite.util import error
             try:
                 buffer_name = args[1]['buffer_name']
-                if buffer_name not in self.__uis:
-                    self.__uis[buffer_name] = Default(self.__vim)
-                return self.__uis[buffer_name].start(args[0], args[1])
+                if buffer_name not in self._uis:
+                    self._uis[buffer_name] = Default(self._vim)
+                return self._uis[buffer_name].start(args[0], args[1])
             except Exception:
                 for line in traceback.format_exc().splitlines():
-                    error(self.__vim, line)
-                error(self.__vim, 'Please execute :messages command.')
+                    error(self._vim, line)
+                error(self._vim, 'Please execute :messages command.')
