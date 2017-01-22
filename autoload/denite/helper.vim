@@ -128,7 +128,7 @@ function! s:eval_cmdline(cmdline) abort
     endif
     let prev_match = matchend(a:cmdline,
           \ '\\\@<!`.\{-}\\\@<!`', match)
-    let cmdline .= escape(eval(a:cmdline[match+1 : prev_match - 2]), '\: ')
+    let cmdline .= escape(eval(a:cmdline[match+1 : prev_match - 2]), '\ ')
 
     let match = match(a:cmdline, '\\\@<!`.\{-}\\\@<!`', prev_match)
   endwhile
