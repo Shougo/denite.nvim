@@ -168,7 +168,7 @@ class Default(object):
         self._bufvars['denite_statusline_path'] = ''
         self._bufvars['denite_statusline_linenr'] = ''
 
-        self._init_syntax()
+        self.init_syntax()
 
         if self._context['statusline']:
             self._window_options['statusline'] = (
@@ -177,7 +177,7 @@ class Default(object):
                 '%#deniteStatusLinePath# %{denite#get_status_path()} %*' +
                 '%#deniteStatusLineNumber#%{denite#get_status_linenr()}%*')
 
-    def __init_syntax(self):
+    def init_syntax(self):
         self._vim.command('syntax case ignore')
         self._vim.command('highlight default link deniteMode ModeMsg')
         self._vim.command('highlight default link deniteMatchedRange ' +
@@ -257,7 +257,7 @@ class Default(object):
 
         del self._vim.current.buffer[:]
         self._vim.current.buffer.append([
-            self._get_candidate_display_text(i)
+            self.get_candidate_display_text(i)
             for i in range(self._cursor,
                            min(self._candidates_len,
                                self._cursor + self._winheight))
@@ -269,7 +269,7 @@ class Default(object):
 
         self.move_cursor()
 
-    def __get_candidate_display_text(self, index):
+    def get_candidate_display_text(self, index):
         candidate = self._candidates[index]
         terms = []
         if self._is_multi:
