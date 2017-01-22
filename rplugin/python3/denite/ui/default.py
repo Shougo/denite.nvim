@@ -420,20 +420,6 @@ class Default(object):
                     ] if self.get_cursor_candidate() else []
         return [self._candidates[x] for x in self._selected_candidates]
 
-    def toggle_select_all_candidates(self):
-        for index in range(0, self._candidates_len):
-            if index in self._selected_candidates:
-                self._selected_candidates.remove(index)
-            else:
-                self._selected_candidates.append(index)
-
-    def toggle_select_cursor_candidate(self):
-        index = self._cursor + self._win_cursor - 1
-        if index in self._selected_candidates:
-            self._selected_candidates.remove(index)
-        else:
-            self._selected_candidates.append(index)
-
     def redraw(self):
         self._context['is_redraw'] = True
         self._denite.gather_candidates(self._context)

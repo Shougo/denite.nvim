@@ -89,12 +89,21 @@ def _restart(prompt, params):
 
 
 def _toggle_select(prompt, params):
-    prompt.denite.toggle_select_cursor_candidate()
+    index = prompt.denite._cursor + prompt.denite._win_cursor - 1
+    _toggle_select_candidate(prompt, index)
     return prompt.denite.update_buffer()
 
 
+def _toggle_select_candidate(prompt, index):
+    if index in prompt.denite._selected_candidates:
+        prompt.denite._selected_candidates.remove(index)
+    else:
+        prompt.denite._selected_candidates.append(index)
+
+
 def _toggle_select_all(prompt, params):
-    prompt.denite.toggle_select_all_candidates()
+    for index in range(0, prompt.denite._candidates_len):
+        _toggle_select_candidate(prompt, index)
     return prompt.denite.update_buffer()
 
 
