@@ -391,7 +391,8 @@ class Default(object):
         self._options['modifiable'] = False
         self._vim.command('pclose!')
         self._vim.command('highlight! link CursorLine CursorLine')
-        self._vim.command('doautocmd ColorScheme')
+        if self._vim.call('exists', '#ColorScheme'):
+            self._vim.command('doautocmd ColorScheme')
 
     def quit_buffer(self):
         self.cleanup()
