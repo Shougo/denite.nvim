@@ -65,6 +65,8 @@ class Denite(object):
             if not entire:
                 continue
             partial = []
+            ctx['candidates'] = entire
+            ctx['input'] = context['input']
             for i in range(0, len(entire), 1000):
                 ctx['candidates'] = entire[i:i+1000]
                 for matcher in [self._filters[x]
@@ -75,7 +77,6 @@ class Denite(object):
                 if len(partial) >= 1000:
                     break
             ctx['candidates'] = partial
-            ctx['input'] = context['input']
             for f in [self._filters[x]
                       for x in source.sorters + source.converters
                       if x in self._filters]:
