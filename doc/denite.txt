@@ -1045,6 +1045,10 @@ grep		Gather grep results and nominates them.
 help		Search through doc tags
 
 
+						*denite-source-jump*
+jump		Gather results of |:jumps|.
+
+
 						*denite-source-line*
 line
 
