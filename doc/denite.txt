@@ -949,6 +949,9 @@ buffer		Gather buffers and jump to the buffer.
 				  the list of excluded filetypes
 				  (default is ['denite'])
 
+						*denite-source-change*
+change		Gather results of |:changes|.
+
 						*denite-source-colorscheme*
 colorscheme	Gather colorschemes and change the colorscheme.
 
