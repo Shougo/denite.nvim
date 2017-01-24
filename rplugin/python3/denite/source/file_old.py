@@ -31,8 +31,8 @@ class Kind(File):
         super().__init__(vim)
 
         self.name = 'file/file_old'
-        self.persist_actions = ['delete']
-        self.redraw_actions = ['delete']
+        self.persist_actions += ['delete']
+        self.redraw_actions += ['delete']
 
     def action_delete(self, context):
         delete_files = [x['action__path'] for x in context['targets']]

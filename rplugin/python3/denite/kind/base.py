@@ -12,11 +12,14 @@ class Base(object):
     def __init__(self, vim):
         self.vim = vim
         self.name = 'base'
-        self.persist_actions = []
+        self.persist_actions = ['echo']
         self.redraw_actions = []
 
     def debug(self, expr):
         denite.util.debug(self.vim, expr)
+
+    def action_echo(self, context):
+        denite.util.debug(self.vim, context['targets'])
 
     def action_yank(self, context):
         _yank(self.vim, "\n".join([
