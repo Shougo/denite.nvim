@@ -224,7 +224,7 @@ COMMANDS 						*denite-commands*
 >
         :Denite -buffer-name=search%`bufnr('%')` line<CR>
 <
-		{options} are options for a denite buffer: |denite-options|
+		{options} are options for Denite buffer: |denite-options|
 
 :DeniteBufferDir [{options}] {sources}			*:DeniteBufferDir*
 		Equivalent to |:Denite| except that it targets the buffer
@@ -448,7 +448,7 @@ are on the neovim-prompt's builtin actions/mappings.
 				*denite-map-print_messages*
 <denite:print_messages>
 		Output denite messages to |:messages|.
-		Note: You cannot read the messages in denite window.
+		Note: You cannot read the messages in Denite window.
 		It is for debug only.
 
 				*denite-map-quit*
@@ -790,7 +790,7 @@ OPTIONS							*denite-options*
 
 						*denite-options-auto-resize*
 -auto-resize
-		Auto resize the denite window height automatically.
+		Auto resize the Denite window height automatically.
 		Default: false
 
 						*denite-options-buffer-name*
@@ -819,7 +819,7 @@ OPTIONS							*denite-options*
 
 						*denite-options-direction*
 -direction={direction}
-		Specify the denite window direction as {direction}.
+		Specify the Denite window direction as {direction}.
 		Default: "botright"
 
 						*denite-options-empty*
@@ -1373,7 +1373,7 @@ word		(String)			(Required)
 
 					*denite-candidate-attribute-abbr*
 abbr		(String)			(Optional)
-		The string displayed in denite buffer.  If it is omitted, word
+		The string displayed in Denite buffer.  If it is omitted, word
 		attribute is used instead.  It is not used for matching
 		inputs.
 
@@ -1435,7 +1435,7 @@ Q: denite can support Vim8?
 
 A: Yes.
 
-Q: I want to change the cursor line color in denite buffer.
+Q: I want to change the cursor line color in Denite buffer.
 
 A: denite uses 'cursorline' feature.
 So you can change the color by |hl-CursorLine| highlight.
