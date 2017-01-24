@@ -1,5 +1,6 @@
 from denite.util import debug
 
+
 def _redraw(prompt, params):
     return prompt.denite.redraw()
 

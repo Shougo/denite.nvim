@@ -4,7 +4,7 @@
 # License: MIT license
 # ============================================================================
 
-from denite.util import get_custom_source, find_rplugins, debug
+from denite.util import get_custom_source, find_rplugins
 
 import denite.source  # noqa
 import denite.filter  # noqa
