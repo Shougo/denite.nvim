@@ -125,7 +125,15 @@ def _print_messages(prompt, params):
         debug(prompt.nvim, mes)
 
 
+def _change_path(prompt, params):
+    path = prompt.nvim.call('input', 'Path: ',
+                            prompt.denite._context['path'], 'dir')
+    prompt.denite._context['path'] = path
+    return prompt.denite.restart()
+
+
 DEFAULT_ACTION_RULES = [
+    ('denite:change_path', _change_path),
     ('denite:choose_action', _choose_action),
     ('denite:do_action', _do_action),
     ('denite:enter_mode', _enter_mode),
@@ -216,6 +224,7 @@ DEFAULT_ACTION_KEYMAP = {
         ('<Space>', '<denite:toggle_select_down>', 'noremap'),
         ('*', '<denite:toggle_select_all>', 'noremap'),
         ('M', '<denite:print_messages>', 'noremap'),
+        ('P', '<denite:change_path>', 'noremap'),
         # Denite specific actions
         ('p', '<denite:do_action:preview>', 'noremap'),
         ('d', '<denite:do_action:delete>', 'noremap'),

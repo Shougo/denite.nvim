@@ -272,6 +272,10 @@ are on the neovim-prompt's builtin actions/mappings.
 		Like |c_<S-Up>| in a native Vim's command-line.
 		Note this is a neovim-prompt's builtin action.
 
+				*denite-map-change_path*
+<denite:change_path>
+		Change and restart Denite buffer.
+
 				*denite-map-choose_action*
 <denite:choose_action>
 		Choose and fire the action.
@@ -361,7 +365,6 @@ are on the neovim-prompt's builtin actions/mappings.
 <denite:jump_to_next_source>
 		Jump to the first candidate of the next source.
 
-				*denite-map-jump_to_prev_source*
 				*denite-map-jump_to_previous_source*
 <denite:jump_to_previous_source>
 		Jump to the first candidate of the previous source.
@@ -419,7 +422,6 @@ are on the neovim-prompt's builtin actions/mappings.
 <denite:move_to_next_line>
 		Move to next line.
 
-				*denite-map-move_to_prev_line*
 				*denite-map-move_to_previous_line*
 <denite:move_to_previous_line>
 		Move to previous line.
@@ -432,11 +434,39 @@ are on the neovim-prompt's builtin actions/mappings.
 <denite:move_to_last_line>
 		Move to last line.
 
+				*denite-map-paste_from_register*
+<denite:paste_from_register>
+		Paste the text from a specified register.
+		Like |c_<C-R>| in a Vim's native command-line.
+		Note this is a neovim-prompt's builtin action.
+
+				*denite-map-paste_from_default_register*
+<denite:paste_from_default_register>
+		Paste the text from a default register (|v:register|).
+		Note this is a neovim-prompt's builtin action.
+
 				*denite-map-print_messages*
 <denite:print_messages>
 		Output denite messages to |:messages|.
 		Note: You cannot read the messages in denite window.
 		It is for debug only.
+
+				*denite-map-quit*
+<denite:quit>
+		Close current Denite buffer.
+
+				*denite-map-redraw*
+<denite:redraw>
+		Clear the cache and redraw the candidates.
+
+				*denite-map-restart*
+<denite:restart>
+		Restart Denite buffer.
+
+				*denite-map-suspend*
+<denite:suspend>
+		Suspend current Denite buffer.
+		You can resume the Denite buffer by <CR> mapping.
 
 				*denite-map-scroll_window_downwards*
 <denite:scroll_window_downwards>
@@ -462,6 +492,12 @@ are on the neovim-prompt's builtin actions/mappings.
 <denite:scroll_up>
 		Scroll up.
 
+				*denite-map-toggle_insert_mode*
+<denite:toggle_insert_mode>
+		Toggle insert mode (insert or overstrike).
+		Like |c_<Insert>| in a Vim's native command-line.
+		Note this is a neovim-prompt's builtin action.
+
 				*denite-map-toggle_select*
 <denite:toggle_select>
 		Toggle cursor candidate select.
@@ -477,40 +513,6 @@ are on the neovim-prompt's builtin actions/mappings.
 				*denite-map-toggle_select_up*
 <denite:toggle_select_up>
 		Toggle cursor candidate select and move to previous line.
-
-				*denite-map-paste_from_register*
-<denite:paste_from_register>
-		Paste the text from a specified register.
-		Like |c_<C-R>| in a Vim's native command-line.
-		Note this is a neovim-prompt's builtin action.
-
-				*denite-map-paste_from_default_register*
-<denite:paste_from_default_register>
-		Paste the text from a default register (|v:register|).
-		Note this is a neovim-prompt's builtin action.
-
-				*denite-map-quit*
-<denite:quit>
-		Close current Denite buffer.
-
-				*denite-map-redraw*
-<denite:redraw>
-		Clear the cache and redraw the candidates.
-
-				*denite-map-restart*
-<denite:restart>
-		Restart Denite buffer.
-
-				*denite-map-suspend*
-<denite:suspend>
-		Suspend current Denite buffer.
-		You can resume the Denite buffer by <CR> mapping.
-
-				*denite-map-toggle_insert_mode*
-<denite:toggle_insert_mode>
-		Toggle insert mode (insert or overstrike).
-		Like |c_<Insert>| in a Vim's native command-line.
-		Note this is a neovim-prompt's builtin action.
 
 				*denite-map-yank_to_register*
 <denite:yank_to_register>
@@ -594,6 +596,8 @@ q		<denite:quit>
 <C-R>		<denite:restart>
 <Space>		<denite:toggle_select_down>
 *		<denite:toggle_select_all>
+M		<denite:print_messages>
+P		<denite:change_path>
 
 ------------------------------------------------------------------------------
 FUNCTIONS						*denite-functions*
