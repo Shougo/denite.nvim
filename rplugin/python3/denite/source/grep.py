@@ -138,22 +138,22 @@ class Source(Base):
         if not context['__patterns']:
             return []
 
-        commands = []
-        commands += self.vars['command']
-        commands += self.vars['default_opts']
-        commands += self.vars['recursive_opts']
-        commands += context['__arguments']
+        args = []
+        args += self.vars['command']
+        args += self.vars['default_opts']
+        args += self.vars['recursive_opts']
+        args += context['__arguments']
         for pattern in context['__patterns']:
-            commands += self.vars['pattern_opt'] + [pattern]
-        commands += self.vars['separator']
+            args += self.vars['pattern_opt'] + [pattern]
+        args += self.vars['separator']
         if context['__paths']:
-            commands += context['__paths']
+            args += context['__paths']
         else:
-            commands += self.vars['final_opts']
+            args += self.vars['final_opts']
 
-        self.print_message(context, commands)
+        self.print_message(context, args)
 
-        context['__proc'] = process.Process(commands, context, context['path'])
+        context['__proc'] = process.Process(args, context, context['path'])
         return self.__async_gather_candidates(context, 2.0)
 
     def __async_gather_candidates(self, context, timeout):

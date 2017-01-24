@@ -58,12 +58,12 @@ class Source(Base):
             return self.__cache[directory]
 
         if ':directory' in self.vars['command']:
-            command = parse_command(
+            args = parse_command(
                 self.vars['command'], directory=directory)
         else:
-            command = self.vars['command'] + [directory]
-        self.print_message(context, command)
-        context['__proc'] = Process(command, context, directory)
+            args = self.vars['command'] + [directory]
+        self.print_message(context, args)
+        context['__proc'] = Process(args, context, directory)
         context['__current_candidates'] = []
         return self.__async_gather_candidates(context, 2.0)
 
