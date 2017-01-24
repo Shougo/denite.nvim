@@ -47,7 +47,6 @@ class Denite(object):
         for source in self._current_sources:
             source.context['is_redraw'] = context['is_redraw']
             source.context['messages'] = context['messages']
-            source.context['input'] = context['input']
             source.context['mode'] = context['mode']
 
             candidates = source.gather_candidates(source.context)
@@ -76,6 +75,7 @@ class Denite(object):
                 if len(partial) >= 1000:
                     break
             ctx['candidates'] = partial
+            ctx['input'] = context['input']
             for f in [self._filters[x]
                       for x in source.sorters + source.converters
                       if x in self._filters]:
