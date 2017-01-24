@@ -19,7 +19,7 @@ class Base(object):
         denite.util.debug(self.vim, expr)
 
     def action_echo(self, context):
-        denite.util.debug(self.vim, context['targets'])
+        context['messages'].append(str(context['targets']))
 
     def action_yank(self, context):
         _yank(self.vim, "\n".join([

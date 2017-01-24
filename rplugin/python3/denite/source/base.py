@@ -29,6 +29,9 @@ class Base(object):
             'syntax region ' + self.syntax_name + ' start=// end=/$/ '
             'contains=deniteMatchedRange contained')
 
+    def print_message(self, context, expr):
+        context['messages'].append(self.name + ': ' + str(expr))
+
     @abstractmethod
     def gather_candidate(self, context):
         pass

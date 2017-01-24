@@ -1,3 +1,5 @@
+from denite.util import debug
+
 def _redraw(prompt, params):
     return prompt.denite.redraw()
 
@@ -117,6 +119,11 @@ def _toggle_select_up(prompt, params):
     return prompt.denite.move_to_prev_line()
 
 
+def _print_messages(prompt, params):
+    for mes in prompt.denite._context['messages']:
+        debug(prompt.nvim, mes)
+
+
 DEFAULT_ACTION_RULES = [
     ('denite:choose_action', _choose_action),
     ('denite:do_action', _do_action),
@@ -140,6 +147,7 @@ DEFAULT_ACTION_RULES = [
     ('denite:scroll_window_downwards', _scroll_window_downwards),
     ('denite:scroll_window_upwards', _scroll_window_upwards),
     ('denite:suspend', _suspend),
+    ('denite:print_messages', _print_messages),
     ('denite:toggle_select', _toggle_select),
     ('denite:toggle_select_down', _toggle_select_down),
     ('denite:toggle_select_up', _toggle_select_up),
@@ -201,15 +209,16 @@ DEFAULT_ACTION_KEYMAP = {
         ('<C-D>', '<denite:scroll_window_downwards>', 'noremap'),
         ('<C-F>', '<denite:scroll_page_forwards>', 'noremap'),
         ('<C-B>', '<denite:scroll_page_backwards>', 'noremap'),
-        # Denite specific actions
-        ('p', '<denite:do_action:preview>', 'noremap'),
-        ('d', '<denite:do_action:delete>', 'noremap'),
-        ('n', '<denite:do_action:new>', 'noremap'),
-        ('t', '<denite:do_action:tabopen>', 'noremap'),
         ('q', '<denite:quit>', 'noremap'),
         ('<C-L>', '<denite:redraw>', 'noremap'),
         ('<C-R>', '<denite:restart>', 'noremap'),
         ('<Space>', '<denite:toggle_select_down>', 'noremap'),
         ('*', '<denite:toggle_select_all>', 'noremap'),
+        ('M', '<denite:print_messages>', 'noremap'),
+        # Denite specific actions
+        ('p', '<denite:do_action:preview>', 'noremap'),
+        ('d', '<denite:do_action:delete>', 'noremap'),
+        ('n', '<denite:do_action:new>', 'noremap'),
+        ('t', '<denite:do_action:tabopen>', 'noremap'),
     ],
 }

@@ -46,16 +46,20 @@ class Denite(object):
     def gather_candidates(self, context):
         for source in self._current_sources:
             source.context['is_redraw'] = context['is_redraw']
+            source.context['messages'] = context['messages']
+            source.context['input'] = context['input']
+            source.context['mode'] = context['mode']
+
             candidates = source.gather_candidates(source.context)
+
             source.context['all_candidates'] = candidates
             source.context['candidates'] = candidates
+
+            context['messages'] = source.context['messages']
 
     def filter_candidates(self, context):
         for source in self._current_sources:
             ctx = source.context
-            ctx['input'] = context['input']
-            ctx['mode'] = context['mode']
-            ctx['is_redraw'] = context['is_redraw']
             entire = ctx['all_candidates']
             if ctx['is_async']:
                 entire += source.gather_candidates(ctx)

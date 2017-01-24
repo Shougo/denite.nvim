@@ -151,6 +151,8 @@ class Source(Base):
         else:
             commands += self.vars['final_opts']
 
+        self.print_message(context, commands)
+
         context['__proc'] = process.Process(commands, context, context['path'])
         return self.__async_gather_candidates(context, 2.0)
 

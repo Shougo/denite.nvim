@@ -62,6 +62,7 @@ class Source(Base):
                 self.vars['command'], directory=directory)
         else:
             command = self.vars['command'] + [directory]
+        self.print_message(context, command)
         context['__proc'] = Process(command, context, directory)
         context['__current_candidates'] = []
         return self.__async_gather_candidates(context, 2.0)

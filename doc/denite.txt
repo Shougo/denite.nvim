@@ -432,6 +432,12 @@ are on the neovim-prompt's builtin actions/mappings.
 <denite:move_to_last_line>
 		Move to last line.
 
+				*denite-map-print_messages*
+<denite:print_messages>
+		Output denite messages to |:messages|.
+		Note: You cannot read the messages in denite window.
+		It is for debug only.
+
 				*denite-map-scroll_window_downwards*
 <denite:scroll_window_downwards>
 		Scroll the window downwards.
@@ -1079,7 +1085,7 @@ KINDS							*denite-kinds*
 
 All candidates can support below actions.
 
-echo		Print the candidates.
+echo		Print the candidates to denite messages.
 yank		Yank the candidate word.
 
 Kind Specific candidates can support below actions.

@@ -38,11 +38,8 @@ def debug(vim, expr):
 
 
 def error(vim, expr):
-    if hasattr(vim, 'err_write'):
-        string = (expr if isinstance(expr, str) else str(expr))
-        return vim.err_write('[denite] ' + string + '\n')
-    else:
-        vim.call('denite#util#print_error', expr)
+    string = (expr if isinstance(expr, str) else str(expr))
+    vim.call('denite#util#print_error', string)
 
 
 def clear_cmdline(vim):
