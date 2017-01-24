@@ -55,8 +55,7 @@ def regex_convert_str_vim(string):
 
 
 def regex_convert_py_vim(expr):
-    return re.sub(r'([/~])', r'\\\1',
-                  re.sub(r'(?!\\)([+?()])', r'\\\1', expr))
+    return r'\v' + re.sub(r'(?!\\)([/~])', r'\\\1', expr)
 
 
 def escape_fuzzy(string, camelcase):

@@ -11,6 +11,5 @@ def test_convert2regex_pattern():
     assert util.convert2regex_pattern('foo bar') == 'foo\|bar'
 
 def test_regex_convert_py_vim():
-    assert util.regex_convert_py_vim(r'foo+') == r'foo\+'
     assert util.regex_convert_py_vim(r'/foo/') == r'\/foo\/'
     assert util.regex_convert_py_vim(r'~foo') == r'\~foo'
