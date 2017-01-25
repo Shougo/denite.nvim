@@ -25,7 +25,7 @@ function! denite#helper#complete(arglead, cmdline, cursorpos) abort
     let _ += filter(map(globpath(&runtimepath,
           \             'rplugin/python3/denite/source/*.py', 1, 1),
           \             "fnamemodify(v:val, ':t:r')"),
-          \         "v:val !=# 'base'")
+          \         "v:val !=# 'base' && v:val !=# '__init__'")
   endif
 
   return uniq(sort(filter(_, 'stridx(v:val, a:arglead) == 0')))
