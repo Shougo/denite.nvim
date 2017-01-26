@@ -60,6 +60,7 @@ class Source(Base):
             'pattern_opt': ['-e'],
             'separator': ['--'],
             'final_opts': ['.'],
+            'min_interactive_pattern': 3,
         }
         self.matchers = ['matcher_ignore_globs', 'matcher_regexp']
 
@@ -99,7 +100,11 @@ class Source(Base):
         arg = args.get(2, [])
         if arg:
             if isinstance(arg, str):
-                arg = [arg]
+                if arg == '!':
+                    # Interactive mode
+                    context['is_interactive'] = True
+                else:
+                    arg = [arg]
             elif not isinstance(arg, list):
                 raise AttributeError('`args[2]` needs to be a `str` or `list`')
         else:
@@ -132,6 +137,17 @@ class Source(Base):
             'contained containedin=' + self.syntax_name)
 
     def gather_candidates(self, context):
+        if context['event'] == 'interactive':
+            # Update input
+            self.on_close(context)
+
+            if (not context['input'] or
+                    len(context['input']) <
+                    self.vars['min_interactive_pattern']):
+                return []
+
+            context['__patterns'] = [context['input']]
+
         if context['__proc']:
             return self.__async_gather_candidates(context, 0.5)
 

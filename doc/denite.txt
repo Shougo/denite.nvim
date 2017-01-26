@@ -1030,6 +1030,9 @@ grep		Gather grep results and nominates them.
 			1. string or list of arguments
 			2. pattern string or list of patterns
 
+		Note: If the args 2 is "!", it is the interactive mode.
+		The results are updated when the input is changed.
+
 		Source custom variables:
 		command		the default grep command
 				(default: ["grep"])
@@ -1367,9 +1370,19 @@ __{name}	(Unknown)			(Optional)
 		candidates		(List)
 			The current candidates.
 
+		event			(String)
+			The gather event.
+			"gather": normal gather update
+			"interactive": interactive update
+			"async": asynchronous update
+
 		is_async		(Bool)
 			If the gather is asynchronous, the source must set
 			it "True".
+
+		is_interactive		(Bool)
+			If the gather is updated interactively, the source
+			must set it "True".
 
 ------------------------------------------------------------------------------
 CANDIDATE ATTRIBUTES			*denite-candidate-attributes*

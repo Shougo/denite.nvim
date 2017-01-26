@@ -48,6 +48,8 @@ class Denite(object):
             source.context['is_redraw'] = context['is_redraw']
             source.context['messages'] = context['messages']
             source.context['mode'] = context['mode']
+            source.context['prev_input'] = context['input']
+            source.context['event'] = 'gather'
 
             candidates = source.gather_candidates(source.context)
 
@@ -59,14 +61,19 @@ class Denite(object):
     def filter_candidates(self, context):
         for source in self._current_sources:
             ctx = source.context
+            ctx['input'] = context['input']
+            if ctx['is_interactive'] and ctx['prev_input'] != ctx['input']:
+                ctx['event'] = 'interactive'
+                ctx['all_candidates'] = source.gather_candidates(ctx)
+                ctx['prev_input'] = ctx['input']
             entire = ctx['all_candidates']
             if ctx['is_async']:
+                ctx['event'] = 'async'
                 entire += source.gather_candidates(ctx)
             if not entire:
                 continue
             partial = []
             ctx['candidates'] = entire
-            ctx['input'] = context['input']
             for i in range(0, len(entire), 1000):
                 ctx['candidates'] = entire[i:i+1000]
                 for matcher in [self._filters[x]
@@ -98,6 +105,7 @@ class Denite(object):
             source.context = copy.deepcopy(context)
             source.context['args'] = args
             source.context['is_async'] = False
+            source.context['is_interactive'] = False
             source.context['all_candidates'] = []
             source.context['candidates'] = []
 
