@@ -8,7 +8,7 @@ import weakref
 from itertools import filterfalse, groupby, takewhile
 
 from denite.util import (
-    clear_cmdline, echo, regex_convert_py_vim, regex_convert_str_vim)
+    clear_cmdline, echo, error, regex_convert_py_vim, regex_convert_str_vim)
 from .action import DEFAULT_ACTION_KEYMAP
 from .prompt import DenitePrompt
 from .. import denite
@@ -56,7 +56,12 @@ class Default(object):
 
     def start(self, sources, context):
         if re.search('\[Command Line\]$', self._vim.current.buffer.name):
-            # Ignore command line window
+            # Ignore command line window.
+            return
+
+        if not sources:
+            # Ignore empty sources.
+            error(self._vim, 'Empty sources')
             return
 
         if self._initialized and context['resume']:
