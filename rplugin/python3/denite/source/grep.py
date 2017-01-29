@@ -146,7 +146,8 @@ class Source(Base):
                     self.vars['min_interactive_pattern']):
                 return []
 
-            context['__patterns'] = [context['input']]
+            context['__patterns'] = [
+                '.*'.join(util.split_input(context['input']))]
 
         if context['__proc']:
             return self.__async_gather_candidates(context, 0.5)
