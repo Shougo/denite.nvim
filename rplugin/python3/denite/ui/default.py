@@ -59,11 +59,6 @@ class Default(object):
             # Ignore command line window.
             return
 
-        if not sources:
-            # Ignore empty sources.
-            error(self._vim, 'Empty sources')
-            return
-
         if self._initialized and context['resume']:
             # Skip the initialization
             if context['mode']:
@@ -80,6 +75,11 @@ class Default(object):
             if self.check_empty():
                 return self._result
         else:
+            if not sources:
+                # Ignore empty sources.
+                error(self._vim, 'Empty sources')
+                return
+
             if not context['mode']:
                 # Default mode
                 context['mode'] = 'insert'
