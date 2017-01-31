@@ -25,3 +25,17 @@ class Kind(Base):
             self.vim.command('VimShellCurrentDir')
         elif self.vim.call('exists', 't:deol'):
             self.vim.call('deol#cd', self.vim.call('getcwd'))
+
+    def action_open(self, context):
+        for target in context['targets']:
+            path = target['action__path']
+            match_path = '^{0}$'.format(path)
+
+            if self.vim.call('bufwinnr', match_path) <= 0:
+                self.vim.call(
+                    'denite#util#execute_path', 'edit', path)
+            elif self.vim.call('bufwinnr',
+                               match_path) != self.vim.current.buffer:
+                self.vim.call(
+                    'denite#util#execute_path', 'buffer', path)
+

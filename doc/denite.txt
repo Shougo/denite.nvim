@@ -1139,6 +1139,9 @@ directory	An interface to change directory.
 				Change the Vim current directory to the
 				directory.
 
+			open
+				Open the directory.
+
 						*denite-kind-file*
 file		An interface to jump to the file position.
 		It extends |denite-kind-openable|.
