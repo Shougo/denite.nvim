@@ -8,7 +8,6 @@ import socket
 from threading import Thread
 from queue import Queue
 from time import time, sleep
-from collections import deque
 
 
 class Socket(object):
@@ -94,14 +93,11 @@ class Socket(object):
             return []
 
         start = time()
-        outs = deque()
+        outs = []
 
         while not self.__queue_out.empty() and time() < start + timeout:
             outs.append(self.__queue_out.get_nowait())
 
-        outs = list(outs)
-
-        sleep(0.1)
         if not self.__thread.is_alive() or self.__queue_out.empty():
             self.__eof = True
             self.__sock = None

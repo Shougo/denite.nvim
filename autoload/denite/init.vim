@@ -96,10 +96,11 @@ function! denite#init#_user_options() abort
         \ 'scroll': 0,
         \ 'short_source_names': v:false,
         \ 'statusline': v:true,
+        \ 'timeoutlen': 1000,
         \ 'use_default_mappings': v:true,
         \ 'vertical_preview': v:false,
         \ 'winheight': 20,
-		\ 'winminheight': -1,
+        \ 'winminheight': -1,
         \}
 endfunction
 function! denite#init#_deprecated_options() abort

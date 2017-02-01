@@ -7,8 +7,7 @@
 import subprocess
 from threading import Thread
 from queue import Queue
-from time import time, sleep
-from collections import deque
+from time import time
 import os
 
 
@@ -26,7 +25,6 @@ class Process(object):
         self.__eof = False
         self.__context = context
         self.__queue_out = Queue()
-        self.__outs = []
         self.__thread = Thread(target=self.enqueue_output)
         self.__thread.start()
 
@@ -40,7 +38,6 @@ class Process(object):
         self.__proc = None
         self.__queue_out = None
         self.__thread = None
-        self.__outs = None
 
     def enqueue_output(self):
         for line in self.__proc.stdout:
@@ -55,17 +52,11 @@ class Process(object):
             return ([], [])
 
         start = time()
-        outs = deque()
+        outs = []
 
         while not self.__queue_out.empty() and time() < start + timeout:
             outs.append(self.__queue_out.get_nowait())
 
-        outs = list(outs)
-        if self.__outs:
-            outs = self.__outs + outs
-            self.__outs = None
-
-        sleep(0.1)
         if self.__thread.is_alive() or not self.__queue_out.empty():
             return (outs, [])
 

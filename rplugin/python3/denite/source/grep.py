@@ -150,7 +150,7 @@ class Source(Base):
                 '.*'.join(util.split_input(context['input']))]
 
         if context['__proc']:
-            return self.__async_gather_candidates(context, 0.5)
+            return self.__async_gather_candidates(context, 0.03)
 
         if not context['__patterns']:
             return []
@@ -171,7 +171,7 @@ class Source(Base):
         self.print_message(context, args)
 
         context['__proc'] = process.Process(args, context, context['path'])
-        return self.__async_gather_candidates(context, 2.0)
+        return self.__async_gather_candidates(context, 0.5)
 
     def __async_gather_candidates(self, context, timeout):
         outs, errs = context['__proc'].communicate(timeout=timeout)

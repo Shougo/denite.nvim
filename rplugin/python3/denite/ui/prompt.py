@@ -1,3 +1,4 @@
+from datetime import timedelta, datetime
 from .action import DEFAULT_ACTION_RULES
 from ..prompt.prompt import (
     ACTION_KEYSTROKE_PATTERN,
@@ -11,6 +12,9 @@ class DenitePrompt(Prompt):
         self.context = context
         super().__init__(vim)
         self.__previous_text = self.text
+        self.__timeout = None
+        self.__timeoutlen = None
+        self.__input = ''
         self.denite = denite
         self.action.register_from_rules(DEFAULT_ACTION_RULES)
         # Remove prompt:accept/prompt:cancel which would break denite
@@ -66,14 +70,22 @@ class DenitePrompt(Prompt):
         return super().on_update(status)
 
     def on_harvest(self):
-        if self.denite.is_async:
-            self.denite.update_candidates()
-            self.denite.update_buffer()
-            # NOTE
-            # Redraw prompt to update the buffer.
-            # Without 'redraw_prompt', the buffer is not updated often enough
-            # for 'async' source.
-            self.redraw_prompt()
+        if not self.denite.is_async or (
+                self.__input != self.context['input'] and
+                self.__timeout and datetime.now() < self.__timeout):
+            return
+
+        self.denite.update_candidates()
+        self.denite.update_buffer()
+        # NOTE
+        # Redraw prompt to update the buffer.
+        # Without 'redraw_prompt', the buffer is not updated often enough
+        # for 'async' source.
+        self.redraw_prompt()
+
+        self.__input = self.context['input']
+        self.__timeout = datetime.now() + timedelta(
+            milliseconds=int(self.context['timeoutlen']))
 
     def on_keypress(self, keystroke):
         m = ACTION_KEYSTROKE_PATTERN.match(str(keystroke))
