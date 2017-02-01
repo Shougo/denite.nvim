@@ -163,6 +163,7 @@ class Default(object):
         self._window_options['winfixheight'] = True
         self._window_options['conceallevel'] = 3
         self._window_options['concealcursor'] = 'n'
+        self._window_options['list'] = False
 
         self._bufvars = self._vim.current.buffer.vars
         self._bufnr = self._vim.current.buffer.number
