@@ -38,4 +38,3 @@ class Kind(Base):
                                match_path) != self.vim.current.buffer:
                 self.vim.call(
                     'denite#util#execute_path', 'buffer', path)
-
