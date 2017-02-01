@@ -28,10 +28,16 @@ you should read `:help provider-python`.
 
 * quickmatch feature
 
-* file and file/new source
-
-* live grep feature
+* file and file:new source
 
 * narrow action
 
 * -no-split, -tab option
+
+* tag and tag:include source
+
+* defx.nvim support
+
+* match highlight improvement
+
+* denite#custom#action()
