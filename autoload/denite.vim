@@ -11,29 +11,7 @@ function! denite#start(sources, ...) abort
   call inputsave()
   try
     let user_context = get(a:000, 0, {})
-    let buffer_name = get(user_context, 'buffer_name', 'default')
-
-    let context = denite#init#_context()
-    call extend(context, denite#init#_user_options())
-    let context.custom = denite#custom#get()
-    if has_key(context.custom.option, buffer_name)
-      call extend(context, context.custom.option[buffer_name])
-    endif
-    call extend(context, user_context)
-
-    " For compatibility(deprecated variables)
-    for [old_option, new_option] in filter(items(
-          \ denite#init#_deprecated_options()),
-          \ 'has_key(context, v:val[0])')
-      let context[new_option] = context[old_option]
-    endfor
-
-    if denite#initialize()
-      return
-    endif
-
-    return has('nvim') ? _denite_start(a:sources, context)
-          \            : denite#vim#_start(a:sources, context)
+    return s:start(a:sources, user_context)
   finally
     call inputrestore()
   endtry
@@ -50,4 +28,31 @@ function! denite#get_status_path() abort
 endfunction
 function! denite#get_status_linenr() abort
   return b:denite_statusline_linenr
+endfunction
+
+
+function! s:start(sources, user_context) abort
+  let buffer_name = get(a:user_context, 'buffer_name', 'default')
+
+  let context = denite#init#_context()
+  call extend(context, denite#init#_user_options())
+  let context.custom = denite#custom#get()
+  if has_key(context.custom.option, buffer_name)
+    call extend(context, context.custom.option[buffer_name])
+  endif
+  call extend(context, a:user_context)
+
+  " For compatibility(deprecated variables)
+  for [old_option, new_option] in filter(items(
+        \ denite#init#_deprecated_options()),
+        \ 'has_key(context, v:val[0])')
+    let context[new_option] = context[old_option]
+  endfor
+
+  if denite#initialize()
+    return
+  endif
+
+  return has('nvim') ? _denite_start(a:sources, context)
+        \            : denite#vim#_start(a:sources, context)
 endfunction
