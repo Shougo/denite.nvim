@@ -41,6 +41,18 @@ class DenitePrompt(Prompt):
     def highlight_cursor(self):
         return self.context.get('highlight_cursor', 'Cursor')
 
+    def on_init(self):
+        # NOTE:
+        # 'inputsave' is not required to be called while denite call it
+        # at denite#start
+        pass
+
+    def on_term(self, status):
+        # NOTE:
+        # 'inputrestore' is not required to be called while denite call it
+        # at denite#start
+        return status
+
     def on_update(self, status):
         if self.__previous_text != self.text:
             self.__previous_text = self.text
