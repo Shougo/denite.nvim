@@ -1046,6 +1046,8 @@ grep		Gather grep results and nominates them.
 
 		Note: If the args 2 is "!", it is the interactive mode.
 		The results are updated when the input is changed.
+		Note: If the args 2 is empty, |denite-options-input| or user
+		input pattern is used.
 
 		Source custom variables:
 		command		the default grep command
