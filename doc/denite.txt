@@ -1511,6 +1511,11 @@ A: >
 	:Denite -resume -select=+1 -immediately
 	:Denite -resume -select=-1 -immediately
 
+Q: I want to close denite buffer if grep results are empty.
+
+A: >
+	:Denite -no-empty grep
+
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
 
