@@ -91,6 +91,7 @@ function! denite#init#_user_options() abort
         \ 'prompt': '#',
         \ 'prompt_highlight': 'Statement',
         \ 'quit': v:true,
+        \ 'refresh': v:false,
         \ 'resume': v:false,
         \ 'reversed': v:false,
         \ 'scroll': 0,

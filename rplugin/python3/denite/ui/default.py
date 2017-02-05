@@ -74,6 +74,8 @@ class Default(object):
                 self.move_to_prev_line()
             if self.check_empty():
                 return self._result
+            if context['refresh']:
+                self.redraw()
         else:
             if not sources:
                 # Ignore empty sources.

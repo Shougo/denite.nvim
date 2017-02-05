@@ -890,6 +890,11 @@ OPTIONS							*denite-options*
 		Quit the denite buffer after the action is executed.
 		Default: true
 
+						*denite-options-refresh*
+-refresh
+		Refresh the candidates when |denite-options-resume| is true.
+		Default: false
+
 							*denite-options-resume*
 -resume
 		Reuse the previous buffer.  If none exist, a new denite
