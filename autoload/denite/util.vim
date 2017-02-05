@@ -45,6 +45,14 @@ function! denite#util#execute_path(command, path) abort
     call denite#util#print_error(v:exception)
   endtry
 endfunction
+function! denite#util#execute_command(command) abort
+  try
+    execute a:command
+  catch /^Vim\%((\a\+)\)\=:E/
+    call denite#util#print_error(v:errmsg)
+  endtry
+endfunction
+
 function! denite#util#echo(color, string) abort
   execute 'echohl' a:color
   echon a:string

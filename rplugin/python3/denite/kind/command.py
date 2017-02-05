@@ -17,4 +17,5 @@ class Kind(Base):
 
     def action_execute(self, context):
         target = context['targets'][0]
-        self.vim.command(target['action__command'])
+        self.vim.call('denite#util#execute_command',
+                      target['action__command'])

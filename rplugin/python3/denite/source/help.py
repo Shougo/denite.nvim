@@ -24,7 +24,7 @@ class Source(Base):
                     name = line.split("\t", 1)[0]
                     help_docs[name] = {
                         'word': name,
-                        'action__command': 'help ' + name
+                        'action__command': 'silent help ' + name
                     }
 
         return sorted(help_docs.values(), key=lambda value: value['word'])
