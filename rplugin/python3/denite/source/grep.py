@@ -184,19 +184,17 @@ class Source(Base):
         candidates = []
 
         for line in outs:
+            result = util.parse_jump_line('', line)
+            if not result:
+                continue
             if context['__paths']:
                 if len(context['__paths']) == 1:
-                    result = util.parse_jump_line(context['__paths'][0], line)
-                    if result:
-                        candidates.append(_candidate(result, os.path.relpath(
-                            result[0], start=context['__paths'][0])))
+                    candidate = _candidate(result, os.path.relpath(
+                        result[0], start=context['__paths'][0]))
                 else:
-                    result = util.parse_jump_line('', line)
-                    if result:
-                        candidates.append(_candidate(result, result[0]))
+                    candidate = _candidate(result, result[0])
             else:
-                result = util.parse_jump_line(context['path'], line)
-                if result:
-                    candidates.append(_candidate(result, os.path.relpath(
-                        result[0], start=context['path'])))
+                candidate = _candidate(result, os.path.relpath(
+                    result[0], start=context['path']))
+            candidates.append(candidate)
         return candidates
