@@ -5,6 +5,7 @@
 # ============================================================================
 
 import re
+import os
 from itertools import filterfalse
 
 from .openable import Kind as Openable
@@ -20,6 +21,7 @@ class Kind(Openable):
         self.persist_actions += ['preview', 'highlight']
 
     def action_open(self, context):
+        cwd = self.vim.call('getcwd')
         for target in context['targets']:
             path = target['action__path']
             match_path = '^{0}$'.format(path)
@@ -28,6 +30,8 @@ class Kind(Openable):
                 # URI
                 self.vim.call('denite#util#open', path)
                 return
+            if path.startswith(cwd):
+                path = os.path.relpath(path, cwd)
 
             if self.vim.call('bufwinnr', match_path) <= 0:
                 self.vim.call(
