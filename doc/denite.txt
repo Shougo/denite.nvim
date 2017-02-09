@@ -1163,6 +1163,9 @@ directory	An interface to change directory.
 			open
 				Open the directory.
 
+			narrow
+				Narrow by the directory.
+
 						*denite-kind-file*
 file		An interface to jump to the file position.
 		It extends |denite-kind-openable|.

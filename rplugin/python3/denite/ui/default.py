@@ -463,9 +463,9 @@ class Default(object):
         if is_quit:
             self.quit()
 
+        prev_input = self._context['input']
         self._denite.do_action(self._context, action_name, candidates)
 
-        is_redraw = action['is_redraw']
         if is_quit and not self._context['quit']:
             # Re-open denite buffer
             self.init_buffer()
@@ -473,8 +473,10 @@ class Default(object):
             # Disable quit flag
             is_quit = False
 
-        if not is_quit and is_redraw:
+        if not is_quit and action['is_redraw']:
             self.redraw()
+            if self._context['input'] != prev_input:
+                self._prompt.caret.locus = self._prompt.caret.tail
 
         self._result = candidates
         return STATUS_ACCEPT if is_quit else None

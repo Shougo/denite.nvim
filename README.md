@@ -30,8 +30,6 @@ you should read `:help provider-python`.
 
 * file and file:new source
 
-* narrow action
-
 * -no-split, -tab option
 
 * tag and tag:include source

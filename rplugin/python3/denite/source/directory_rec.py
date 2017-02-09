@@ -70,14 +70,16 @@ class Source(Base):
         if not outs:
             return []
         if isabs(outs[0]):
-            candidates = [{'word': relpath(x, start=context['__directory']),
-                           'action__path': x}
-                          for x in outs
-                          if x != '' and x != context['__directory']]
+            candidates = [{
+                'word': relpath(x, start=context['__directory']),
+                'abbr': relpath(x, start=context['__directory']) + '/',
+                'action__path': x
+            } for x in outs if x != '' and x != context['__directory']]
         else:
-            candidates = [{'word': x, 'action__path':
-                           join(context['__directory'], x)}
-                          for x in outs if x != '' and x != '.']
+            candidates = [{
+                'word': x, 'abbr': x + '/',
+                'action__path': join(context['__directory'], x)
+            } for x in outs if x != '' and x != '.']
         context['__current_candidates'] += candidates
         if (len(context['__current_candidates']) >=
                 self.vars['min_cache_files']):
