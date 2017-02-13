@@ -22,11 +22,6 @@ class Kind(Base):
         target = context['targets'][0]
         self.vim.command('lcd {}'.format(target['action__path']))
 
-        if self.vim.current.buffer.options['filetype'] == 'vimshell':
-            self.vim.command('VimShellCurrentDir')
-        elif self.vim.call('exists', 't:deol'):
-            self.vim.call('deol#cd', self.vim.call('getcwd'))
-
     def action_narrow(self, context):
         target = context['targets'][0]
         context['input'] = target['action__path']
