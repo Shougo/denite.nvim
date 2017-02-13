@@ -4,7 +4,6 @@
 # License: MIT license
 # ============================================================================
 
-import os
 import shlex
 
 from denite import util, process
