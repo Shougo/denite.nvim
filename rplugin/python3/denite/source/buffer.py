@@ -95,7 +95,7 @@ class Source(Base):
         }
 
         attr.update({
-            'filetype': buf.options['filetype'],
+            'filetype': self.vim.call('getbufvar', buf.number, '&filetype'),
             'timestamp': getatime(
                 attr['name']) if exists(attr['name']) else time(),
             'status': '{0}{1}{2}{3}'.format(
