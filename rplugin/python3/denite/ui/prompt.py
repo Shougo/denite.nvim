@@ -75,8 +75,13 @@ class DenitePrompt(Prompt):
                 self.__timeout and datetime.now() < self.__timeout):
             return
 
-        self.denite.update_candidates()
-        self.denite.update_buffer()
+        if self.denite.update_candidates():
+            if self.context['reversed']:
+                self.denite.init_cursor()
+            self.denite.update_buffer()
+        else:
+            self.denite.update_status()
+
         # NOTE
         # Redraw prompt to update the buffer.
         # Without 'redraw_prompt', the buffer is not updated often enough
