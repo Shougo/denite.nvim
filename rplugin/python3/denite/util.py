@@ -174,6 +174,7 @@ def find_rplugins(context, source, loaded_paths):
                 continue
             yield path, name
 
+
 def parse_tagline(line):
     elem = [e for e in line.split("\t") if e != '']
     return {

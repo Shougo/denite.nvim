@@ -53,7 +53,7 @@ class Source(Base):
             command += [context['__path']]
 
             try:
-                outline = check_output(command).decode(self.vars['encoding'])
+                check_output(command).decode(self.vars['encoding'])
             except CalledProcessError:
                 return []
 
