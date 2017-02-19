@@ -100,6 +100,9 @@ class Kind(Openable):
         except Exception:
             pass
 
+        if 'action__pattern' in target:
+            self.vim.call('search', target['action__pattern'])
+
         # Open folds
         self.vim.command('normal! zv')
 

@@ -173,3 +173,13 @@ def find_rplugins(context, source, loaded_paths):
                     path in loaded_paths):
                 continue
             yield path, name
+
+def parse_tagline(line):
+    elem = [e for e in line.split("\t") if e != '']
+    return {
+        'name': elem[0],
+        'file': elem[1],
+        'pattern': re.sub(r'^/|/;"$', '', elem[2]),
+        'type': elem[3],
+        'ref': ' '.join(elem[4:])
+    }

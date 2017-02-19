@@ -1180,6 +1180,10 @@ file		An interface to jump to the file position.
 				The column number in the file you'll jump
 				into.
 
+			action__pattern		(String)	(Optional)
+				The search pattern in the file you'll jump
+				into.
+
 						*denite-kind-file-actions*
 			open (default)
 				Open the file.
