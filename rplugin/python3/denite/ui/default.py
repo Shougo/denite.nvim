@@ -126,7 +126,7 @@ class Default(object):
         self._winheight = int(self._context['winheight'])
         self._prev_winid = self._vim.call('win_getid')
         self._prev_bufnr = self._vim.current.buffer.number
-        self._prev_tabpages = self._vim.call('tabpagebuflist')
+        self._prev_tabpagenr = self._vim.call('tabpagenr')
         self._winrestcmd = self._vim.call('winrestcmd')
         self._winsaveview = self._vim.call('winsaveview')
         self._scroll = int(self._context['scroll'])
@@ -411,7 +411,7 @@ class Default(object):
         self._vim.call('win_gotoid', self._prev_winid)
         self._vim.command('silent bdelete! ' + str(self._bufnr))
 
-        if self._vim.call('tabpagebuflist') == self._prev_tabpages:
+        if self._vim.call('tabpagenr') == self._prev_tabpagenr:
             self._vim.command(self._winrestcmd)
 
         # Note: Does not work for line source

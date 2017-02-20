@@ -1138,6 +1138,9 @@ buffer		An interface to open the buffer.
 			open (default)
 				Open the buffer.
 
+			delete
+				Delete the buffer.
+
 						*denite-kind-command*
 command		An interface to execute the command.
 

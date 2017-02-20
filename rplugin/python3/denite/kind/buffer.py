@@ -14,10 +14,16 @@ class Kind(Openable):
 
         self.name = 'buffer'
         self.default_action = 'open'
+        self.redraw_actions += ['delete']
+        self.persist_actions += ['delete']
 
     def action_open(self, context):
         for target in context['targets']:
             self.vim.command('buffer {0}'.format(target['action__bufnr']))
+
+    def action_delete(self, context):
+        for target in context['targets']:
+            self.vim.command('bdelete {0}'.format(target['action__bufnr']))
 
     def __winid(self, target):
         winids = self.vim.call('win_findbuf', target['action__bufnr'])
