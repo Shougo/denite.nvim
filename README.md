@@ -22,6 +22,23 @@ But the implementation is ugly and very slow.
 Denite.nvim resolves unite.vim problems.
 It is 10 times faster than unite.vim.
 
+* Theoretically faster while the main process is executed by python
+
+* Theoretically more stable while no other processes can be performed when
+denite.nvim is executed.
+
+* The implementation is relatively simple than unite.vim
+
+* Denite.nvim has great potential to implement a new feature
+
+* To send the pull request by Python3 is easier than Vim script
+
+* There are a lot of useful tools to keep code simple (linter, tester, etc...)
+in Python3.
+
+* The unite.vim is officially obsolete, minor bugs (or even major bugs) are
+not fixed anymore
+
 
 ## Requirements
 
