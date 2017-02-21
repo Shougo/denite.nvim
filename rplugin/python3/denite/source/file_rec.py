@@ -30,11 +30,10 @@ class Source(Base):
                 'find', '-L', ':directory',
                 '-path', '*/.git/*', '-prune', '-o',
                 '-type', 'l', '-print', '-o', '-type', 'f', '-print']
-            
+
         if context['is_windows'] and not self.vars['command']:
             scantree = join(path.split(__file__)[0], pardir, 'scantree.py')
             self.vars['command'] = ['python', scantree, ':directory']
-
 
         context['__proc'] = None
         directory = context['args'][0] if len(
