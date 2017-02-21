@@ -26,7 +26,7 @@ class Source(Base):
         self.kind = 'file'
         self.vars = {
             'command': ['ctags'],
-            'options': ['-o'],
+            'options': [],
             'ignore_types': [],
             'encoding': 'utf-8'
         }
@@ -46,14 +46,15 @@ class Source(Base):
 
     def gather_candidates(self, context):
         with tempfile.NamedTemporaryFile(mode='w') as tf:
-            command = []
-            command += self.vars['command']
-            command += self.vars['options']
-            command += [tf.name]
-            command += [context['__path']]
+            args = []
+            args += self.vars['command']
+            args += self.vars['options']
+            args += ['-o', tf.name]
+            args += [context['__path']]
+            self.print_message(context, args)
 
             try:
-                check_output(command).decode(self.vars['encoding'])
+                check_output(args).decode(self.vars['encoding'])
             except CalledProcessError:
                 return []
 

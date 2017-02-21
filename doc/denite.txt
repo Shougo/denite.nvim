@@ -1126,7 +1126,7 @@ outline		Gather outline and jump to the target.
 		command 	the default command to get outline
 				(default: ['ctags'])
 		options 	the default options for command
-				(default: ['-x'])
+				(default: [])
 		ignore_types 	the list of ignore types
 				(default: [])
 		encoding 	the text encoding
