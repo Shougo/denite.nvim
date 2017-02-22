@@ -1451,12 +1451,67 @@ abbr		(String)			(Optional)
 ==============================================================================
 CREATE KIND						*denite-create-kind*
 
-Note: Not implemented yet...
+Custom Kind can be created to contain extra actions for your custom source.
+Before create your new kind, you should have a look at existing kinds in
+rplugin/python3/denite/kind/*.py
+
+Instead of create new kind from scratch, you can extend one of the existing
+Kind class, let's take "openable" for example: >
+
+    from ..kind.openable import Kind as Openable
+
+    class Kind(Openable):
+        def __init__(self, vim):
+            super().__init__(vim)
+            self.name = 'mykind'
+
+        def action_open(self, context):
+            target = context['targets'][0]
+            path = target['action__path']
+            # assume you have a MyEdit command
+            self.vim.call('MyEdit', path)
+>
+After create new Kind class, alias it to your source by >
+
+    self.kind = Kind(vim)
+<
+in the "__init__" method of your source class.
 
 ------------------------------------------------------------------------------
 KIND ATTRIBUTES					*denite-kind-attributes*
 
-Note: Not implemented yet...
+					*denite-kind-attribute-__init__*
+__init__	(Function)
+		Kind constructor.  It is always called in initializing.  It
+		must call super() constructor.  This function takes {self} and
+		{vim} as its parameters.
+
+					*denite-kind-attribute-name*
+name 		(String) 			(Required)
+		The name of a Kind.
+
+					*denite-kind-attribute-default_action*
+default_action  (String)
+		Default action name.
+
+					*denite-kind-attribute-persist_actions*
+persist_actions (List) 				(Optional)
+		List of action names which not close Denite buffer after
+		executed.
+
+					*denite-kind-attribute-redraw_actions*
+redraw_actions (List) 				(Optional)
+		List of action names which redraw Denite buffer after
+		executed.
+
+					*denite-kind-attribute-action_*
+action_{name} (Function) 			(Optional)
+		Custom action logic with {name} as action name. The function
+		is passed with {self} and {context}. To get the seleted
+		candidate list, you could use "targets" attribute: >
+
+                    targets = context['targets']
+
 
 ==============================================================================
 CREATE FILTER						*denite-create-filter*
