@@ -141,7 +141,8 @@ class Default(object):
             # Create new buffer
             self._vim.call(
                 'denite#util#execute_path',
-                'silent ' + self._context['direction'] + ' new', '[denite]')
+                'silent keepalt %s new ' % self._context['direction'],
+                '[denite]')
         self.resize_buffer()
         self._vim.command('nnoremap <silent><buffer> <CR> ' +
                           ':<C-u>Denite -resume -buffer_name=' +
