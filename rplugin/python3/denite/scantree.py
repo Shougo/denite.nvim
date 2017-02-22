@@ -3,8 +3,9 @@ import os
 
 
 def scantree(pathn):
-    """Use scandir if available else os.walk. scandir is supposed to be much faster"""
-    
+    """Use scandir if available else os.walk.
+    scandir is supposed to be much faster"""
+
     skip_list = ['.git']
 
     if 'scandir' in dir(os):
