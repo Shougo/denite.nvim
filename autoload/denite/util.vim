@@ -221,3 +221,44 @@ function! s:_path2project_directory_others(vcs, path) abort
   endif
   return fnamemodify(d, ':p:h:h')
 endfunction
+
+function! denite#util#alternate_buffer() abort
+  if len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) <= 1
+    enew
+    return
+  endif
+
+  let cnt = 0
+  let pos = 1
+  let current = 0
+  while pos <= bufnr('$')
+    if buflisted(pos)
+      if pos == bufnr('%')
+        let current = cnt
+      endif
+
+      let cnt += 1
+    endif
+
+    let pos += 1
+  endwhile
+
+  if current > cnt / 2
+    bprevious
+  else
+    bnext
+  endif
+endfunction
+function! denite#util#delete_buffer(command, bufnr) abort
+  " Not to close window, move to alternate buffer.
+
+  let prev_winnr = winnr()
+  for winnr in range(1, winnr('$'))
+    if winbufnr(winnr) == a:bufnr
+      execute winnr . 'wincmd w'
+      call denite#util#alternate_buffer()
+      silent execute a:bufnr a:command
+    endif
+  endfor
+  execute prev_winnr . 'wincmd w'
+endfunction
