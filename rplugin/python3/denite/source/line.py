@@ -9,7 +9,7 @@ from .base import Base
 LINE_NUMBER_SYNTAX = (
     'syntax match deniteSource_lineNumber '
     r'/\d\+\(:\d\+\)\?/ '
-    'contained containedin=deniteSource_line')
+    'contained containedin=')
 LINE_NUMBER_HIGHLIGHT = 'highlight default link deniteSource_lineNumber LineNR'
 
 
@@ -29,7 +29,7 @@ class Source(Base):
         context['__bufnr'] = self.vim.current.buffer.number
 
     def highlight(self):
-        self.vim.command(LINE_NUMBER_SYNTAX)
+        self.vim.command(LINE_NUMBER_SYNTAX + self.syntax_name)
         self.vim.command(LINE_NUMBER_HIGHLIGHT)
 
     def gather_candidates(self, context):
