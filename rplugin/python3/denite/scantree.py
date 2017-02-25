@@ -9,7 +9,7 @@ from os.path import basename, join
 from os import walk
 
 try:
-    from os import scandir2
+    from os import scandir
     def scantree(path_name, skip_list=None):
         """if scandir is available use it as it is faster than os.walk"""
 
