@@ -1,4 +1,7 @@
+import re
 from denite.util import debug
+from denite.prompt.util import build_keyword_pattern_set
+# from
 
 
 def _redraw(prompt, params):
@@ -132,6 +135,61 @@ def _change_path(prompt, params):
     return prompt.denite.restart()
 
 
+def _change_word(prompt, params):
+    # NOTE: Respect the behavior of 'w' in Normal mode.
+    if prompt.caret.locus == prompt.caret.tail:
+        return prompt.denite.change_mode('insert')
+    pattern_set = build_keyword_pattern_set(prompt.nvim)
+    pattern = re.compile(
+        r'^(?:%s+|%s+|[^\s\x20-\xff]+|)\s*' % pattern_set
+    )
+    forward_text = pattern.sub('', prompt.caret.get_forward_text())
+    prompt.text = ''.join([
+        prompt.caret.get_backward_text(),
+        forward_text
+    ])
+    prompt.denite.change_mode('insert')
+
+
+def _change_line(prompt, params):
+    prompt.text = ''
+    prompt.caret.locus = 0
+    prompt.denite.change_mode('insert')
+
+
+def _move_caret_to_next_word(prompt, params):
+    pattern = re.compile('^\S+')
+    original_text = prompt.caret.get_forward_text()
+    substituted_text = pattern.sub('', original_text)
+    prompt.caret.locus += 2 + len(original_text) - len(substituted_text)
+
+
+def _move_caret_to_end_of_word(prompt, params):
+    pattern = re.compile('^\S+')
+    original_text = prompt.caret.get_forward_text()
+    if (original_text[0] == ' '):
+        _move_caret_to_next_word(prompt, params)
+        _move_caret_to_end_of_word(prompt, params)
+    else:
+        substituted_text = pattern.sub('', original_text)
+        prompt.caret.locus += len(original_text) - len(substituted_text)
+
+
+def _append(prompt, params):
+    prompt.caret.locus += 1
+    prompt.denite.change_mode('insert')
+
+
+def _append_to_line(prompt, params):
+    prompt.caret.locus = prompt.caret.tail
+    prompt.denite.change_mode('insert')
+
+
+def _insert_to_head(prompt, params):
+    prompt.caret.locus = prompt.caret.head
+    prompt.denite.change_mode('insert')
+
+
 DEFAULT_ACTION_RULES = [
     ('denite:change_path', _change_path),
     ('denite:choose_action', _choose_action),
@@ -161,6 +219,13 @@ DEFAULT_ACTION_RULES = [
     ('denite:toggle_select_down', _toggle_select_down),
     ('denite:toggle_select_up', _toggle_select_up),
     ('denite:toggle_select_all', _toggle_select_all),
+    ('denite:move_caret_to_next_word', _move_caret_to_next_word),
+    ('denite:move_caret_to_end_of_word', _move_caret_to_end_of_word),
+    ('denite:change_word', _change_word),
+    ('denite:change_line', _change_line),
+    ('denite:append', _append),
+    ('denite:append_to_line', _append_to_line),
+    ('denite:insert_to_head', _insert_to_head),
 ]
 
 DEFAULT_ACTION_KEYMAP = {
@@ -225,6 +290,20 @@ DEFAULT_ACTION_KEYMAP = {
         ('*', '<denite:toggle_select_all>', 'noremap'),
         ('M', '<denite:print_messages>', 'noremap'),
         ('P', '<denite:change_path>', 'noremap'),
+        ('b', '<denite:move_caret_to_one_word_left>', 'noremap'),
+        ('w', '<denite:move_caret_to_next_word>', 'noremap'),
+        ('e', '<denite:move_caret_to_end_of_word>', 'noremap'),
+        ('0', '<denite:move_caret_to_head>', 'noremap'),
+        ('$', '<denite:move_caret_to_tail>', 'noremap'),
+        ('cc', '<denite:change_line>', 'noremap'),
+        ('cw', '<denite:change_word>', 'noremap'),
+        ('dd', '<denite:delete_entire_text>', 'noremap'),
+        ('h', '<denite:move_caret_to_left>', 'noremap'),
+        ('l', '<denite:move_caret_to_right>', 'noremap'),
+        ('a', '<denite:append>', 'noremap'),
+        ('A', '<denite:append_to_line>', 'noremap'),
+        ('I', '<denite:insert_to_head>', 'noremap'),
+
         # Denite specific actions
         ('p', '<denite:do_action:preview>', 'noremap'),
         ('d', '<denite:do_action:delete>', 'noremap'),
