@@ -428,6 +428,52 @@ def _insert_digraph(prompt, params):
     prompt.restore(state)
     prompt.update_text(char)
 
+def _change_word(prompt, params):
+    # NOTE: Respect the behavior of 'w' in Normal mode.
+    if prompt.caret.locus == prompt.caret.tail:
+        return prompt.denite.change_mode('insert')
+    pattern_set = build_keyword_pattern_set(prompt.nvim)
+    pattern = re.compile(
+        r'^(?:%s+|%s+|[^\s\x20-\xff]+|)\s*' % pattern_set
+    )
+    forward_text = pattern.sub('', prompt.caret.get_forward_text())
+    prompt.text = ''.join([
+        prompt.caret.get_backward_text(),
+        forward_text
+    ])
+    prompt.denite.change_mode('insert')
+
+def _change_line(prompt, params):
+    _delete_entire_text(prompt, params)
+    prompt.denite.change_mode('insert')
+
+def _move_caret_to_next_word(prompt, params):
+    pattern = re.compile('^\S+')
+    original_text = prompt.caret.get_forward_text()
+    substituted_text = pattern.sub('', original_text)
+    prompt.caret.locus += 2 + len(original_text) - len(substituted_text)
+
+def _move_caret_to_end_of_word(prompt, params):
+    pattern = re.compile('^\S+')
+    original_text = prompt.caret.get_forward_text()
+    if (original_text[0] == ' '):
+        _move_caret_to_next_word(prompt, params)
+        _move_caret_to_end_of_word(prompt, params)
+    else:
+        substituted_text = pattern.sub('', original_text)
+        prompt.caret.locus += len(original_text) - len(substituted_text)
+
+def _append(prompt, params):
+    _move_caret_to_right(prompt, params)
+    prompt.denite.change_mode('insert')
+
+def _append_to_line(prompt, params):
+    _move_caret_to_tail(prompt, params)
+    prompt.denite.change_mode('insert')
+
+def _insert_to_head(prompt, params):
+    _move_caret_to_head(prompt, params)
+    prompt.denite.change_mode('insert')
 
 DEFAULT_ACTION = Action.from_rules([
     ('prompt:accept', _accept),
@@ -439,6 +485,7 @@ DEFAULT_ACTION = Action.from_rules([
     ('prompt:delete_word_after_caret', _delete_word_after_caret),
     ('prompt:delete_char_under_caret', _delete_char_under_caret),
     ('prompt:delete_word_under_caret', _delete_word_under_caret),
+    # ('prompt:delete_word', _delete_word),
     ('prompt:delete_text_before_caret', _delete_text_before_caret),
     ('prompt:delete_text_after_caret', _delete_text_after_caret),
     ('prompt:delete_entire_text', _delete_entire_text),
@@ -451,6 +498,8 @@ DEFAULT_ACTION = Action.from_rules([
     ('prompt:move_caret_to_head', _move_caret_to_head),
     ('prompt:move_caret_to_lead', _move_caret_to_lead),
     ('prompt:move_caret_to_tail', _move_caret_to_tail),
+    ('prompt:move_caret_to_next_word', _move_caret_to_next_word),
+    ('prompt:move_caret_to_end_of_word', _move_caret_to_end_of_word),
     ('prompt:assign_previous_text', _assign_previous_text),
     ('prompt:assign_next_text', _assign_next_text),
     ('prompt:assign_previous_matched_text', _assign_previous_matched_text),
@@ -461,4 +510,9 @@ DEFAULT_ACTION = Action.from_rules([
     ('prompt:yank_to_default_register', _yank_to_default_register),
     ('prompt:insert_special', _insert_special),
     ('prompt:insert_digraph', _insert_digraph),
+    ('prompt:change_word', _change_word),
+    ('prompt:change_line', _change_line),
+    ('prompt:append', _append),
+    ('prompt:append_to_line', _append_to_line),
+    ('prompt:insert_to_head', _insert_to_head),
 ])
