@@ -1042,6 +1042,10 @@ file_rec	Gather files recursive and nominates all file names under the
 					\ "-path", "*/.svn/*", "-prune", "-o",
 					\ '-type', 'l', '-print', '-o',
 					\ '-type', 'f', '-print'])
+					
+				In windows if no command is specified file_rec
+				uses a python script scantree.py to get the list
+				of files using scandir or os.walk.
 <
 		min_cache_files	the minimum number of files that
 				it saves the caches.
