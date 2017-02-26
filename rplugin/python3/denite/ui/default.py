@@ -177,6 +177,8 @@ class Default(object):
         self._bufvars['denite_statusline_path'] = ''
         self._bufvars['denite_statusline_linenr'] = ''
 
+        self._vim.command('doautocmd FileType denite')
+
         self.init_syntax()
 
         if self._context['statusline']:
