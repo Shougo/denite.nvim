@@ -356,6 +356,34 @@ are on the neovim-prompt's builtin actions/mappings.
 		Delete an entire text.
 		Note this is a neovim-prompt's builtin action.
 
+				*denite-map-caret_to_next_word*
+<denite:move_caret_to_next_word>
+		Move caret to beginning of next word, like |w| in normal mode in vim buffer.
+
+				*denite-map-caret_to_end_of_word*
+<denite:move_caret_to_end_of_word>
+		Move caret to end of word, like |e| in normal mode in vim buffer.
+
+				*denite-map-change_word*
+<denite:change_word>
+		Change word, like |cw| in normal mode in vim buffer.
+
+				*denite-map-change_line*
+<denite:change_line>
+		Change line, like |cc| in normal mode in vim buffer.
+
+				*denite-map-append*
+<denite:append>
+		Append, like |a| in normal mode in vim buffer.
+
+				*denite-map-append_to_line*
+<denite:append_to_line>
+		Append to line, like |A| in normal mode in vim buffer.
+
+				*denite-map-insert_to_head*
+<denite:insert_to_head>
+		Insert at head of line, like |I| in normal mode in vim buffer.
+
 				*denite-map-do_action*
 <denite:do_action:{action}>
 		Close current Denite buffer and fire {action} action.
@@ -610,8 +638,22 @@ All mode mappings (override by mode mappings).
 {key}		{mapping}
 --------	-----------------------------
 i		<denite:enter_mode:insert>
+I		<denite:insert_to_head>
+a		<denite:append>
+A		<denite:append_to_line>
 j		<denite:move_to_next_line>
+h		<denite:move_caret_to_left>
+l		<denite:move_caret_to_right>
 k		<denite:move_to_previous_line>
+b		<denite:move_caret_to_one_word_left>
+w		<denite:move_caret_to_next_word>
+e		<denite:move_caret_to_end_of_word>
+0		<denite:move_caret_to_head>
+$		<denite:move_caret_to_tail>
+c		<denite:change_word>
+cc	<denite:change_line>
+cw	<denite:change_word>
+dd	<denite:delete_entire_text>
 gg		<denite:move_to_first_line>
 G		<denite:move_to_last_line>
 <C-U>		<denite:scroll_window_upwards>

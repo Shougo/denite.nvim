@@ -1,7 +1,6 @@
 import re
 from denite.util import debug
 from denite.prompt.util import build_keyword_pattern_set
-# from
 
 
 def _redraw(prompt, params):
