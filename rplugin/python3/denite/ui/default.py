@@ -47,6 +47,7 @@ class Default(object):
         self._scroll = 0
         self._is_multi = False
         self._matched_pattern = ''
+        self._displayed_texts = []
         self._statusline_sources = ''
         self._prompt = DenitePrompt(
             self._vim,
@@ -107,6 +108,7 @@ class Default(object):
             self.init_buffer()
             self.init_cursor()
 
+        self.update_candidates()
         self.change_mode(self._current_mode)
 
         if self._context['cursor_pos'].isnumeric():
@@ -177,6 +179,8 @@ class Default(object):
         self._bufvars['denite_statusline_path'] = ''
         self._bufvars['denite_statusline_linenr'] = ''
 
+        self._vim.command('doautocmd FileType denite')
+
         self.init_syntax()
 
         if self._context['statusline']:
@@ -235,17 +239,48 @@ class Default(object):
         if self._context['reversed']:
             self.move_to_last_line()
 
+    def update_candidates(self):
+        pattern = ''
+        sources = ''
+        self._selected_candidates = []
+        self._candidates = []
+        for name, entire, partial in self._denite.filter_candidates(
+                self._context):
+            self._candidates += partial
+            sources += '{}({}/{}) '.format(name, len(partial), len(entire))
+
+            if pattern == '':
+                matchers = self._denite.get_source(name).matchers
+                patterns = filterfalse(lambda x: x == '', (
+                    self._denite.get_filter(x).convert_pattern(
+                        self._context['input'])
+                    for x in matchers if self._denite.get_filter(x)
+                ))
+                pattern = next(patterns, '')
+        self._matched_pattern = pattern
+        self._candidates_len = len(self._candidates)
+        if self._context['reversed']:
+            self._candidates.reverse()
+
+        if self._denite.is_async():
+            sources = '[async] ' + sources
+        self._statusline_sources = sources
+
+        prev_displayed_texts = self._displayed_texts
+        self.update_displayed_texts()
+
+        return self._displayed_texts != prev_displayed_texts
+
+    def update_displayed_texts(self):
+        self._displayed_texts = [
+            self.get_candidate_display_text(i)
+            for i in range(self._cursor,
+                           min(self._candidates_len,
+                               self._cursor + self._winheight))
+        ]
+
     def update_buffer(self):
-        max_len = len(str(self._candidates_len))
-        linenr = ('{:'+str(max_len)+'}/{:'+str(max_len)+'}').format(
-            self._cursor + self._win_cursor,
-            self._candidates_len)
-        mode = '-- ' + self._current_mode.upper() + ' -- '
-        self._bufvars['denite_statusline_mode'] = mode
-        self._bufvars['denite_statusline_sources'] = self._statusline_sources
-        self._bufvars['denite_statusline_path'] = (
-            '[' + self._context['path'] + ']')
-        self._bufvars['denite_statusline_linenr'] = linenr
+        self.update_status()
 
         self._vim.command('silent! syntax clear deniteMatchedRange')
         self._vim.command('silent! syntax clear deniteMatchedChar')
@@ -265,18 +300,29 @@ class Default(object):
             ))
 
         del self._vim.current.buffer[:]
-        self._vim.current.buffer.append([
-            self.get_candidate_display_text(i)
-            for i in range(self._cursor,
-                           min(self._candidates_len,
-                               self._cursor + self._winheight))
-        ])
+        self._vim.current.buffer.append(self._displayed_texts)
         del self._vim.current.buffer[0]
         self.resize_buffer()
 
         self._options['modified'] = False
 
         self.move_cursor()
+
+    def update_status(self):
+        max_len = len(str(self._candidates_len))
+        linenr = ('{:'+str(max_len)+'}/{:'+str(max_len)+'}').format(
+            self._cursor + self._win_cursor,
+            self._candidates_len)
+        mode = '-- ' + self._current_mode.upper() + ' -- '
+        self._bufvars['denite_statusline_mode'] = mode
+        self._bufvars['denite_statusline_sources'] = self._statusline_sources
+        self._bufvars['denite_statusline_path'] = (
+            '[' + self._context['path'] + ']')
+        self._bufvars['denite_statusline_linenr'] = linenr
+
+    def update_cursor(self):
+        self.update_displayed_texts()
+        self.update_buffer()
 
     def get_candidate_display_text(self, index):
         candidate = self._candidates[index]
@@ -317,32 +363,6 @@ class Default(object):
             return True
         return not (self._context['empty'] or
                     self._denite.is_async() or self._candidates)
-
-    def update_candidates(self):
-        pattern = ''
-        sources = ''
-        self._selected_candidates = []
-        self._candidates = []
-        for name, entire, partial in self._denite.filter_candidates(
-                self._context):
-            self._candidates += partial
-            sources += '{}({}/{}) '.format(name, len(partial), len(entire))
-
-            if pattern == '':
-                matchers = self._denite.get_source(name).matchers
-                pattern = next(filterfalse(
-                    lambda x: x == '',
-                    [self._denite.get_filter(x).convert_pattern(
-                        self._context['input']) for x in matchers
-                     if self._denite.get_filter(x)]), '')
-        self._matched_pattern = pattern
-        self._candidates_len = len(self._candidates)
-        if self._context['reversed']:
-            self._candidates.reverse()
-
-        if self._denite.is_async():
-            sources = '[async] ' + sources
-        self._statusline_sources = sources
 
     def move_cursor(self):
         if self._win_cursor > self._vim.call('line', '$'):
@@ -432,9 +452,11 @@ class Default(object):
 
     def redraw(self):
         self._context['is_redraw'] = True
-        self._denite.gather_candidates(self._context)
-        self.update_candidates()
-        self.update_buffer()
+        self.gather_candidates(self._context)
+        if self.update_candidates():
+            self.update_buffer()
+        else:
+            self.update_status()
         self._context['is_redraw'] = False
 
     def quit(self):
@@ -513,7 +535,7 @@ class Default(object):
             self.move_to_first_line()
         else:
             return
-        self.update_buffer()
+        self.update_cursor()
 
     def move_to_prev_line(self):
         if self._win_cursor > 1:
@@ -524,13 +546,13 @@ class Default(object):
             self.move_to_last_line()
         else:
             return
-        self.update_buffer()
+        self.update_cursor()
 
     def move_to_first_line(self):
         if self._win_cursor > 1 or self._cursor > 0:
             self._win_cursor = 1
             self._cursor = 0
-            self.update_buffer()
+            self.update_cursor()
 
     def move_to_last_line(self):
         win_max = min(self._candidates_len, self._winheight)
@@ -538,7 +560,7 @@ class Default(object):
         if self._win_cursor < win_max or self._cursor < cur_max:
             self._win_cursor = win_max
             self._cursor = cur_max
-            self.update_buffer()
+            self.update_cursor()
 
     def scroll_window_upwards(self):
         self.scroll_up(self._scroll)
@@ -565,7 +587,7 @@ class Default(object):
                     self._candidates_len - self._win_cursor)
         else:
             return
-        self.update_buffer()
+        self.update_cursor()
 
     def scroll_up(self, scroll):
         if self._win_cursor > 1:
@@ -574,7 +596,7 @@ class Default(object):
             self._cursor = max(self._cursor - scroll, 0)
         else:
             return
-        self.update_buffer()
+        self.update_cursor()
 
     def jump_to_next_source(self):
         if len(self._context['sources']) == 1:
@@ -604,7 +626,7 @@ class Default(object):
             self._cursor += forward_times + self._win_cursor - 1
             self._win_cursor = 1
 
-        self.update_buffer()
+        self.update_cursor()
 
     def jump_to_prev_source(self):
         if len(self._context['sources']) == 1:
@@ -649,7 +671,7 @@ class Default(object):
                 self._cursor -= back_times - self._win_cursor + 1
                 self._win_cursor = 1
 
-        self.update_buffer()
+        self.update_cursor()
 
     def enter_mode(self, mode):
         self._mode_stack.append(self._current_mode)

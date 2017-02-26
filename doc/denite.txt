@@ -690,6 +690,7 @@ denite#custom#filter({filter-name}, {variable-name}, {value})
 denite#custom#option({buffer-name}, {option-name}, {value})
 		Set {option-name} option to {value} in {buffer-name}
 		buffer.
+		If {buffer-name} is "_", the options are used for all buffers.
 		Note: The all options are in |denite-options|.  However, "-" is
 		substituted to "_", and "-" prefix is removed.
 

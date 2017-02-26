@@ -105,3 +105,12 @@ class Kind(Openable):
 
         # Open folds
         self.vim.command('normal! zv')
+
+    # Needed for openable actions
+    def __winid(self, target):
+        path = target['action__path']
+        bufnr = self.vim.call('bufnr', path)
+        if bufnr == -1:
+            return None
+        winids = self.vim.call('win_findbuf', bufnr)
+        return None if len(winids) == 0 else winids[0]

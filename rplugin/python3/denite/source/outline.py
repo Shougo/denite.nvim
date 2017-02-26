@@ -1,5 +1,5 @@
 # ============================================================================
-# FILE: outlint.py
+# FILE: outline.py
 # AUTHOR: Yasumasa Tamura (tamura.yasumasa _at_ gmail.com)
 # License: MIT license
 # ============================================================================
@@ -54,7 +54,7 @@ class Source(Base):
             self.print_message(context, args)
 
             try:
-                check_output(args).decode(self.vars['encoding'])
+                check_output(args).decode(self.vars['encoding'], 'replace')
             except CalledProcessError:
                 return []
 
