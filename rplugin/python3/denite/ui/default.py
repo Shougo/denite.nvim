@@ -108,6 +108,7 @@ class Default(object):
             self.init_buffer()
             self.init_cursor()
 
+        self.update_candidates()
         self.change_mode(self._current_mode)
 
         if self._context['cursor_pos'].isnumeric():
