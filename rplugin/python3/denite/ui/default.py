@@ -117,6 +117,8 @@ class Default(object):
         # Make sure that the caret position is ok
         self._prompt.caret.locus = self._prompt.caret.tail
         status = self._prompt.start()
+        # Redraw to clear prompt
+        self._vim.command('redraw!')
         if status == STATUS_INTERRUPT:
             # STATUS_INTERRUPT is returned when user hit <C-c> and the loop has
             # interrupted.

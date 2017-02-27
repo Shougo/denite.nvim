@@ -182,7 +182,6 @@ class Prompt:
                 raise e
         except KeyboardInterrupt:
             status = STATUS_INTERRUPT
-        self.nvim.command('redraw!')
         if self.text:
             self.nvim.call('histadd', 'input', self.text)
         return self.on_term(status)
