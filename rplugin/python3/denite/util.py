@@ -123,6 +123,12 @@ def expand(path):
     return os.path.expandvars(os.path.expanduser(path))
 
 
+def abspath(vim, path):
+    path = expand(path)
+    return path if os.path.isabs(path) else os.path.join(
+        vim.call('getcwd'), path)
+
+
 def convert2fuzzy_pattern(text):
     return '\|'.join([escape_fuzzy(x, True) for x in split_input(text)])
 
