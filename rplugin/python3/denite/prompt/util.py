@@ -97,7 +97,7 @@ def ensure_str(nvim, seed):
     """
     if isinstance(seed, bytes):
         encoding = get_encoding(nvim)
-        return seed.decode(encoding, 'replace')
+        return seed.decode(encoding, 'surrogateescape')
     return seed
 
 

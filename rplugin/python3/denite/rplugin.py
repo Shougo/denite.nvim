@@ -9,7 +9,7 @@ ENCODING = vim.eval('&encoding')
 
 def reform_bytes(value):
     if isinstance(value, bytes):
-        return value.decode(ENCODING, 'replace')
+        return value.decode(ENCODING, 'surrogateescape')
     elif isinstance(value, (dict, vim.Dictionary, vim.Options)):
         return {
             reform_bytes(k): reform_bytes(v) for k, v in value.items()
