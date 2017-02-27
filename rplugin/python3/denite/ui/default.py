@@ -452,7 +452,7 @@ class Default(object):
 
     def redraw(self):
         self._context['is_redraw'] = True
-        self.gather_candidates(self._context)
+        self._denite.gather_candidates(self._context)
         if self.update_candidates():
             self.update_buffer()
         else:
