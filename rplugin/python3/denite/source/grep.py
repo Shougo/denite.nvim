@@ -79,13 +79,13 @@ class Source(Base):
         arg = args.get(0, [])
         if arg:
             if isinstance(arg, str):
-                arg = [self.vim.call('expand', arg)]
+                arg = [arg]
             elif not isinstance(arg, list):
                 raise AttributeError('`args[0]` needs to be a `str` or `list`')
         # Windows needs to specify the directory.
         elif context['is_windows']:
             arg = [context['path']]
-        context['__paths'] = arg
+        context['__paths'] = [util.abspath(self.vim, x) for x in arg]
 
         # arguments
         arg = args.get(1, [])
