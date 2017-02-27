@@ -37,6 +37,9 @@ function! s:start(sources, user_context) abort
   let context = denite#init#_context()
   call extend(context, denite#init#_user_options())
   let context.custom = denite#custom#get()
+  if has_key(context.custom.option, '_')
+    call extend(context, context.custom.option['_'])
+  endif
   if has_key(context.custom.option, buffer_name)
     call extend(context, context.custom.option[buffer_name])
   endif
