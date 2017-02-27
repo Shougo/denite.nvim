@@ -7,6 +7,7 @@
 import shlex
 
 from denite import util, process
+from os.path import relpath
 
 from .base import Base
 
@@ -183,8 +184,9 @@ class Source(Base):
         candidates = []
 
         for line in outs:
-            result = util.parse_jump_line('', line)
+            result = util.parse_jump_line(context['path'], line)
             if not result:
                 continue
-            candidates.append(_candidate(result, result[0]))
+            path = relpath(result[0], start=context['path'])
+            candidates.append(_candidate(result, path))
         return candidates
