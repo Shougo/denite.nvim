@@ -26,9 +26,8 @@ class Source(Base):
 
             changes.append({
                 'word': '%4d-%-3d  %s' % (linenr, col, text),
-                'action__path': self.vim.call('fnamemodify',
-                                              self.vim.call('expand', '%'),
-                                              ':p'),
+                'action__path': self.vim.call(
+                    'fnamemodify', self.vim.call('bufname', '%'), ':p'),
                 'action__line': linenr,
                 'action__col': col,
             })
