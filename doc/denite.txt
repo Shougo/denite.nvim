@@ -999,6 +999,9 @@ directory_rec	Gather directories recursive and nominates all directory names
 
 		Source args:
 			0. the search directory
+			Note: The directory is not expanded argument by
+			|expand()|.  The environment variable is only
+			expanded.
 
 		Source custom variables:
 		command		 the default get directories command
@@ -1023,6 +1026,9 @@ file_rec	Gather files recursive and nominates all file names under the
 
 		Source args:
 			0. the search directory
+			Note: The directory is not expanded argument by
+			|expand()|.  The environment variable is only
+			expanded.
 
 		Source custom variables:
 		command		the default get files command.
