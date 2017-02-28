@@ -852,6 +852,15 @@ OPTIONS							*denite-options*
 						*denite-options-direction*
 -direction={direction}
 		Specify the Denite window direction as {direction}.
+
+		When it is "dynamictop", if each item's length is less than
+		the current window's width, the direction becomes "aboveleft",
+		otherwise - "topleft".
+		Similarly for "dynamicbottom", the direction becomes
+		"belowright" or "botright".
+		It is useful to always make best effort to show all items
+		without shortening.
+
 		Default: "botright"
 
 						*denite-options-empty*

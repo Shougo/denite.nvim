@@ -108,7 +108,7 @@ class Default(object):
             self.init_buffer()
             self.init_cursor()
 
-        self.update_candidates()
+        self.update_displayed_texts()
         self.change_mode(self._current_mode)
 
         if self._context['cursor_pos'].isnumeric():
@@ -143,7 +143,7 @@ class Default(object):
             # Create new buffer
             self._vim.call(
                 'denite#util#execute_path',
-                'silent keepalt %s new ' % self._context['direction'],
+                'silent keepalt %s new ' % self._get_direction(),
                 '[denite]')
         self.resize_buffer()
         self._vim.command('nnoremap <silent><buffer> <CR> ' +
@@ -189,6 +189,19 @@ class Default(object):
                 '%{denite#get_status_sources()} %=' +
                 '%#deniteStatusLinePath# %{denite#get_status_path()} %*' +
                 '%#deniteStatusLineNumber#%{denite#get_status_linenr()}%*')
+
+    def _get_direction(self):
+        direction = self._context['direction']
+        if direction == 'dynamictop' or direction == 'dynamicbottom':
+            self.update_displayed_texts()
+            winwidth = self._vim.call('winwidth', 0)
+            is_fit = not [x for x in self._displayed_texts
+                          if self._vim.call('strwidth', x) > winwidth]
+            if direction == 'dynamictop':
+                direction = 'aboveleft' if is_fit else 'topleft'
+            else:
+                direction = 'belowright' if is_fit else 'botright'
+        return direction
 
     def init_syntax(self):
         self._vim.command('syntax case ignore')
