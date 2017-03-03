@@ -125,6 +125,7 @@ def expand(path):
 
 def abspath(vim, path):
     path = expand(path)
+    path.replace('\\', '/')
     return path if os.path.isabs(path) else os.path.join(
         vim.call('getcwd'), path)
 
