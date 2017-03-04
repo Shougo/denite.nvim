@@ -159,10 +159,10 @@ def _change_line(prompt, params):
 
 
 def _move_caret_to_next_word(prompt, params):
-    pattern = re.compile('^\S+')
+    pattern = re.compile('^\S+\s+\S')
     original_text = prompt.caret.get_forward_text()
     substituted_text = pattern.sub('', original_text)
-    prompt.caret.locus += 2 + len(original_text) - len(substituted_text)
+    prompt.caret.locus += len(original_text) - len(substituted_text)
 
 
 def _move_caret_to_end_of_word(prompt, params):
