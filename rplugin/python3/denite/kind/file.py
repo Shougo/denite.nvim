@@ -19,6 +19,7 @@ class Kind(Openable):
         self.name = 'file'
         self.default_action = 'open'
         self.persist_actions += ['preview', 'highlight']
+        self._previewed_target = {}
 
     def action_open(self, context):
         cwd = self.vim.call('getcwd')
@@ -69,8 +70,7 @@ class Kind(Openable):
         col = int(target.get('action__col', 0))
 
         preview_window = self.__get_preview_window()
-        if (preview_window and preview_window.buffer.name == path and
-                line == 0 and col == 0):
+        if (preview_window and self._previewed_target == target):
             self.vim.command('pclose!')
         else:
             prev_id = self.vim.call('win_getid')
@@ -82,6 +82,7 @@ class Kind(Openable):
                 self.vim.call('matchaddpos', 'Search',
                               [int(target.get('action__line', 0))])
             self.vim.call('win_gotoid', prev_id)
+            self._previewed_target = target
 
     def __jump(self, context, target):
         if 'action__pattern' in target:
