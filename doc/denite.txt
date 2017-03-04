@@ -651,9 +651,9 @@ e		<denite:move_caret_to_end_of_word>
 0		<denite:move_caret_to_head>
 $		<denite:move_caret_to_tail>
 c		<denite:change_word>
-cc	<denite:change_line>
-cw	<denite:change_word>
-dd	<denite:delete_entire_text>
+cc		<denite:change_line>
+cw		<denite:change_word>
+dd		<denite:delete_entire_text>
 gg		<denite:move_to_first_line>
 G		<denite:move_to_last_line>
 <C-U>		<denite:scroll_window_upwards>
