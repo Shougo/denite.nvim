@@ -66,8 +66,6 @@ class Kind(Openable):
     def __preview(self, context, highlight):
         target = context['targets'][0]
         path = target['action__path'].replace('/./', '/')
-        line = int(target.get('action__line', 0))
-        col = int(target.get('action__col', 0))
 
         preview_window = self.__get_preview_window()
         if (preview_window and self._previewed_target == target):

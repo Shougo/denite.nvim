@@ -9,6 +9,8 @@ import os
 import sys
 import glob
 
+from os.path import normpath, join
+
 
 def set_default(vim, var, val):
     return vim.call('denite#util#set_default', var, val)
@@ -82,7 +84,7 @@ def get_custom_source(custom, source_name, key, default):
 
 def load_external_module(file, module):
     current = os.path.dirname(os.path.abspath(file))
-    module_dir = os.path.join(os.path.dirname(current), module)
+    module_dir = join(os.path.dirname(current), module)
     sys.path.insert(0, module_dir)
 
 
@@ -114,7 +116,7 @@ def parse_jump_line(path_head, line):
     if not col:
         col = '0'
     if not os.path.isabs(path):
-        path = os.path.join(path_head, path)
+        path = join(path_head, path)
 
     return [path, linenr, col, text]
 
@@ -124,10 +126,7 @@ def expand(path):
 
 
 def abspath(vim, path):
-    path = expand(path)
-    path.replace('\\', '/')
-    return path if os.path.isabs(path) else os.path.join(
-        vim.call('getcwd'), path)
+    return normpath(join(vim.call('getcwd'), path))
 
 
 def convert2fuzzy_pattern(text):
@@ -172,7 +171,7 @@ def find_rplugins(context, source, loaded_paths):
     Searches $VIMRUNTIME/*/rplugin/python3/denite/$source/
     """
 
-    src = os.path.join('rplugin/python3/denite', source, '*.py')
+    src = join('rplugin/python3/denite', source, '*.py')
     for runtime in context.get('runtimepath', '').split(','):
         for path in glob.iglob(os.path.join(runtime, src)):
             name = os.path.splitext(os.path.basename(path))[0]
