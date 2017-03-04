@@ -8,14 +8,23 @@ import sys
 from os.path import basename, join
 from os import walk
 
+
+DEFAULT_SKIP_LIST = ['.git', '.hg']
+
 try:
+    # 'scandir' was introduced at Python 3.5.
+    # See https://pypi.python.org/pypi/scandir
     from os import scandir
 
     def scantree(path_name, skip_list=None):
-        """if scandir is available use it as it is faster than os.walk"""
+        """This function returns the files present in path_name, including the
+        files present in subfolders.
+
+        Implementation uses scandir, if available, as it is faster than
+        os.walk"""
 
         if skip_list is None:
-            skip_list = ['.git', '.hg']
+            skip_list = DEFAULT_SKIP_LIST
 
         for entry in scandir(path_name):
             if entry.is_dir(follow_symlinks=False):
@@ -25,16 +34,17 @@ try:
                 yield entry.path
 except ImportError:
     def scantree(path_name, skip_list=None):
-        """scandir is not available use os.walk"""
+        """This function returns the files present in path_name, including the
+        files present in subfolders using os.walk"""
 
         if skip_list is None:
-            skip_list = ['.git', '.hg']
+            skip_list = DEFAULT_SKIP_LIST
 
         for root, dirn, files in walk(path_name):
             if basename(root) in skip_list:
                 continue
-            for fn in files:
-                yield join(root, fn)
+            for filename in files:
+                yield join(root, filename)
 
 
 def output_files():
