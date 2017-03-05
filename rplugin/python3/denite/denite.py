@@ -210,6 +210,12 @@ class Denite(object):
         if not action:
             return True
 
+        sources = set()
+        for target in targets:
+            sources.add(target['source'])
+        context['source'] = self._sources[
+            sources.pop()].context if len(sources) == 1 else {}
+
         context['targets'] = targets
         return action['func'](context)
 

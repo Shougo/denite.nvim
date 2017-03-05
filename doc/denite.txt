@@ -1569,11 +1569,21 @@ redraw_actions (List) 				(Optional)
 					*denite-kind-attribute-action_*
 action_{name} (Function) 			(Optional)
 		Custom action logic with {name} as action name. The function
-		is passed with {self} and {context}. To get the seleted
-		candidate list, you could use "targets" attribute: >
+		is passed with {self} and {context}.
+		
+		To get the seleted candidate list, you could use "targets"
+		attribute in {context}: >
 
                     targets = context['targets']
+<
 
+		To get the source context, you could use "source" attribute in
+		{context}: >
+
+		    source_context = context['source']
+<
+		Note: If the candidates source is not single, the "source"
+		attribute is empty.
 
 ==============================================================================
 CREATE FILTER						*denite-create-filter*
