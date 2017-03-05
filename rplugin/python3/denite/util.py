@@ -126,7 +126,7 @@ def expand(path):
 
 
 def abspath(vim, path):
-    return normpath(join(vim.call('getcwd'), path))
+    return normpath(join(vim.call('getcwd'), expand(path)))
 
 
 def convert2fuzzy_pattern(text):
