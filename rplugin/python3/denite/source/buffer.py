@@ -11,9 +11,9 @@ from sys import maxsize
 
 BUFFER_HIGHLIGHT_SYNTAX = [
     {'name': 'Name',     'link': 'Function',  're': r'[^/ \[\]]\+\s'},
-    {'name': 'Prefix',   'link': 'Constant',  're': r'\d\+\s\%(\S\+\)\?'},
+    {'name': 'Prefix',   'link': 'Constant',  're': r'\d\+\s[\ ahu%#]\+'},
     {'name': 'Info',     'link': 'PreProc',   're': r'\[.\{-}\] '},
-    {'name': 'Modified', 'link': 'Statement', 're': r'\[.\{-}+\]'},
+    {'name': 'Modified', 'link': 'Statement', 're': r'+\s'},
     {'name': 'NoFile',   'link': 'Function',  're': r'\[nofile\]'},
     {'name': 'Time',     'link': 'Statement', 're': r'(.\{-})'},
 ]
