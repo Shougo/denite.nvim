@@ -7,7 +7,7 @@
 import socket
 from threading import Thread
 from queue import Queue
-from time import time, sleep
+from time import time
 
 
 class Socket(object):
@@ -31,6 +31,25 @@ class Socket(object):
     def welcome(self):
         return self.__welcome
 
+    def eof(self):
+        return self.__eof
+
+    def kill(self):
+        if self.__sock is not None:
+            self.__sock.close()
+
+        self.__sock = None
+        self.__queue_out = None
+        self.__thread = None
+
+    def sendall(self, commands):
+        for command in commands:
+            self.__sock.sendall('{}\n'.format(command).encode(self.__enc))
+
+    def receive(self, bytes=1024):
+        return self.__sock.recv(bytes).decode(
+            self.__enc, errors='replace')
+
     def connect(self, host, port, timeout):
         for res in socket.getaddrinfo(host, port, socket.AF_UNSPEC,
                                       socket.SOCK_STREAM, socket.IPPROTO_TCP,
@@ -52,15 +71,6 @@ class Socket(object):
                 else:
                     raise OSError('Socket: getaddrinfo returns an empty list')
 
-    def sendall(self, commands):
-        for command in commands:
-            self.__sock.sendall('{}\n'.format(command).encode(self.__enc))
-        sleep(0.1)
-
-    def receive(self, bytes=1024):
-        return self.__sock.recv(bytes).decode(
-            self.__enc, errors='replace')
-
     def enqueue_output(self):
         if not self.__queue_out:
             return
@@ -77,17 +87,6 @@ class Socket(object):
                 else:
                     buffer += more
 
-    def eof(self):
-        return self.__eof
-
-    def kill(self):
-        if self.__sock is not None:
-            self.__sock.close()
-
-        self.__sock = None
-        self.__queue_out = None
-        self.__thread = None
-
     def communicate(self, timeout):
         if not self.__sock:
             return []
@@ -98,10 +97,12 @@ class Socket(object):
         while not self.__queue_out.empty() and time() < start + timeout:
             outs.append(self.__queue_out.get_nowait())
 
-        if not self.__thread.is_alive() or self.__queue_out.empty():
-            self.__eof = True
-            self.__sock = None
-            self.__thread = None
-            self.__queue = None
+        if self.__thread.is_alive() or not self.__queue_out.empty():
+            return outs
+
+        self.__eof = True
+        self.__sock = None
+        self.__thread = None
+        self.__queue = None
 
         return outs
