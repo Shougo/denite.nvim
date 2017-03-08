@@ -99,16 +99,18 @@ class Source(Base):
             'timestamp': getatime(
                 attr['name']) if exists(attr['name']) else time(),
             'status': '{0}{1}{2}{3}'.format(
-                ' ' if self.vim.call('buflisted', attr['number']) else 'u',
+                ' ' if self.vim.call('buflisted', attr['number'])
+                    else 'u',
                 '%' if attr['number'] == context['__caller_bufnr']
                     else '#' if attr['number'] == context['__alter_bufnr']
                     else ' ',
-                'a' if self.vim.call('bufwinnr', attr['number']) > 0
-                    else 'h' if self.vim.call('bufloaded',
-                                              attr['number']) != 0 else ' ',
+                'a' if self.vim.call('win_findbuf', attr['number'])
+                    else 'h' if self.vim.call('bufloaded', attr['number']) != 0
+                    else ' ',
                 '=' if buf.options['readonly']
-                    else ('+' if buf.options['modified']
-                          else '-' if buf.options['modifiable'] == 0 else ' ')
+                    else '+' if buf.options['modified']
+                    else '-' if buf.options['modifiable'] == 0
+                    else ' '
             )
         })
 
