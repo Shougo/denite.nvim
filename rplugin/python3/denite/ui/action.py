@@ -168,7 +168,7 @@ def _move_caret_to_next_word(prompt, params):
 def _move_caret_to_end_of_word(prompt, params):
     pattern = re.compile('^\S+')
     original_text = prompt.caret.get_forward_text()
-    if (original_text[0] == ' '):
+    if original_text and original_text[0] == ' ':
         _move_caret_to_next_word(prompt, params)
         _move_caret_to_end_of_word(prompt, params)
     else:
