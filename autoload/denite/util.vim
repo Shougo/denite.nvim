@@ -250,15 +250,25 @@ function! denite#util#alternate_buffer() abort
   endif
 endfunction
 function! denite#util#delete_buffer(command, bufnr) abort
-  " Not to close window, move to alternate buffer.
+  if index(tabpagebuflist(), a:bufnr) < 0
+    silent execute a:bufnr a:command
+    return
+  endif
 
+  let buffers = filter(range(1, bufnr('$')), 'buflisted(v:val)')
+  if len(buffers) == 1 && bufname(buffers[0]) == ''
+    " Noname buffer only
+    return
+  endif
+
+  " Not to close window, move to alternate buffer.
   let prev_winnr = winnr()
   for winnr in range(1, winnr('$'))
     if winbufnr(winnr) == a:bufnr
       execute winnr . 'wincmd w'
       call denite#util#alternate_buffer()
-      silent execute a:bufnr a:command
     endif
   endfor
   execute prev_winnr . 'wincmd w'
+  silent execute a:bufnr a:command
 endfunction
