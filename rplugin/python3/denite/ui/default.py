@@ -152,10 +152,10 @@ class Default(object):
 
         self._options = self._vim.current.buffer.options
         self._options['buftype'] = 'nofile'
-        self._options['filetype'] = 'denite'
         self._options['swapfile'] = False
         self._options['modifiable'] = True
         self._options['buflisted'] = False
+        self._options['filetype'] = 'denite'
 
         self._window_options = self._vim.current.window.options
         if self._context['cursorline']:
@@ -179,6 +179,8 @@ class Default(object):
         self._bufvars['denite_statusline_path'] = ''
         self._bufvars['denite_statusline_linenr'] = ''
 
+        self._vim.command('doautocmd WinEnter')
+        self._vim.command('doautocmd BufWinEnter')
         self._vim.command('doautocmd FileType denite')
 
         self.init_syntax()
