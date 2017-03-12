@@ -1636,7 +1636,9 @@ A: Yes.
 Q: I want to change the cursor line color in Denite buffer.
 
 A: denite uses 'cursorline' feature.
-So you can change the color by |hl-CursorLine| highlight.
+So you can change the color by |hl-CursorLine| highlight or
+|denite-options-highlight-mode-{mode}|. >
+	Denite file_rec -highlight-mode-insert=Search
 
 Q: I want to use unite source in denite.
 
