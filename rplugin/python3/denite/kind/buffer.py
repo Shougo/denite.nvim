@@ -24,7 +24,7 @@ class Kind(Openable):
     def action_delete(self, context):
         for target in context['targets']:
             self.vim.call('denite#util#delete_buffer',
-                          'bdelete', target['action__bufnr'])
+                          'bdelete!', target['action__bufnr'])
 
     # Needed for openable actions
     def __winid(self, target):
