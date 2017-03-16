@@ -103,6 +103,7 @@ class Source(Base):
                 if arg == '!':
                     # Interactive mode
                     context['is_interactive'] = True
+                    arg = ''
                 else:
                     arg = [arg]
             elif not isinstance(arg, list):
