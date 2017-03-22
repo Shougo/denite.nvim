@@ -65,6 +65,15 @@ class Source(Base):
                          }
                         for candidate in menus[menu]['command_candidates']
                     ])
+                # Handle directory candidates
+                if 'directory_candidates' in menus[menu]:
+                    lines.extend([
+                        {'word': str(candidate[0]),
+                            'kind': 'directory',
+                            'action__path': candidate[1]
+                            }
+                            for candidate in menus[menu]['directory_candidates']
+                        ])
         else:
             # Display all the registered menus
             lines.extend([
