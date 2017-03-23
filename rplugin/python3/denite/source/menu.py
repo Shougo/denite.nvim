@@ -59,27 +59,32 @@ class Source(Base):
                 # Handle command candidates
                 if 'command_candidates' in menus[menu]:
                     lines.extend([
-                        {'word': str(candidate[0]),
-                         'kind': 'command',
-                         'action__command': candidate[1]
+                        {
+                            'word': str(candidate[0]),
+                            'kind': 'command',
+                            'action__command': candidate[1]
                          }
                         for candidate in menus[menu]['command_candidates']
                     ])
                 # Handle directory candidates
                 if 'directory_candidates' in menus[menu]:
                     lines.extend([
-                        {'word': str(candidate[0]),
+                        {
+                            'word': str(candidate[0]),
                             'kind': 'directory',
                             'action__path': candidate[1]
-                            }
-                            for candidate in menus[menu]['directory_candidates']
+                         }
+                        for candidate in menus[menu][
+                                'directory_candidates']
                         ])
         else:
             # Display all the registered menus
             lines.extend([
-                {'word': '{} - {}'.format(menu, candidate.get('description')),
-                 'kind': 'command',
-                 'action__command': 'Denite menu:' + menu,
+                {
+                    'word': '{} - {}'.format(
+                        menu, candidate.get('description')),
+                    'kind': 'command',
+                    'action__command': 'Denite menu:' + menu,
                  }
                 for menu, candidate in menus.items()
             ])
