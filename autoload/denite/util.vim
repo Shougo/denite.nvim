@@ -256,7 +256,7 @@ function! denite#util#delete_buffer(command, bufnr) abort
   endif
 
   let buffers = filter(range(1, bufnr('$')), 'buflisted(v:val)')
-  if len(buffers) == 1 && bufname(buffers[0]) == ''
+  if len(buffers) == 1 && bufname(buffers[0]) ==# ''
     " Noname buffer only
     return
   endif
