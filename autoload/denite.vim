@@ -56,6 +56,13 @@ function! s:start(sources, user_context) abort
     return
   endif
 
+  call s:add_to_jumplist()
   return has('nvim') ? _denite_start(a:sources, context)
         \            : denite#vim#_start(a:sources, context)
+endfunction
+
+function! s:add_to_jumplist() abort
+  let mark_position = getpos("'a")
+  normal! ma`a
+  call setpos("'a", mark_position)
 endfunction
