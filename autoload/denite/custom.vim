@@ -81,13 +81,22 @@ function! denite#custom#alias(type, name, base) abort
   let custom[a:base] = uniq(sort(add(custom[a:base], a:name)))
 endfunction
 
-function! denite#custom#option(buffer_name, option_name, value) abort
+function! denite#custom#option(buffer_name, name_or_dict, ...) abort
   let custom = denite#custom#get().option
 
   for key in denite#util#split(a:buffer_name)
     if !has_key(custom, key)
       let custom[key] = {}
     endif
-    let custom[key][a:option_name] = a:value
+
+    call s:set_custom(custom[key], a:name_or_dict, get(a:000, 0, ''))
   endfor
+endfunction
+
+function! s:set_custom(dest, name_or_dict, value) abort
+  if type(a:name_or_dict) == type({})
+    call extend(a:dest, a:name_or_dict)
+  else
+    let a:dest[a:name_or_dict] = a:value
+  endif
 endfunction

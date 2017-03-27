@@ -688,11 +688,19 @@ denite#custom#filter({filter-name}, {variable-name}, {value})
 
 						*denite#custom#option()*
 denite#custom#option({buffer-name}, {option-name}, {value})
+denite#custom#option({buffer-name}, {dict})
 		Set {option-name} option to {value} in {buffer-name}
 		buffer.
 		If {buffer-name} is "_", the options are used for all buffers.
+		If {dict} is available, the key is {option-name} and the value
+		is {value}.
 		Note: The all options are in |denite-options|.  However, "-" is
-		substituted to "_", and "-" prefix is removed.
+		substituted to "_", and "-" prefix is removed. >
+
+	call denite#custom#option('default', {
+	      \ 'prompt': '>',
+	      \ 'short_source_names': v:true
+	      \ })
 
 							*denite#custom#map()*
 denite#custom#map({mode}, {lhs}, {rhs}[, {params}])
