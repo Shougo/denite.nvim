@@ -2,50 +2,52 @@
 
 [![Join the chat at https://gitter.im/Shougo/denite.nvim](https://badges.gitter.im/Shougo/denite.nvim.svg)](https://gitter.im/Shougo/denite.nvim?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Denite.nvim is a dark powered for Neovim/Vim unite all interfaces.
-It can replace many features or plugins by the interface.
-It is like the fuzzy finder, but it is more generic.
-You can extend the interface by the customization and to create the sources.
+Denite is a dark powered plugin for Neovim/Vim to unite all interfaces.
+It can replace many features or plugins with its interface.
+It is like a fuzzy finder, but is more generic.
+You can extend the interface and create the sources.
 
-* Open the files
+Some things you can do with it include:
 
-* Switch buffers
+* Opening files
 
-* Insert the register value
+* Switching buffers
 
-* Change the current directory
+* Inserting the value of a register
 
-* Search the candidates
+* Changing current directory
 
-Unite.vim is anything.el like interface for Vim.
-But the implementation is ugly and very slow.
-Denite.nvim resolves unite.vim problems.
-It is 10 times faster than unite.vim.
+* Searching for a string
 
-* Theoretically faster while the main process is executed by python
+[Unite.vim](https://github.com/Shougo/unite.vim) was meant to be like [Helm](https://github.com/emacs-helm/helm) for Vim.
+But the implementation is ugly and it's very slow.
 
-* Theoretically more stable while no other processes can be performed when
-denite.nvim is executed.
+Denite resolves Unite's problems. Here are some of its benefits:
 
-* The implementation is relatively simple than unite.vim
+* Theoretically faster because the main process is executed by Python
 
-* Denite.nvim has great potential to implement a new feature
+* Theoretically more stable because no other processes can be performed when
+it runs.
 
-* To send the pull request by Python3 is easier than Vim script
+* The implementation is simpler than unite
+
+* Has greater potential to implement new features
+
+* Python3 is easier to work with than Vimscript
 
 * There are a lot of useful tools to keep code simple (linter, tester, etc...)
 in Python3.
 
-* The unite.vim is officially obsolete, minor bugs (or even major bugs) are
+* Unite is officially obsolete, minor bugs (or even major bugs) are
 not fixed anymore
 
 
 ## Requirements
 
-denite requires Neovim or Vim8.0+ with if\_python3.
+Denite requires Neovim or Vim8.0+ with `if_python3`.
 If `:echo has("python3")` returns `1`, then you're done; otherwise, see below.
 
-You can enable Python3 interface with pip:
+You can enable Python3 interface with `pip`:
 
     pip3 install neovim
 
@@ -55,20 +57,20 @@ you should read `:help provider-python`.
 
 ## Future works (not implemented yet)
 
-* source completion support: completion(args, arglead)
+* source completion support: `completion(args, arglead)`
 
-* matcher_hide_hidden_files
+* `matcher_hide_hidden_files`
 
 * quickmatch feature
 
 * file and file:new source
 
-* -no-split, -tab option
+* `--no-split`, `--tab` option
 
 * tag and tag:include source
 
-* defx.nvim support
+* [`defx`](https://github.com/Shougo/defx.nvim) support
 
 * match highlight improvement
 
-* denite#custom#action()
+* `denite#custom#action()`
