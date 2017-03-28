@@ -349,11 +349,10 @@ class Default(object):
                 )
             else:
                 terms.append(candidate['source'])
-        word = candidate['word'][:self._context['max_candidate_width']]
         encoding = self._context['encoding']
-        abbr = candidate.get('abbr', word).encode(
+        abbr = candidate.get('abbr', candidate['word']).encode(
             encoding, errors='replace').decode(encoding, errors='replace')
-        terms.append(abbr)
+        terms.append(abbr[:self._context['max_candidate_width']])
         return (self._context['selected_icon']
                 if index in self._selected_candidates
                 else ' ') + ' '.join(terms)
