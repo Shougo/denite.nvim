@@ -51,12 +51,20 @@ class Denite(object):
             source.context['prev_input'] = context['input']
             source.context['event'] = 'gather'
 
-            candidates = source.gather_candidates(source.context)
+            candidates = self._gather_source_candidates(
+                source.context, source)
 
             source.context['all_candidates'] = candidates
             source.context['candidates'] = candidates
 
             context['messages'] = source.context['messages']
+
+    def _gather_source_candidates(self, context, source):
+        max_len = context['max_candidate_width'] * 2
+        candidates = source.gather_candidates(context)
+        for candidate in [x for x in candidates if len(x['word']) > max_len]:
+            candidate['word'] = candidate['word'][: max_len]
+        return candidates
 
     def filter_candidates(self, context):
         for source in self._current_sources:
@@ -64,12 +72,13 @@ class Denite(object):
             ctx['input'] = context['input']
             if ctx['is_interactive'] and ctx['prev_input'] != ctx['input']:
                 ctx['event'] = 'interactive'
-                ctx['all_candidates'] = source.gather_candidates(ctx)
+                ctx['all_candidates'] = self._gather_source_candidates(
+                    ctx, source)
                 ctx['prev_input'] = ctx['input']
             entire = ctx['all_candidates']
             if ctx['is_async']:
                 ctx['event'] = 'async'
-                entire += source.gather_candidates(ctx)
+                entire += self._gather_source_candidates(ctx, source)
             if not entire:
                 continue
             partial = []
