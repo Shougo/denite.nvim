@@ -272,3 +272,27 @@ function! denite#util#delete_buffer(command, bufnr) abort
   execute prev_winnr . 'wincmd w'
   silent execute a:bufnr a:command
 endfunction
+function! denite#util#command_histories() abort
+  let out = ''
+  redir => out
+  silent! history
+  redir END
+
+  let commands = []
+
+  for line in reverse(split(out, '\n'))
+    " convert history command output
+    " '    #  command1'
+    " '    1  command2'
+    " '    2  command3'
+    " ...
+    " to
+    " '# command1'
+    " '1 command2'
+    " '2 command3'
+    " ...
+    call add(commands, split(substitute(line, '^>\? \+\(#\|[0-9]\+\) *\(.*\)', '\1\n\2', ''), '\n'))
+  endfor
+
+  return commands
+endfunction
