@@ -1051,6 +1051,13 @@ change		Gather results of |:changes|.
 						*denite-source-colorscheme*
 colorscheme	Gather colorschemes and change the colorscheme.
 
+						*denite-source-command-history*
+command_history	Gather command histories and run it.
+
+		Source custom variables:
+		ignore_command_regexp	 the regexp to exclude from histories.
+					Note: python3's regexp
+
 						*denite-source-directory_rec*
 directory_rec	Gather directories recursive and nominates all directory names
 		under the search directory (argument 0) or the current directory
