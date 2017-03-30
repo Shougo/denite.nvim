@@ -1,0 +1,29 @@
+from .prompt import Prompt
+
+
+class Caret:
+    prompt = ... # type: Prompt
+    _locus = ... # type: int
+
+    def __init__(self, prompt: Prompt, locus: int) -> None: ...
+
+    @property
+    def locus(self) -> int: ...
+
+    @locus.setter
+    def locus(self, value: int) -> None: ...
+
+    @property
+    def head(self) -> int: ...
+
+    @property
+    def lead(self) -> int: ...
+
+    @property
+    def tail(self) -> int: ...
+
+    def get_backward_text(self) -> str: ...
+
+    def get_selected_text(self) -> str: ...
+
+    def get_forward_text(self) -> str: ...
