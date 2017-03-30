@@ -25,16 +25,6 @@ function! denite#util#convert2list(expr) abort
   return type(a:expr) ==# type([]) ? a:expr : [a:expr]
 endfunction
 
-function! denite#util#redir(cmd) abort
-  let [save_verbose, save_verbosefile] = [&verbose, &verbosefile]
-  set verbose=0 verbosefile=
-  redir => res
-  silent! execute a:cmd
-  redir END
-  let [&verbose, &verbosefile] = [save_verbose, save_verbosefile]
-  return res
-endfunction
-
 function! denite#util#execute_path(command, path) abort
   try
     execute a:command fnameescape(a:path)
