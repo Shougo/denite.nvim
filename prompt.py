@@ -53,6 +53,10 @@ class Prompt:
         self.history = History(weakref.proxy(self))
         self.action = copy.copy(DEFAULT_ACTION)
         self.keymap = Keymap.from_rules(nvim, DEFAULT_KEYMAP_RULES)
+        # MacVim (GUI) has a problem on 'redraw'
+        self.is_macvim = (
+            nvim.call('has', 'gui_running') and nvim.call('has', 'mac')
+        )
 
     def insert_text(self, text):
         """Insert text after the caret.
@@ -148,6 +152,9 @@ class Prompt:
             build_echon_expr(selected_text, self.highlight_caret),
             build_echon_expr(forward_text, self.highlight_text),
         ]))
+        if self.is_macvim:
+            # MacVim requires extra 'redraw'
+            self.nvim.command('redraw')
 
     def start(self):
         """Start prompt and return value.
