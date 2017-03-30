@@ -22,14 +22,16 @@ class Source(Base):
 
     def gather_candidates(self, context):
         histories = self._get_histories()
-        if histories:
-            max_len = len(histories[0][0])
-            return [self._convert(r, max_len) for r in histories if len(r) > 1]
+        if not histories:
+            return []
+
+        max_len = len(histories[0][0])
+        return [self._convert(r, max_len) for r in histories if len(r) > 1]
 
     def _get_histories(self):
         histories = [
-            x for x in self.vim.call('denite#util#command_histories')
-            if len(x) > 1
+            [str(x), self.vim.call('histget', ':', x)]
+            for x in reversed(range(1, self.vim.call('histnr', ':')))
         ]
         histories = self._remove_duplicate_entry(histories)
         if self.vars['ignore_command_regexp']:
