@@ -438,7 +438,7 @@ class Default(object):
         self._options['modifiable'] = False
         self._vim.command('pclose!')
         # Redraw to clear prompt
-        self._vim.command('echo ""')
+        self._vim.command('redraw | echo ""')
         self._vim.command('highlight! link CursorLine CursorLine')
         if self._vim.call('exists', '#ColorScheme'):
             self._vim.command('silent doautocmd ColorScheme')
