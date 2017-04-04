@@ -179,9 +179,9 @@ class Default(object):
         self._bufvars['denite_statusline_path'] = ''
         self._bufvars['denite_statusline_linenr'] = ''
 
-        self._vim.command('doautocmd WinEnter')
-        self._vim.command('doautocmd BufWinEnter')
-        self._vim.command('doautocmd FileType denite')
+        self._vim.command('silent doautocmd WinEnter')
+        self._vim.command('silent doautocmd BufWinEnter')
+        self._vim.command('silent doautocmd FileType denite')
 
         self.init_syntax()
 
@@ -441,7 +441,7 @@ class Default(object):
         self._vim.command('echo ""')
         self._vim.command('highlight! link CursorLine CursorLine')
         if self._vim.call('exists', '#ColorScheme'):
-            self._vim.command('doautocmd ColorScheme')
+            self._vim.command('silent doautocmd ColorScheme')
 
     def quit_buffer(self):
         self.cleanup()
