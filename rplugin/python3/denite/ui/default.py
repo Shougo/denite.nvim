@@ -334,6 +334,7 @@ class Default(object):
         self._bufvars['denite_statusline_path'] = (
             '[' + self._context['path'] + ']')
         self._bufvars['denite_statusline_linenr'] = linenr
+        self._vim.command('redrawstatus')
 
     def update_cursor(self):
         self.update_displayed_texts()
