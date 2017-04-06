@@ -40,6 +40,7 @@ class Socket(object):
 
         self.__sock = None
         self.__queue_out = None
+        self.__thread.join(1.0)
         self.__thread = None
 
     def sendall(self, commands):
