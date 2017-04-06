@@ -153,7 +153,8 @@ class Source(Base):
                 '.*'.join(util.split_input(context['input']))]
 
         if context['__proc']:
-            return self.__async_gather_candidates(context, 0.03)
+            return self.__async_gather_candidates(
+                context, context['async_timeout'])
 
         if not context['__patterns']:
             return []

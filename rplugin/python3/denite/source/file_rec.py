@@ -50,7 +50,8 @@ class Source(Base):
             return []
 
         if context['__proc']:
-            return self.__async_gather_candidates(context, 0.03)
+            return self.__async_gather_candidates(
+                context, context['async_timeout'])
 
         if context['is_redraw']:
             self.__cache = {}
