@@ -63,7 +63,7 @@ you should read `:help provider-python`.
 
 * quickmatch feature
 
-* file and file:new source
+* file:new source
 
 * `--no-split`, `--tab` option
 
