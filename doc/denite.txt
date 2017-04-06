@@ -1051,6 +1051,9 @@ change		Gather results of |:changes|.
 						*denite-source-colorscheme*
 colorscheme	Gather colorschemes and change the colorscheme.
 
+						*denite-source-command*
+command		Gather commands and put on ex-mode.
+
 						*denite-source-command-history*
 command_history	Gather command histories and run it.
 
@@ -1128,14 +1131,11 @@ file_rec	Gather files recursive and nominates all file names under the
 filetype	Gather filetypes and change the filetype of the current
 		buffer.
 
-						*denite-source-command*
-command		Gather commands and put on ex-mode.
-
 						*denite-source-grep*
 grep		Gather grep results and nominates them.
-		The source executes [command, default_opts, recursive_opts, args[1]...,
-		`pattern_opt, args[2]`..., separator, args[0]... or final_opts]
-		command line.
+		The source executes [command, default_opts, recursive_opts,
+		args[1]..., `pattern_opt, args[2]`..., separator, args[0]...
+		or final_opts] command line.
 		Note: The command result must be "path:linenr:text" pattern.
 
 		Source args:
@@ -1208,6 +1208,10 @@ outline		Gather outline and jump to the target.
 				(default: [])
 		encoding 	the text encoding
 				(default: 'utf-8')
+
+						*denite-source-tag*
+tag		Gather results of |tagfiles()|.
+
 
 ==============================================================================
 KINDS							*denite-kinds*

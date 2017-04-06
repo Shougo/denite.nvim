@@ -18,8 +18,8 @@ class Source(Base):
 
     def gather_candidates(self, context):
         help_docs = {}
-        for file in globruntime(context['runtimepath'], 'doc/tags'):
-            with open(file, 'r') as ins:
+        for f in globruntime(context['runtimepath'], 'doc/tags'):
+            with open(f, 'r') as ins:
                 for line in ins:
                     name = line.split("\t", 1)[0]
                     help_docs[name] = {

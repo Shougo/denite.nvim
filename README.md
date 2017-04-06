@@ -67,8 +67,6 @@ you should read `:help provider-python`.
 
 * `--no-split`, `--tab` option
 
-* tag and tag:include source
-
 * [`defx`](https://github.com/Shougo/defx.nvim) support
 
 * match highlight improvement
