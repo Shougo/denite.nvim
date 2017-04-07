@@ -139,6 +139,7 @@ class Default(object):
                 'win_gotoid', self._winid):
             # Move the window to bottom
             self._vim.command('wincmd J')
+            self._winrestcmd = ''
         else:
             # Create new buffer
             self._vim.call(
