@@ -1,4 +1,3 @@
-from datetime import timedelta, datetime
 from .action import DEFAULT_ACTION_RULES
 from ..prompt.prompt import (
     ACTION_KEYSTROKE_PATTERN,
