@@ -72,21 +72,20 @@ class Denite(object):
         for source in self._current_sources:
             ctx = source.context
             ctx['input'] = context['input']
-            ctx['async_timeout'] = (0.005
-                                    if context['mode'] == 'insert'
-                                    else 0.01)
-            if ctx['prev_input'] != ctx['input']:
-                ctx['async_timeout'] /= 10
-                if ctx['is_interactive']:
-                    ctx['event'] = 'interactive'
-                    ctx['all_candidates'] = self._gather_source_candidates(
-                        ctx, source)
+            ctx['async_timeout'] = 0.1 if ctx['mode'] != 'insert' else 0.05
+            if ctx['prev_input'] != ctx['input'] and ctx['is_interactive']:
+                ctx['event'] = 'interactive'
+                ctx['all_candidates'] = self._gather_source_candidates(
+                    ctx, source)
             ctx['prev_input'] = ctx['input']
             entire = ctx['all_candidates']
             if ctx['is_async']:
                 ctx['event'] = 'async'
                 entire += self._gather_source_candidates(ctx, source)
-            if not entire:
+            if not entire or (ctx['is_async'] and
+                              len(entire) > source.max_candidates and
+                              ctx['input']):
+                yield source.name, entire, []
                 continue
             partial = []
             ctx['candidates'] = entire

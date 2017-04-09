@@ -1427,10 +1427,17 @@ kind		(String) or (Kind)		(Optional)
 		The candidates kind name or source specific Kind object.
 
 					*denite-source-attribute-syntax_name*
-syntax_name		(String)			(Optional)
+syntax_name		(String)		(Optional)
 		The source syntax highlight name.
 
 		If you omit it, "deniteSource_{source-name}" is used.
+
+				*denite-source-attribute-max_candidates*
+max_candidates		(Number)		(Optional)
+		If the candidates are more than it, denite will ignore the
+		filtering in asynchronous mode.
+
+		If you omit it, 10000 is used.
 
 					*denite-source-attribute-matchers*
 matchers	(List)				(Optional)
@@ -1701,6 +1708,12 @@ Q: I want to close denite buffer if grep results are empty.
 
 A: >
 	:Denite -no-empty grep
+
+Q: grep source is very slow.
+
+A: Because your machine is very slow.  The modern grep command like ripgrep is
+optimized for modern multi core processors.  It uses 4 processes heavily.
+More than a quad core CPU is recommended.  A dual core CPU is very slow.
 
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
