@@ -268,6 +268,8 @@ COMMANDS 						*denite-commands*
 :DeniteProjectDir [{options}] {sources}			*:DeniteProjectDir*
 		Equivalent to |:Denite| except that it targets the project
 		directory.
+		Note: You can change the rooted directory by
+		|denite-options-path| instead of |getcwd()|.
 
 ------------------------------------------------------------------------------
 KEY MAPPINGS 						*denite-key-mappings*

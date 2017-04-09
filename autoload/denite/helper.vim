@@ -46,7 +46,7 @@ function! denite#helper#call_denite(command, args, line1, line2) abort
   elseif a:command ==# 'DeniteBufferDir'
     let context.path = fnamemodify(bufname('%'), ':p:h')
   elseif a:command ==# 'DeniteProjectDir'
-    let context.path = denite#util#path2project_directory(getcwd())
+    let context.path = denite#util#path2project_directory(context.path)
   endif
 
   call denite#start(args, context)
