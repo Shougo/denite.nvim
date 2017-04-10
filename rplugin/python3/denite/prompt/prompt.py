@@ -156,6 +156,15 @@ class Prompt:
             # MacVim requires extra 'redraw'
             self.nvim.command('redraw')
 
+    @property
+    def timeout(self):
+        if self.nvim.options['timeout']:
+            timeoutlen = timedelta(
+                milliseconds=int(self.nvim.options['timeoutlen'])
+            )
+        else:
+            timeoutlen = None
+
     def start(self):
         """Start prompt and return value.
 
@@ -163,19 +172,13 @@ class Prompt:
             int: The status of the prompt.
         """
         status = self.on_init() or STATUS_PROGRESS
-        if self.nvim.options['timeout']:
-            timeoutlen = timedelta(
-                milliseconds=int(self.nvim.options['timeoutlen'])
-            )
-        else:
-            timeoutlen = None
         try:
             status = self.on_update(status) or STATUS_PROGRESS
             while status is STATUS_PROGRESS:
                 self.on_redraw()
                 status = self.on_keypress(self.keymap.harvest(
                     self.nvim,
-                    timeoutlen=timeoutlen,
+                    timeoutlen=self.timeout,
                     callback=self.on_harvest,
                 )) or STATUS_PROGRESS
                 status = self.on_update(status) or status
