@@ -97,7 +97,7 @@ function! denite#init#_user_options() abort
         \ 'scroll': 0,
         \ 'short_source_names': v:false,
         \ 'statusline': v:true,
-        \ 'timeoutlen': 1000,
+        \ 'updatetime': 500,
         \ 'use_default_mappings': v:true,
         \ 'vertical_preview': v:false,
         \ 'winheight': 20,

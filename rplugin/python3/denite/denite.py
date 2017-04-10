@@ -73,7 +73,7 @@ class Denite(object):
             ctx = source.context
             ctx['input'] = context['input']
             ctx['mode'] = context['mode']
-            ctx['async_timeout'] = 0.05 if ctx['mode'] != 'insert' else 0.005
+            ctx['async_timeout'] = 0.03 if ctx['mode'] != 'insert' else 0.02
             if ctx['prev_input'] != ctx['input'] and ctx['is_interactive']:
                 ctx['event'] = 'interactive'
                 ctx['all_candidates'] = self._gather_source_candidates(

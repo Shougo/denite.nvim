@@ -1,4 +1,5 @@
 from .action import DEFAULT_ACTION_RULES
+from datetime import timedelta, datetime
 from ..prompt.prompt import (
     ACTION_KEYSTROKE_PATTERN,
     Prompt,
@@ -10,12 +11,14 @@ class DenitePrompt(Prompt):
     def __init__(self, vim, context, denite):
         self.context = context
         super().__init__(vim)
-        self.__previous_text = self.text
         self.denite = denite
         self.action.register_from_rules(DEFAULT_ACTION_RULES)
         # Remove prompt:accept/prompt:cancel which would break denite
         self.action.unregister('prompt:accept', fail_silently=True)
         self.action.unregister('prompt:cancel', fail_silently=True)
+
+        self.__previous_text = self.text
+        self.__timeout = datetime.now()
 
     @property
     def text(self):
@@ -54,24 +57,28 @@ class DenitePrompt(Prompt):
         return status
 
     def on_update(self, status):
-        if self.__previous_text != self.text:
-            self.__previous_text = self.text
-            self.denite.update_candidates()
-            self.denite.update_buffer()
-            self.denite.init_cursor()
-
         if self.denite.is_async and self.denite.check_empty():
             self.denite.quit()
             return STATUS_CANCEL
         return super().on_update(status)
 
     def on_harvest(self):
+        while self.__timeout > datetime.now():
+            return
+
+        self.__timeout = datetime.now() + timedelta(
+                milliseconds=int(self.context['updatetime'])
+            )
         if self.denite.update_candidates():
             if self.context['reversed']:
                 self.denite.init_cursor()
             self.denite.update_buffer()
         else:
             self.denite.update_status()
+
+        if self.__previous_text != self.text:
+            self.__previous_text = self.text
+            self.denite.init_cursor()
 
         # NOTE
         # Redraw prompt to update the buffer.

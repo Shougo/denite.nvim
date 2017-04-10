@@ -997,6 +997,11 @@ OPTIONS							*denite-options*
 		Enable statusline.
 		Default: true
 
+						*denite-options-updatetime*
+-updatetime={time}
+		Specify the buffer updatetime when narrowing.
+		Default: 500
+
 					*denite-options-use-default-mappings*
 -use-default-mappings
 		Enable default key mappings.
