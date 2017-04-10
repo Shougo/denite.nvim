@@ -333,7 +333,7 @@ class Keymap:
                 nvim,
                 datetime.now() + timeoutlen if timeoutlen else None,
             )
-            if code is None :
+            if code is None:
                 if previous is None:
                     # timeout without input
                     if callback:

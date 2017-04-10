@@ -164,6 +164,7 @@ class Prompt:
             )
         else:
             timeoutlen = None
+        return timeoutlen
 
     def start(self):
         """Start prompt and return value.
