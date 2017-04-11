@@ -1173,6 +1173,10 @@ grep		Gather grep results and nominates them.
 		final_opts	the final arguments
 				(default: ["."] path to search argument)
 
+                interactive mode grep:
+                               call denite#custom#var('grep', 'pattern_opt', ['', '!'])
+
+
 						*denite-source-help*
 help		Search through doc tags
 
