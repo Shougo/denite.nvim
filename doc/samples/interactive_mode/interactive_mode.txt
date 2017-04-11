@@ -1,0 +1,27 @@
+Q: I want to use grep source as interactive mode.
+The interactive mode gives you a prompt, and searches once the input is complete.
+
+1: Preparation
+
+mkdir interactive
+cd interactive
+
+cat <<\EOF > repositories.txt
+denite.nvim
+vimfiler.vim
+deoplete.nvim
+EOF
+
+cat <<\EOF > sample.txt
+denite,denite
+file,file,file
+nvim,nvim,nvim
+EOF
+
+2: Execution
+
+call denite#custom#source('grep', 'args', ['', '', '!'])
+Denite grep
+
+3: Input
+den
