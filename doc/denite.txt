@@ -1000,7 +1000,7 @@ OPTIONS							*denite-options*
 						*denite-options-updatetime*
 -updatetime={time}
 		Specify the buffer updatetime when narrowing.
-		Default: 500
+		Default: 100
 
 					*denite-options-use-default-mappings*
 -use-default-mappings
