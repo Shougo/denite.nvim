@@ -63,12 +63,9 @@ class DenitePrompt(Prompt):
         return super().on_update(status)
 
     def on_harvest(self):
-        while self.__timeout > datetime.now():
+        if self.__timeout > datetime.now():
             return
 
-        self.__timeout = datetime.now() + timedelta(
-                milliseconds=int(self.context['updatetime'])
-            )
         if self.denite.update_candidates():
             if self.context['reversed']:
                 self.denite.init_cursor()
@@ -93,3 +90,7 @@ class DenitePrompt(Prompt):
         elif self.denite.current_mode == 'insert':
             # Updating text from a keystroke is a feature of 'insert' mode
             self.update_text(str(keystroke))
+
+        self.__timeout = datetime.now() + timedelta(
+                milliseconds=int(self.context['updatetime'])
+            )
