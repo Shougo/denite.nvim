@@ -332,17 +332,14 @@ class Keymap:
             code = _getcode(
                 nvim,
                 datetime.now() + timeoutlen if timeoutlen else None,
+                callback=callback,
             )
-            if code is None:
-                if previous is None:
-                    # timeout without input
-                    if callback:
-                        callback()
-                    continue
-                else:
-                    # timeout
-                    return self.resolve(nvim,
-                                        previous, nowait=True) or previous
+            if code is None and previous is None:
+                # timeout without input
+                continue
+            elif code is None:
+                # timeout
+                return self.resolve(nvim, previous, nowait=True) or previous
             previous = Keystroke((previous or ()) + (Key.parse(nvim, code),))
             keystroke = self.resolve(nvim, previous, nowait=False)
             if keystroke:
@@ -382,8 +379,10 @@ class Keymap:
         return keymap
 
 
-def _getcode(nvim, timeout, sleep=0.005):
+def _getcode(nvim, timeout, callback=None, sleep=0.005):
     while not timeout or timeout > datetime.now():
+        if callback:
+            callback()
         code = getchar(nvim, False)
         if code != 0:
             return code

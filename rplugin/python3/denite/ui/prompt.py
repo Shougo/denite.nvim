@@ -43,13 +43,6 @@ class DenitePrompt(Prompt):
     def highlight_cursor(self):
         return self.context.get('highlight_cursor', 'Cursor')
 
-    @property
-    def timeout(self):
-        # Use updatetime option
-        return timedelta(
-            milliseconds=int(self.context['updatetime'])
-        )
-
     def on_init(self):
         # NOTE:
         # 'inputsave' is not required to be called while denite call it
