@@ -28,6 +28,9 @@ endfunction
 function! denite#util#execute_path(command, path) abort
   try
     execute a:command fnameescape(a:path)
+    if &l:filetype == ''
+      filetype detect
+    endif
   catch /^Vim\%((\a\+)\)\=:E325/
     " Ignore swap file error
   catch
