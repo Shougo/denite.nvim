@@ -7,7 +7,7 @@
 import socket
 from threading import Thread
 from queue import Queue
-from time import time
+from time import time, sleep
 
 
 class Socket(object):
