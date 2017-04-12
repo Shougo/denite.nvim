@@ -96,12 +96,9 @@ class Default(object):
 
             self._denite.start(self._context)
 
-            self._denite.on_init(self._context)
-
-            self._initialized = True
-
-            self._denite.gather_candidates(self._context)
+            self.gather_candidates()
             self.update_candidates()
+
             if self.check_empty():
                 return self._result
 
@@ -258,7 +255,6 @@ class Default(object):
     def update_candidates(self):
         pattern = ''
         sources = ''
-        self._selected_candidates = []
         self._candidates = []
         for name, entire, partial in self._denite.filter_candidates(
                 self._context):
@@ -472,8 +468,7 @@ class Default(object):
         return [self._candidates[x] for x in self._selected_candidates]
 
     def redraw(self):
-        self._context['is_redraw'] = True
-        self._denite.gather_candidates(self._context)
+        self.gather_candidates()
         if self.update_candidates():
             self.update_buffer()
         else:
@@ -488,11 +483,18 @@ class Default(object):
 
     def restart(self):
         self.quit_buffer()
-        self._denite.on_init(self._context)
-        self._denite.gather_candidates(self._context)
+        self.gather_candidates()
         self.init_buffer()
         self.update_candidates()
         self.update_buffer()
+
+    def gather_candidates(self):
+        self._denite.on_init(self._context)
+        self._initialized = True
+
+        self._context['is_redraw'] = True
+        self._selected_candidates = []
+        self._denite.gather_candidates(self._context)
 
     def do_action(self, action_name):
         candidates = self.get_selected_candidates()
