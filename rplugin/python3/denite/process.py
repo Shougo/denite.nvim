@@ -7,7 +7,7 @@
 import subprocess
 from threading import Thread
 from queue import Queue
-from time import time
+from time import time, sleep
 import os
 
 
@@ -57,6 +57,8 @@ class Process(object):
         start = time()
         outs = []
 
+        if self.__queue_out.empty():
+            sleep(0.1)
         while not self.__queue_out.empty() and time() < start + timeout:
             outs.append(self.__queue_out.get_nowait())
 

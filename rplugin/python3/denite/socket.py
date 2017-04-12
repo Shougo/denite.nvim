@@ -95,6 +95,8 @@ class Socket(object):
         start = time()
         outs = []
 
+        if self.__queue_out.empty():
+            sleep(0.1)
         while not self.__queue_out.empty() and time() < start + timeout:
             outs.append(self.__queue_out.get_nowait())
 
