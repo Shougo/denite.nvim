@@ -1,5 +1,5 @@
 from .action import DEFAULT_ACTION_RULES
-from datetime import timedelta
+from datetime import timedelta, datetime
 from ..prompt.prompt import (
     ACTION_KEYSTROKE_PATTERN,
     Prompt,
@@ -18,6 +18,7 @@ class DenitePrompt(Prompt):
         self.action.unregister('prompt:cancel', fail_silently=True)
 
         self.__previous_text = self.text
+        self.__timeout = datetime.now()
 
     @property
     def text(self):
@@ -62,6 +63,12 @@ class DenitePrompt(Prompt):
         return super().on_update(status)
 
     def on_harvest(self):
+        while self.__timeout > datetime.now():
+            return
+
+        self.__timeout = datetime.now() + timedelta(
+                milliseconds=int(self.context['updatetime'])
+            )
         if self.denite.update_candidates():
             if self.context['reversed']:
                 self.denite.init_cursor()
