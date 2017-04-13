@@ -8,6 +8,7 @@ import re
 from .base import Base
 from denite.util import split_input
 
+
 class Filter(Base):
     def __init__(self, vim):
         super().__init__(vim)
