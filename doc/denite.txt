@@ -1721,6 +1721,32 @@ Q: grep source is very slow.
 A: Because your machine is very slow.  The modern grep command like ripgrep is
 optimized for modern multi core processors.  It uses 4 processes heavily.
 More than a quad core CPU is recommended.  A dual core CPU is very slow.
+And you can change |denite-options-updatetime| option.
+
+Q: I want to use the cursor keys to move the candidates.
+
+A: >
+	call denite#custom#map(
+	      \ 'insert',
+	      \ '<Down>',
+	      \ '<denite:move_to_next_line>',
+	      \ 'noremap'
+	      \)
+	call denite#custom#map(
+	      \ 'insert',
+	      \ '<Up>',
+	      \ '<denite:move_to_previous_line>',
+	      \ 'noremap'
+	      \)
+
+
+Q: I want to use grep source as interactive mode.  The interactive mode gives
+you a prompt, and searches once the input is complete.
+
+A: You must set the 3rd argument to "!" in grep source(|denite-source-grep|).
+If you want to use the interactive mode by default: >
+
+	call denite#custom#source('grep', 'args', ['', '', '!'])
 
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
