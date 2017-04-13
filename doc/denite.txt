@@ -789,6 +789,7 @@ denite#custom#source({source-name}, {option-name}, {value})
 		Set {source-name} source specialized {option-name} to {value}.
 		You may specify multiple sources with the separator "," in
 		{source-name}.
+		A {source-name} of "_" sets the default for all sources.
 
 		The options below are available:
 
