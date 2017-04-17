@@ -940,7 +940,7 @@ OPTIONS							*denite-options*
 
 						*denite-options-immediately*
 -immediately
-		If candidates are exists, it runs the default action
+		If candidates exist, it runs the default action
 		immediately.
 		Default: false
 
@@ -1007,7 +1007,7 @@ OPTIONS							*denite-options*
 -use-default-mappings
 		Enable default key mappings.
 
-		Note that fundemental mappings including <Esc> or <Enter> are
+		Note that fundamental mappings including <Esc> or <Enter> are
 		also provided by the default key mappings. So disabling this
 		option without proper custom mappings would make denite
 		useless. Use <C-c> to quit the denite if you accidentally
