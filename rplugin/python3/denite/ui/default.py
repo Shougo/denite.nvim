@@ -449,9 +449,9 @@ class Default(object):
         self._vim.call('win_gotoid', self._prev_winid)
         self._vim.command('silent bdelete! ' + str(self._bufnr))
 
-        if (self._vim.call('tabpagenr') == self._prev_tabpagenr and
-                self._vim.call('tabpagebuflist') == self._prev_buflist):
-            self._vim.command(self._winrestcmd)
+        # if (self._vim.call('tabpagenr') == self._prev_tabpagenr and
+        #         self._vim.call('tabpagebuflist') == self._prev_buflist):
+        #     self._vim.command(self._winrestcmd)
 
         # Note: Does not work for line source
         # if self._vim.current.buffer.number == self._prev_bufnr:
