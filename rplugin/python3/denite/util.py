@@ -9,7 +9,7 @@ import os
 import sys
 import glob
 
-from os.path import normpath, join
+from os.path import normpath, join, dirname
 
 
 def set_default(vim, var, val):
@@ -181,11 +181,11 @@ def find_rplugins(context, source, loaded_paths):
             yield path, name
 
 
-def parse_tagline(line):
+def parse_tagline(line, tagpath):
     elem = [e for e in line.split("\t") if e != '']
     return {
         'name': elem[0],
-        'file': elem[1],
+        'file': normpath(join(dirname(tagpath), elem[1])),
         'pattern': re.sub(r'^/|/;"$', '', elem[2]),
         'type': elem[3],
         'ref': ' '.join(elem[4:])

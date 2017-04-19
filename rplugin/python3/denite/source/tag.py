@@ -25,7 +25,7 @@ class Source(Base):
                 for line in ins:
                     if re.match('!', line) or not line:
                         continue
-                    info = parse_tagline(line.rstrip())
+                    info = parse_tagline(line.rstrip(), f)
                     candidates.append({
                         'word': '{name} [{type}]  {ref}'.format(**info),
                         'action__path': info['file'],
