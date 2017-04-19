@@ -133,7 +133,7 @@ class Default(object):
         if self._scroll == 0:
             self._scroll = round(self._winheight / 2)
         self._guicursor = self._vim.options['guicursor']
-        self._vim.options['guicursor'] = 'n:None'
+        self._vim.options['guicursor'] = 'n-v-c:None'
 
         if self._winid > 0 and self._vim.call(
                 'win_gotoid', self._winid):
