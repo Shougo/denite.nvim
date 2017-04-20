@@ -52,6 +52,7 @@ class Source(Base):
             args += ['-o', tf.name]
             args += [context['__path']]
             self.print_message(context, args)
+            tf.close()
 
             try:
                 check_output(args).decode(self.vars['encoding'], 'replace')
@@ -59,7 +60,7 @@ class Source(Base):
                 return []
 
             candidates = []
-            with open(tf.name) as f:
+            with open(tf.name, encoding=self.vars['encoding']) as f:
                 for line in f:
                     if re.match('!', line) or not line:
                         continue
