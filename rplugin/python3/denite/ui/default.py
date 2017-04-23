@@ -301,8 +301,10 @@ class Default(object):
     def update_buffer(self):
         self.update_status()
 
-        self._vim.command('silent! syntax clear deniteMatchedRange')
-        self._vim.command('silent! syntax clear deniteMatchedChar')
+        if self._vim.call('hlexists', 'deniteMatchedRange'):
+            self._vim.command('silent! syntax clear deniteMatchedRange')
+        if self._vim.call('hlexists', 'deniteMatchedChar'):
+            self._vim.command('silent! syntax clear deniteMatchedChar')
         if self._matched_pattern != '':
             self._vim.command(
                 'silent! syntax match deniteMatchedRange /%s/ contained' % (
@@ -318,12 +320,8 @@ class Default(object):
                 self._context['input'].replace(' ', '')
             ))
 
-        del self._vim.current.buffer[:]
-        self._vim.current.buffer.append(self._displayed_texts)
-        del self._vim.current.buffer[0]
+        self._vim.current.buffer[:] = self._displayed_texts
         self.resize_buffer()
-
-        self._options['modified'] = False
 
         self.move_cursor()
 
@@ -373,7 +371,8 @@ class Default(object):
             elif (self._candidates_len < self._winheight):
                 winheight = self._candidates_len
 
-        self._vim.command('resize ' + str(winheight))
+        if self._vim.current.window.height != winheight:
+            self._vim.command('resize ' + str(winheight))
 
     def check_empty(self):
         if self._candidates and self._context['immediately']:
@@ -389,7 +388,8 @@ class Default(object):
     def move_cursor(self):
         if self._win_cursor > self._vim.call('line', '$'):
             self._win_cursor = self._vim.call('line', '$')
-        self._vim.call('cursor', [self._win_cursor, 1])
+        if self._win_cursor != self._vim.call('line', '.'):
+            self._vim.call('cursor', [self._win_cursor, 1])
 
         if self._context['auto_preview']:
             self.do_action('preview')
