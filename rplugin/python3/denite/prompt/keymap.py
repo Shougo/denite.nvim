@@ -379,7 +379,7 @@ class Keymap:
         return keymap
 
 
-def _getcode(nvim, timeout, callback=None, sleep=0.005):
+def _getcode(nvim, timeout, callback=None, sleep=0.033):
     while not timeout or timeout > datetime.now():
         if callback:
             callback()

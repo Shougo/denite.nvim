@@ -66,6 +66,9 @@ class DenitePrompt(Prompt):
         if self.__timeout > datetime.now():
             return
 
+        if not self.denite.is_async and self.__previous_text == self.text:
+            return
+
         if self.denite.update_candidates():
             if self.context['reversed']:
                 self.denite.init_cursor()
