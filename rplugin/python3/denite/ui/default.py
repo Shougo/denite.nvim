@@ -74,6 +74,10 @@ class Default(object):
                 self.move_to_next_line()
             elif context['cursor_pos'] == '-1':
                 self.move_to_prev_line()
+
+            if self.check_empty():
+                return self._result
+
             if context['refresh']:
                 self.redraw()
         else:
