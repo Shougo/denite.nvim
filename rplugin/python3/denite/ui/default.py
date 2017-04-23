@@ -55,6 +55,7 @@ class Default(object):
             weakref.proxy(self)
         )
         self._guicursor = ''
+        self._previous_status = ''
 
     def start(self, sources, context):
         if re.search('\[Command Line\]$', self._vim.current.buffer.name):
@@ -331,12 +332,17 @@ class Default(object):
             self._cursor + self._win_cursor,
             self._candidates_len)
         mode = '-- ' + self._current_mode.upper() + ' -- '
-        self._bufvars['denite_statusline_mode'] = mode
-        self._bufvars['denite_statusline_sources'] = self._statusline_sources
-        self._bufvars['denite_statusline_path'] = (
-            '[' + self._context['path'] + ']')
-        self._bufvars['denite_statusline_linenr'] = linenr
-        self._vim.command('redrawstatus')
+        path = '[' + self._context['path'] + ']'
+        bufvars = self._bufvars
+
+        status = mode + self._statusline_sources + path + linenr
+        if status != self._previous_status:
+            bufvars['denite_statusline_mode'] = mode
+            bufvars['denite_statusline_sources'] = self._statusline_sources
+            bufvars['denite_statusline_path'] = path
+            bufvars['denite_statusline_linenr'] = linenr
+            self._vim.command('redrawstatus')
+            self._previous_status = status
 
     def update_cursor(self):
         self.update_displayed_texts()
