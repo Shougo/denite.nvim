@@ -58,6 +58,15 @@ class Default(object):
         self._previous_status = ''
 
     def start(self, sources, context):
+        self._result = []
+        try:
+            self._start(sources, context)
+        finally:
+            self.cleanup()
+
+        return self._result
+
+    def _start(self, sources, context):
         if re.search('\[Command Line\]$', self._vim.current.buffer.name):
             # Ignore command line window.
             return
@@ -77,7 +86,7 @@ class Default(object):
                 self.move_to_prev_line()
 
             if self.check_empty():
-                return self._result
+                return
 
             if context['refresh']:
                 self.redraw()
@@ -103,7 +112,7 @@ class Default(object):
             self.update_candidates()
 
             if self.check_empty():
-                return self._result
+                return
 
             self.init_buffer()
             self.init_cursor()
@@ -122,7 +131,7 @@ class Default(object):
             # interrupted.
             # In this case, denite cancel any operation and close its window.
             self.quit()
-        return self._result
+        return
 
     def init_buffer(self):
         self._displayed_texts = []
@@ -159,7 +168,6 @@ class Default(object):
         self._options = self._vim.current.buffer.options
         self._options['buftype'] = 'nofile'
         self._options['swapfile'] = False
-        self._options['modifiable'] = True
         self._options['buflisted'] = False
         self._options['filetype'] = 'denite'
 
@@ -445,7 +453,6 @@ class Default(object):
         self.update_buffer()
 
     def cleanup(self):
-        self._options['modifiable'] = False
         self._vim.command('pclose!')
         # Redraw to clear prompt
         self._vim.command('redraw | echo ""')
@@ -727,5 +734,4 @@ class Default(object):
         self.change_mode(self._current_mode)
 
     def suspend(self):
-        self.cleanup()
         return STATUS_ACCEPT
