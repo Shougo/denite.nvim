@@ -29,7 +29,8 @@ try:
         for entry in scandir(path_name):
             if entry.is_dir(follow_symlinks=False):
                 if basename(entry.path) not in skip_list:
-                    yield from scantree(entry.path)
+                    for path in scantree(entry.path):
+                        yield path
             else:
                 yield entry.path
 except ImportError:
