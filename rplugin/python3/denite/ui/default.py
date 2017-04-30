@@ -134,6 +134,7 @@ class Default(object):
         return
 
     def init_buffer(self):
+        self._previous_status = ''
         self._displayed_texts = []
 
         self._winheight = int(self._context['winheight'])
