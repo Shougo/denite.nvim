@@ -491,8 +491,10 @@ class Default(object):
                     ] if self.get_cursor_candidate() else []
         return [self._candidates[x] for x in self._selected_candidates]
 
-    def redraw(self):
-        self.gather_candidates()
+    def redraw(self, is_force=True):
+        self._context['is_redraw'] = is_force
+        if is_force:
+            self.gather_candidates()
         if self.update_candidates():
             self.update_buffer()
         else:
@@ -542,7 +544,7 @@ class Default(object):
         if is_quit and not self._context['quit']:
             # Re-open denite buffer
             self.init_buffer()
-            self.update_buffer()
+            self.redraw(False)
             # Disable quit flag
             is_quit = False
 
