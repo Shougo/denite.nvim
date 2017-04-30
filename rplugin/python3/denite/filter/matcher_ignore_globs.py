@@ -38,5 +38,6 @@ class Filter(Base):
                 glob += '*'
             patterns.append(translate(glob))
         pattern = '|'.join(patterns)
+        max_width = context['max_candidate_width']
         return [x for x in context['candidates']
-                if not search(pattern, x['action__path'])]
+                if not search(pattern, x['action__path'][:max_width])]

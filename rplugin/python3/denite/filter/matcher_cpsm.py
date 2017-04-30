@@ -43,11 +43,10 @@ class Filter(Base):
 
         import cpsm_py
         candidates = context['candidates']
-        max_width = context['max_candidate_width']
         ispath = (os.path.exists(context['candidates'][0]['word']))
         for pattern in split_input(context['input']):
             cpsm_result = cpsm_py.ctrlp_match(
-                (d['word'][:max_width] for d in candidates),
+                (d['word'] for d in candidates),
                 pattern, limit=1000, ispath=ispath)[0]
             candidates = [x for x in candidates if x['word'] in cpsm_result]
         return candidates
