@@ -43,6 +43,7 @@ def _candidate(result, path):
         'action__path': result[0],
         'action__line': result[1],
         'action__col': result[2],
+        'action__text': result[3],
     }
 
 
