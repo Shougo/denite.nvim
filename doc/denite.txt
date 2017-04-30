@@ -1753,6 +1753,13 @@ If you want to use the interactive mode by default: >
 
 	call denite#custom#source('grep', 'args', ['', '', '!'])
 
+
+Q: What is "ch x was closed by the client"?
+
+A: Python process was crashed.  I cannot fix the error.
+I think the process was under heavy load.  You should change
+|denite-options-updatetime| option.
+
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
 
