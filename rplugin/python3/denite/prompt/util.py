@@ -159,6 +159,8 @@ def getchar(nvim, *args):
                 raise KeyboardInterrupt
             return ret
         return ensure_bytes(nvim, ret)
+    except KeyboardInterrupt:
+        return 0x03
     except nvim.error as e:
         # NOTE:
         # neovim raise nvim.error instead of KeyboardInterrupt when Ctrl-C has
