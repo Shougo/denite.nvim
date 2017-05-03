@@ -27,7 +27,7 @@ class Source(Base):
         self.vars = {
             'command': ['ctags'],
             'options': [],
-            'file_opt_name': '-o',
+            'file_opt': '-o',
             'ignore_types': [],
             'encoding': 'utf-8'
         }
@@ -50,7 +50,7 @@ class Source(Base):
             args = []
             args += self.vars['command']
             args += self.vars['options']
-            args += [self.vars['file_opt_name'], tf.name]
+            args += [self.vars['file_opt'], tf.name]
             args += [context['__path']]
             self.print_message(context, args)
             tf.close()

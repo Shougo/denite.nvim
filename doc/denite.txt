@@ -1216,7 +1216,7 @@ outline		Gather outline and jump to the target.
 				(default: ['ctags'])
 		options 	the default options for command
 				(default: [])
-		file_opt_name 	the default option name for writing to
+		file_opt 	the default option for writing to
 				specified file
 				(default: '-o')
 		ignore_types 	the list of ignore types
