@@ -28,7 +28,7 @@ endfunction
 function! denite#util#execute_path(command, path) abort
   let dir = s:path2directory(a:path)
   " Auto make directory.
-  if dir !~ '^\a\+:' && !isdirectory(dir)
+  if dir !~# '^\a\+:' && !isdirectory(dir)
         \ && denite#util#input_yesno(
         \       printf('"%s" does not exist. Create?', dir))
     call mkdir(dir, 'p')
@@ -278,7 +278,7 @@ function! denite#util#input_yesno(message) abort
   let yesno = input(a:message . ' [yes/no]: ')
   while yesno !~? '^\%(y\%[es]\|n\%[o]\)$'
     redraw
-    if yesno == ''
+    if yesno ==# ''
       echo 'Canceled.'
       break
     endif
