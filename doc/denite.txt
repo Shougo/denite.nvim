@@ -1223,6 +1223,9 @@ outline		Gather outline and jump to the target.
 
 						*denite-source-tag*
 tag		Gather results of |tagfiles()|.
+		Note: If the args 0 is "include", it gathers the results of
+		|neoinclude| plugin.
+		https://github.com/Shougo/neoinclude.vim
 
 
 ==============================================================================
