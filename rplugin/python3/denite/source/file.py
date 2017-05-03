@@ -24,6 +24,7 @@ class Source(Base):
         if context['args'] and context['args'][0] == 'new':
             candidates.append({
                 'word': context['input'],
+                'abbr': '[new] ' + context['input'],
                 'action__path': abspath(self.vim, context['input']),
             })
         else:
