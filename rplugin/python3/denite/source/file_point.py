@@ -5,7 +5,7 @@
 # ============================================================================
 
 from .base import Base
-from denite.util import parse_jump_line, expand
+from denite.util import parse_jump_line, expand, abspath
 from socket import gethostbyname
 from re import sub, match
 import os
@@ -42,7 +42,7 @@ class Source(Base):
             return []
         if os.path.exists(cfile):
             return [{'word': cfile,
-                     'action__path': os.path.abspath(cfile)}]
+                     'action__path': abspath(self.vim, cfile)}]
         if _checkhost(cfile):
             return [{'word': cfile, 'action__path': cfile}]
         return []

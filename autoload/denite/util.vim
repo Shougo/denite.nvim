@@ -26,6 +26,14 @@ function! denite#util#convert2list(expr) abort
 endfunction
 
 function! denite#util#execute_path(command, path) abort
+  let dir = s:path2directory(a:path)
+  " Auto make directory.
+  if dir !~ '^\a\+:' && !isdirectory(dir)
+        \ && denite#util#input_yesno(
+        \       printf('"%s" does not exist. Create?', dir))
+    call mkdir(dir, 'p')
+  endif
+
   try
     execute a:command fnameescape(a:path)
     if &l:filetype ==# ''
@@ -264,4 +272,23 @@ function! denite#util#delete_buffer(command, bufnr) abort
   endfor
   execute prev_winnr . 'wincmd w'
   silent execute a:bufnr a:command
+endfunction
+
+function! denite#util#input_yesno(message) abort
+  let yesno = input(a:message . ' [yes/no]: ')
+  while yesno !~? '^\%(y\%[es]\|n\%[o]\)$'
+    redraw
+    if yesno == ''
+      echo 'Canceled.'
+      break
+    endif
+
+    " Retry.
+    call denite#util#print_error('Invalid input.')
+    let yesno = input(a:message . ' [yes/no]: ')
+  endwhile
+
+  redraw
+
+  return yesno =~? 'y\%[es]'
 endfunction

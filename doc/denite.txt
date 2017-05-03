@@ -1088,6 +1088,7 @@ directory_rec	Gather directories recursive and nominates all directory names
 						*denite-source-file*
 file
 		Gather files from the user input.
+		Note: If the args 0 is "new", it will create the file.
 
 						*denite-source-file_old*
 file_old
@@ -1223,8 +1224,8 @@ outline		Gather outline and jump to the target.
 
 						*denite-source-tag*
 tag		Gather results of |tagfiles()|.
-		Note: If the args 0 is "include", it gathers the results of
-		|neoinclude| plugin.
+		Note: If the args 0 is "include", it will gather the results
+		of |neoinclude| plugin.
 		https://github.com/Shougo/neoinclude.vim
 
 

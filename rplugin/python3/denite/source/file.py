@@ -7,6 +7,7 @@
 from .base import Base
 import glob
 import os
+from denite.util import abspath
 
 
 class Source(Base):
@@ -20,10 +21,16 @@ class Source(Base):
     def gather_candidates(self, context):
         context['is_interactive'] = True
         candidates = []
-        for f in glob.glob(context['input'] + '*'):
+        if context['args'] and context['args'][0] == 'new':
             candidates.append({
-                'word': f,
-                'abbr': f + ('/' if os.path.isdir(f) else ''),
-                'action__path': os.path.abspath(f),
+                'word': context['input'],
+                'action__path': abspath(self.vim, context['input']),
             })
+        else:
+            for f in glob.glob(context['input'] + '*'):
+                candidates.append({
+                    'word': f,
+                    'abbr': f + ('/' if os.path.isdir(f) else ''),
+                    'action__path': abspath(self.vim, f),
+                })
         return candidates
