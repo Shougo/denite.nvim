@@ -114,7 +114,8 @@ EXAMPLES						*denite-examples*
 	" For Pt(the platinum searcher)
 	" NOTE: It also supports windows.
 	call denite#custom#var('file_rec', 'command',
-	\ ['pt', '--follow', '--nocolor', '--nogroup', '-g:', ''])
+	\ ['pt', '--follow', '--nocolor', '--nogroup',
+	\  (has('win32') ? '-g:' : '-g='), ''])
 
 	" Change mappings.
 	call denite#custom#map(
