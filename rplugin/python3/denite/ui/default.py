@@ -38,8 +38,10 @@ class Default(object):
         self._mode_stack = []
         self._current_mappings = {}
         self._bufnr = -1
+        self._prev_winsize = (-1, -1)
+        self._prev_wininfo = []
+        self._prev_winrestcmd = ''
         self._winid = -1
-        self._winrestcmd = ''
         self._winsaveview = {}
         self._initialized = False
         self._winheight = 0
@@ -142,7 +144,6 @@ class Default(object):
         self._prev_bufnr = self._vim.current.buffer.number
         self._prev_tabpagenr = self._vim.call('tabpagenr')
         self._prev_buflist = self._vim.call('tabpagebuflist')
-        self._winrestcmd = self._vim.call('winrestcmd')
         self._winsaveview = self._vim.call('winsaveview')
         self._scroll = int(self._context['scroll'])
         if self._scroll == 0:
@@ -154,8 +155,8 @@ class Default(object):
                 'win_gotoid', self._winid):
             # Move the window to bottom
             self._vim.command('wincmd J')
-            self._winrestcmd = ''
         else:
+            self.save_windows()
             # Create new buffer
             self._vim.call(
                 'denite#util#execute_path',
@@ -375,6 +376,42 @@ class Default(object):
                 if index in self._selected_candidates
                 else ' ') + ' '.join(terms)
 
+    def save_windows(self):
+        self._prev_winsize = (self._vim.options['columns'], self._vim.options['lines'])
+        self._prev_wininfo = self._vim.call('getwininfo')
+        self._prev_winrestcmd = self._vim.call('winrestcmd')
+
+    def restore_windows(self):
+        """Run winrestcmd if possible.
+
+           We make sure that we have the same set of windows open and the
+           terminal/guiwindow size is the same.  If so, we should be able
+           to run winrestcmd and not have it break everything."""
+        if self._vim.call('tabpagenr') != self._prev_tabpagenr:
+            return False
+
+        prev_wininfo = {}
+        for win in self._prev_wininfo:
+            if win['tabnr'] == self._prev_tabpagenr:
+                prev_wininfo[win['winnr']] = win
+        found_windows = True
+        for win in self._vim.call('getwininfo'):
+            if win['tabnr'] != self._prev_tabpagenr:
+                continue
+            winnr = win['winnr']
+            prev_win = prev_wininfo.pop(winnr, None)
+            if prev_win is None:
+                found_windows = False
+                break
+        if (found_windows and
+                not prev_wininfo and
+                (self._vim.options['columns'], self._vim.options['lines']) == self._prev_winsize):
+            self._vim.command(self._prev_winrestcmd)
+            return True
+        # else:
+        #     self._vim.command('echom "failed to restore"')
+        return False
+
     def resize_buffer(self):
         winheight = self._winheight
 
@@ -472,9 +509,7 @@ class Default(object):
         self._vim.call('win_gotoid', self._prev_winid)
         self._vim.command('silent bdelete! ' + str(self._bufnr))
 
-        # if (self._vim.call('tabpagenr') == self._prev_tabpagenr and
-        #         self._vim.call('tabpagebuflist') == self._prev_buflist):
-        #     self._vim.command(self._winrestcmd)
+        self.restore_windows()
 
         # Note: Does not work for line source
         # if self._vim.current.buffer.number == self._prev_bufnr:
