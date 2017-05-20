@@ -137,11 +137,9 @@ class Default(object):
         self._previous_status = ''
         self._displayed_texts = []
 
+        self._prev_wininfo = self._get_wininfo()
         self._winheight = int(self._context['winheight'])
         self._prev_winid = self._vim.call('win_getid')
-        self._prev_bufnr = self._vim.current.buffer.number
-        self._prev_tabpagenr = self._vim.call('tabpagenr')
-        self._prev_buflist = self._vim.call('tabpagebuflist')
         self._winrestcmd = self._vim.call('winrestcmd')
         self._winsaveview = self._vim.call('winsaveview')
         self._scroll = int(self._context['scroll'])
@@ -219,6 +217,15 @@ class Default(object):
             else:
                 direction = 'belowright' if is_fit else 'botright'
         return direction
+
+    def _get_wininfo(self):
+        wininfo = self._vim.call('getwininfo', self._vim.call('win_getid'))[0]
+        return [
+            self._vim.options['columns'], self._vim.options['lines'],
+            self._vim.call('tabpagebuflist'),
+            wininfo['bufnr'], wininfo['winnr'],
+            wininfo['winid'], wininfo['tabnr'],
+        ]
 
     def init_syntax(self):
         self._vim.command('syntax case ignore')
@@ -474,9 +481,8 @@ class Default(object):
         self._vim.call('win_gotoid', self._prev_winid)
         self._vim.command('silent bdelete! ' + str(self._bufnr))
 
-        # if (self._vim.call('tabpagenr') == self._prev_tabpagenr and
-        #         self._vim.call('tabpagebuflist') == self._prev_buflist):
-        #     self._vim.command(self._winrestcmd)
+        if self._get_wininfo() == self._prev_wininfo:
+            self._vim.command(self._winrestcmd)
 
         # Note: Does not work for line source
         # if self._vim.current.buffer.number == self._prev_bufnr:
