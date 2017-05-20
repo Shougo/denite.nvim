@@ -193,6 +193,7 @@ def parse_tagline(line, tagpath):
         info['pattern'] = ''
         info['line'] = re.sub(r';"$', '', elem[2])
     else:
-        info['pattern'] = re.sub(r'^/|/;"$', '', elem[2])
+        info['pattern'] = re.sub(r'([~.*\[\]\\])', r'\\\1',
+                                 re.sub(r'^/|/;"$', '', elem[2]))
         info['line'] = ''
     return info
