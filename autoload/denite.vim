@@ -57,7 +57,9 @@ function! s:start(sources, user_context) abort
   endif
 
   " Add current position to the jumplist.
+  let pos = getpos('.')
   execute line('.')
+  call setpos('.', pos)
 
   return has('nvim') ? _denite_start(a:sources, context)
         \            : denite#vim#_start(a:sources, context)
