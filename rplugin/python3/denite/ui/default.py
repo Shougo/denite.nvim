@@ -286,6 +286,7 @@ class Default(object):
                     for x in matchers if self._denite.get_filter(x)
                 ))
                 pattern = next(patterns, '')
+        prev_matched_pattern = self._matched_pattern
         self._matched_pattern = pattern
         self._candidates_len = len(self._candidates)
         if self._context['reversed']:
@@ -298,7 +299,8 @@ class Default(object):
         prev_displayed_texts = self._displayed_texts
         self.update_displayed_texts()
 
-        return self._displayed_texts != prev_displayed_texts
+        return (self._displayed_texts != prev_displayed_texts or
+                self._matched_pattern != prev_matched_pattern)
 
     def update_displayed_texts(self):
         self._displayed_texts = [

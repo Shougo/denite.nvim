@@ -130,11 +130,11 @@ def abspath(vim, path):
 
 
 def convert2fuzzy_pattern(text):
-    return '\|'.join([escape_fuzzy(x, True) for x in split_input(text)])
+    return '|'.join([escape_fuzzy(x, True) for x in split_input(text)])
 
 
 def convert2regex_pattern(text):
-    return '\|'.join(split_input(text))
+    return '|'.join(split_input(text))
 
 
 def parse_command(array, **kwargs):
