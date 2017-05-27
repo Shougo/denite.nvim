@@ -219,6 +219,9 @@ class Default(object):
         return direction
 
     def _get_wininfo(self):
+        if not self._vim.call('exists', '*getwininfo'):
+            return []
+
         wininfo = self._vim.call('getwininfo', self._vim.call('win_getid'))[0]
         return [
             self._vim.options['columns'], self._vim.options['lines'],
@@ -481,7 +484,7 @@ class Default(object):
         self._vim.call('win_gotoid', self._prev_winid)
         self._vim.command('silent bdelete! ' + str(self._bufnr))
 
-        if self._get_wininfo() == self._prev_wininfo:
+        if self._get_wininfo() and self._get_wininfo() == self._prev_wininfo:
             self._vim.command(self._winrestcmd)
 
         # Note: Does not work for line source
