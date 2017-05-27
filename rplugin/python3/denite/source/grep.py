@@ -83,8 +83,7 @@ class Source(Base):
                 arg = [arg]
             elif not isinstance(arg, list):
                 raise AttributeError('`args[0]` needs to be a `str` or `list`')
-        # Windows needs to specify the directory.
-        elif context['is_windows']:
+        else:
             arg = [context['path']]
         context['__paths'] = [util.abspath(self.vim, x) for x in arg]
 

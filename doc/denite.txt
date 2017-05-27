@@ -199,8 +199,13 @@ EXAMPLES						*denite-examples*
 	call denite#custom#var('grep', 'separator', ['--'])
 	call denite#custom#var('grep', 'final_opts', [])
 
-	call denite#custom#source('file_mru', 'converters',
-	      \ ['converter_relative_word'])
+	" jvgrep command on grep source
+	call denite#custom#var('grep', 'command', ['jvgrep'])
+	call denite#custom#var('grep', 'default_opts', [])
+	call denite#custom#var('grep', 'recursive_opts', ['-R'])
+	call denite#custom#var('grep', 'pattern_opt', [])
+	call denite#custom#var('grep', 'separator', [])
+	call denite#custom#var('grep', 'final_opts', [])
 
 	" Define alias
 	call denite#custom#alias('source', 'file_rec/git', 'file_rec')
