@@ -101,13 +101,13 @@ def path2project(vim, path):
 
 
 def parse_jump_line(path_head, line):
-    m = re.search(r'^(.*):(\d+)(?::(\d+))?:(.*)$', line)
+    m = re.search(r'^([^:]*):(\d+)(?::(\d+))?:(.*)$', line)
     if not m or not m.group(1) or not m.group(4):
         return []
 
     if re.search(r':\d+$', m.group(1)):
         # Use column pattern
-        m = re.search(r'^(.*):(\d+):(\d+):(.*)$', line)
+        m = re.search(r'^([^:]*):(\d+):(\d+):(.*)$', line)
 
     [path, linenr, col, text] = m.groups()
 
