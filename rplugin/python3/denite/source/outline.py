@@ -46,7 +46,8 @@ class Source(Base):
                     self.syntax_name, syn['name'], syn['link']))
 
     def gather_candidates(self, context):
-        with tempfile.NamedTemporaryFile(mode='w') as tf:
+        with tempfile.NamedTemporaryFile(
+                mode='w', encoding=self.vars['encoding']) as tf:
             args = []
             args += self.vars['command']
             args += self.vars['options']
@@ -61,7 +62,8 @@ class Source(Base):
                 return []
 
             candidates = []
-            with open(tf.name, encoding=self.vars['encoding']) as f:
+            with open(tf.name, encoding=self.vars['encoding'],
+                      errors='replace') as f:
                 for line in f:
                     if re.match('!', line) or not line:
                         continue
