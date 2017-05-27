@@ -1094,7 +1094,10 @@ directory_rec	Gather directories recursive and nominates all directory names
 						*denite-source-file*
 file
 		Gather files from the user input.
-		Note: If the args 0 is "new", it will create the file.
+
+		Source args:
+			0. if it is "new", file source create the file.
+			1. the search directory
 
 						*denite-source-file_old*
 file_old

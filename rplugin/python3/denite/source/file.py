@@ -21,14 +21,17 @@ class Source(Base):
     def gather_candidates(self, context):
         context['is_interactive'] = True
         candidates = []
+        path = (context['args'][1] if len(context['args']) > 1
+                else context['path'])
+        filename = os.path.join(path, context['input'])
         if context['args'] and context['args'][0] == 'new':
             candidates.append({
-                'word': context['input'],
-                'abbr': '[new] ' + context['input'],
-                'action__path': abspath(self.vim, context['input']),
+                'word': filename,
+                'abbr': '[new] ' + filename,
+                'action__path': abspath(self.vim, filename),
             })
         else:
-            for f in glob.glob(context['input'] + '*'):
+            for f in glob.glob(filename + '*'):
                 candidates.append({
                     'word': f,
                     'abbr': f + ('/' if os.path.isdir(f) else ''),
