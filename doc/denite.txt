@@ -1776,7 +1776,7 @@ A: Python process was crashed.  I cannot fix the error.
 I think the process was under heavy load.  You should change
 |denite-options-updatetime| option.
 
-Q: Does hg (highway) work in denite.nvim?
+Q: Does hw (highway) work in denite.nvim?
 
 A: No. It is not supported.
 
