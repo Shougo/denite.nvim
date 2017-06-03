@@ -31,7 +31,7 @@ class Source(Base):
                         continue
                     info = parse_tagline(line.rstrip(), f)
                     candidate = {
-                        'word': '{name} [{type}]  {ref}'.format(**info),
+                        'word': '{name} [{type}] {file} {ref}'.format(**info),
                         'action__path': info['file'],
                     }
                     if info['line']:
