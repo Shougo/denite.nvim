@@ -186,7 +186,7 @@ def parse_tagline(line, tagpath):
     info = {
         'name': elem[0],
         'file': normpath(join(dirname(tagpath), elem[1])),
-        'type': elem[3],
+        'type': (elem[3] if len(elem) >= 4 else ''),
         'ref': ' '.join(elem[4:])
     }
     if re.match('\d+;"$', elem[2]):
