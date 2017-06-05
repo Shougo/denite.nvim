@@ -182,18 +182,28 @@ def find_rplugins(context, source, loaded_paths):
 
 
 def parse_tagline(line, tagpath):
-    elem = [e for e in line.split("\t") if e != '']
+    elem = line.split("\t")
     info = {
         'name': elem[0],
         'file': normpath(join(dirname(tagpath), elem[1])),
-        'type': (elem[3] if len(elem) >= 4 else ''),
-        'ref': ' '.join(elem[4:])
     }
-    if re.match('\d+;"$', elem[2]):
+
+    rest = '\t'.join(elem[2:])
+    m = re.search(r'.*;"', rest)
+    if not m:
+        return {}
+
+    pattern = m.group(0)
+    if re.match('\d+;"$', pattern):
         info['pattern'] = ''
-        info['line'] = re.sub(r';"$', '', elem[2])
+        info['line'] = re.sub(r';"$', '', pattern)
     else:
         info['pattern'] = re.sub(r'([~.*\[\]\\])', r'\\\1',
-                                 re.sub(r'^/|/;"$', '', elem[2]))
+                                 re.sub(r'^/|/;"$', '', pattern))
         info['line'] = ''
+
+    elem = rest[len(pattern)+1:].split("\t")
+    info['type'] = (elem[0] if len(elem) >= 1 else '')
+    info['ref'] = ' '.join(elem[1:])
+
     return info
