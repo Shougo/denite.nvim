@@ -28,13 +28,15 @@ class Filter(Base):
 
         if not self.__initialized:
             # cpsm installation check
-            if globruntime(context['runtimepath'], 'bin/cpsm_py.so'):
+            ext = '.pyd' if context['is_windows'] else '.so'
+            if globruntime(context['runtimepath'], 'bin/cpsm_py' + ext):
                 # Add path
                 sys.path.append(os.path.dirname(
-                    globruntime(context['runtimepath'], 'bin/cpsm_py.so')[0]))
+                    globruntime(context['runtimepath'],
+                                'bin/cpsm_py' + ext)[0]))
                 self.__initialized = True
             else:
-                error(self.vim, 'matcher_cpsm: bin/cpsm_py.so' +
+                error(self.vim, 'matcher_cpsm: bin/cpsm_py' + ext +
                       ' is not found in your runtimepath.')
                 error(self.vim, 'matcher_cpsm: You must install/build' +
                       ' Python3 support enabled cpsm.')
