@@ -89,6 +89,24 @@ def _suspend(prompt, params):
     return prompt.denite.suspend()
 
 
+def _wincmd(prompt, params):
+    mapping = {
+            'h': 'wincmd h',
+            'j': 'wincmd j',
+            'k': 'wincmd k',
+            'l': 'wincmd l',
+            'w': 'wincmd w',
+            'W': 'wincmd W',
+            't': 'wincmd t',
+            'b': 'wincmd b',
+            'p': 'wincmd p',
+            }
+    if params not in mapping:
+        return
+    prompt.nvim.command(mapping[params])
+    return prompt.denite.suspend()
+
+
 def _restart(prompt, params):
     return prompt.denite.restart()
 
@@ -201,6 +219,7 @@ DEFAULT_ACTION_RULES = [
     ('denite:jump_to_next_source', _jump_to_next_source),
     ('denite:jump_to_previous_source', _jump_to_previous_source),
     ('denite:leave_mode', _leave_mode),
+    ('denite:wincmd', _wincmd),
     ('denite:move_to_first_line', _move_to_first_line),
     ('denite:move_to_last_line', _move_to_last_line),
     ('denite:move_to_next_line', _move_to_next_line),
@@ -310,5 +329,14 @@ DEFAULT_ACTION_KEYMAP = {
         ('d', '<denite:do_action:delete>', 'noremap'),
         ('n', '<denite:do_action:new>', 'noremap'),
         ('t', '<denite:do_action:tabopen>', 'noremap'),
+        ('<C-w>h', '<denite:wincmd:h>', 'noremap'),
+        ('<C-w>j', '<denite:wincmd:j>', 'noremap'),
+        ('<C-w>k', '<denite:wincmd:k>', 'noremap'),
+        ('<C-w>l', '<denite:wincmd:l>', 'noremap'),
+        ('<C-w>w', '<denite:wincmd:w>', 'noremap'),
+        ('<C-w>W', '<denite:wincmd:W>', 'noremap'),
+        ('<C-w>t', '<denite:wincmd:t>', 'noremap'),
+        ('<C-w>b', '<denite:wincmd:b>', 'noremap'),
+        ('<C-w>p', '<denite:wincmd:p>', 'noremap'),
     ],
 }
