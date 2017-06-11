@@ -285,6 +285,14 @@ like interface.
 Report issues to https://github.com/lambdalisue/neovim-prompt when the issues
 are on the neovim-prompt's builtin actions/mappings.
 
+				*denite-map-append*
+<denite:append>
+		Append, like |a| in normal mode in vim buffer.
+
+				*denite-map-append_to_line*
+<denite:append_to_line>
+		Append to line, like |A| in normal mode in vim buffer.
+
 				*denite-map-assign_next_matched_text*
 <denite:assign_next_matched_text>
 		Recall next command-line from history that matches pattern in
@@ -311,32 +319,30 @@ are on the neovim-prompt's builtin actions/mappings.
 		Like |c_<S-Up>| in a native Vim's command-line.
 		Note this is a neovim-prompt's builtin action.
 
+				*denite-map-change_line*
+<denite:change_line>
+		Change line, like |cc| in normal mode in vim buffer.
+
 				*denite-map-change_path*
 <denite:change_path>
 		Change and restart Denite buffer.
 
+				*denite-map-change_word*
+<denite:change_word>
+		Change word, like |cw| in normal mode in vim buffer.
+
 				*denite-map-choose_action*
 <denite:choose_action>
 		Choose and fire the action.
-
-				*denite-map-delete_char_before_caret*
-<denite:delete_char_before_caret>
-		Delete a character before the caret.
-		Note this is a neovim-prompt's builtin action.
-
-				*denite-map-delete_word_before_caret*
-<denite:delete_word_before_caret>
-		Delete a word before the caret.
-		Note this is a neovim-prompt's builtin action.
 
 				*denite-map-delete_char_after_caret*
 <denite:delete_char_after_caret>
 		Delete a character after the caret.
 		Note this is a neovim-prompt's builtin action.
 
-				*denite-map-delete_word_after_caret*
-<denite:delete_word_after_caret>
-		Delete a word after the caret.
+				*denite-map-delete_char_before_caret*
+<denite:delete_char_before_caret>
+		Delete a character before the caret.
 		Note this is a neovim-prompt's builtin action.
 
 				*denite-map-delete_char_under_caret*
@@ -344,14 +350,19 @@ are on the neovim-prompt's builtin actions/mappings.
 		Delete a character under the caret.
 		Note this is a neovim-prompt's builtin action.
 
+				*denite-map-delete_word_after_caret*
+<denite:delete_word_after_caret>
+		Delete a word after the caret.
+		Note this is a neovim-prompt's builtin action.
+
+				*denite-map-delete_word_before_caret*
+<denite:delete_word_before_caret>
+		Delete a word before the caret.
+		Note this is a neovim-prompt's builtin action.
+
 				*denite-map-delete_word_under_caret*
 <denite:delete_word_under_caret>
 		Delete a word under the caret.
-		Note this is a neovim-prompt's builtin action.
-
-				*denite-map-delete_text_before_caret*
-<denite:delete_text_before_caret>
-		Delete a text before the caret.
 		Note this is a neovim-prompt's builtin action.
 
 				*denite-map-delete_text_after_caret*
@@ -359,38 +370,15 @@ are on the neovim-prompt's builtin actions/mappings.
 		Delete a text after the caret.
 		Note this is a neovim-prompt's builtin action.
 
+				*denite-map-delete_text_before_caret*
+<denite:delete_text_before_caret>
+		Delete a text before the caret.
+		Note this is a neovim-prompt's builtin action.
+
 				*denite-map-delete_entire_text*
 <denite:delete_entire_text>
 		Delete an entire text.
 		Note this is a neovim-prompt's builtin action.
-
-				*denite-map-caret_to_next_word*
-<denite:move_caret_to_next_word>
-		Move caret to beginning of next word, like |w| in normal mode in vim buffer.
-
-				*denite-map-caret_to_end_of_word*
-<denite:move_caret_to_end_of_word>
-		Move caret to end of word, like |e| in normal mode in vim buffer.
-
-				*denite-map-change_word*
-<denite:change_word>
-		Change word, like |cw| in normal mode in vim buffer.
-
-				*denite-map-change_line*
-<denite:change_line>
-		Change line, like |cc| in normal mode in vim buffer.
-
-				*denite-map-append*
-<denite:append>
-		Append, like |a| in normal mode in vim buffer.
-
-				*denite-map-append_to_line*
-<denite:append_to_line>
-		Append to line, like |A| in normal mode in vim buffer.
-
-				*denite-map-insert_to_head*
-<denite:insert_to_head>
-		Insert at head of line, like |I| in normal mode in vim buffer.
 
 				*denite-map-do_action*
 <denite:do_action:{action}>
@@ -412,6 +400,10 @@ are on the neovim-prompt's builtin actions/mappings.
 		Like |c_<C-K>| in a Vim's native command-line.
 		See also |denite-map-toggle_insert_mode|.
 		Note this is a neovim-prompt's builtin action.
+
+				*denite-map-insert_to_head*
+<denite:insert_to_head>
+		Insert at head of line, like |I| in normal mode in vim buffer.
 
 				*denite-map-insert_special*
 <denite:insert_special>
@@ -439,6 +431,16 @@ are on the neovim-prompt's builtin actions/mappings.
 				*denite-map-leave_mode*
 <denite:leave_mode>
 		Return to the previous mode or close current Denite buffer.
+
+				*denite-map-caret_to_end_of_word*
+<denite:move_caret_to_end_of_word>
+		Move caret to end of word, like |e| in normal mode in vim
+		buffer.
+
+				*denite-map-caret_to_next_word*
+<denite:move_caret_to_next_word>
+		Move caret to beginning of next word, like |w| in normal mode
+		in vim buffer.
 
 				*denite-map-move_caret_to_left*
 <denite:move_caret_to_left>
@@ -477,21 +479,13 @@ are on the neovim-prompt's builtin actions/mappings.
 
 				*denite-map-move_caret_to_lead*
 <denite:move_caret_to_lead>
-		Move the caret to the lead (a first printable character.)
+		Move the caret to the lead (a first printable character).
 		Note this is a neovim-prompt's builtin action.
 
 				*denite-map-move_caret_to_tail*
 <denite:move_caret_to_tail>
-		Move the caret to the tail (a end of the text.)
+		Move the caret to the tail (a end of the text).
 		Note this is a neovim-prompt's builtin action.
-
-				*denite-map-move_to_next_line*
-<denite:move_to_next_line>
-		Move to next line.
-
-				*denite-map-move_to_previous_line*
-<denite:move_to_previous_line>
-		Move to previous line.
 
 				*denite-map-move_to_first_line*
 <denite:move_to_first_line>
@@ -500,6 +494,14 @@ are on the neovim-prompt's builtin actions/mappings.
 				*denite-map-move_to_last_line*
 <denite:move_to_last_line>
 		Move to last line.
+
+				*denite-map-move_to_next_line*
+<denite:move_to_next_line>
+		Move to next line.
+
+				*denite-map-move_to_previous_line*
+<denite:move_to_previous_line>
+		Move to previous line.
 
 				*denite-map-paste_from_register*
 <denite:paste_from_register>
