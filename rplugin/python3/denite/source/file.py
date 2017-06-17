@@ -23,7 +23,9 @@ class Source(Base):
         candidates = []
         path = (context['args'][1] if len(context['args']) > 1
                 else context['path'])
-        filename = os.path.join(path, context['input'])
+        filename = (context['input']
+                    if os.path.isabs(context['input'])
+                    else os.path.join(path, context['input']))
         if context['args'] and context['args'][0] == 'new':
             candidates.append({
                 'word': filename,
@@ -35,6 +37,7 @@ class Source(Base):
                 candidates.append({
                     'word': f,
                     'abbr': f + ('/' if os.path.isdir(f) else ''),
+                    'kind': ('directory' if os.path.isdir(f) else 'file'),
                     'action__path': abspath(self.vim, f),
                 })
         return candidates

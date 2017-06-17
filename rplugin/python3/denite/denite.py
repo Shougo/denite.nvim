@@ -49,6 +49,7 @@ class Denite(object):
             ctx['is_redraw'] = context['is_redraw']
             ctx['messages'] = context['messages']
             ctx['mode'] = context['mode']
+            ctx['input'] = context['input']
             ctx['prev_input'] = context['input']
             ctx['event'] = 'gather'
             ctx['async_timeout'] = 0.01
