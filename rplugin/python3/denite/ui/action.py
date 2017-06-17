@@ -329,6 +329,7 @@ DEFAULT_ACTION_KEYMAP = {
         ('d', '<denite:do_action:delete>', 'noremap'),
         ('n', '<denite:do_action:new>', 'noremap'),
         ('t', '<denite:do_action:tabopen>', 'noremap'),
+        ('y', '<denite:do_action:yank>', 'noremap'),
         ('<C-w>h', '<denite:wincmd:h>', 'noremap'),
         ('<C-w>j', '<denite:wincmd:j>', 'noremap'),
         ('<C-w>k', '<denite:wincmd:k>', 'noremap'),
