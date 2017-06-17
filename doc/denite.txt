@@ -1301,15 +1301,15 @@ directory	An interface to change directory.
 				directory.
 
 					*denite-kind-directory-actions*
-			cd (default)
+			narrow (default)
+				Narrow by the directory.
+
+			cd
 				Change the Vim current directory to the
 				directory.
 
 			open
 				Open the directory.
-
-			narrow
-				Narrow by the directory.
 
 						*denite-kind-file*
 file		An interface to jump to the file position.

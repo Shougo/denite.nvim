@@ -14,7 +14,7 @@ class Kind(Base):
         super().__init__(vim)
 
         self.name = 'directory'
-        self.default_action = 'cd'
+        self.default_action = 'narrow'
         self.redraw_actions += ['narrow']
         self.persist_actions += ['narrow']
 
