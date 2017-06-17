@@ -947,19 +947,24 @@ OPTIONS							*denite-options*
 					*denite-options-highlight-matched-char*
 -highlight-matched-char
 		Matched characters highlight.
-		Default: 'Search'
+		Default: "Search"
 
 					*denite-options-highlight-matched-range*
 -highlight-matched-range
 		Matched range highlight.
-		Default: 'Underlined'
+		Default: "Underlined"
 
 					*denite-options-highlight-mode-{mode}*
 -highlight-mode-{mode}
 		Change |hl-CursorLine| in {mode}.
 		Default:
-		'CursorLine' in "insert" mode
-		'WildMenu' in "normal" mode
+		"CursorLine" in "insert" mode
+		"WildMenu" in "normal" mode
+
+					*denite-options-highlight-preview-line*
+-highlight-preview-line
+		Previewed line highlight.
+		Default: "Search"
 
 						*denite-options-immediately*
 -immediately

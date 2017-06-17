@@ -78,7 +78,8 @@ class Kind(Openable):
             self.__jump(context, target)
             if highlight:
                 self.vim.call('clearmatches')
-                self.vim.call('matchaddpos', 'Search',
+                self.vim.call('matchaddpos',
+                              context['highlight_preview_line'],
                               [int(target.get('action__line', 0))])
             self.vim.call('win_gotoid', prev_id)
             self._previewed_target = target

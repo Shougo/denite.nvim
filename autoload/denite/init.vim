@@ -81,6 +81,7 @@ function! denite#init#_user_options() abort
         \ 'highlight_matched_char': 'Search',
         \ 'highlight_mode_normal': 'WildMenu',
         \ 'highlight_mode_insert': 'CursorLine',
+        \ 'highlight_preview_line': 'Search',
         \ 'ignorecase': v:true,
         \ 'immediately': v:false,
         \ 'input': '',
