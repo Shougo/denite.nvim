@@ -468,6 +468,7 @@ class Default(object):
 
     def cleanup(self):
         self._vim.command('pclose!')
+        self._vim.call('clearmatches')
         # Redraw to clear prompt
         self._vim.command('redraw | echo ""')
         self._vim.command('highlight! link CursorLine CursorLine')

@@ -1340,10 +1340,11 @@ file		An interface to jump to the file position.
 				Open the file.
 
 			preview
-				Preview the file.
+				Preview and highlight the file.
 
 			highlight
-				Preview and highlight the file.
+				Highlight the location of the candidate if the
+				buffer is visible.
 
 			quickfix
 				Set the quickfix list and open the quickfix
