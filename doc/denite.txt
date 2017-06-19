@@ -1125,6 +1125,9 @@ file
 file_old
 		Gather files from |v:oldfiles|.
 
+		Note: This source cannot be update the candidates until Vim
+		restart in Vim8.
+
 		Source actions:
 		delete		Remove the files from |v:oldfiles|
 

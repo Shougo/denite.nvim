@@ -7,6 +7,7 @@
 from .base import Base
 from os import path
 from ..kind.file import Kind as File
+from denite.util import expand
 
 
 class Source(Base):
@@ -18,11 +19,13 @@ class Source(Base):
         self.kind = Kind(vim)
 
     def on_init(self, context):
-        self.vim.command('wviminfo | rviminfo!')
+        # rviminfo! is broken in Vim8
+        if self.vim.call('has', 'nvim'):
+            self.vim.command('wviminfo | rviminfo!')
 
     def gather_candidates(self, context):
         return [{'word': x, 'action__path': x}
-                for x in self.vim.eval('v:oldfiles')
+                for x in [expand(x) for x in self.vim.eval('v:oldfiles')]
                 if path.isfile(x) or self.vim.call('buflisted', x)]
 
 
