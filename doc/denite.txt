@@ -1806,6 +1806,11 @@ Q: Does hw (highway) work in denite.nvim?
 
 A: No. It is not supported.
 
+Q: Can I make denite window always use 40% of the current window?
+
+A: >
+	Denite file -winheight=`60*winheight(0)/100`
+
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
 
