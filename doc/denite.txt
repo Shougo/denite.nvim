@@ -1811,6 +1811,30 @@ Q: Can I make denite window always use 40% of the current window?
 A: >
 	Denite file -winheight=`60*winheight(0)/100`
 
+Q: Alt keymappings does not work. >
+	call denite#custom#map(
+	\ 'insert',
+	\ '<A-v>',
+	\ '<denite:scroll_window_upwards>',
+	\ 'noremap'
+	\)
+
+A:
+>
+	function! s:getchar() abort
+	  redraw | echo 'Press any key: '
+	  let c = getchar()
+	  while c ==# "\<CursorHold>"
+	    redraw | echo 'Press any key: '
+	    let c = getchar()
+	  endwhile
+	  redraw | echomsg printf('Raw: "%s" | Char: "%s"', c, nr2char(c))
+	endfunction
+	command! GetChar call s:getchar()
+
+Please execute :GetChar and press <A-g>.
+If it is the same of g, your environment does not support <A-g>.
+
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
 
