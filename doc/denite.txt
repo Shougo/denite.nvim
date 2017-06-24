@@ -1218,8 +1218,16 @@ jump		Gather results of |:jumps|.
 
 
 						*denite-source-line*
-line
+line		Gather current buffer lines as candidates.
 
+		Source arguments:
+
+		1. the search direction:
+		"all":       Search from buffer top
+		"backward":   Search from the current to the buffer top
+		"forward":  Search from the current to the buffer bottom
+		Note: If the direction is "all" or omitted, it searches from
+		buffer top.
 
 						*denite-source-menu*
 menu		Gather custom menus.
@@ -1811,7 +1819,8 @@ Q: Can I make denite window always use 40% of the current window?
 A: >
 	Denite file -winheight=`60*winheight(0)/100`
 
-Q: Alt keymappings does not work. >
+Q: Alt keymappings does not work.
+>
 	call denite#custom#map(
 	\ 'insert',
 	\ '<A-v>',
@@ -1831,12 +1840,15 @@ A:
 	  redraw | echomsg printf('Raw: "%s" | Char: "%s"', c, nr2char(c))
 	endfunction
 	command! GetChar call s:getchar()
-
+<
 Please execute :GetChar and press <A-g>.
 If it is the same of g, your environment does not support <A-g>.
 
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
+
+2017.06.24
+* "line" source default direction is "all" instead of "forward".
 
 2017.06.17
 * "directory" kind default action is changed to "narrow".
