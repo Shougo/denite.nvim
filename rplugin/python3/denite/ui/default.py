@@ -479,12 +479,12 @@ class Default(object):
 
     def quit_buffer(self):
         self.cleanup()
-        if not self._vim.call('bufloaded', self._bufnr):
+        if self._vim.call('bufwinnr', self._bufnr) < 0:
             return
 
         # Restore the view
+        self._vim.command('close!')
         self._vim.call('win_gotoid', self._prev_winid)
-        self._vim.command('silent bdelete! ' + str(self._bufnr))
 
         if self._get_wininfo() and self._get_wininfo() == self._prev_wininfo:
             self._vim.command(self._winrestcmd)
