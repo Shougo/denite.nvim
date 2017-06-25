@@ -300,9 +300,10 @@ class Default(object):
                 pattern = next(patterns, '')
 
         for sorter in self._context['sorters'].split(','):
-            ctx = copy(self._context)
-            ctx['candidates'] = self._candidates
-            self._candidates = self._denite.get_filter(sorter).filter(ctx)
+            if sorter:
+                ctx = copy(self._context)
+                ctx['candidates'] = self._candidates
+                self._candidates = self._denite.get_filter(sorter).filter(ctx)
 
         prev_matched_pattern = self._matched_pattern
         self._matched_pattern = pattern
