@@ -12,6 +12,7 @@ from denite.util import (
 from .action import DEFAULT_ACTION_KEYMAP
 from .prompt import DenitePrompt
 from .. import denite
+from copy import copy
 from ..prompt.prompt import STATUS_ACCEPT, STATUS_INTERRUPT
 
 
@@ -297,6 +298,12 @@ class Default(object):
                     for x in matchers if self._denite.get_filter(x)
                 ))
                 pattern = next(patterns, '')
+
+        for sorter in self._context['sorters'].split(','):
+            ctx = copy(self._context)
+            ctx['candidates'] = self._candidates
+            self._candidates = self._denite.get_filter(sorter).filter(ctx)
+
         prev_matched_pattern = self._matched_pattern
         self._matched_pattern = pattern
         self._candidates_len = len(self._candidates)

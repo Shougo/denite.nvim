@@ -97,6 +97,7 @@ function! denite#init#_user_options() abort
         \ 'reversed': v:false,
         \ 'scroll': 0,
         \ 'short_source_names': v:false,
+        \ 'sorters': '',
         \ 'statusline': v:true,
         \ 'updatetime': 100,
         \ 'use_default_mappings': v:true,

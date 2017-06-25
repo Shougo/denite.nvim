@@ -1021,6 +1021,11 @@ OPTIONS							*denite-options*
 		Use short source names if multiple sources.
 		Default: false
 
+						*denite-options-sorters*
+-sorters
+		Specify a list of sorter names.  They are source independent.
+		Default: ""
+
 						*denite-options-statusline*
 -statusline
 		Enable statusline.
