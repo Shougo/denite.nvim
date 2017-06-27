@@ -38,7 +38,7 @@ class Source(Base):
             }]
 
         cfile = context['__cfile']
-        if cfile == '.' or cfile == '..' or cfile == '/':
+        if match('[./]+$', cfile):
             return []
         if os.path.exists(cfile):
             return [{'word': cfile,
