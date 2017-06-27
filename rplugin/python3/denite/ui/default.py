@@ -8,7 +8,8 @@ import weakref
 from itertools import filterfalse, groupby, takewhile
 
 from denite.util import (
-    clear_cmdline, echo, error, regex_convert_py_vim, regex_convert_str_vim)
+    clear_cmdline, echo, error, regex_convert_py_vim,
+    regex_convert_str_vim, clearmatch)
 from .action import DEFAULT_ACTION_KEYMAP
 from .prompt import DenitePrompt
 from .. import denite
@@ -477,7 +478,7 @@ class Default(object):
 
     def cleanup(self):
         self._vim.command('pclose!')
-        self._vim.call('clearmatches')
+        clearmatch(self._vim)
         # Redraw to clear prompt
         self._vim.command('redraw | echo ""')
         self._vim.command('highlight! link CursorLine CursorLine')

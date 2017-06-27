@@ -9,6 +9,7 @@ import os
 from itertools import filterfalse
 
 from .openable import Kind as Openable
+from denite.util import clearmatch
 
 
 class Kind(Openable):
@@ -84,9 +85,9 @@ class Kind(Openable):
         self.vim.command('copen')
 
     def __highlight(self, context, line):
-        self.vim.call('clearmatches')
-        self.vim.call('matchaddpos',
-                      context['highlight_preview_line'], [line])
+        clearmatch(self.vim)
+        self.vim.current.window.vars['denite_match_id'] = self.vim.call(
+            'matchaddpos', context['highlight_preview_line'], [line])
 
     def __get_preview_window(self):
         return next(filterfalse(lambda x:
