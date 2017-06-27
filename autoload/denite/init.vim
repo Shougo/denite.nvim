@@ -72,6 +72,7 @@ function! denite#init#_user_options() abort
         \ 'buffer_name': 'default',
         \ 'cursor_pos': '',
         \ 'cursor_wrap': v:false,
+        \ 'cursor_shape': has('gui_running'),
         \ 'cursorline': v:true,
         \ 'default_action': 'default',
         \ 'direction': 'botright',

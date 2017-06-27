@@ -147,8 +147,9 @@ class Default(object):
         self._scroll = int(self._context['scroll'])
         if self._scroll == 0:
             self._scroll = round(self._winheight / 2)
-        self._guicursor = self._vim.options['guicursor']
-        self._vim.options['guicursor'] = 'n-v-c:None'
+        if self._context['cursor_shape']:
+            self._guicursor = self._vim.options['guicursor']
+            self._vim.options['guicursor'] = 'n-v-c:None'
 
         if self._winid > 0 and self._vim.call(
                 'win_gotoid', self._winid):
@@ -482,8 +483,9 @@ class Default(object):
         self._vim.command('highlight! link CursorLine CursorLine')
         if self._vim.call('exists', '#ColorScheme'):
             self._vim.command('silent doautocmd ColorScheme')
-        self._vim.command('set guicursor&')
-        self._vim.options['guicursor'] = self._guicursor
+        if self._context['cursor_shape']:
+            self._vim.command('set guicursor&')
+            self._vim.options['guicursor'] = self._guicursor
 
     def quit_buffer(self):
         self.cleanup()
