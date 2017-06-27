@@ -208,6 +208,7 @@ def parse_tagline(line, tagpath):
 
     return info
 
+
 def clearmatch(vim):
     if vim.call('exists', 'w:denite_match_id'):
         vim.call('matchdelete',
