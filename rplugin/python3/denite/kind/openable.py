@@ -23,33 +23,42 @@ class Kind(Base):
         pass
 
     def action_split(self, context):
-        for target in context['targets']:
-            new_context = copy(context)
-            new_context['targets'] = [target]
-
-            self.vim.command('split')
-            self.action_open(new_context)
-
-    def action_vsplit(self, context):
-        for target in context['targets']:
-            new_context = copy(context)
-            new_context['targets'] = [target]
-
-            self.vim.command('vsplit')
-            self.action_open(new_context)
-
-    def action_tabopen(self, context):
-        hidden = self.vim.options['hidden']
-        try:
-            self.vim.options['hidden'] = False
+        if self.__is_current_buffer_empty():
+            self.action_open(context)
+        else:
             for target in context['targets']:
                 new_context = copy(context)
                 new_context['targets'] = [target]
 
-                self.vim.command('tabnew')
+                self.vim.command('split')
                 self.action_open(new_context)
-        finally:
-            self.vim.options['hidden'] = hidden
+
+    def action_vsplit(self, context):
+        if self.__is_current_buffer_empty():
+            self.action_open(context)
+        else:
+            for target in context['targets']:
+                new_context = copy(context)
+                new_context['targets'] = [target]
+
+                self.vim.command('vsplit')
+                self.action_open(new_context)
+
+    def action_tabopen(self, context):
+        if self.__is_current_buffer_empty():
+            self.action_open(context)
+        else:
+            hidden = self.vim.options['hidden']
+            try:
+                self.vim.options['hidden'] = False
+                for target in context['targets']:
+                    new_context = copy(context)
+                    new_context['targets'] = [target]
+
+                    self.vim.command('tabnew')
+                    self.action_open(new_context)
+            finally:
+                self.vim.options['hidden'] = hidden
 
     def action_switch(self, context):
         self.__action_switch(context, self.action_open)
@@ -70,3 +79,7 @@ class Kind(Base):
                 self.vim.call('win_gotoid', winid)
             else:
                 fallback(context)
+
+    def __is_current_buffer_empty(self):
+        buffer = self.vim.current.buffer
+        return buffer.name == '' and len(buffer) == 1 and buffer[0] == ''
