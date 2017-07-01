@@ -1,6 +1,7 @@
 """Key module."""
 from collections import namedtuple
 from .util import ensure_bytes, ensure_str, int2char
+from typing import Dict  # noqa: F401
 
 
 ESCAPE_QUOTE = str.maketrans({
@@ -118,7 +119,7 @@ class Key(KeyBase):
     """
 
     __slots__ = ()
-    __cached = {}
+    __cached = {}  # type: Dict[str, Key]
 
     def __str__(self):
         """Return string representation of the key."""
