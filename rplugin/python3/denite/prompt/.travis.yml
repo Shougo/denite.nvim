@@ -1,0 +1,52 @@
+dist: trusty
+sudo: false
+language: python
+python:
+  - 3.3
+  - 3.4
+  - 3.5
+  - 3.6
+#os:
+#  - linux
+#  - osx
+#osx_image: xcode8
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-trusty-4.0
+    packages:
+      - autoconf
+      - automake
+      - apport
+      - build-essential
+      - clang-4.0
+      - cmake
+      - cscope
+      - g++-5-multilib
+      - g++-multilib
+      - gcc-5-multilib
+      - gcc-multilib
+      - gdb
+      - language-pack-tr
+      - libc6-dev-i386
+      - libtool
+      - llvm-4.0-dev
+      - locales
+      - pkg-config
+      - unzip
+      - valgrind
+      - xclip
+
+install:
+  - curl -sL git.io/v18DU | bash
+  - git clone --depth 1 --single-branch -b ci-test https://github.com/lambdalisue/neovim-prompt ci-test
+  - pip install coveralls
+
+script:
+  - cd ci-test
+  - PATH="$HOME/neovim/bin:$PATH" sh ./scripts/test.sh
+
+after_success:
+  - coveralls
