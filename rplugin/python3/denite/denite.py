@@ -4,7 +4,7 @@
 # License: MIT license
 # ============================================================================
 
-from denite.util import get_custom_source, find_rplugins
+from denite.util import get_custom_source, find_rplugins, split_input
 
 import denite.source  # noqa
 import denite.filter  # noqa
@@ -96,7 +96,7 @@ class Denite(object):
                 for matcher in [self._filters[x]
                                 for x in source.matchers
                                 if x in self._filters]:
-                    ctx['candidates'] = matcher.filter(ctx)
+                    self.match_candidates(ctx, matcher)
                 partial += ctx['candidates']
                 if len(partial) >= 1000:
                     break
@@ -110,6 +110,11 @@ class Denite(object):
                 c['source'] = source.name
             ctx['candidates'] = []
             yield source.name, entire, partial
+
+    def match_candidates(self, ctx, matcher):
+        for pattern in split_input(ctx['input']):
+            ctx['input'] = pattern
+            ctx['candidates'] = matcher.filter(ctx)
 
     def on_init(self, context):
         self._current_sources = []

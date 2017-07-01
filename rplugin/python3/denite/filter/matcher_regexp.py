@@ -6,7 +6,7 @@
 
 import re
 from .base import Base
-from denite.util import split_input, convert2regex_pattern
+from denite.util import convert2regex_pattern
 
 
 class Filter(Base):
@@ -21,13 +21,12 @@ class Filter(Base):
         if context['input'] == '':
             return context['candidates']
         candidates = context['candidates']
-        for pattern in split_input(context['input']):
-            try:
-                p = re.compile(pattern, flags=re.IGNORECASE
-                               if context['ignorecase'] else 0)
-            except Exception:
-                return []
-            candidates = [x for x in candidates if p.search(x['word'])]
+        try:
+            p = re.compile(context['input'], flags=re.IGNORECASE
+                           if context['ignorecase'] else 0)
+        except Exception:
+            return []
+        candidates = [x for x in candidates if p.search(x['word'])]
         return candidates
 
     def convert_pattern(self, input_str):
