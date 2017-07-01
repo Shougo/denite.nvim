@@ -71,6 +71,17 @@ USAGE							*denite-usage*
 >
 	:Denite -input=foo file_rec
 <
+	Multiple keywords can be used to narrow down the candidates.  They are
+	separated by either a space " ", and act like a logical AND.
+>
+	foo bar
+<
+	Specify negative conditions with a bang "!".
+>
+	foo !bar
+<
+	It matches candidates that contain "foo" but not "bar".
+
 ==============================================================================
 INSTALL							*denite-install*
 
