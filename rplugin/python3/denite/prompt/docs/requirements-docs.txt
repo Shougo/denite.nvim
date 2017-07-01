@@ -1,5 +1,0 @@
-neovim
-sphinx
-sphinx-autodoc-annotation
-enum34; python_version < '3.4'
-typing; python_version < '3.5'
