@@ -142,7 +142,7 @@ class Default(object):
 
         self._prev_wininfo = self._get_wininfo()
         self._winheight = int(self._context['winheight'])
-        self._prev_winid = self._vim.call('win_getid')
+        self._prev_winid = int(self._context['prev_winid'])
         self._winrestcmd = self._vim.call('winrestcmd')
         self._winsaveview = self._vim.call('winsaveview')
         self._scroll = int(self._context['scroll'])
