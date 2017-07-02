@@ -74,5 +74,3 @@ you should read `:help provider-python`.
 * [`defx`](https://github.com/Shougo/defx.nvim) support
 
 * match highlight improvement
-
-* `denite#custom#action()`
