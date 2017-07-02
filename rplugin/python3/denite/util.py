@@ -89,7 +89,7 @@ def load_external_module(file, module):
 
 
 def split_input(text):
-    return [x for x in re.split(r'\s+', text) if x != '']
+    return [x for x in re.split(r'\s+', text) if x != ''] if text else ['']
 
 
 def path2dir(path):

@@ -113,7 +113,7 @@ class Denite(object):
     def match_candidates(self, context, matchers):
         for pattern in split_input(context['input']):
             ctx = copy.copy(context)
-            if pattern[0] == '!':
+            if pattern and pattern[0] == '!':
                 if pattern == '!':
                     continue
                 ctx['input'] = pattern[1:]
