@@ -315,12 +315,12 @@ class Denite(object):
         custom_actions = self.get_custom_actions(kind.name)
         if action_name in custom_actions:
             return {
-            'name': action_name,
-            'kind': kind.name,
-            'func': None,
-            'is_quit': True,
-            'is_redraw': False,
-        }
+                'name': action_name,
+                'kind': kind.name,
+                'func': None,
+                'is_quit': True,
+                'is_redraw': False,
+            }
 
         action_attr = 'action_' + action_name
         if not hasattr(kind, action_attr):
@@ -348,7 +348,7 @@ class Denite(object):
             return []
         actions = ['default']
         actions += [x.replace('action_', '') for x in dir(kind)
-                              if x.find('action_') == 0]
+                    if x.find('action_') == 0]
         actions += self.get_custom_actions(kind.name).keys()
         return actions
 
