@@ -230,8 +230,11 @@ EXAMPLES						*denite-examples*
 	call denite#custom#filter('matcher_ignore_globs', 'ignore_globs',
 	      \ [ '.git/', '.ropeproject/', '__pycache__/',
 	      \   'venv/', 'images/', '*.min.*', 'img/', 'fonts/'])
-<
 
+	" Custom action
+	call denite#custom#action('file', 'test',
+	      \ {context -> execute('let g:foo = 1')})
+<
 ==============================================================================
 INTERFACE						*denite-interface*
 
@@ -710,6 +713,11 @@ P		<denite:change_path>
 
 ------------------------------------------------------------------------------
 FUNCTIONS						*denite-functions*
+
+						*denite#custom#action()*
+denite#custom#action({kind}, {name}, {func})
+		Define {name} action for {kind}.
+		{func} must be a |Funcref| or the name of a function.
 
 							*denite#custom#alias()*
 denite#custom#alias({type}, {alias-name}, {base-name})

@@ -252,7 +252,9 @@ class Denite(object):
             sources.pop()].context if len(sources) == 1 else {}
 
         context['targets'] = targets
-        return action['func'](context)
+        return action['func'](context) if action['func'] else self._vim.call(
+            'denite#custom#call_action',
+            action['kind'], action['name'], context)
 
     def _get_kind(self, context, targets):
         if not targets:
@@ -308,23 +310,47 @@ class Denite(object):
                 action_name = source.default_action
             if action_name == 'default':
                 action_name = kind.default_action
+
+        # Custom action
+        custom_actions = self.get_custom_actions(kind.name)
+        if action_name in custom_actions:
+            return {
+            'name': action_name,
+            'kind': kind.name,
+            'func': None,
+            'is_quit': True,
+            'is_redraw': False,
+        }
+
         action_attr = 'action_' + action_name
         if not hasattr(kind, action_attr):
             self.error('Invalid action: ' + action_name)
             return {}
         return {
             'name': action_name,
+            'kind': kind.name,
             'func': getattr(kind, action_attr),
             'is_quit': (action_name not in kind.persist_actions),
             'is_redraw': (action_name in kind.redraw_actions),
         }
 
+    def get_custom_actions(self, kind_name):
+        actions = {}
+        if '_' in self._custom['action']:
+            actions.update(self._custom['action']['_'])
+        if kind_name in self._custom['action']:
+            actions.update(self._custom['action'][kind_name])
+        return actions
+
     def get_actions(self, context, targets):
         kind = self._get_kind(context, targets)
         if not kind:
             return []
-        return ['default'] + [x.replace('action_', '') for x in dir(kind)
+        actions = ['default']
+        actions += [x.replace('action_', '') for x in dir(kind)
                               if x.find('action_') == 0]
+        actions += self.get_custom_actions(kind.name).keys()
+        return actions
 
     def is_async(self):
         return len([x for x in self._current_sources

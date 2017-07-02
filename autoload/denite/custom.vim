@@ -15,6 +15,7 @@ function! denite#custom#get() abort
     let s:custom.alias_filter = {}
     let s:custom.option = {}
     let s:custom.filter = {}
+    let s:custom.action = {}
   endif
 
   return s:custom
@@ -96,6 +97,26 @@ function! denite#custom#option(buffer_name, name_or_dict, ...) abort
     endif
 
     call s:set_custom(custom[key], a:name_or_dict, get(a:000, 0, ''))
+  endfor
+endfunction
+
+function! denite#custom#action(kind, name, func, ...) abort
+  let custom = denite#custom#get().action
+
+  for key in denite#util#split(a:kind)
+    if !has_key(custom, key)
+      let custom[key] = {}
+    endif
+    let custom[key][a:name] = a:func
+  endfor
+endfunction
+function! denite#custom#call_action(kind, name, context) abort
+  let custom = denite#custom#get().action
+
+  for key in denite#util#split(a:kind)
+    if has_key(custom, key) && has_key(custom[key], a:name)
+      call call(custom[key][a:name], [a:context])
+    endif
   endfor
 endfunction
 

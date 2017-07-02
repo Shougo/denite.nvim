@@ -33,7 +33,7 @@ class Kind(File):
     def __init__(self, vim):
         super().__init__(vim)
 
-        self.name = 'file/file_old'
+        self.name = 'file'
         self.persist_actions += ['delete']
         self.redraw_actions += ['delete']
 
