@@ -54,3 +54,57 @@ if _temporary_scope in dir():
 EOF
   return []
 endfunction
+
+function! denite#vim#_get_context(key, bufname) abort
+  python3 << EOF
+def _temporary_scope():
+    global _value
+    import traceback
+    import vim
+    from denite.util import error
+    from denite.rplugin import Neovim, reform_bytes
+    nvim = Neovim(vim)
+    try:
+        if not denite__uis:
+            return
+        key = reform_bytes(nvim.eval('a:key'))
+        bufname = reform_bytes(nvim.eval('a:bufname'))
+        if key:
+            ui = denite__uis[reform_bytes(nvim.eval('a:bufname'))]
+            _value = ui._context[reform_bytes(nvim.eval('a:key'))]
+        else:
+            # Return list of keys of any UI
+            _value = sorted(next(iter(denite__uis.values()))._context)
+        nvim.command('return py3eval("_value")')
+    except Exception as e:
+        for line in traceback.format_exc().splitlines():
+            error(nvim, line)
+        error(nvim, 'Please execute :messages command.')
+_temporary_scope()
+if _temporary_scope in dir():
+    del _temporary_scope
+EOF
+endfunction
+
+function! denite#vim#_set_context(key, value, bufname) abort
+  python3 << EOF
+def _temporary_scope():
+    import traceback
+    import vim
+    from denite.util import error
+    from denite.rplugin import Neovim, reform_bytes
+    nvim = Neovim(vim)
+    try:
+        if not denite__uis:
+            return
+        ui = denite__uis[reform_bytes(nvim.eval('a:bufname'))]
+        ui._context[nvim.eval('a:key')] = reform_bytes(nvim.eval('a:value'))
+    except Exception as e:
+        for line in traceback.format_exc().splitlines():
+            error(nvim, line)
+        error(nvim, 'Please execute :messages command.')
+_temporary_scope()
+if _temporary_scope in dir():
+    del _temporary_scope
+EOF
+endfunction
