@@ -11,7 +11,7 @@ from importlib import find_loader
 if not find_loader('vim'):
     import neovim
     from denite.ui.default import Default
-    _uis = {}
+    _uis = {}  # type: dict
 
     @neovim.plugin
     class DeniteHandlers(object):
