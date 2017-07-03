@@ -908,6 +908,25 @@ denite#context#set({key}, {value}[, {bufname}])	    *denite#context#set()*
 		a Denite instance. Optionally specify a Denite buffer, or
 		else use the default Denite buffer.
 		Note: Does nothing if no Denite buffer exists.
+>
+		" Create a map that toggles reverse order
+		function! ToggleReverse() abort " {{{
+		    let sorters = split(denite#context#get('sorters'), ',')
+		    if index(sorters, 'sorter_reverse') == -1
+		        call add(sorters, 'sorter_reverse')
+		    else
+		        call remove(sorters, index(sorters, 'sorter_reverse'))
+		    endif
+		    call denite#context#set('sorters', join(sorters, ','))
+		    return '<denite:redraw>'
+		endfunction " }}}
+		call denite#custom#map(
+		    \ 'insert',
+		    \ '<C-s>',
+		    \ 'ToggleReverse()',
+		    \ 'noremap expr'
+		    \)
+<
 
 ------------------------------------------------------------------------------
 OPTIONS							*denite-options*
