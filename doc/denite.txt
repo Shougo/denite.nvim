@@ -1485,6 +1485,10 @@ sorter_sublime
 		Uses the scoring algorithm from this article and its implementation:
 		https://bit.ly/reverse-engineering-sublime-text-s-fuzzy-match
 
+						*denite-filter-sorter_reverse*
+sorter_reverse
+		Simple filter to reverse the order of candidates.
+
 				*denite-filter-converter_relative_word*
 converter_relative_word
 		Convert candidate's word to the relative path.
