@@ -577,7 +577,7 @@ are on the neovim-prompt's builtin actions/mappings.
 
 				*denite-map-scroll_window_up_one_line*
 <denite:scroll_window_up_one_line>
-		Scroll the window one line up like |CTRL-E|.
+		Scroll the window one line up like |CTRL-Y|.
 
 				*denite-map-scroll_page_forwards*
 <denite:scroll_page_forwards>
@@ -734,7 +734,6 @@ n		<denite:do_action:new>
 t		<denite:do_action:tabopen>
 y		<denite:do_action:yank>
 q		<denite:quit>
-ZZ		<denite:quit>
 <C-L>		<denite:redraw>
 <C-R>		<denite:restart>
 <Space>		<denite:toggle_select_down>

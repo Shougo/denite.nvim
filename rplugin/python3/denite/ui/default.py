@@ -664,8 +664,10 @@ class Default(object):
 
     def scroll_down(self, scroll):
         if self._win_cursor + self._cursor < self._candidates_len:
-            if self._win_cursor == 1:
-                self._cursor -= scroll
+            if self._win_cursor <= 1:
+                self._win_cursor = 1
+                self._cursor = min(self._cursor + scroll,
+                                   self._candidates_len)
             elif self._win_cursor < self._winheight:
                 self._win_cursor = min(
                     self._win_cursor + scroll,
@@ -696,7 +698,7 @@ class Default(object):
         self.update_cursor()
 
     def scroll_window_down_one_line(self):
-        if self._win_cursor <= 1:
+        if self._win_cursor <= 1 and self._cursor > 0:
             return self.scroll_down(1)
         self._cursor += 1
         self._win_cursor -= 1
