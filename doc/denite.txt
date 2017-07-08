@@ -519,15 +519,15 @@ are on the neovim-prompt's builtin actions/mappings.
 
 				*denite-map-move_to_top*
 <denite:move_to_top>
-		Move to the top visible candidate.
+		Move to the top visible candidate like |H|.
 
 				*denite-map-move_to_middle*
 <denite:move_to_middle>
-		Move to the middle visible candidate.
+		Move to the middle visible candidate like |M|.
 
 				*denite-map-move_to_bottom*
 <denite:move_to_bottom>
-		Move to the bottom visible candidate.
+		Move to the bottom visible candidate like |L|.
 
 				*denite-map-paste_from_register*
 <denite:paste_from_register>
