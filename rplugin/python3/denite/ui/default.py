@@ -638,6 +638,18 @@ class Default(object):
             self._cursor = cur_max
             self.update_cursor()
 
+    def move_to_top(self):
+        self._win_cursor = 1
+        self.update_cursor()
+
+    def move_to_middle(self):
+        self._win_cursor = self._winheight // 2
+        self.update_cursor()
+
+    def move_to_bottom(self):
+        self._win_cursor = self._winheight
+        self.update_cursor()
+
     def scroll_window_upwards(self):
         self.scroll_up(self._scroll)
 
