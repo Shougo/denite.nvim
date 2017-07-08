@@ -186,6 +186,7 @@ class Default(object):
         self._window_options['conceallevel'] = 3
         self._window_options['concealcursor'] = 'n'
         self._window_options['list'] = False
+        self._window_options['wrap'] = False
 
         self._bufvars = self._vim.current.buffer.vars
         self._bufnr = self._vim.current.buffer.number
@@ -651,7 +652,9 @@ class Default(object):
 
     def scroll_down(self, scroll):
         if self._win_cursor + self._cursor < self._candidates_len:
-            if self._win_cursor < self._winheight:
+            if self._win_cursor == 1:
+                self._cursor -= scroll
+            elif self._win_cursor < self._winheight:
                 self._win_cursor = min(
                     self._win_cursor + scroll,
                     self._candidates_len,
@@ -672,6 +675,35 @@ class Default(object):
         else:
             return
         self.update_cursor()
+
+    def scroll_window_up_one_line(self):
+        if self._cursor < 1:
+            return self.scroll_up(1)
+        self._cursor -= 1
+        self._win_cursor += 1
+        self.update_cursor()
+
+    def scroll_window_down_one_line(self):
+        if self._win_cursor <= 1:
+            return self.scroll_down(1)
+        self._cursor += 1
+        self._win_cursor -= 1
+        self.update_cursor()
+
+    def scroll_cursor_to_top(self):
+        self._cursor += self._win_cursor - 1
+        self._win_cursor = 1
+        self.update_cursor()
+
+    def scroll_cursor_to_middle(self):
+        self.scroll_cursor_to_top()
+        while self._cursor >= 1 and self._win_cursor < self._winheight // 2:
+            self.scroll_window_up_one_line()
+
+    def scroll_cursor_to_bottom(self):
+        self.scroll_cursor_to_top()
+        while self._cursor >= 1 and self._win_cursor < self._winheight:
+            self.scroll_window_up_one_line()
 
     def jump_to_next_source(self):
         if len(self._context['sources']) == 1:

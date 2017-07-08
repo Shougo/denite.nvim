@@ -555,9 +555,17 @@ are on the neovim-prompt's builtin actions/mappings.
 <denite:scroll_window_downwards>
 		Scroll the window downwards.
 
+				*denite-map-scroll_window_down_one_line*
+<denite:scroll_window_down_one_line>
+		Scroll the window one line down like |CTRL-E|.
+
 				*denite-map-scroll_window_upwards*
 <denite:scroll_window_upwards>
 		Scroll the window upwards.
+
+				*denite-map-scroll_window_up_one_line*
+<denite:scroll_window_up_one_line>
+		Scroll the window one line up like |CTRL-E|.
 
 				*denite-map-scroll_page_forwards*
 <denite:scroll_page_forwards>
@@ -574,6 +582,18 @@ are on the neovim-prompt's builtin actions/mappings.
 				*denite-map-scroll_up*
 <denite:scroll_up>
 		Scroll up.
+
+				*denite-map-scroll_cursor_to_top*
+<denite:scroll_cursor_to_top>
+		Scroll the cursor to the top of the window like |zt|.
+
+				*denite-map-scroll_cursor_to_middle*
+<denite:scroll_cursor_to_middle>
+		Scroll the cursor to the middle of the window like |zz|.
+
+				*denite-map-scroll_cursor_to_bottom*
+<denite:scroll_cursor_to_bottom>
+		Scroll the cursor to the bottom of the window like |zb|.
 
 				*denite-map-toggle_insert_mode*
 <denite:toggle_insert_mode>
@@ -686,9 +706,14 @@ dd		<denite:delete_entire_text>
 gg		<denite:move_to_first_line>
 G		<denite:move_to_last_line>
 <C-U>		<denite:scroll_window_upwards>
+<C-E>		<denite:scroll_window_up_one_line>
 <C-D>		<denite:scroll_window_downwards>
+<C-Y>		<denite:scroll_window_down_one_line>
 <C-F>		<denite:scroll_page_forwards>
 <C-B>		<denite:scroll_page_backwards>
+zt		<denite:scroll_cursor_to_top>
+zz		<denite:scroll_cursor_to_middle>
+zb		<denite:scroll_cursor_to_bottom>
 p		<denite:do_action:preview>
 d		<denite:do_action:delete>
 n		<denite:do_action:new>
