@@ -341,11 +341,6 @@ are on the neovim-prompt's builtin actions/mappings.
 <denite:change_char>
 		Change character like |s| in normal mode in vim buffer.
 
-				*denite-map-delete_char_under_caret*
-<denite:delete_char_under_caret>
-		Delete the character under the caret like |x| in normal mode
-		in vim buffer.
-
 				*denite-map-change_path*
 <denite:change_path>
 		Change and restart Denite buffer.
