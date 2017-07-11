@@ -337,6 +337,10 @@ are on the neovim-prompt's builtin actions/mappings.
 <denite:change_line>
 		Change line, like |cc| in normal mode in vim buffer.
 
+				*denite-map-change_char*
+<denite:change_char>
+		Change character like |s| in normal mode in vim buffer.
+
 				*denite-map-change_path*
 <denite:change_path>
 		Change and restart Denite buffer.
@@ -681,6 +685,9 @@ e		<denite:move_caret_to_end_of_word>
 $		<denite:move_caret_to_tail>
 c		<denite:change_word>
 cc		<denite:change_line>
+S		<denite:change_line>
+s		<denite:change_char>
+x		<denite:delete_char_under_caret>
 cw		<denite:change_word>
 dd		<denite:delete_entire_text>
 gg		<denite:move_to_first_line>

@@ -176,6 +176,14 @@ def _change_line(prompt, params):
     prompt.denite.change_mode('insert')
 
 
+def _change_char(prompt, params):
+    prompt.text = ''.join([
+        prompt.caret.get_backward_text(),
+        prompt.caret.get_forward_text(),
+    ])
+    prompt.denite.change_mode('insert')
+
+
 def _move_caret_to_next_word(prompt, params):
     pattern = re.compile('^\S+\s+\S')
     original_text = prompt.caret.get_forward_text()
@@ -243,6 +251,7 @@ DEFAULT_ACTION_RULES = [
     ('denite:move_caret_to_end_of_word', _move_caret_to_end_of_word),
     ('denite:change_word', _change_word),
     ('denite:change_line', _change_line),
+    ('denite:change_char', _change_char),
     ('denite:append', _append),
     ('denite:append_to_line', _append_to_line),
     ('denite:insert_to_head', _insert_to_head),
@@ -316,7 +325,11 @@ DEFAULT_ACTION_KEYMAP = {
         ('0', '<denite:move_caret_to_head>', 'noremap'),
         ('$', '<denite:move_caret_to_tail>', 'noremap'),
         ('cc', '<denite:change_line>', 'noremap'),
+        ('S', '<denite:change_line>', 'noremap'),
         ('cw', '<denite:change_word>', 'noremap'),
+        ('S', '<denite:change_line>', 'noremap'),
+        ('s', '<denite:change_char>', 'noremap'),
+        ('x', '<denite:delete_char_under_caret>', 'noremap'),
         ('dd', '<denite:delete_entire_text>', 'noremap'),
         ('h', '<denite:move_caret_to_left>', 'noremap'),
         ('l', '<denite:move_caret_to_right>', 'noremap'),
