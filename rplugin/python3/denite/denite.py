@@ -346,9 +346,7 @@ class Denite(object):
         kind = self._get_kind(context, targets)
         if not kind:
             return []
-        actions = ['default']
-        actions += [x.replace('action_', '') for x in dir(kind)
-                    if x.find('action_') == 0]
+        actions = kind.get_action_names()
         actions += self.get_custom_actions(kind.name).keys()
         return actions
 
