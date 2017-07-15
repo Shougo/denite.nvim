@@ -13,6 +13,7 @@ import denite.kind    # noqa
 import importlib.machinery
 import copy
 import re
+from itertools import filterfalse
 
 
 class Denite(object):
@@ -90,7 +91,7 @@ class Denite(object):
             if not entire or (ctx['is_async'] and
                               len(entire) > source.max_candidates and
                               ctx['input']):
-                yield source.name, entire, []
+                yield source.name, entire, [], []
                 continue
             partial = []
             ctx['candidates'] = entire
@@ -111,7 +112,12 @@ class Denite(object):
             for c in partial:
                 c['source'] = source.name
             ctx['candidates'] = []
-            yield source.name, entire, partial
+
+            patterns = filterfalse(lambda x: x == '', (
+                self._filters[x].convert_pattern(context['input'])
+                for x in source.matchers if self._filters[x]))
+
+            yield source.name, entire, partial, patterns
 
     def match_candidates(self, context, matchers):
         for pattern in split_input(context['input']):
@@ -183,12 +189,6 @@ class Denite(object):
     def error(self, msg):
         self._vim.call('denite#util#print_error', msg)
 
-    def get_sources(self):
-        return self._sources
-
-    def get_source(self, name):
-        return self._sources.get(name, {})
-
     def get_current_sources(self):
         return self._current_sources
 
@@ -212,9 +212,6 @@ class Denite(object):
                     self._sources[alias].name = alias
                     self._sources[alias].path = path
                     self._sources[alias].syntax_name = syntax_name
-
-    def get_filter(self, filter_name):
-        return self._filters.get(filter_name, None)
 
     def load_filters(self, context):
         # Load filters from runtimepath

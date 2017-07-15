@@ -5,7 +5,7 @@
 # ============================================================================
 import re
 import weakref
-from itertools import filterfalse, groupby, takewhile
+from itertools import groupby, takewhile
 
 from denite.util import (
     clear_cmdline, echo, error, regex_convert_py_vim,
@@ -290,18 +290,12 @@ class Default(object):
         pattern = ''
         sources = ''
         self._candidates = []
-        for name, entire, partial in self._denite.filter_candidates(
+        for name, entire, partial, patterns in self._denite.filter_candidates(
                 self._context):
             self._candidates += partial
             sources += '{}({}/{}) '.format(name, len(partial), len(entire))
 
-            if pattern == '':
-                matchers = self._denite.get_source(name).matchers
-                patterns = filterfalse(lambda x: x == '', (
-                    self._denite.get_filter(x).convert_pattern(
-                        self._context['input'])
-                    for x in matchers if self._denite.get_filter(x)
-                ))
+            if pattern == '' and patterns:
                 pattern = next(patterns, '')
 
         if self._context['sorters']:
