@@ -125,6 +125,8 @@ class Default(object):
         if self._context['cursor_pos'].isnumeric():
             self.init_cursor()
             self.move_to_pos(int(self._context['cursor_pos']))
+        elif context['cursor_pos'] == '$':
+            self.move_to_last_line()
 
         # Make sure that the caret position is ok
         self._prompt.caret.locus = self._prompt.caret.tail

@@ -981,8 +981,9 @@ OPTIONS							*denite-options*
 		Select {number} candidate.
 		If {number} is "+1" or "-1" when resume, selects the next or
 		previous candidate.
-		Note: 0 is the first candidate.
-		Default: ''
+		Note: "0" is the first candidate.
+		Note: "$" is the last candidate.
+		Default: ""
 
 						*denite-options-cursor-shape*
 -cursor-shape
