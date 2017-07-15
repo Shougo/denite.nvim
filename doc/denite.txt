@@ -764,6 +764,7 @@ FUNCTIONS						*denite-functions*
 denite#custom#action({kind}, {name}, {func})
 		Define {name} action for {kind}.
 		{func} must be a |Funcref| or the name of a function.
+		Note: {kind} is comma separated.
 
 							*denite#custom#alias()*
 denite#custom#alias({type}, {alias-name}, {base-name})
