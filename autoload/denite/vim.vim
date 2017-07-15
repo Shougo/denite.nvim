@@ -21,6 +21,9 @@ import sys
 import vim
 # Add sys.path
 sys.path.insert(0, vim.eval('s:denite_path'))
+import denite.util
+import denite.ui.default
+import denite.rplugin
 # Define 'denite__uis' to store UI for individual buffers
 denite__uis = {}
 EOF
@@ -30,10 +33,6 @@ endfunction
 function! denite#vim#_start(sources, context) abort
   python3 << EOF
 def _temporary_scope():
-    import vim
-    import denite.util
-    import denite.ui.default
-    import denite.rplugin
     nvim = denite.rplugin.Neovim(vim)
     try:
         buffer_name = nvim.eval('a:context')['buffer_name']

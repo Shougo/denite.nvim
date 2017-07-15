@@ -4,7 +4,6 @@
 # License: MIT license
 # =============================================================================
 
-import traceback
 from importlib import find_loader
 
 
@@ -25,13 +24,31 @@ if not find_loader('vim'):
 
         @neovim.function('_denite_start', sync=True)
         def start(self, args):
-            from denite.util import error
             try:
-                buffer_name = args[1]['buffer_name']
-                if buffer_name not in self._uis:
-                    self._uis[buffer_name] = Default(self._vim)
-                return self._uis[buffer_name].start(args[0], args[1])
+                ui = self.get_ui(args[1]['buffer_name'])
+                return ui.start(args[0], args[1])
             except Exception:
+                import traceback
+                import denite.util
                 for line in traceback.format_exc().splitlines():
-                    error(self._vim, line)
-                error(self._vim, 'Please execute :messages command.')
+                    denite.util.error(self._vim, line)
+                denite.util.error(self._vim,
+                                  'Please execute :messages command.')
+
+        @neovim.function('_denite_do_action', sync=True)
+        def take_action(self, args):
+            try:
+                ui = self.get_ui(args[0]['buffer_name'])
+                return ui._denite.do_action(args[0], args[1], args[2])
+            except Exception:
+                import traceback
+                import denite.util
+                for line in traceback.format_exc().splitlines():
+                    denite.util.error(self._vim, line)
+                denite.util.error(self._vim,
+                                  'Please execute :messages command.')
+
+        def get_ui(self, buffer_name):
+            if buffer_name not in self._uis:
+                self._uis[buffer_name] = Default(self._vim)
+            return self._uis[buffer_name]

@@ -234,6 +234,9 @@ EXAMPLES						*denite-examples*
 	" Custom action
 	call denite#custom#action('file', 'test',
 	      \ {context -> execute('let g:foo = 1')})
+	call denite#custom#action('file', 'test2',
+	      \ {context -> denite#do_action(
+	      \  context, 'open', context['targets'])})
 <
 ==============================================================================
 INTERFACE						*denite-interface*
@@ -906,6 +909,12 @@ denite#custom#var({source-name}, {var-name}, {value})
 		Set {source-name} source specialized variable {variable-name}
 		to {value}.  You may specify multiple sources with the
 		separator "," in {source-name}.
+
+							*denite#do_action()*
+denite#do_action({context}, {action-name}, {targets})
+		Runs an action {action-name} against {targets}.  This will
+		mainly be used in |denite#custom#action()|.
+		Note: It is neovim only.
 
 denite#get_status_mode()			 *denite#get_status_mode()*
 		Returns the mode part of the status string.  It is useful to

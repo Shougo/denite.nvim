@@ -64,3 +64,7 @@ function! s:start(sources, user_context) abort
   return has('nvim') ? _denite_start(a:sources, context)
         \            : denite#vim#_start(a:sources, context)
 endfunction
+
+function! denite#do_action(context, action_name, targets) abort
+  return _denite_do_action(a:context, a:action_name, a:targets)
+endfunction
