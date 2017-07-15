@@ -121,6 +121,7 @@ class Default(object):
 
         self.update_displayed_texts()
         self.change_mode(self._current_mode)
+        self.update_buffer()
 
         if self._context['cursor_pos'].isnumeric():
             self.init_cursor()
@@ -471,7 +472,7 @@ class Default(object):
         self._context['mode'] = mode
 
         # Update mode indicator
-        self.update_buffer()
+        self.update_status()
 
     def cleanup(self):
         self._vim.command('pclose!')
