@@ -587,7 +587,7 @@ class Default(object):
         if not candidates:
             return
 
-        self._vim.vars['denite#_actions'] = self._denite.get_actions(
+        self._vim.vars['denite#_actions'] = self._denite.get_action_names(
             self._context, candidates)
         clear_cmdline(self._vim)
         action = self._vim.call('input', 'Action: ', '',

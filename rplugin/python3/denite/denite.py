@@ -342,7 +342,7 @@ class Denite(object):
             actions.update(self._custom['action'][kind_name])
         return actions
 
-    def get_actions(self, context, targets):
+    def get_action_names(self, context, targets):
         kind = self._get_kind(context, targets)
         if not kind:
             return []
