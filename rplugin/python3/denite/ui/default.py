@@ -80,16 +80,10 @@ class Default(object):
             self._context['immediately'] = context['immediately']
             self._context['cursor_wrap'] = context['cursor_wrap']
 
-            self.init_buffer()
-
-            if context['cursor_pos'] == '+1':
-                self.move_to_next_line()
-            elif context['cursor_pos'] == '-1':
-                self.move_to_prev_line()
-
             if self.check_empty():
                 return
 
+            self.init_buffer()
             if context['refresh']:
                 self.redraw()
         else:
@@ -110,6 +104,7 @@ class Default(object):
             self._is_multi = len(sources) > 1
 
             self.init_denite()
+            self.init_cursor()
             self.gather_candidates()
             self.update_candidates()
 
@@ -117,17 +112,10 @@ class Default(object):
                 return
 
             self.init_buffer()
-            self.init_cursor()
 
         self.update_displayed_texts()
         self.change_mode(self._current_mode)
         self.update_buffer()
-
-        if self._context['cursor_pos'].isnumeric():
-            self.init_cursor()
-            self.move_to_pos(int(self._context['cursor_pos']))
-        elif context['cursor_pos'] == '$':
-            self.move_to_last_line()
 
         # Make sure that the caret position is ok
         self._prompt.caret.locus = self._prompt.caret.tail
@@ -330,6 +318,9 @@ class Default(object):
         ]
 
     def update_buffer(self):
+        if self._bufnr != self._vim.current.buffer.number:
+            return
+
         self.update_status()
 
         if self._vim.call('hlexists', 'deniteMatchedRange'):
@@ -411,6 +402,16 @@ class Default(object):
             self._vim.command('resize ' + str(winheight))
 
     def check_empty(self):
+        if self._context['cursor_pos'].isnumeric():
+            self.init_cursor()
+            self.move_to_pos(int(self._context['cursor_pos']))
+        elif self._context['cursor_pos'] == '+1':
+            self.move_to_next_line()
+        elif self._context['cursor_pos'] == '-1':
+            self.move_to_prev_line()
+        elif self._context['cursor_pos'] == '$':
+            self.move_to_last_line()
+
         if self._candidates and self._context['immediately']:
             self.do_action('default')
             candidate = self.get_cursor_candidate()
