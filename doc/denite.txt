@@ -1855,8 +1855,8 @@ Q: ":UniteNext"/":UnitePrevious" like commands are available?
 
 A: >
 
-	:Denite -resume -select=+1 -immediately
-	:Denite -resume -select=-1 -immediately
+	:Denite -resume -cursor-pos=+1 -immediately
+	:Denite -resume -cursor-pos=-1 -immediately
 
 Q: I want to close denite buffer if grep results are empty.
 
