@@ -12,6 +12,7 @@ import denite.kind    # noqa
 
 import importlib.machinery
 import copy
+import re
 
 
 class Denite(object):
@@ -73,6 +74,8 @@ class Denite(object):
         for source in self._current_sources:
             ctx = source.context
             ctx['input'] = context['input']
+            if context['smartcase']:
+                ctx['ignorecase'] = re.search(r'[A-Z]', ctx['input']) is None
             ctx['mode'] = context['mode']
             ctx['async_timeout'] = 0.03 if ctx['mode'] != 'insert' else 0.02
             if ctx['prev_input'] != ctx['input'] and ctx['is_interactive']:

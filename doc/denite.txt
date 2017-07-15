@@ -1036,6 +1036,11 @@ OPTIONS							*denite-options*
 		Previewed line highlight.
 		Default: "Search"
 
+						*denite-options-ignorecase*
+-ignorecase
+		If it is true, denite ignores the case.
+		Default: true
+
 						*denite-options-immediately*
 -immediately
 		If candidates exist, it runs the default action
@@ -1089,6 +1094,12 @@ OPTIONS							*denite-options*
 					*denite-options-short-source-names*
 -short-source-names
 		Use short source names if multiple sources.
+		Default: false
+
+						*denite-options-smartcase*
+-smartcase
+		If it is true, denite ignores the case when the input contains
+		the uppercase characters.
 		Default: false
 
 						*denite-options-sorters*

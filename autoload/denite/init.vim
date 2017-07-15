@@ -99,6 +99,7 @@ function! denite#init#_user_options() abort
         \ 'reversed': v:false,
         \ 'scroll': 0,
         \ 'short_source_names': v:false,
+        \ 'smartcase': v:false,
         \ 'sorters': '',
         \ 'statusline': v:true,
         \ 'updatetime': 100,
