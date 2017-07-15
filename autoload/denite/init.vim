@@ -104,6 +104,7 @@ function! denite#init#_user_options() abort
         \ 'split': 'horizontal',
         \ 'statusline': v:true,
         \ 'updatetime': 100,
+        \ 'unique': v:false,
         \ 'use_default_mappings': v:true,
         \ 'vertical_preview': v:false,
         \ 'winheight': 20,

@@ -1123,6 +1123,11 @@ OPTIONS							*denite-options*
 		Enable statusline.
 		Default: true
 
+						*denite-options-unique*
+-unique
+		Unique the candidates by word attribute.
+		Default: false
+
 						*denite-options-updatetime*
 -updatetime={time}
 		Specify the buffer updatetime when narrowing.

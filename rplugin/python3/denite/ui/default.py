@@ -298,6 +298,15 @@ class Default(object):
                 ctx['candidates'] = self._candidates
                 self._candidates = self._denite.get_filter(sorter).filter(ctx)
 
+        if self._context['unique']:
+            unique_candidates = []
+            unique_words = set()
+            for candidate in self._candidates:
+                if candidate['word'] not in unique_words:
+                    unique_words.add(candidate['word'])
+                    unique_candidates.append(candidate)
+            self._candidates = unique_candidates
+
         prev_matched_pattern = self._matched_pattern
         self._matched_pattern = pattern
         self._candidates_len = len(self._candidates)
