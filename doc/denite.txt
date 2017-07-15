@@ -1109,6 +1109,15 @@ OPTIONS							*denite-options*
 		Specify a list of sorter names.  They are source independent.
 		Default: ""
 
+						*denite-options-split*
+-split={direction}
+		Specify the split direction.
+
+		"vertical": Split buffer vertically
+		"horizontal": Split buffer horizontally
+
+		Default: "horizontal"
+
 						*denite-options-statusline*
 -statusline
 		Enable statusline.
@@ -1138,10 +1147,19 @@ OPTIONS							*denite-options*
 
 						*denite-options-winheight*
 -winheight={window-height}
-		Set the height of the Denite window. If auto-resize is set,
-		|denite-options-winheight| is the maximum size of the window.
+		Set the width of the Denite window if |denite-options-split|
+		is "horizontal".
+		If auto-resize is set, |denite-options-winheight| is the
+		maximum size of the window.
 
 		Default: 20
+
+						*denite-options-winwidth*
+-winwidth={window-width}
+		Set the width of the Denite window if |denite-options-split|
+		is "vertical".
+
+		Default: 90
 
 						*denite-options-winminheight*
 -winminheight={window-height}

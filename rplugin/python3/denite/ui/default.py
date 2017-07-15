@@ -45,6 +45,7 @@ class Default(object):
         self._winsaveview = {}
         self._initialized = False
         self._winheight = 0
+        self._winwidth = 0
         self._winminheight = -1
         self._scroll = 0
         self._is_multi = False
@@ -133,6 +134,7 @@ class Default(object):
 
         self._prev_wininfo = self._get_wininfo()
         self._winheight = int(self._context['winheight'])
+        self._winwidth = int(self._context['winwidth'])
         self._prev_winid = int(self._context['prev_winid'])
         self._winrestcmd = self._vim.call('winrestcmd')
         self._winsaveview = self._vim.call('winsaveview')
@@ -152,7 +154,10 @@ class Default(object):
             # Create new buffer
             self._vim.call(
                 'denite#util#execute_path',
-                'silent keepalt %s new ' % self._get_direction(),
+                'silent keepalt %s %s new ' %
+                (self._get_direction(),
+                 ('vertical' if self._context['split'] == 'vertical'
+                  else '')),
                 '[denite]')
         self.resize_buffer()
         self._vim.command('nnoremap <silent><buffer> <CR> ' +
@@ -389,17 +394,21 @@ class Default(object):
 
     def resize_buffer(self):
         winheight = self._winheight
+        winwidth = self._winwidth
+        is_vertical = self._context['split'] == 'vertical'
 
-        if self._context['auto_resize']:
+        if not is_vertical and self._context['auto_resize']:
             if (self._context['winminheight'] is not -1 and
                     self._candidates_len <
                     int(self._context['winminheight'])):
                 winheight = self._context['winminheight']
-            elif (self._candidates_len < self._winheight):
+            elif self._candidates_len < self._winheight:
                 winheight = self._candidates_len
 
-        if self._vim.current.window.height != winheight:
+        if not is_vertical and self._vim.current.window.height != winheight:
             self._vim.command('resize ' + str(winheight))
+        elif is_vertical and self._vim.current.window.width != winwidth:
+            self._vim.command('vertical resize ' + str(winwidth))
 
     def check_empty(self):
         if self._context['cursor_pos'].isnumeric():

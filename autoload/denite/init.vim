@@ -101,11 +101,13 @@ function! denite#init#_user_options() abort
         \ 'short_source_names': v:false,
         \ 'smartcase': v:false,
         \ 'sorters': '',
+        \ 'split': 'horizontal',
         \ 'statusline': v:true,
         \ 'updatetime': 100,
         \ 'use_default_mappings': v:true,
         \ 'vertical_preview': v:false,
         \ 'winheight': 20,
+        \ 'winwidth': 90,
         \ 'winminheight': -1,
         \}
 endfunction
