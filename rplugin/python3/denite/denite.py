@@ -137,7 +137,7 @@ class Denite(object):
                 raise NameError('Source "' + name + '" is not found.')
 
             source = copy.copy(self._sources[name])
-            source.context = copy.deepcopy(context)
+            source.context = copy.copy(context)
             source.context['args'] = args
             source.context['is_async'] = False
             source.context['is_interactive'] = False
