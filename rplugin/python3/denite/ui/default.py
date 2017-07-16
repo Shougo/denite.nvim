@@ -59,6 +59,7 @@ class Default(object):
         )
         self._guicursor = ''
         self._previous_status = ''
+        self._prev_curpos = []
 
     def start(self, sources, context):
         self._result = []
@@ -132,6 +133,7 @@ class Default(object):
         self._previous_status = ''
         self._displayed_texts = []
 
+        self._prev_curpos = self._vim.call('getcurpos')
         self._prev_wininfo = self._get_wininfo()
         self._winheight = int(self._context['winheight'])
         self._winwidth = int(self._context['winwidth'])
@@ -513,6 +515,9 @@ class Default(object):
         # Restore the view
         self._vim.command('close!')
         self._vim.call('win_gotoid', self._prev_winid)
+
+        # Restore the position
+        self._vim.call('setpos', '.', self._prev_curpos)
 
         if self._get_wininfo() and self._get_wininfo() == self._prev_wininfo:
             self._vim.command(self._winrestcmd)
