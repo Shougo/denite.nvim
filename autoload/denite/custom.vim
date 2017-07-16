@@ -107,7 +107,7 @@ function! denite#custom#action(kind, name, func, ...) abort
     if !has_key(custom, key)
       let custom[key] = {}
     endif
-    let custom[key][a:name] = a:func
+    let custom[key][a:name] = [a:func, a:0 ? a:1 : {}]
   endfor
 endfunction
 function! denite#custom#call_action(kind, name, context) abort
@@ -115,7 +115,7 @@ function! denite#custom#call_action(kind, name, context) abort
 
   for key in denite#util#split(a:kind)
     if has_key(custom, key) && has_key(custom[key], a:name)
-      call call(custom[key][a:name], [a:context])
+      call call(custom[key][a:name][0], [a:context])
     endif
   endfor
 endfunction

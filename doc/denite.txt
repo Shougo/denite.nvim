@@ -764,9 +764,11 @@ P		<denite:change_path>
 FUNCTIONS						*denite-functions*
 
 						*denite#custom#action()*
-denite#custom#action({kind}, {name}, {func})
+denite#custom#action({kind}, {name}, {func}[, {options}])
 		Define {name} action for {kind}.
 		{func} must be a |Funcref| or the name of a function.
+		{options} is an optional dictionary which overrides the
+		action behaviors "is_quit" and/or "is_redraw".
 		Note: {kind} is comma separated.
 
 							*denite#custom#alias()*

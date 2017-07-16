@@ -13,6 +13,7 @@ import denite.kind    # noqa
 import importlib.machinery
 import copy
 import re
+from collections import ChainMap
 from itertools import filterfalse
 
 
@@ -314,13 +315,14 @@ class Denite(object):
         # Custom action
         custom_actions = self.get_custom_actions(kind.name)
         if action_name in custom_actions:
-            return {
+            _, user_attrs = custom_actions[action_name]
+            return ChainMap(user_attrs, {
                 'name': action_name,
                 'kind': kind.name,
                 'func': None,
                 'is_quit': True,
                 'is_redraw': False,
-            }
+            })
 
         action_attr = 'action_' + action_name
         if not hasattr(kind, action_attr):
