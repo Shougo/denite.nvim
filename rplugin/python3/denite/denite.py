@@ -65,7 +65,7 @@ class Denite(object):
             context['messages'] = ctx['messages']
 
     def _gather_source_candidates(self, context, source):
-        max_len = context['max_candidate_width'] * 2
+        max_len = int(context['max_candidate_width']) * 2
         candidates = source.gather_candidates(context)
         for candidate in [x for x in candidates if len(x['word']) > max_len]:
             candidate['word'] = candidate['word'][: max_len]

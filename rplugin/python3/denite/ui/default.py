@@ -396,7 +396,7 @@ class Default(object):
         encoding = self._context['encoding']
         abbr = candidate.get('abbr', candidate['word']).encode(
             encoding, errors='replace').decode(encoding, errors='replace')
-        terms.append(abbr[:self._context['max_candidate_width']])
+        terms.append(abbr[:int(self._context['max_candidate_width'])])
         return (self._context['selected_icon']
                 if index in self._selected_candidates
                 else ' ') + ' '.join(terms)

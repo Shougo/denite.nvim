@@ -914,7 +914,6 @@ denite#custom#var({source-name}, {var-name}, {value})
 denite#do_action({context}, {action-name}, {targets})
 		Runs an action {action-name} against {targets}.  This will
 		mainly be used in |denite#custom#action()|.
-		Note: It is neovim only.
 
 denite#get_status_mode()			 *denite#get_status_mode()*
 		Returns the mode part of the status string.  It is useful to

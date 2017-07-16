@@ -36,11 +36,36 @@ def _temporary_scope():
     nvim = denite.rplugin.Neovim(vim)
     try:
         buffer_name = nvim.eval('a:context')['buffer_name']
-        if buffer_name not in denite__uis:
+        if nvim.eval('a:context')['buffer_name'] not in denite__uis:
             denite__uis[buffer_name] = denite.ui.default.Default(nvim)
         denite__uis[buffer_name].start(
-            denite.rplugin.reform_bytes(nvim.bindeval('a:sources')),
-            denite.rplugin.reform_bytes(nvim.bindeval('a:context')),
+            denite.rplugin.reform_bytes(nvim.eval('a:sources')),
+            denite.rplugin.reform_bytes(nvim.eval('a:context')),
+        )
+    except Exception as e:
+        import traceback
+        for line in traceback.format_exc().splitlines():
+            denite.util.error(nvim, line)
+        denite.util.error(nvim, 'Please execute :messages command.')
+_temporary_scope()
+if _temporary_scope in dir():
+    del _temporary_scope
+EOF
+  return []
+endfunction
+
+function! denite#vim#_do_action(context, action_name, targets) abort
+  python3 << EOF
+def _temporary_scope():
+    nvim = denite.rplugin.Neovim(vim)
+    try:
+        buffer_name = nvim.eval('a:context')['buffer_name']
+        if buffer_name not in denite__uis:
+            denite__uis[buffer_name] = denite.ui.default.Default(nvim)
+        denite__uis[buffer_name]._denite.do_action(
+            denite.rplugin.reform_bytes(nvim.eval('a:context')),
+            denite.rplugin.reform_bytes(nvim.eval('a:action_name')),
+            denite.rplugin.reform_bytes(nvim.eval('a:targets')),
         )
     except Exception as e:
         import traceback

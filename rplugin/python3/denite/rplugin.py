@@ -16,6 +16,8 @@ def reform_bytes(value):
         }
     elif isinstance(value, (list, tuple, vim.List)):
         return list(map(reform_bytes, value))
+    elif value is None:
+        return 0
     else:
         return value
 
