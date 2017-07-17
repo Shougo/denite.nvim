@@ -81,6 +81,7 @@ class Default(object):
                 self._current_mode = context['mode']
             self._context['immediately'] = context['immediately']
             self._context['cursor_wrap'] = context['cursor_wrap']
+            self._context['cursor_pos'] = context['cursor_pos']
 
             if self.check_empty():
                 return
