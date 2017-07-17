@@ -426,10 +426,12 @@ class Default(object):
         if self._context['cursor_pos'].isnumeric():
             self.init_cursor()
             self.move_to_pos(int(self._context['cursor_pos']))
-        elif self._context['cursor_pos'] == '+1':
-            self.move_to_next_line()
-        elif self._context['cursor_pos'] == '-1':
-            self.move_to_prev_line()
+        elif re.match(r'\+\d+', self._context['cursor_pos']):
+            for _ in range(int(self._context['cursor_pos'][1:])):
+                self.move_to_next_line()
+        elif re.match(r'-\d+', self._context['cursor_pos']):
+            for _ in range(int(self._context['cursor_pos'][1:])):
+                self.move_to_prev_line()
         elif self._context['cursor_pos'] == '$':
             self.move_to_last_line()
 
