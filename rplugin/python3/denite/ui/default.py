@@ -298,7 +298,7 @@ class Default(object):
             for sorter in self._context['sorters'].split(','):
                 ctx = copy(self._context)
                 ctx['candidates'] = self._candidates
-                self._candidates = self._denite.get_filter(sorter).filter(ctx)
+                self._candidates = self._denite._filters[sorter].filter(ctx)
 
         if self._context['unique']:
             unique_candidates = []
