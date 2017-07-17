@@ -79,8 +79,8 @@ class Default(object):
             # Skip the initialization
             if context['mode']:
                 self._current_mode = context['mode']
-            self._context['immediately'] = context['immediately']
-            self._context['cursor_wrap'] = context['cursor_wrap']
+            for key in 'immediately', 'cursor_wrap', 'cursor_pos', 'quit':
+                self._context[key] = context[key]
 
             if self.check_empty():
                 return
@@ -580,7 +580,7 @@ class Default(object):
             self._context, action_name, candidates)
         if not action:
             return
-        is_quit = action['is_quit']
+        is_quit = action['is_quit'] or self._context['force_quit']
         if is_quit:
             self.quit()
 

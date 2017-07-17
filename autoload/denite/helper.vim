@@ -38,6 +38,7 @@ endfunction
 function! denite#helper#call_denite(command, args, line1, line2) abort
   let [args, context] = denite#helper#_parse_options_args(a:args)
 
+  let context.force_quit = get(context, 'quit', v:false)
   let context.firstline = a:line1
   let context.lastline = a:line2
   let context.bufnr = bufnr('%')
