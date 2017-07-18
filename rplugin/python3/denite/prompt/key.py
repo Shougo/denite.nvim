@@ -1,6 +1,7 @@
 """Key module."""
 from collections import namedtuple
 from .util import ensure_bytes, ensure_str, int2char
+from typing import Dict  # noqa: F401
 
 
 ESCAPE_QUOTE = str.maketrans({
@@ -118,7 +119,7 @@ class Key(KeyBase):
     """
 
     __slots__ = ()
-    __cached = {}
+    __cached = {}  # type: Dict[str, Key]
 
     def __str__(self):
         """Return string representation of the key."""
@@ -218,11 +219,11 @@ def _resolve_from_special_keys(nvim, inner):
             _resolve_from_special_keys_inner(nvim, inner[2:]),
         ])
     elif inner_upper == b'LEADER':
-        leader = nvim.vars['mapleader']
+        leader = nvim.vars.get('mapleader', '\\')
         leader = ensure_bytes(nvim, leader)
         return _resolve(nvim, leader)
     elif inner_upper == b'LOCALLEADER':
-        leader = nvim.vars['maplocalleader']
+        leader = nvim.vars.get('maplocalleader', '\\')
         leader = ensure_bytes(nvim, leader)
         return _resolve(nvim, leader)
     return inner

@@ -21,12 +21,21 @@ STATUS_INTERRUPT = 3
 INSERT_MODE_INSERT = 1
 INSERT_MODE_REPLACE = 2
 
+DEFAULT_HARVEST_INTERVAL = 0.033
 
 Condition = namedtuple('Condition', ['text', 'caret_locus'])
 
 
 class Prompt:
-    """Prompt class."""
+    """Prompt class.
+
+    Attributes:
+        prefix: Prompt prefix
+        highlight_prefix: Highlight group name for the prefix
+        highlight_text: Highlight group name for the text
+        highlight_caret: Highlight group name for the caret
+        harvest_interval: Harvest interval in second
+    """
 
     prefix = ''
 
@@ -35,6 +44,8 @@ class Prompt:
     highlight_text = 'None'
 
     highlight_caret = 'IncSearch'
+
+    harvest_interval = DEFAULT_HARVEST_INTERVAL
 
     def __init__(self, nvim):
         """Constructor.
@@ -177,6 +188,7 @@ class Prompt:
                     self.nvim,
                     timeoutlen=timeoutlen,
                     callback=self.on_harvest,
+                    interval=self.harvest_interval,
                 )) or STATUS_PROGRESS
                 status = self.on_update(status) or status
         except self.nvim.error as e:
