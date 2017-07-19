@@ -79,7 +79,8 @@ class Default(object):
             # Skip the initialization
             if context['mode']:
                 self._current_mode = context['mode']
-            for key in 'immediately', 'cursor_wrap', 'cursor_pos', 'quit':
+            update = 'immediately', 'cursor_wrap', 'cursor_pos', 'force_quit'
+            for key in update:
                 self._context[key] = context[key]
 
             if self.check_empty():

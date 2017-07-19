@@ -1085,6 +1085,12 @@ OPTIONS							*denite-options*
 		Quit the denite buffer after the action is executed.
 		Default: true
 
+						*denite-options-force-quit*
+-force-quit
+		Quit the denite buffer after the action is executed even if
+		the action causes quit.
+		Default: false
+
 						*denite-options-refresh*
 -refresh
 		Refresh the candidates when |denite-options-resume| is true.
