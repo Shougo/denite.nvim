@@ -90,11 +90,6 @@ class Default(object):
             if context['refresh']:
                 self.redraw()
         else:
-            if not sources:
-                # Ignore empty sources.
-                error(self._vim, 'Empty sources')
-                return
-
             if not context['mode']:
                 # Default mode
                 context['mode'] = 'insert'
@@ -105,6 +100,11 @@ class Default(object):
             self._context['is_redraw'] = False
             self._current_mode = context['mode']
             self._is_multi = len(sources) > 1
+
+            if not sources:
+                # Ignore empty sources.
+                error(self._vim, 'Empty sources')
+                return
 
             self.init_denite()
             self.init_cursor()
