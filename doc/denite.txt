@@ -1390,7 +1390,7 @@ outline		Gather outline and jump to the target.
 		encoding 	the text encoding
 				(default: 'utf-8')
 
-						*unite-source-output*
+						*denite-source-output*
 output		Gather executed command output as candidates.
 
 		Source arguments:
