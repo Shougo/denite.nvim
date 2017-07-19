@@ -146,7 +146,7 @@ class Default(object):
             self._scroll = round(self._winheight / 2)
         if self._context['cursor_shape']:
             self._guicursor = self._vim.options['guicursor']
-            self._vim.options['guicursor'] = 'n-v-c:None'
+            self._vim.options['guicursor'] = 'a:None'
 
         if self._winid > 0 and self._vim.call(
                 'win_gotoid', self._winid):
