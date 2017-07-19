@@ -10,6 +10,7 @@ KeystrokeType = Tuple[Key, ...]
 KeystrokeExpr = Union[KeystrokeType, bytes, str]
 
 ACTION_KEYSTROKE_PATTERN = ...  # type: Pattern
+DEFAULT_HARVEST_INTERVAL = ...  # type: float
 
 STATUS_PROGRESS = ...  # type: int
 STATUS_ACCEPT = ...  # type: int
@@ -52,6 +53,8 @@ class Prompt:
     highlight_text = ...  # type: str
 
     highlight_caret = ...  # type: str
+
+    harvest_interval = ...  # type: float
 
     def __init__(self, nvim: Nvim) -> None: ...
 

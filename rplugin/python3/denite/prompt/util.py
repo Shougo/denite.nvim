@@ -1,10 +1,7 @@
 """Utility module."""
 import re
 from collections import namedtuple
-
-_cached_encoding = None
-
-_cached_keyword_pattern_set = {}
+from typing import Dict  # noqa: F401
 
 ESCAPE_ECHO = str.maketrans({
     '"': '\\"',
@@ -30,6 +27,10 @@ PatternSet = namedtuple('PatternSet', [
     'pattern',
     'inverse',
 ])
+
+_cached_encoding = None
+
+_cached_keyword_pattern_set = {}  # type: Dict[str, PatternSet]
 
 
 def get_encoding(nvim):

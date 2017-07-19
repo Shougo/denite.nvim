@@ -990,8 +990,9 @@ OPTIONS							*denite-options*
 						*denite-options-cursor-pos*
 -cursor-pos={number}
 		Select {number} candidate.
-		If {number} is "+1" or "-1" when resume, selects the next or
-		previous candidate.
+		If {number} is "+{N}" or "-{N}" when resume, selects the next
+		{N} or previous {N} candidate.
+		previous {N} candidate.
 		Note: "0" is the first candidate.
 		Note: "$" is the last candidate.
 		Default: ""
@@ -1187,7 +1188,7 @@ OPTIONS							*denite-options*
 		Set the minimum height of an auto-resize window.
 		Note: a value of -1 for |denite-options-winminheight| leaves
 		the minimum height unset.
-		
+
 		Default: -1
 
 ==============================================================================
@@ -1292,7 +1293,7 @@ file_rec	Gather files recursive and nominates all file names under the
 					\ "-path", "*/.svn/*", "-prune", "-o",
 					\ '-type', 'l', '-print', '-o',
 					\ '-type', 'f', '-print'])
-					
+
 <
 				In windows if no command is specified file_rec
 				uses a python script scantree.py to get the list
@@ -1394,6 +1395,20 @@ outline		Gather outline and jump to the target.
 				(default: [])
 		encoding 	the text encoding
 				(default: 'utf-8')
+
+						*unite-source-output*
+output		Gather executed command output as candidates.
+
+		Source arguments:
+		1. Vim command or '!' prefixed shell command.
+		2. Command args.
+>
+		" It outputs "foo bar".
+		:Denite output:echo:"foo:bar"
+		:Denite output:echo\ "foo\ bar"
+
+		" Gather the output of ls
+		:Denite output:!ls
 
 						*denite-source-tag*
 tag		Gather results of |tagfiles()|.
@@ -1795,7 +1810,7 @@ redraw_actions (List) 				(Optional)
 action_{name} (Function) 			(Optional)
 		Custom action logic with {name} as action name. The function
 		is passed with {self} and {context}.
-		
+
 		To get the seleted candidate list, you could use "targets"
 		attribute in {context}: >
 
