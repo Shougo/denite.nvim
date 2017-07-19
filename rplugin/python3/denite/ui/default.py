@@ -136,8 +136,6 @@ class Default(object):
 
         self._prev_curpos = self._vim.call('getcurpos')
         self._prev_wininfo = self._get_wininfo()
-        self._winheight = int(self._context['winheight'])
-        self._winwidth = int(self._context['winwidth'])
         self._prev_winid = int(self._context['prev_winid'])
         self._winrestcmd = self._vim.call('winrestcmd')
         self._winsaveview = self._vim.call('winsaveview')
@@ -166,6 +164,9 @@ class Default(object):
         self._vim.command('nnoremap <silent><buffer> <CR> ' +
                           ':<C-u>Denite -resume -buffer_name=' +
                           self._context['buffer_name'] + '<CR>')
+
+        self._winheight = self._vim.current.window.height
+        self._winwidth = self._vim.current.window.width
 
         self._options = self._vim.current.buffer.options
         self._options['buftype'] = 'nofile'
@@ -569,6 +570,8 @@ class Default(object):
         self._denite.start(self._context)
         self._denite.on_init(self._context)
         self._initialized = True
+        self._winheight = int(self._context['winheight'])
+        self._winwidth = int(self._context['winwidth'])
 
     def gather_candidates(self):
         self._context['is_redraw'] = True
