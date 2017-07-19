@@ -990,8 +990,9 @@ OPTIONS							*denite-options*
 						*denite-options-cursor-pos*
 -cursor-pos={number}
 		Select {number} candidate.
-		If {number} is "+1" or "-1" when resume, selects the next or
-		previous candidate.
+		If {number} is "+{N}" or "-{N}" when resume, selects the next
+		{N} or previous {N} candidate.
+		previous {N} candidate.
 		Note: "0" is the first candidate.
 		Note: "$" is the last candidate.
 		Default: ""
