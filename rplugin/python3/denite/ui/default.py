@@ -837,8 +837,8 @@ class Default(object):
     def suspend(self):
         if self._context['auto_resume']:
             self._vim.command('autocmd denite WinEnter <buffer> ' +
-                            'Denite -resume -buffer_name=' +
-                            self._context['buffer_name'])
+                              'Denite -resume -buffer_name=' +
+                              self._context['buffer_name'])
         self._vim.command('nnoremap <silent><buffer> <CR> ' +
                           ':<C-u>Denite -resume -buffer_name=' +
                           self._context['buffer_name'] + '<CR>')
