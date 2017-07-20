@@ -162,9 +162,6 @@ class Default(object):
                   else '')),
                 '[denite]')
         self.resize_buffer()
-        self._vim.command('nnoremap <silent><buffer> <CR> ' +
-                          ':<C-u>Denite -resume -buffer_name=' +
-                          self._context['buffer_name'] + '<CR>')
 
         self._winheight = self._vim.current.window.height
         self._winwidth = self._vim.current.window.width
@@ -197,6 +194,8 @@ class Default(object):
         self._bufvars['denite_statusline_sources'] = ''
         self._bufvars['denite_statusline_path'] = ''
         self._bufvars['denite_statusline_linenr'] = ''
+
+        self._vim.command('autocmd! denite')
 
         self._vim.command('silent doautocmd WinEnter')
         self._vim.command('silent doautocmd BufWinEnter')
@@ -836,4 +835,11 @@ class Default(object):
         self.change_mode(self._current_mode)
 
     def suspend(self):
+        if self._context['auto_resume']:
+            self._vim.command('autocmd denite WinEnter <buffer> ' +
+                            'Denite -resume -buffer_name=' +
+                            self._context['buffer_name'])
+        self._vim.command('nnoremap <silent><buffer> <CR> ' +
+                          ':<C-u>Denite -resume -buffer_name=' +
+                          self._context['buffer_name'] + '<CR>')
         return STATUS_ACCEPT
