@@ -17,6 +17,7 @@ class DenitePrompt(Prompt):
         self.action.unregister('prompt:accept', fail_silently=True)
         self.action.unregister('prompt:cancel', fail_silently=True)
 
+        self.harvest_interval = 0.01
         self.__previous_text = self.text
         self.__timeout = datetime.now()
 
