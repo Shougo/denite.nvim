@@ -45,6 +45,12 @@ class Base(object):
                               if x.find('action_') == 0]
 
 
+class Kind(Base):
+
+    def __init__(self, vim):
+        super().__init__(vim)
+
+
 def _yank(vim, word):
     vim.call('setreg', '"', word, 'v')
     if vim.call('has', 'clipboard'):
