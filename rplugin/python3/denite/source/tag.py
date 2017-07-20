@@ -34,7 +34,8 @@ class Source(Base):
                     if not info:
                         continue
                     candidate = {
-                        'word': '{name} [{type}] {file} {ref}'.format(**info),
+                        'word': info['name'],
+                        'abbr': '{name} [{type}] {file} {ref}'.format(**info),
                         'action__path': info['file'],
                     }
                     if info['line']:
