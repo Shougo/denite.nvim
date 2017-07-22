@@ -48,8 +48,9 @@ class Source(Base):
                     self.syntax_name, syn['name'], syn['link']))
 
     def gather_candidates(self, context):
+        rjust = len('{}'.format(len(self.vim.buffers))) + 1
         candidates = [
-            self._convert(ba) for ba in [
+            self._convert(ba, rjust) for ba in [
                 bufattr for bufattr in [
                     self._get_attributes(context, buf)
                     for buf in self.vim.buffers
@@ -69,12 +70,12 @@ class Source(Base):
             return True
         return False
 
-    def _convert(self, buffer_attr):
+    def _convert(self, buffer_attr, rjust=None):
         return {
             'bufnr': buffer_attr['number'],
             'word': '{0}{1} {2}{3} {4}'.format(
                 str(buffer_attr['number']).rjust(
-                    len('{}'.format(len(self.vim.buffers))) + 1, ' '),
+                    rjust or len('{}'.format(len(self.vim.buffers))) + 1, ' '),
                 buffer_attr['status'],
                 self.vim.call('fnamemodify', buffer_attr['name'], ':~:.'
                               ) if buffer_attr['name'] != '' else 'No Name',
