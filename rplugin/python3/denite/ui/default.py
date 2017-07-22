@@ -156,13 +156,17 @@ class Default(object):
             self._winrestcmd = ''
         else:
             # Create new buffer
+            if self._context['split'] == 'tab':
+                self._vim.command('tabnew')
             self._vim.call(
                 'denite#util#execute_path',
                 'silent keepalt %s %s %s ' % (
                     self._get_direction(),
                     ('vertical'
                      if self._context['split'] == 'vertical' else ''),
-                    'edit' if self._context['split'] == 'no' else 'new'
+                    ('edit'
+                     if self._context['split'] == 'no' or
+                     self._context['split'] == 'tab' else 'new'),
                 ),
                 '[denite]')
         self.resize_buffer()
@@ -417,12 +421,13 @@ class Default(object):
                 else ' ') + ' '.join(terms)
 
     def resize_buffer(self):
-        if self._context['split'] == 'no':
+        split = self._context['split']
+        if split == 'no' or split == 'tab':
             return
 
         winheight = self._winheight
         winwidth = self._winwidth
-        is_vertical = self._context['split'] == 'vertical'
+        is_vertical = split == 'vertical'
 
         if not is_vertical and self._context['auto_resize']:
             if (self._context['winminheight'] is not -1 and
@@ -537,7 +542,10 @@ class Default(object):
             self._switch_prev_buffer()
             self._vim.current.window.options = self._save_window_options
         else:
-            self._vim.command('close!')
+            if self._context['split'] == 'tab':
+                self._vim.command('tabclose!')
+            else:
+                self._vim.command('close!')
             self._vim.call('win_gotoid', self._prev_winid)
 
             # Restore the buffer
