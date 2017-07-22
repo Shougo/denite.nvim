@@ -40,8 +40,8 @@ class Kind(Openable):
                     'denite#util#execute_path', 'edit', path)
             elif self.vim.call('bufwinnr',
                                match_path) != self.vim.current.buffer:
-                self.vim.call(
-                    'denite#util#execute_path', 'buffer', path)
+                self.vim.command('buffer' +
+                                 str(self.vim.call('bufnr', path)))
             self.__jump(context, target)
 
     def action_preview(self, context):
