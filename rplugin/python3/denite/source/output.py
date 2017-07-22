@@ -3,6 +3,9 @@
 # License: MIT license
 # ============================================================================
 
+import shlex
+import subprocess
+
 from .base import Base
 
 
@@ -15,19 +18,22 @@ class Source(Base):
         self.default_action = 'yank'
 
     def gather_candidates(self, context):
-        output = []
         args = context['args']
 
         if not args:
-            return output
+            return []
 
         first = args[0]
+        output = []
         if first[0] != '!':
-            output += self.vim.call('execute', ' '.join(args)).splitlines()[1:]
+            cmdline = ' '.join(args)
+            output = self.vim.call('execute', cmdline).splitlines()[1:]
         else:
-            output += (self.vim.call('system',
-                                     ' '.join([first[1:]] + args[1:])
-                                     ).splitlines())
-
-        return [{'word': x}
-                for x in output]
+            cmdline = ' '.join([first[1:]] + args[1:])
+            try:
+                output = [x.decode(context['encoding']) for x in
+                          subprocess.check_output(shlex.split(cmdline))
+                          .splitlines()]
+            except subprocess.CalledProcessError:
+                return []
+        return [{'word': x} for x in output]
