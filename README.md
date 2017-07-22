@@ -74,7 +74,7 @@ you should read `:help provider-python`.
 
 * quickmatch feature
 
-* `--no-split`, `--tab` option
+* `--tab` option
 
 * [`defx`](https://github.com/Shougo/defx.nvim) support
 

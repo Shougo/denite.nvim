@@ -1142,6 +1142,7 @@ OPTIONS							*denite-options*
 
 		"vertical": Split buffer vertically
 		"horizontal": Split buffer horizontally
+		"no": No split
 
 		Default: "horizontal"
 

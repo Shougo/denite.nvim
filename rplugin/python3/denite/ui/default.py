@@ -158,10 +158,12 @@ class Default(object):
             # Create new buffer
             self._vim.call(
                 'denite#util#execute_path',
-                'silent keepalt %s %s new ' %
-                (self._get_direction(),
-                 ('vertical' if self._context['split'] == 'vertical'
-                  else '')),
+                'silent keepalt %s %s %s ' % (
+                    self._get_direction(),
+                    ('vertical'
+                     if self._context['split'] == 'vertical' else ''),
+                    'edit' if self._context['split'] == 'no' else 'new'
+                ),
                 '[denite]')
         self.resize_buffer()
 
@@ -175,6 +177,7 @@ class Default(object):
         self._options['filetype'] = 'denite'
 
         self._window_options = self._vim.current.window.options
+        self._save_window_options = copy(self._window_options)
         if self._context['cursorline']:
             self._window_options['cursorline'] = True
         self._window_options['colorcolumn'] = ''
@@ -236,6 +239,12 @@ class Default(object):
             wininfo['bufnr'], wininfo['winnr'],
             wininfo['winid'], wininfo['tabnr'],
         ]
+
+    def _switch_prev_buffer(self):
+        if self._vim.buffers[self._prev_bufnr].name == '':
+            self._vim.command('enew')
+        else:
+            self._vim.command('buffer ' + str(self._prev_bufnr))
 
     def init_syntax(self):
         self._vim.command('syntax case ignore')
@@ -408,6 +417,9 @@ class Default(object):
                 else ' ') + ' '.join(terms)
 
     def resize_buffer(self):
+        if self._context['split'] == 'no':
+            return
+
         winheight = self._winheight
         winwidth = self._winwidth
         is_vertical = self._context['split'] == 'vertical'
@@ -521,15 +533,19 @@ class Default(object):
             return
 
         # Restore the window
-        self._vim.command('close!')
-        self._vim.call('win_gotoid', self._prev_winid)
+        if self._context['split'] == 'no':
+            self._switch_prev_buffer()
+            self._vim.current.window.options = self._save_window_options
+        else:
+            self._vim.command('close!')
+            self._vim.call('win_gotoid', self._prev_winid)
 
-        # Restore the buffer
-        if self._vim.call('bufwinnr', self._prev_bufnr) < 0:
-            if not self._vim.call('buflisted', self._prev_bufnr):
-                # Not listed
-                return
-            self._vim.command('buffer ' + str(self._prev_bufnr))
+            # Restore the buffer
+            if self._vim.call('bufwinnr', self._prev_bufnr) < 0:
+                if not self._vim.call('buflisted', self._prev_bufnr):
+                    # Not listed
+                    return
+                self._switch_prev_buffer()
 
         # Restore the position
         self._vim.call('setpos', '.', self._prev_curpos)
