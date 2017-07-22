@@ -42,7 +42,6 @@ class Default(object):
         self._bufnr = -1
         self._winid = -1
         self._winrestcmd = ''
-        self._winsaveview = {}
         self._initialized = False
         self._winheight = 0
         self._winwidth = 0
@@ -60,6 +59,7 @@ class Default(object):
         self._guicursor = ''
         self._prev_status = ''
         self._prev_curpos = []
+        self._is_suspend = False
 
     def start(self, sources, context):
         self._result = []
@@ -117,6 +117,7 @@ class Default(object):
 
             self.init_buffer()
 
+        self._is_suspend = False
         self.update_displayed_texts()
         self.change_mode(self._current_mode)
         self.update_buffer()
@@ -135,11 +136,13 @@ class Default(object):
         self._prev_status = ''
         self._displayed_texts = []
 
-        self._prev_curpos = self._vim.call('getcurpos')
-        self._prev_wininfo = self._get_wininfo()
-        self._prev_winid = int(self._context['prev_winid'])
-        self._winrestcmd = self._vim.call('winrestcmd')
-        self._winsaveview = self._vim.call('winsaveview')
+        if not self._is_suspend:
+            self._prev_bufnr = self._vim.current.buffer.number
+            self._prev_curpos = self._vim.call('getcurpos')
+            self._prev_wininfo = self._get_wininfo()
+            self._prev_winid = int(self._context['prev_winid'])
+            self._winrestcmd = self._vim.call('winrestcmd')
+
         self._scroll = int(self._context['scroll'])
         if self._scroll == 0:
             self._scroll = round(self._winheight / 2)
@@ -147,8 +150,7 @@ class Default(object):
             self._guicursor = self._vim.options['guicursor']
             self._vim.options['guicursor'] = 'a:None'
 
-        if self._winid > 0 and self._vim.call(
-                'win_gotoid', self._winid):
+        if self._winid > 0 and self._vim.call('win_gotoid', self._winid):
             # Move the window to bottom
             self._vim.command('wincmd J')
             self._winrestcmd = ''
@@ -515,21 +517,25 @@ class Default(object):
     def quit_buffer(self):
         self.cleanup()
         if self._vim.call('bufwinnr', self._bufnr) < 0:
+            # Denite buffer is already closed
             return
 
-        # Restore the view
+        # Restore the window
         self._vim.command('close!')
         self._vim.call('win_gotoid', self._prev_winid)
+
+        # Restore the buffer
+        if self._vim.call('bufwinnr', self._prev_bufnr) < 0:
+            if not self._vim.call('buflisted', self._prev_bufnr):
+                # Not listed
+                return
+            self._vim.command('buffer ' + str(self._prev_bufnr))
 
         # Restore the position
         self._vim.call('setpos', '.', self._prev_curpos)
 
         if self._get_wininfo() and self._get_wininfo() == self._prev_wininfo:
             self._vim.command(self._winrestcmd)
-
-        # Note: Does not work for line source
-        # if self._vim.current.buffer.number == self._prev_bufnr:
-        #     self._vim.call('winrestview', self._winsaveview)
 
     def get_cursor_candidate(self):
         if self._cursor + self._win_cursor > self._candidates_len:
@@ -596,7 +602,12 @@ class Default(object):
 
         if is_quit and not self._context['quit']:
             # Re-open denite buffer
+
+            # Disable the previous window info
+            self._is_suspend = True
             self.init_buffer()
+            self._is_suspend = False
+
             self.redraw(False)
             # Disable quit flag
             is_quit = False
@@ -842,4 +853,5 @@ class Default(object):
         self._vim.command('nnoremap <silent><buffer> <CR> ' +
                           ':<C-u>Denite -resume -buffer_name=' +
                           self._context['buffer_name'] + '<CR>')
+        self._is_suspend = True
         return STATUS_ACCEPT
