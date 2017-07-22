@@ -71,16 +71,18 @@ class Source(Base):
         return False
 
     def _convert(self, buffer_attr, rjust):
+        name = self.vim.call(
+            'fnamemodify', buffer_attr['name'], ':~:.'
+        ) if buffer_attr['name'] != '' else 'No Name'
         return {
             'bufnr': buffer_attr['number'],
-            'word': '{0}{1} {2}{3} {4}'.format(
+            'word': name,
+            'abbr': '{0}{1} {2}{3} {4}'.format(
                 str(buffer_attr['number']).rjust(rjust, ' '),
                 buffer_attr['status'],
-                self.vim.call('fnamemodify', buffer_attr['name'], ':~:.'
-                              ) if buffer_attr['name'] != '' else 'No Name',
-                ' [{}]'.format(
-                    buffer_attr['filetype']
-                ) if buffer_attr['filetype'] != '' else '',
+                name,
+                ' [{}]'.format(buffer_attr['filetype']
+                               ) if buffer_attr['filetype'] != '' else '',
                 strftime('(' + self.vars['date_format'] + ')',
                          localtime(buffer_attr['timestamp'])
                          ) if self.vars['date_format'] != '' else ''
