@@ -34,8 +34,9 @@ function! denite#util#execute_path(command, path) abort
     call mkdir(dir, 'p')
   endif
 
+  let save_wildignore = &wildignore
   try
-    execute a:command fnameescape(a:path)
+    execute a:command '`=a:path`'
     if &l:filetype ==# ''
       filetype detect
     endif
@@ -44,6 +45,8 @@ function! denite#util#execute_path(command, path) abort
   catch
     call denite#util#print_error(v:throwpoint)
     call denite#util#print_error(v:exception)
+  finally
+    let &wildignore = save_wildignore
   endtry
 endfunction
 function! denite#util#execute_command(command) abort
