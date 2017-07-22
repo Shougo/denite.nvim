@@ -108,12 +108,20 @@ def _scroll_cursor_to_bottom(prompt, params):
     return prompt.denite.scroll_cursor_to_bottom()
 
 
+def _jump_to_next_by(prompt, params):
+    return prompt.denite.jump_to_next_by(params)
+
+
+def _jump_to_previous_by(prompt, params):
+    return prompt.denite.jump_to_prev_by(params)
+
+
 def _jump_to_next_source(prompt, params):
-    return prompt.denite.jump_to_next_source()
+    return prompt.denite.jump_to_next_by('source')
 
 
 def _jump_to_previous_source(prompt, params):
-    return prompt.denite.jump_to_prev_source()
+    return prompt.denite.jump_to_prev_by('source')
 
 
 def _input_command_line(prompt, params):
@@ -274,6 +282,8 @@ DEFAULT_ACTION_RULES = [
     ('denite:enter_mode', _enter_mode),
     ('denite:input_command_line', _input_command_line),
     ('denite:insert_word', _insert_word),
+    ('denite:jump_to_next_by', _jump_to_next_by),
+    ('denite:jump_to_previous_by', _jump_to_previous_by),
     ('denite:jump_to_next_source', _jump_to_next_source),
     ('denite:jump_to_previous_source', _jump_to_previous_source),
     ('denite:leave_mode', _leave_mode),

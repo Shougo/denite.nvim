@@ -782,17 +782,18 @@ class Default(object):
         while self._cursor >= 1 and self._win_cursor < self._winheight:
             self.scroll_window_up_one_line()
 
-    def jump_to_next_source(self):
-        if len(self._context['sources']) == 1:
+    def jump_to_next_by(self, key):
+        keyfunc = self._keyfunc(key)
+        keys = [keyfunc(candidate) for candidate in self._candidates]
+        if not keys or len(set(keys)) == 1:
             return
 
         current_index = self._cursor + self._win_cursor - 1
         forward_candidates = self._candidates[current_index:]
-        forward_sources = groupby(
-            forward_candidates,
-            lambda candidate: candidate['source']
-        )
+        forward_sources = groupby(forward_candidates, keyfunc)
         forward_times = len(list(next(forward_sources)[1]))
+        if not forward_times:
+            return
         remaining_candidates = (self._candidates_len - current_index
                                 - forward_times)
         if next(forward_sources, None) is None:
@@ -812,23 +813,22 @@ class Default(object):
 
         self.update_cursor()
 
-    def jump_to_prev_source(self):
-        if len(self._context['sources']) == 1:
+    def jump_to_prev_by(self, key):
+        keyfunc = self._keyfunc(key)
+        keys = [keyfunc(candidate) for candidate in self._candidates]
+        if not keys or len(set(keys)) == 1:
             return
 
         current_index = self._cursor + self._win_cursor - 1
         backward_candidates = reversed(self._candidates[:current_index + 1])
-        backward_sources = groupby(
-            backward_candidates,
-            lambda candidate: candidate['source']
-        )
+        backward_sources = groupby(backward_candidates, keyfunc)
         current_source = list(next(backward_sources)[1])
         try:
             prev_source = list(next(backward_sources)[1])
         except StopIteration:  # If the cursor is on the first source
             last_source = takewhile(
                 lambda candidate:
-                    candidate['source'] == self._candidates[-1]['source'],
+                    keyfunc(candidate) == keyfunc(self._candidates[-1]),
                 reversed(self._candidates)
             )
             len_last_source = len(list(last_source))
@@ -856,6 +856,16 @@ class Default(object):
                 self._win_cursor = 1
 
         self.update_cursor()
+
+    def _keyfunc(self, key):
+        def wrapped(candidate):
+            for k in key, 'action__' + key:
+                try:
+                    return str(candidate[k])
+                except Exception:
+                    pass
+            return ''
+        return wrapped
 
     def enter_mode(self, mode):
         self._mode_stack.append(self._current_mode)
