@@ -1,7 +1,7 @@
 denite.nvim
 ===========
 
-https://travis-ci.org/Shougo/denite.nvim.svg?branch=master
+[![Build Status](https://travis-ci.org/Shougo/denite.nvim.svg?branch=master)](https://travis-ci.org/Shougo/denite.nvim)
 
 ## About
 
