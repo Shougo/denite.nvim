@@ -1,4 +1,6 @@
 import re
+from datetime import timedelta, datetime
+
 from denite.util import debug
 from denite.prompt.util import build_keyword_pattern_set
 
@@ -20,12 +22,25 @@ def _choose_action(prompt, params):
 
 
 def _move_to_next_line(prompt, params):
+    for cnt in range(0, _accel_count(prompt.denite)):
+        prompt.denite.move_to_next_line()
     return prompt.denite.move_to_next_line()
 
 
 def _move_to_previous_line(prompt, params):
+    for cnt in range(0, _accel_count(prompt.denite)):
+        prompt.denite.move_to_prev_line()
     return prompt.denite.move_to_prev_line()
 
+def _accel_count(denite):
+    if not denite._context['auto_accel']:
+        return 0
+    now = datetime.now()
+    if not hasattr(denite, '_accel_timeout'):
+        denite._accel_timeout = now
+    timeout = denite._accel_timeout
+    denite._accel_timeout = now + timedelta(milliseconds=100)
+    return 2 if timeout > now else 0
 
 def _move_to_top(prompt, params):
     return prompt.denite.move_to_top()

@@ -960,6 +960,11 @@ OPTIONS							*denite-options*
 		Note: If you use both {option-name} and -no-{option-name} in
 		the same denite buffer, it is undefined.
 
+						*denite-options-auto-accel*
+-auto-accel
+		Accelerate the cursor moving automatically.
+		Default: false
+
 						*denite-options-auto-highlight*
 -auto-highlight
 		When you select a candidate, it runs the "highlight" action
