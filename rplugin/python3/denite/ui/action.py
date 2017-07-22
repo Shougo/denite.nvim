@@ -150,8 +150,9 @@ def _wincmd(prompt, params):
             }
     if params not in mapping:
         return
+    ret = prompt.denite.suspend()
     prompt.nvim.command(mapping[params])
-    return prompt.denite.suspend()
+    return ret
 
 
 def _restart(prompt, params):
