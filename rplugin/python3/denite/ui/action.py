@@ -32,6 +32,7 @@ def _move_to_previous_line(prompt, params):
         prompt.denite.move_to_prev_line()
     return prompt.denite.move_to_prev_line()
 
+
 def _accel_count(denite):
     if not denite._context['auto_accel']:
         return 0
@@ -41,6 +42,7 @@ def _accel_count(denite):
     timeout = denite._accel_timeout
     denite._accel_timeout = now + timedelta(milliseconds=100)
     return 2 if timeout > now else 0
+
 
 def _move_to_top(prompt, params):
     return prompt.denite.move_to_top()
