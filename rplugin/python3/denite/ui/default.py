@@ -58,7 +58,7 @@ class Default(object):
             weakref.proxy(self)
         )
         self._guicursor = ''
-        self._previous_status = ''
+        self._prev_status = ''
         self._prev_curpos = []
 
     def start(self, sources, context):
@@ -132,7 +132,7 @@ class Default(object):
         return
 
     def init_buffer(self):
-        self._previous_status = ''
+        self._prev_status = ''
         self._displayed_texts = []
 
         self._prev_curpos = self._vim.call('getcurpos')
@@ -375,13 +375,13 @@ class Default(object):
         bufvars = self._bufvars
 
         status = mode + self._statusline_sources + path + linenr
-        if status != self._previous_status:
+        if status != self._prev_status:
             bufvars['denite_statusline_mode'] = mode
             bufvars['denite_statusline_sources'] = self._statusline_sources
             bufvars['denite_statusline_path'] = path
             bufvars['denite_statusline_linenr'] = linenr
             self._vim.command('redrawstatus')
-            self._previous_status = status
+            self._prev_status = status
 
     def update_cursor(self):
         self.update_displayed_texts()
