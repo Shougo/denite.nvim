@@ -36,7 +36,7 @@ function! denite#util#execute_path(command, path) abort
 
   let save_wildignore = &wildignore
   try
-    execute a:command '`=a:path`'
+    execute a:command '`=s:expand(a:path)`'
     if &l:filetype ==# ''
       filetype detect
     endif
@@ -225,6 +225,13 @@ function! s:_path2project_directory_others(vcs, path) abort
   endif
   return fnamemodify(d, ':p:h:h')
 endfunction
+function! s:expand(path) abort "{{{
+  return s:substitute_path_separator(
+        \ (a:path =~ '^\~') ? fnamemodify(a:path, ':p') :
+        \ (a:path =~ '^\$\h\w*') ? substitute(a:path,
+        \               '^\$\h\w*', '\=eval(submatch(0))', '') :
+        \ a:path)
+endfunction"}}}
 
 function! denite#util#alternate_buffer() abort
   if len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) <= 1
