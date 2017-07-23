@@ -706,6 +706,7 @@ class Default(object):
             self._win_cursor = win_max
             self._cursor = cur_max
             self.update_cursor()
+            self._vim.command('normal! zb')
 
     def move_to_top(self):
         self._win_cursor = 1
