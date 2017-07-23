@@ -637,6 +637,7 @@ class Default(object):
             self._is_suspend = True
             self.init_buffer()
             self._is_suspend = False
+            self.change_mode(self._current_mode)
 
             self.redraw(False)
             # Disable quit flag
