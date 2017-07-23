@@ -60,6 +60,7 @@ class Default(object):
         self._prev_status = ''
         self._prev_curpos = []
         self._is_suspend = False
+        self._save_window_options = {}
 
     def start(self, sources, context):
         self._result = []
@@ -181,19 +182,24 @@ class Default(object):
         self._options['filetype'] = 'denite'
 
         self._window_options = self._vim.current.window.options
-        self._save_window_options = copy(self._window_options)
+        window_options = {
+            'colorcolumn': '',
+            'conceallevel': 3,
+            'concealcursor': 'n',
+            'foldenable': False,
+            'foldcolumn': 0,
+            'list': False,
+            'number': False,
+            'relativenumber': False,
+            'winfixheight': True,
+            'wrap': False,
+        }
         if self._context['cursorline']:
-            self._window_options['cursorline'] = True
-        self._window_options['colorcolumn'] = ''
-        self._window_options['number'] = False
-        self._window_options['relativenumber'] = False
-        self._window_options['foldenable'] = False
-        self._window_options['foldcolumn'] = 0
-        self._window_options['winfixheight'] = True
-        self._window_options['conceallevel'] = 3
-        self._window_options['concealcursor'] = 'n'
-        self._window_options['list'] = False
-        self._window_options['wrap'] = False
+            window_options['cursorline'] = True
+        self._save_window_options = {}
+        for k, v in window_options.items():
+            self._save_window_options[k] = self._window_options[k]
+            self._window_options[k] = v
 
         self._bufvars = self._vim.current.buffer.vars
         self._bufnr = self._vim.current.buffer.number
@@ -540,7 +546,7 @@ class Default(object):
         # Restore the window
         if self._context['split'] == 'no':
             self._switch_prev_buffer()
-            self._vim.current.window.options = self._save_window_options
+            self._vim.current.window.options.update(self._save_window_options)
         else:
             if self._context['split'] == 'tab':
                 self._vim.command('tabclose!')
