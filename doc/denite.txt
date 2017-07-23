@@ -441,6 +441,20 @@ are on the neovim-prompt's builtin actions/mappings.
 >
 		call denite#custom#map('insert', '<F4>', 'hello!', 'noremap')
 <
+				*denite-map-jump_to_next_by*
+<denite:jump_to_next_by:{word}>
+		Jump to the next candidate with a different value of {word}.
+		For example,
+>
+		<denite:jump_to_next_by:path>
+<
+		will jump to the next result in a different file in grep.
+
+				*denite-map-jump_to_previous_by*
+<denite:jump_to_previous_by:{word}>
+		Jump to the previous candidate with a different value of
+		{word}.
+
 				*denite-map-jump_to_next_source*
 <denite:jump_to_next_source>
 		Jump to the first candidate of the next source.
