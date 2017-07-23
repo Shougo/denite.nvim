@@ -385,6 +385,8 @@ class Default(object):
         self.resize_buffer()
 
         self.move_cursor()
+        if self._context['reversed']:
+            self.move_to_last_line()
 
     def update_status(self):
         max_len = len(str(self._candidates_len))
