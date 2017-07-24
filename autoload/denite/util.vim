@@ -227,9 +227,9 @@ function! s:_path2project_directory_others(vcs, path) abort
 endfunction
 function! s:expand(path) abort "{{{
   return s:substitute_path_separator(
-        \ (a:path =~ '^\~') ? fnamemodify(a:path, ':p') :
-        \ (a:path =~ '^\$\h\w*') ? substitute(a:path,
-        \               '^\$\h\w*', '\=eval(submatch(0))', '') :
+        \ (a:path =~# '^\~') ? fnamemodify(a:path, ':p') :
+        \ (a:path =~# '^\$\h\w*') ? substitute(a:path,
+        \             '^\$\h\w*', '\=eval(submatch(0))', '') :
         \ a:path)
 endfunction"}}}
 
