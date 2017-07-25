@@ -1195,7 +1195,7 @@ OPTIONS							*denite-options*
 
 						*denite-options-winheight*
 -winheight={window-height}
-		Set the width of the Denite window if |denite-options-split|
+		Set the height of the Denite window if |denite-options-split|
 		is "horizontal".
 		If auto-resize is set, |denite-options-winheight| is the
 		maximum size of the window.
