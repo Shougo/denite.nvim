@@ -200,6 +200,16 @@ def _toggle_select_up(prompt, params):
     return prompt.denite.move_to_prev_line()
 
 
+def _toggle_matchers(prompt, params):
+    matchers = ''.join(params)
+    context = prompt.denite._context
+    if context['matchers'] != matchers:
+        context['matchers'] = matchers
+    else:
+        context['matchers'] = ''
+    return prompt.denite.redraw()
+
+
 def _toggle_sorters(prompt, params):
     sorters = ''.join(params)
     context = prompt.denite._context
@@ -325,6 +335,7 @@ DEFAULT_ACTION_RULES = [
     ('denite:toggle_select_down', _toggle_select_down),
     ('denite:toggle_select_up', _toggle_select_up),
     ('denite:toggle_select_all', _toggle_select_all),
+    ('denite:toggle_matchers', _toggle_matchers),
     ('denite:toggle_sorters', _toggle_sorters),
     ('denite:move_caret_to_next_word', _move_caret_to_next_word),
     ('denite:move_caret_to_end_of_word', _move_caret_to_end_of_word),

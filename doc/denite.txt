@@ -650,6 +650,11 @@ are on the neovim-prompt's builtin actions/mappings.
 <denite:toggle_select_up>
 		Toggle cursor candidate select and move to previous line.
 
+				*denite-map-toggle_matchers*
+<denite:toggle_matchers{arg}>
+		Change |denite-options-matchers| to {arg}.
+		If |denite-options-matchers| is {arg}, it will be disabled.
+
 				*denite-map-toggle_sorters*
 <denite:toggle_sorters:{arg}>
 		Change |denite-options-sorters| to {arg}.
@@ -1092,6 +1097,12 @@ OPTIONS							*denite-options*
 							*denite-options-input*
 -input={input-text}
 		Specify an initial narrowing text.
+		Default: ""
+
+						*denite-options-matchers*
+-matchers
+		Specify a list of matcher names.  They overwrite the source
+		matchers.
 		Default: ""
 
 					*denite-options-max-candidate-width*

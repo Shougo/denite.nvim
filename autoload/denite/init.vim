@@ -89,6 +89,7 @@ function! denite#init#_user_options() abort
         \ 'ignorecase': v:true,
         \ 'immediately': v:false,
         \ 'input': '',
+        \ 'matchers': '',
         \ 'max_candidate_width': 200,
         \ 'mode': '',
         \ 'path': getcwd(),

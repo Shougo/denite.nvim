@@ -75,6 +75,7 @@ class Denite(object):
     def filter_candidates(self, context):
         for source in self._current_sources:
             ctx = source.context
+            ctx['matchers'] = context['matchers']
             ctx['input'] = context['input']
             if context['smartcase']:
                 ctx['ignorecase'] = re.search(r'[A-Z]', ctx['input']) is None
@@ -98,9 +99,11 @@ class Denite(object):
             ctx['candidates'] = entire
             for i in range(0, len(entire), 1000):
                 ctx['candidates'] = entire[i:i+1000]
-                self.match_candidates(
-                    ctx, [self._filters[x] for x in source.matchers
-                          if x in self._filters])
+                matchers = [self._filters[x] for x in
+                            (ctx['matchers'].split(',') if ctx['matchers']
+                             else source.matchers)
+                            if x in self._filters]
+                self.match_candidates(ctx, matchers)
                 partial += ctx['candidates']
                 if len(partial) >= 1000:
                     break
