@@ -650,6 +650,11 @@ are on the neovim-prompt's builtin actions/mappings.
 <denite:toggle_select_up>
 		Toggle cursor candidate select and move to previous line.
 
+				*denite-map-toggle_sorters*
+<denite:toggle_sorters:{arg}>
+		Change |denite-options-sorters| to {arg}.
+		If |denite-options-sorters| is {arg}, it will be disabled.
+
 				*denite-map-yank_to_register*
 <denite:yank_to_register>
 		Yank a text into a specified register.

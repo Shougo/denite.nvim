@@ -200,6 +200,16 @@ def _toggle_select_up(prompt, params):
     return prompt.denite.move_to_prev_line()
 
 
+def _toggle_sorters(prompt, params):
+    sorters = ''.join(params)
+    context = prompt.denite._context
+    if context['sorters'] != sorters:
+        context['sorters'] = sorters
+    else:
+        context['sorters'] = ''
+    return prompt.denite.redraw()
+
+
 def _print_messages(prompt, params):
     for mes in prompt.denite._context['messages']:
         debug(prompt.nvim, mes)
@@ -315,6 +325,7 @@ DEFAULT_ACTION_RULES = [
     ('denite:toggle_select_down', _toggle_select_down),
     ('denite:toggle_select_up', _toggle_select_up),
     ('denite:toggle_select_all', _toggle_select_all),
+    ('denite:toggle_sorters', _toggle_sorters),
     ('denite:move_caret_to_next_word', _move_caret_to_next_word),
     ('denite:move_caret_to_end_of_word', _move_caret_to_end_of_word),
     ('denite:change_word', _change_word),
