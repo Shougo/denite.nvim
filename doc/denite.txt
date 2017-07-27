@@ -1173,7 +1173,7 @@ OPTIONS							*denite-options*
 		"vertical": Split buffer vertically
 		"horizontal": Split buffer horizontally
 		"no": No split
-		"no": Create the new tab for denite buffer
+		"tab": Create the new tab for denite buffer
 
 		Default: "horizontal"
 
