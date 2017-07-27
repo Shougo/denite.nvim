@@ -71,8 +71,6 @@ class DenitePrompt(Prompt):
             return
 
         if self.denite.update_candidates():
-            if self.context['reversed']:
-                self.denite.init_cursor()
             self.denite.update_buffer()
         else:
             self.denite.update_status()

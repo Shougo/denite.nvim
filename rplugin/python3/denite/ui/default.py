@@ -331,12 +331,12 @@ class Default(object):
                     unique_words.add(candidate['word'])
                     unique_candidates.append(candidate)
             self._candidates = unique_candidates
+        if self._context['reversed']:
+            self._candidates.reverse()
 
         prev_matched_pattern = self._matched_pattern
         self._matched_pattern = pattern
         self._candidates_len = len(self._candidates)
-        if self._context['reversed']:
-            self._candidates.reverse()
 
         if self._denite.is_async():
             sources = '[async] ' + sources
@@ -345,8 +345,12 @@ class Default(object):
         prev_displayed_texts = self._displayed_texts
         self.update_displayed_texts()
 
-        return (self._displayed_texts != prev_displayed_texts or
+        updated = (self._displayed_texts != prev_displayed_texts or
                 self._matched_pattern != prev_matched_pattern)
+        if updated and self._context['reversed']:
+            self.move_to_last_line()
+
+        return updated
 
     def update_displayed_texts(self):
         self._displayed_texts = [
@@ -385,8 +389,6 @@ class Default(object):
         self.resize_buffer()
 
         self.move_cursor()
-        if self._context['reversed']:
-            self.move_to_last_line()
 
     def update_status(self):
         max_len = len(str(self._candidates_len))
