@@ -346,7 +346,7 @@ class Default(object):
         self.update_displayed_texts()
 
         updated = (self._displayed_texts != prev_displayed_texts or
-                self._matched_pattern != prev_matched_pattern)
+                   self._matched_pattern != prev_matched_pattern)
         if updated and self._context['reversed']:
             self.move_to_last_line()
 
