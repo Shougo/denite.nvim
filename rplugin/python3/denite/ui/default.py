@@ -466,11 +466,20 @@ class Default(object):
             self.move_to_last_line()
 
         if self._candidates and self._context['immediately']:
+            goto = self._winid > 0 and self._vim.call(
+                'win_gotoid', self._winid)
+            if goto:
+                # Jump to denite window
+                self.init_buffer()
+                self.update_cursor()
             self.do_action('default')
             candidate = self.get_cursor_candidate()
             echo(self._vim, 'Normal', '[{0}/{1}] {2}]'.format(
                 self._cursor + self._win_cursor, self._candidates_len,
                 candidate.get('abbr', candidate['word'])))
+            if goto:
+                # Move to the previous window
+                self._vim.command('wincmd p')
             return True
         return not (self._context['empty'] or
                     self._denite.is_async() or self._candidates)
