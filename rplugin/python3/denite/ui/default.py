@@ -637,10 +637,7 @@ class Default(object):
         if is_quit and not self._context['quit']:
             # Re-open denite buffer
 
-            # Disable the previous window info
-            self._is_suspend = True
             self.init_buffer()
-            self._is_suspend = False
             self.change_mode(self._current_mode)
 
             self.redraw(False)
