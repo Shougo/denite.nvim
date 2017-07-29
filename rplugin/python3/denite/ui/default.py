@@ -531,8 +531,9 @@ class Default(object):
     def cleanup(self):
         self._vim.command('pclose!')
         clearmatch(self._vim)
-        # Redraw to clear prompt
-        self._vim.command('redraw | echo ""')
+        if not self._context['immediately']:
+            # Redraw to clear prompt
+            self._vim.command('redraw | echo ""')
         self._vim.command('highlight! link CursorLine CursorLine')
         if self._vim.call('exists', '#ColorScheme'):
             self._vim.command('silent doautocmd ColorScheme')
