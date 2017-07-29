@@ -4,7 +4,8 @@
 # License: MIT license
 # ============================================================================
 
-from denite.util import get_custom_source, find_rplugins, split_input
+from denite.util import (get_custom_source,
+                         find_rplugins, split_input, abspath)
 
 import denite.source  # noqa
 import denite.filter  # noqa
@@ -56,6 +57,7 @@ class Denite(object):
             ctx['prev_input'] = context['input']
             ctx['event'] = 'gather'
             ctx['async_timeout'] = 0.01
+            ctx['path'] = abspath(self._vim, context['path'])
 
             candidates = self._gather_source_candidates(
                 source.context, source)
