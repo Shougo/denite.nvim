@@ -2,7 +2,7 @@
 # FILE: output.py
 # License: MIT license
 # ============================================================================
-
+import re
 import shlex
 import subprocess
 
@@ -16,6 +16,11 @@ class Source(Base):
         self.name = 'output'
         # why doesn't this seem to be working?
         self.default_action = 'yank'
+
+    def define_syntax(self):
+        cmd = self.context['args'][0]
+        if re.fullmatch(r'hi(ghlight)?(!)?', cmd):
+            self.define_syntax_for_highlight(cmd)
 
     def gather_candidates(self, context):
         args = context['args']
@@ -37,3 +42,23 @@ class Source(Base):
             except subprocess.CalledProcessError:
                 return []
         return [{'word': x} for x in output]
+
+    def define_syntax_for_highlight(self, cmd):
+        self.vim.command('syntax include syntax/vim.vim')
+        hi_list = self.vim.call('execute', cmd).splitlines()[1:]
+        for hi in (h.split()[0] for h in hi_list):
+            syn_hi_name = (
+                'syntax match vimHiGroup' +
+                ' /' + hi + r'\>/' +
+                ' nextgroup=' + hi +
+                ' skipwhite'
+            )
+            syn_hi_xxx = (
+                'syntax match ' + hi +
+                ' /xxx/' +
+                ' contained' +
+                ' nextgroup=@vimHighlightCluster' +
+                ' skipwhite'
+            )
+            self.vim.command(syn_hi_name)
+            self.vim.command(syn_hi_xxx)
