@@ -88,6 +88,7 @@ function! denite#init#_user_options() abort
         \ 'highlight_preview_line': 'Search',
         \ 'ignorecase': v:true,
         \ 'immediately': v:false,
+        \ 'immediately_1': v:false,
         \ 'input': '',
         \ 'matchers': '',
         \ 'max_candidate_width': 200,

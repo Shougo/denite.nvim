@@ -81,7 +81,8 @@ class Default(object):
             if context['mode']:
                 self._current_mode = context['mode']
 
-            update = 'immediately', 'cursor_wrap', 'cursor_pos', 'force_quit'
+            update = ('immediately', 'immediately_1',
+                      'cursor_wrap', 'cursor_pos', 'force_quit')
             for key in update:
                 self._context[key] = context[key]
 
@@ -465,7 +466,8 @@ class Default(object):
         elif self._context['cursor_pos'] == '$':
             self.move_to_last_line()
 
-        if self._candidates and self._context['immediately']:
+        if (self._candidates and self._context['immediately'] or
+                len(self._candidates) == 1 and self._context['immediately_1']):
             goto = self._winid > 0 and self._vim.call(
                 'win_gotoid', self._winid)
             if goto:
