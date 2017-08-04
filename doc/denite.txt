@@ -262,12 +262,14 @@ COMMANDS 						*denite-commands*
 
 		Denite can accept a list of strings, separated with ":", after
 		the name of sources.  You must escape ":" and "\" with "\"
-		in parameters themselves.
+		in parameters themselves, or surround the parameter with quotes.
 
 		Examples:
 		"file_rec:foo:bar": the parameters of source file are
 		                    ["foo", "bar"].
 		"file_rec:foo\:bar": the parameter of source file is
+		                     ["foo:bar"].
+		"file_rec:'foo:bar'": the parameter of source file is
 		                     ["foo:bar"].
 		"file_rec:foo::bar": the parameters of source file are
 		                     ["foo", "", "bar"].
