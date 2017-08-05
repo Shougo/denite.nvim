@@ -48,12 +48,13 @@ class Source(Base):
         linenr = context['__linenr']
         candidates = []
         for bufnr in context['__bufnrs']:
-            lines = [{'word': x,
-                    'abbr': (context['__fmt'] % (i + 1, x)),
-                    'action__path': self.vim.call('bufname', bufnr),
-                    'action__line': (i + 1)}
-                    for [i, x] in
-                    enumerate(self.vim.call('getbufline', bufnr, 1, '$'))]
+            lines = [{
+                'word': x,
+                'abbr': (context['__fmt'] % (i + 1, x)),
+                'action__path': self.vim.call('bufname', bufnr),
+                'action__line': (i + 1)}
+                for [i, x] in
+                enumerate(self.vim.call('getbufline', bufnr, 1, '$'))]
             if context['__direction'] == 'all':
                 candidates += lines
             elif context['__direction'] == 'backward':
