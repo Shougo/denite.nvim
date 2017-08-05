@@ -25,8 +25,7 @@ class Source(Base):
 
     def on_init(self, context):
         context['__linenr'] = self.vim.current.window.cursor[0]
-        context['__bufname'] = self.vim.current.buffer.name
-        context['__bufnr'] = self.vim.current.buffer.number
+        context['__bufnrs'] = [self.vim.current.buffer.number]
         context['__direction'] = 'all'
         context['__fmt'] = '%' + str(len(
             str(self.vim.call('line', '$')))) + 'd: %s'
@@ -41,17 +40,19 @@ class Source(Base):
 
     def gather_candidates(self, context):
         linenr = context['__linenr']
-        lines = [{'word': x,
-                  'abbr': (context['__fmt'] % (i + 1, x)),
-                  'action__path': context['__bufname'],
-                  'action__line': (i + 1)}
-                 for [i, x] in
-                 enumerate(self.vim.call(
-                     'getbufline', context['__bufnr'], 1, '$'))]
-        if context['__direction'] == 'all':
-            return lines
-        elif context['__direction'] == 'backward':
-            return list(reversed(lines[:linenr])) + list(
-                reversed(lines[linenr:]))
-        else:
-            return lines[linenr-1:] + lines[:linenr-1]
+        candidates = []
+        for bufnr in context['__bufnrs']:
+            lines = [{'word': x,
+                    'abbr': (context['__fmt'] % (i + 1, x)),
+                    'action__path': self.vim.call('bufname', bufnr),
+                    'action__line': (i + 1)}
+                    for [i, x] in
+                    enumerate(self.vim.call('getbufline', bufnr, 1, '$'))]
+            if context['__direction'] == 'all':
+                candidates += lines
+            elif context['__direction'] == 'backward':
+                candidates += list(reversed(lines[:linenr])) + list(
+                    reversed(lines[linenr:]))
+            else:
+                candidates += lines[linenr-1:] + lines[:linenr-1]
+        return candidates
