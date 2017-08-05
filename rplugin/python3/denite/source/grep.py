@@ -157,11 +157,11 @@ class Source(Base):
             return self.__async_gather_candidates(
                 context, context['async_timeout'])
 
-        if not context['__patterns']:
+        if not context['__patterns'] or not self.vars['command']:
             return []
 
-        args = []
-        args += self.vars['command']
+        args = [util.expand(self.vars['command'][0])]
+        args += self.vars['command'][1:]
         args += self.vars['default_opts']
         args += self.vars['recursive_opts']
         args += context['__arguments']
