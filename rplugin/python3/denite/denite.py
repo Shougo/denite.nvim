@@ -92,9 +92,7 @@ class Denite(object):
             if ctx['is_async']:
                 ctx['event'] = 'async'
                 entire += self._gather_source_candidates(ctx, source)
-            if not entire or (ctx['is_async'] and
-                              len(entire) > source.max_candidates and
-                              ctx['input']):
+            if not entire:
                 yield source.name, entire, [], []
                 continue
             partial = []
