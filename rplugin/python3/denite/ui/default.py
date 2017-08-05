@@ -494,7 +494,7 @@ class Default(object):
             self._vim.call('cursor', [self._win_cursor, 1])
 
         if self._context['auto_preview']:
-            self.do_action('preview')
+            self.do_action('previewopen')
         if self._context['auto_highlight']:
             self.do_action('highlight')
 
