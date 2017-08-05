@@ -29,10 +29,16 @@ class Source(Base):
         context['__direction'] = 'all'
         context['__fmt'] = '%' + str(len(
             str(self.vim.call('line', '$')))) + 'd: %s'
-        if context['args'] and (context['args'][0] == 'all' or
-                                context['args'][0] == 'forward' or
-                                context['args'][0] == 'backward'):
-            context['__direction'] = context['args'][0]
+        if context['args'] :
+            direction = context['args'][0]
+            if (direction == 'all' or direction == 'forward' or
+                    direction == 'backward'):
+                context['__direction'] = direction
+            elif direction == 'buffers':
+                context['__bufnrs'] = [x.number for x in self.vim.buffers]
+            elif direction == 'args':
+                context['__bufnrs'] = [self.vim.call('bufnr', x) for x
+                                       in self.vim.call('argv')]
 
     def highlight(self):
         self.vim.command(LINE_NUMBER_SYNTAX + self.syntax_name)

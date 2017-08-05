@@ -1402,11 +1402,13 @@ line		Gather current buffer lines as candidates.
 		Source arguments:
 
 		1. the search direction:
-		"all":       Search from buffer top
-		"backward":   Search from the current to the buffer top
-		"forward":  Search from the current to the buffer bottom
+		"all":       Search from the buffer top
+		"backward":  Search from the current to the buffer top
+		"forward":   Search from the current to the buffer bottom
+		"buffers":   Search from the all buffers
+		"args":      Search from the argument buffers
 		Note: If the direction is "all" or omitted, it searches from
-		buffer top.
+		the buffer top.
 
 						*denite-source-menu*
 menu		Gather custom menus.
