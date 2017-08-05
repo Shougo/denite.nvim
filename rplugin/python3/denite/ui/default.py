@@ -252,7 +252,8 @@ class Default(object):
         ]
 
     def _switch_prev_buffer(self):
-        if self._vim.buffers[self._prev_bufnr].name == '':
+        if (self._prev_bufnr == self._bufnr or
+                self._vim.buffers[self._prev_bufnr].name == ''):
             self._vim.command('enew')
         else:
             self._vim.command('buffer ' + str(self._prev_bufnr))
@@ -562,7 +563,8 @@ class Default(object):
         # Restore the window
         if self._context['split'] == 'no':
             self._switch_prev_buffer()
-            self._vim.current.window.options.update(self._save_window_options)
+            for k, v in self._save_window_options.items():
+                self._vim.current.window.options[k] = v
         else:
             if self._context['split'] == 'tab':
                 self._vim.command('tabclose!')
