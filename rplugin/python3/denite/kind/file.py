@@ -19,7 +19,7 @@ class Kind(Openable):
 
         self.name = 'file'
         self.default_action = 'open'
-        self.persist_actions += ['preview', 'highlight']
+        self.persist_actions += ['preview', 'previewopen', 'highlight']
         self._previewed_target = {}
 
     def action_open(self, context):
@@ -51,14 +51,15 @@ class Kind(Openable):
             self.vim.command('pclose!')
             return
 
-        path = target['action__path'].replace('/./', '/')
-        prev_id = self.vim.call('win_getid')
-        self.vim.call('denite#helper#preview_file', context, path)
-        self.vim.command('wincmd P')
-        self.__jump(context, target)
-        self.__highlight(context, int(target.get('action__line', 0)))
-        self.vim.call('win_gotoid', prev_id)
-        self._previewed_target = target
+        self.__preview(context, target)
+
+    def action_previewopen(self, context):
+        target = context['targets'][0]
+
+        if self.__get_preview_window() and self._previewed_target == target:
+            return
+
+        self.__preview(context, target)
 
     def action_highlight(self, context):
         target = context['targets'][0]
@@ -93,6 +94,16 @@ class Kind(Openable):
         return next(filterfalse(lambda x:
                                 not x.options['previewwindow'],
                                 self.vim.windows), None)
+
+    def __preview(self, context, target):
+        path = target['action__path'].replace('/./', '/')
+        prev_id = self.vim.call('win_getid')
+        self.vim.call('denite#helper#preview_file', context, path)
+        self.vim.command('wincmd P')
+        self.__jump(context, target)
+        self.__highlight(context, int(target.get('action__line', 0)))
+        self.vim.call('win_gotoid', prev_id)
+        self._previewed_target = target
 
     def __jump(self, context, target):
         if 'action__pattern' in target:

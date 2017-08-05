@@ -999,7 +999,7 @@ OPTIONS							*denite-options*
 
 						*denite-options-auto-preview*
 -auto-preview
-		When you select a candidate, it runs the "preview" action
+		When you select a candidate, it runs the "previewopen" action
 		automatically.
 		Default: false
 
@@ -1544,6 +1544,10 @@ file		An interface to jump to the file position.
 				Open the file.
 
 			preview
+				Preview and highlight the file. Close the
+				preview window if it already exists.
+
+			previewopen
 				Preview and highlight the file.
 
 			highlight
