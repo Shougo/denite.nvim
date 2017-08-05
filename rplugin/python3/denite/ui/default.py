@@ -355,6 +355,16 @@ class Default(object):
         return updated
 
     def update_displayed_texts(self):
+        if self._context['auto_resize']:
+            winminheight = int(self._context['winminheight'])
+            if (winminheight is not -1 and
+                    self._candidates_len < winminheight):
+                self._winheight = winminheight
+            elif self._candidates_len > int(self._context['winheight']):
+                self._winheight = int(self._context['winheight'])
+            elif self._candidates_len != self._winheight:
+                self._winheight = self._candidates_len
+
         self._displayed_texts = [
             self.get_candidate_display_text(i)
             for i in range(self._cursor,
@@ -440,14 +450,6 @@ class Default(object):
         winheight = self._winheight
         winwidth = self._winwidth
         is_vertical = split == 'vertical'
-
-        if not is_vertical and self._context['auto_resize']:
-            if (self._context['winminheight'] is not -1 and
-                    self._candidates_len <
-                    int(self._context['winminheight'])):
-                winheight = self._context['winminheight']
-            elif self._candidates_len < self._winheight:
-                winheight = self._candidates_len
 
         if not is_vertical and self._vim.current.window.height != winheight:
             self._vim.command('resize ' + str(winheight))
