@@ -47,7 +47,9 @@ class Kind(Openable):
     def action_preview(self, context):
         target = context['targets'][0]
 
-        if self.__get_preview_window() and self._previewed_target == target:
+        if (not context['auto_preview'] and
+                self.__get_preview_window() and
+                self._previewed_target == target):
             self.vim.command('pclose!')
             return
 

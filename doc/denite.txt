@@ -1544,7 +1544,8 @@ file		An interface to jump to the file position.
 				Open the file.
 
 			preview
-				Preview and highlight the file.
+				Preview and highlight the file.  Close the
+				preview window if it is already exists.
 
 			highlight
 				Highlight the location of the candidate if the
