@@ -29,7 +29,7 @@ class Source(Base):
         context['__direction'] = 'all'
         context['__fmt'] = '%' + str(len(
             str(self.vim.call('line', '$')))) + 'd: %s'
-        if context['args'] :
+        if context['args']:
             direction = context['args'][0]
             if (direction == 'all' or direction == 'forward' or
                     direction == 'backward'):
