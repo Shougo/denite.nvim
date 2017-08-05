@@ -72,6 +72,8 @@ class Default(object):
         return self._result
 
     def _start(self, sources, context):
+        self._vim.command('silent! autocmd! denite')
+
         if re.search('\[Command Line\]$', self._vim.current.buffer.name):
             # Ignore command line window.
             return
@@ -210,8 +212,6 @@ class Default(object):
         self._bufvars['denite_statusline_sources'] = ''
         self._bufvars['denite_statusline_path'] = ''
         self._bufvars['denite_statusline_linenr'] = ''
-
-        self._vim.command('autocmd! denite')
 
         self._vim.command('silent doautocmd WinEnter')
         self._vim.command('silent doautocmd BufWinEnter')
@@ -484,6 +484,7 @@ class Default(object):
                 candidate.get('abbr', candidate['word'])))
             if goto:
                 # Move to the previous window
+                self.suspend()
                 self._vim.command('wincmd p')
             return True
         return not (self._context['empty'] or
@@ -905,12 +906,13 @@ class Default(object):
         self.change_mode(self._current_mode)
 
     def suspend(self):
-        if self._context['auto_resume']:
-            self._vim.command('autocmd denite WinEnter <buffer> ' +
-                              'Denite -resume -buffer_name=' +
-                              self._context['buffer_name'])
-        self._vim.command('nnoremap <silent><buffer> <CR> ' +
-                          ':<C-u>Denite -resume -buffer_name=' +
-                          self._context['buffer_name'] + '<CR>')
+        if self._bufnr == self._vim.current.buffer.number:
+            if self._context['auto_resume']:
+                self._vim.command('autocmd denite WinEnter <buffer> ' +
+                                  'Denite -resume -buffer_name=' +
+                                  self._context['buffer_name'])
+            self._vim.command('nnoremap <silent><buffer> <CR> ' +
+                              ':<C-u>Denite -resume -buffer_name=' +
+                              self._context['buffer_name'] + '<CR>')
         self._is_suspend = True
         return STATUS_ACCEPT
