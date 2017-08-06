@@ -1614,6 +1614,11 @@ matcher_cpsm
 matcher_fuzzy
 		A matcher which filters the candidates with user given fuzzy
 		string.
+						*denite-filter-matcher_fzf*
+matcher_fzf
+		A matcher which filters the candidates using fzf.
+		Note: fzf must be installed.
+		https://github.com/junegunn/fzf
 
 				*denite-filter-matcher_hide_hidden_files*
 matcher_hide_hidden_files
