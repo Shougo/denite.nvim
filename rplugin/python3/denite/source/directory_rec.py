@@ -25,7 +25,7 @@ class Source(Base):
         self.__cache = {}
 
     def on_init(self, context):
-        if not context['is_windows'] and not self.vars['command']:
+        if context['is_windows'] == '0' and not self.vars['command']:
             self.vars['command'] = [
                 'find', '-L', ':directory',
                 '-path', '*/.git/*', '-prune', '-o',
