@@ -59,7 +59,7 @@ function! denite#init#_context() abort
   return {
         \ 'runtimepath': &runtimepath,
         \ 'encoding': &encoding,
-        \ 'is_windows': has('win32') || has('win64'),
+        \ 'is_windows': ((has('win32') || has('win64')) ? v:true : v:false),
         \ 'selected_icon': '*',
         \ 'prev_winid': win_getid(),
         \ 'messages': [],

@@ -28,7 +28,7 @@ class Filter(Base):
 
         if not self.__initialized:
             # cpsm installation check
-            ext = '.pyd' if context['is_windows'] != '0' else '.so'
+            ext = '.pyd' if context['is_windows'] else '.so'
             if globruntime(context['runtimepath'], 'bin/cpsm_py' + ext):
                 # Add path
                 sys.path.append(os.path.dirname(
