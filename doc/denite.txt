@@ -1653,14 +1653,18 @@ sorter_rank
 		for file candidate source.
 
 
+						*denite-filter-sorter_reverse*
+sorter_reverse
+		Simple filter to reverse the order of candidates.
+
 						*denite-filter-sorter_sublime*
 sorter_sublime
 		Uses the scoring algorithm from this article and its implementation:
 		https://bit.ly/reverse-engineering-sublime-text-s-fuzzy-match
 
-						*denite-filter-sorter_reverse*
-sorter_reverse
-		Simple filter to reverse the order of candidates.
+				*denite-filter-converter_relative_abbr*
+converter_relative_abbr
+		Convert candidate's abbr to the relative path.
 
 				*denite-filter-converter_relative_word*
 converter_relative_word
