@@ -76,7 +76,7 @@ class Source(Base):
             path = None
         else:
             name = self.vim.call('fnamemodify', buffer_attr['name'], ':~:.')
-            path = self.vim.call('fnamemodify',buffer_attr['name'],':p')
+            path = self.vim.call('fnamemodify', buffer_attr['name'], ':p')
         return {
             'bufnr': buffer_attr['number'],
             'word': name,
