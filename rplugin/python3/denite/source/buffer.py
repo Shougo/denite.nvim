@@ -73,7 +73,7 @@ class Source(Base):
     def _convert(self, buffer_attr, rjust):
         if buffer_attr['name'] == '':
             name = 'No Name'
-            path = None
+            path = ''
         else:
             name = self.vim.call('fnamemodify', buffer_attr['name'], ':~:.')
             path = self.vim.call('fnamemodify', buffer_attr['name'], ':p')
