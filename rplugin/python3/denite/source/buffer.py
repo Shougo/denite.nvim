@@ -71,9 +71,12 @@ class Source(Base):
         return False
 
     def _convert(self, buffer_attr, rjust):
-        name = self.vim.call(
-            'fnamemodify', buffer_attr['name'], ':~:.'
-        ) if buffer_attr['name'] != '' else 'No Name'
+        if buffer_attr['name'] == '':
+            name = 'No Name'
+            path = ''
+        else:
+            name = self.vim.call('fnamemodify', buffer_attr['name'], ':~:.')
+            path = self.vim.call('fnamemodify', buffer_attr['name'], ':p')
         return {
             'bufnr': buffer_attr['number'],
             'word': name,
@@ -88,6 +91,7 @@ class Source(Base):
                          ) if self.vars['date_format'] != '' else ''
             ),
             'action__bufnr': buffer_attr['number'],
+            'action__path': path,
             'timestamp': buffer_attr['timestamp']
         }
 
