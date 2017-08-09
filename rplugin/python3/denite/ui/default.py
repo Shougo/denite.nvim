@@ -350,7 +350,7 @@ class Default(object):
         updated = (self._displayed_texts != prev_displayed_texts or
                    self._matched_pattern != prev_matched_pattern)
         if updated and self._context['reversed']:
-            self.move_to_last_line()
+            self.init_cursor()
 
         return updated
 
@@ -399,6 +399,9 @@ class Default(object):
 
         self._vim.current.buffer[:] = self._displayed_texts
         self.resize_buffer()
+
+        if self._context['reversed']:
+            self._vim.command('normal! zb')
 
         self.move_cursor()
 
@@ -725,7 +728,6 @@ class Default(object):
             self._win_cursor = win_max
             self._cursor = cur_max
             self.update_cursor()
-            self._vim.command('normal! zb')
 
     def move_to_top(self):
         self._win_cursor = 1
