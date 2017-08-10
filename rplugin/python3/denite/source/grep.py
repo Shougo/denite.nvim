@@ -154,8 +154,10 @@ class Source(Base):
                 '.*'.join(util.split_input(context['input']))]
 
         if context['__proc']:
-            return self.__async_gather_candidates(
-                context, context['async_timeout'])
+            if not context['is_redraw']:
+                return self.__async_gather_candidates(
+                    context, context['async_timeout'])
+            self.on_close(context)
 
         if not context['__patterns'] or not self.vars['command']:
             return []
