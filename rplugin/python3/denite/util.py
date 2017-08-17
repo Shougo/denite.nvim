@@ -129,6 +129,10 @@ def abspath(vim, path):
     return normpath(join(vim.call('getcwd'), expand(path)))
 
 
+def relpath(vim, path):
+    return normpath(vim.call('fnamemodify', expand(path), ':.:~'))
+
+
 def convert2fuzzy_pattern(text):
     return '|'.join([escape_fuzzy(x, True) for x in split_input(text)])
 

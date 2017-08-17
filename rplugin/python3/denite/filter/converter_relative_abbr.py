@@ -5,7 +5,8 @@
 # ============================================================================
 
 from .base import Base
-from os.path import relpath, isabs
+from denite.util import relpath
+from os.path import isabs
 
 
 class Filter(Base):
@@ -19,6 +20,5 @@ class Filter(Base):
     def filter(self, context):
         for candidate in context['candidates']:
             if isabs(candidate['word']):
-                candidate['abbr'] = relpath(
-                    candidate['word'], start=context['path'])
+                candidate['abbr'] = relpath(self.vim, candidate['word'])
         return context['candidates']
