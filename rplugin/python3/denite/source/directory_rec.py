@@ -6,7 +6,6 @@
 # ============================================================================
 
 from .file_rec import Source as Rec
-from denite.util import abspath
 
 
 class Source(Rec):
