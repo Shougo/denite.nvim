@@ -34,7 +34,7 @@ class Source(Base):
                 'action__path': abspath(self.vim, filename),
             })
         else:
-            for f in glob.glob(filename + '*'):
+            for f in glob.glob(os.path.dirname(filename) + '/*'):
                 candidates.append({
                     'word': f,
                     'abbr': f + ('/' if os.path.isdir(f) else ''),
