@@ -32,4 +32,4 @@ class Filter(Base):
         return candidates
 
     def convert_pattern(self, input_str):
-        return '\|'.join([re.escape(x) for x in split_input(input_str)])
+        return '|'.join([re.escape(x) for x in split_input(input_str)])
