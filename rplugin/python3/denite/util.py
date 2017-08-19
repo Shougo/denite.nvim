@@ -130,7 +130,7 @@ def abspath(vim, path):
 
 
 def relpath(vim, path):
-    return normpath(vim.call('fnamemodify', expand(path), ':.:~'))
+    return normpath(vim.call('fnamemodify', expand(path), ':~:.'))
 
 
 def convert2fuzzy_pattern(text):
