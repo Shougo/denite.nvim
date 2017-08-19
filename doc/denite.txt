@@ -759,7 +759,7 @@ dd		<denite:delete_entire_text>
 gg		<denite:move_to_first_line>
 G		<denite:move_to_last_line>
 H		<denite:move_to_top>
-L		<denite:move_to_bottom
+L		<denite:move_to_bottom>
 <C-U>		<denite:scroll_window_upwards>
 <C-E>		<denite:scroll_window_up_one_line>
 <C-D>		<denite:scroll_window_downwards>
