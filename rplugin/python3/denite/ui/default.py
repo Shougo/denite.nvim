@@ -372,21 +372,6 @@ class Default(object):
                                self._cursor + self._winheight))
         ]
 
-    def quick_match_redraw(self, table, is_define):
-        for [key, number] in table.items():
-            if is_define:
-                self._vim.command('silent! sign define unite_quick_match_' +
-                                  number + ' text=' + key + ' texthl=Special')
-                self._vim.command('silent! sign place ' + (2000+number) +
-                                  'unite_quick_match_' + number +
-                                  ' line=' + number + ' buffer=' +
-                                  str(self._vim.current.buffer.number))
-            else:
-                self._vim.command('silent! sign unplace ' + (2000+number) +
-                                  'unite_quick_match_' + number +
-                                  ' buffer=' +
-                                  str(self._vim.current.buffer.number))
-
     def update_buffer(self):
         if self._bufnr != self._vim.current.buffer.number:
             return
