@@ -62,6 +62,14 @@ function! denite#init#_context() abort
         \ 'is_windows': ((has('win32') || has('win64')) ? v:true : v:false),
         \ 'selected_icon': '*',
         \ 'prev_winid': win_getid(),
+        \ 'quick_move_table': {
+        \   'a' : 0, 's' : 1, 'd' : 2, 'f' : 3, 'g' : 4,
+        \   'h' : 5, 'j' : 6, 'k' : 7, 'l' : 8, ';' : 9,
+        \   'q' : 10, 'w' : 11, 'e' : 12, 'r' : 13, 't' : 14,
+        \   'y' : 15, 'u' : 16, 'i' : 17, 'o' : 18, 'p' : 19,
+        \   '1' : 20, '2' : 21, '3' : 22, '4' : 23, '5' : 24,
+        \   '6' : 25, '7' : 26, '8' : 27, '9' : 28, '0' : 29,
+        \ },
         \ 'messages': [],
         \}
 endfunction

@@ -70,8 +70,6 @@ you should read `:help provider-python`.
 
 * source completion support: `completion(args, arglead)`
 
-* quickmatch feature
-
 * [`defx`](https://github.com/Shougo/defx.nvim) support
 
 * match highlight improvement

@@ -569,6 +569,10 @@ are on the neovim-prompt's builtin actions/mappings.
 		Note: You cannot read the messages in Denite window.
 		It is for debug only.
 
+				*denite-map-quick_move*
+<denite:quick_move>
+		Move to the selected candidate with using quick match.
+
 				*denite-map-quit*
 <denite:quit>
 		Close current Denite buffer.
@@ -746,9 +750,10 @@ e		<denite:move_caret_to_end_of_word>
 $		<denite:move_caret_to_tail>
 c		<denite:change_word>
 cc		<denite:change_line>
-S		<denite:change_line>
 s		<denite:change_char>
+S		<denite:change_line>
 x		<denite:delete_char_under_caret>
+X		<denite:quick_move>
 cw		<denite:change_word>
 dd		<denite:delete_entire_text>
 gg		<denite:move_to_first_line>
@@ -1128,6 +1133,24 @@ OPTIONS							*denite-options*
 -path={input-text}
 		Specify an initial narrowing path.
 		Default: ""
+
+					*denite-options-quick-move-table*
+-quick-move
+
+		The table of completion candidates of quick move list,
+		corresponding the narrowing text.
+
+		Note: You cannot specify it from the command-line.
+
+		Default: >
+			{
+        		\   'a' : 0, 's' : 1, 'd' : 2, 'f' : 3, 'g' : 4,
+        		\   'h' : 5, 'j' : 6, 'k' : 7, 'l' : 8, ';' : 9,
+        		\   'q' : 10, 'w' : 11, 'e' : 12, 'r' : 13, 't' : 14,
+        		\   'y' : 15, 'u' : 16, 'i' : 17, 'o' : 18, 'p' : 19,
+        		\   '1' : 20, '2' : 21, '3' : 22, '4' : 23, '5' : 24,
+        		\   '6' : 25, '7' : 26, '8' : 27, '9' : 28, '0' : 29,
+        		\ }
 
 							*denite-options-quit*
 -quit
