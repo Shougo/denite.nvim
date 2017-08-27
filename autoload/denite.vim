@@ -18,16 +18,16 @@ function! denite#start(sources, ...) abort
 endfunction
 
 function! denite#get_status_mode() abort
-  return b:denite_statusline_mode
+  return get(b:, 'denite_statusline_mode', '')
 endfunction
 function! denite#get_status_sources() abort
-  return b:denite_statusline_sources
+  return get(b:, 'denite_statusline_sources', '')
 endfunction
 function! denite#get_status_path() abort
-  return b:denite_statusline_path
+  return get(b:, 'denite_statusline_path', '')
 endfunction
 function! denite#get_status_linenr() abort
-  return b:denite_statusline_linenr
+  return get(b:, 'denite_statusline_linenr', '')
 endfunction
 
 
