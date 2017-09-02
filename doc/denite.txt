@@ -1477,6 +1477,8 @@ output		Gather executed command output as candidates.
 		Source arguments:
 		1. Vim command or '!' prefixed shell command.
 		2. Command args.
+
+		Source default action: yank
 >
 		" It outputs "foo bar".
 		:Denite output:echo:"foo:bar"
