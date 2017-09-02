@@ -12,6 +12,7 @@ class Base(object):
     def __init__(self, vim):
         self.vim = vim
         self.name = 'base'
+        self.default_action = 'echo'
         self.persist_actions = ['echo']
         self.redraw_actions = []
 
