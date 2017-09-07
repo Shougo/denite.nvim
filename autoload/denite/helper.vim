@@ -63,7 +63,7 @@ function! denite#helper#preview_file(context, filename) abort
     let previewheight_save = &previewheight
     try
       let &previewheight = a:context.previewheight
-      call denite#util#execute_path('silent pedit!', a:filename)
+      call denite#util#execute_path('silent aboveleft pedit!', a:filename)
     finally
       let &previewheight = previewheight_save
     endtry
