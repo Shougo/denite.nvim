@@ -2,8 +2,10 @@
 # FILE: output.py
 # License: MIT license
 # ============================================================================
+
 import re
 import shlex
+from denite.util import relpath
 import subprocess
 
 from .base import Base
@@ -35,12 +37,7 @@ class Source(Base):
             output = self.vim.call('execute', cmdline).splitlines()[1:]
         else:
             cmdline = ' '.join([first[1:]] + args[1:])
-            try:
-                output = [x.decode(context['encoding']) for x in
-                          subprocess.check_output(shlex.split(cmdline))
-                          .splitlines()]
-            except subprocess.CalledProcessError:
-                return []
+            output = self.vim.call('system', cmdline).splitlines()
         return [{'word': x} for x in output]
 
     def define_syntax_for_highlight(self, cmd):
