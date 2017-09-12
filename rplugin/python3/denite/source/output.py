@@ -4,9 +4,6 @@
 # ============================================================================
 
 import re
-import shlex
-from denite.util import relpath
-import subprocess
 
 from .base import Base
 
