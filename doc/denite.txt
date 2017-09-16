@@ -88,8 +88,6 @@ INSTALL							*denite-install*
 Note: denite requires Neovim(the latest is recommended) or Vim8.0+ with
 |:python3| enabled.
 
-Note: You need to install Python3.5+ or `pip3 install typing`.
-
 For neovim install:
 
 1. Extract the files and put them in your Neovim directory
@@ -1373,6 +1371,39 @@ file_rec	Gather files recursive and nominates all file names under the
 				In windows if no command is specified file_rec
 				uses a python script scantree.py to get the list
 				of files using scandir or os.walk.
+
+				There a python script that can be used as a command
+				in file_rec. In order to use it you can set:
+
+				call denite#custom#var("file_rec", "command",
+					\ ["scantree.py"])
+
+				By default it ignores the files or folders matching
+				your wildignore setting.
+				If you want to change this setting there is an option
+				"--ignore" that you can use to control the behavior.
+				The possible values for this are:
+					"use_wildignore" -- the default
+					"ignore_none"    -- don't ignore any files
+					string of comma separated expressions to ignore.
+
+				As an example you can set use the two following commands:
+
+				call denite#custom#var("file_rec", "command",
+					\ ["scantree.py", "--ignore=ignore_none"])
+
+				or
+
+				call denite#custom#var("file_rec", "command",
+					\ ["scantree.py", "--ignore", ".hg,.git,*.o,*.pyc"])
+
+				The first example doesn't ignore any files, the second will not
+				show you any candidates that match each of the patterns in the
+				comma separated list.
+				Note: The patterns are based on fnmatch python module.
+
+
+
 
 		min_cache_files	the minimum number of files that
 				it saves the caches.
