@@ -11,23 +11,18 @@ from os.path import relpath, isabs, isdir, join
 from denite.util import parse_command, abspath
 import argparse
 import os
+import vim
 
 
 def parse_command_for_scantree(cmd):
     """Given the user choice for --ignore get the corresponding value"""
 
     parser = argparse.ArgumentParser(description="parse scantree options")
-    parser.add_argument('--ignore', type=str, default='use_wildignore')
+    parser.add_argument('--ignore', type=str, default=None)
 
     # the first name on the list is 'scantree.py'
-    args = parser.parse_args(cmd[1:])
-    if args.ignore == 'use_wildignore':
-        # how to get the value of vim variable?
-        ignore = '.git,.hg,*.pyc'
-    elif args.ignore == 'ignore_none':
-        ignore = ''
-    else:
-        ignore = args.ignore
+    args = parser.parse_args(cmd[1:] if cmd[0] == 'scantree.py' else cmd)
+    ignore = vim.eval("&wildignore") if args.ignore is None else args.ignore
 
     current_folder, _ = path.split(__file__)
     scantree_python = os.path.normpath(join(current_folder,

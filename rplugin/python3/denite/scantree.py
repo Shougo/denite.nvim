@@ -66,6 +66,7 @@ def output_lines(lines):
 
 def is_ignored(name, ignore_list):
     """checks if file name matches the ignore list"""
+    name = os.path.basename(name)
     return any(fnmatch.fnmatch(name, p) for p in ignore_list)
 
 
@@ -79,7 +80,7 @@ def output_files():
                         default='.hg,.git')
 
     args = parser.parse_args()
-    ignore = args.ignore.split(',')
+    ignore = list(set(args.ignore.split(',')))
     # later we can account for more paths
     for path_name in [args.path]:
         curr_list = []
