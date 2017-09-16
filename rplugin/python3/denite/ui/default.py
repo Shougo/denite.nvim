@@ -647,7 +647,15 @@ class Default(object):
         action = self._denite.get_action(
             self._context, action_name, candidates)
         if not action:
-            return
+            # Search the prefix.
+            prefix_actions = [x for x in
+                              self._denite.get_action_names(
+                                  self._context, candidates)
+                              if x.startswith(action_name)]
+            action_name = prefix_actions[0]
+            action = self._denite.get_action(
+                self._context, action_name, candidates)
+
         is_quit = action['is_quit'] or self._context['force_quit']
         if is_quit:
             self.quit()
