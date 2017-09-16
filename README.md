@@ -59,6 +59,8 @@ You can enable Python3 interface with `pip`:
 If you want to read the Neovim-python/python3 interface install documentation,
 you should read `:help provider-python`.
 
+Note: You need to install Python3.5+ or `pip3 install typing`.
+
 ### For Windows users
 
 1. Install Vim from [Vim Win32 Installer releases](https://github.com/vim/vim-win32-installer/releases)
