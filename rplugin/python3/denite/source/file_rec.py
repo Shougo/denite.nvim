@@ -6,11 +6,12 @@
 
 from .base import Base
 from denite.process import Process
-from os import path, pardir
+from os import path
 from os.path import relpath, isabs, isdir, join
 from denite.util import parse_command, abspath
 import argparse
 import os
+
 
 def parse_command_for_scantree(cmd):
     """Given the user choice for --ignore get the corresponding value"""
@@ -29,9 +30,11 @@ def parse_command_for_scantree(cmd):
         ignore = args.ignore
 
     current_folder, _ = path.split(__file__)
-    scantree_python = os.path.normpath(join(current_folder, os.pardir, 'scantree.py'))
+    scantree_python = os.path.normpath(join(current_folder,
+                                       os.pardir, 'scantree.py'))
 
-    return ['python', scantree_python, '--ignore', ignore, '--path', ':directory']
+    return ['python', scantree_python, '--ignore', ignore,
+            '--path', ':directory']
 
 
 class Source(Base):
@@ -53,7 +56,8 @@ class Source(Base):
 
         if self.vars['command']:
             if self.vars['command'][0] == 'scantree.py':
-                self.vars['command'] = parse_command_for_scantree(self.vars['command'])
+                self.vars['command'] = \
+                        parse_command_for_scantree(self.vars['command'])
         else:
             if not context['is_windows']:
                 self.vars['command'] = [

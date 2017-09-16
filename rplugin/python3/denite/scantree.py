@@ -55,6 +55,7 @@ except ImportError:
             for filename in files:
                 yield join(root, filename)
 
+
 def output_lines(lines):
     try:
         sys.stdout.write(''.join(lines))
@@ -67,14 +68,15 @@ def is_ignored(name, ignore_list):
     """checks if file name matches the ignore list"""
     return any(fnmatch.fnmatch(name, p) for p in ignore_list)
 
+
 def output_files():
     """print the list of files to stdout"""
     parser = argparse.ArgumentParser()
     parser.add_argument('--path', type=str, default=os.curdir,
-            help='path to look for the files')
+                        help='path to look for the files')
     parser.add_argument('--ignore', type=str,
-            help='command separated list of patterns to ignore',
-            default='.hg,.git')
+                        help='command separated list of patterns to ignore',
+                        default='.hg,.git')
 
     args = parser.parse_args()
     ignore = args.ignore.split(',')
@@ -84,7 +86,7 @@ def output_files():
         max_size = 40
         max_time_without_write = 0.005
         last_write_time = time.time()
-        for fn in scantree(path_name):
+        for fn in scantree(path_name, ignore):
             curr_list.append(fn + '\n')
             if (len(curr_list) >= max_size or curr_list and
                     time.time() - last_write_time > max_time_without_write):
