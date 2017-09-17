@@ -49,8 +49,8 @@ except ImportError:
 
         for root, _, files in walk(path_name):
             if not is_ignored(root, skip_list):
-                for fname in (f for f in files if not is_ignored(f, skip_list)):
-                    yield join(root, fname)
+                for name in (f for f in files if not is_ignored(f, skip_list)):
+                    yield join(root, name)
 
 
 def output_lines(lines):
