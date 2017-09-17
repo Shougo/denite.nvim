@@ -5,11 +5,10 @@
 # ============================================================================
 
 import sys
+from os import walk, curdir
 from os.path import basename, join
-from os import walk
 import argparse
 import fnmatch
-import os
 import time
 
 DEFAULT_SKIP_LIST = ['.git', '.hg']
@@ -31,15 +30,14 @@ try:
             skip_list = DEFAULT_SKIP_LIST
 
         try:
-            for entry in scandir(path_name):
-                if is_ignored(entry.path, skip_list):
-                    continue
+            for entry in (e for e in scandir(path_name)
+                          if not is_ignored(e, skip_list)):
                 if entry.is_dir(follow_symlinks=False):
                     yield from scantree(entry.path, skip_list)
                 else:
                     yield entry.path
         except PermissionError:
-            yield ("PermissionError reading {}".format(path_name))
+            yield "PermissionError reading {}".format(path_name)
 
 except ImportError:
     def scantree(path_name, skip_list=None):
@@ -49,11 +47,10 @@ except ImportError:
         if skip_list is None:
             skip_list = DEFAULT_SKIP_LIST
 
-        for root, dirn, files in walk(path_name):
-            if basename(root) in skip_list:
-                continue
-            for filename in files:
-                yield join(root, filename)
+        for root, _, files in walk(path_name):
+            if not is_ignored(root, skip_list):
+                for fname in (f for f in files if not is_ignored(f, skip_list)):
+                    yield join(root, fname)
 
 
 def output_lines(lines):
@@ -66,14 +63,14 @@ def output_lines(lines):
 
 def is_ignored(name, ignore_list):
     """checks if file name matches the ignore list"""
-    name = os.path.basename(name)
+    name = basename(name)
     return any(fnmatch.fnmatch(name, p) for p in ignore_list)
 
 
 def output_files():
     """print the list of files to stdout"""
     parser = argparse.ArgumentParser()
-    parser.add_argument('--path', type=str, default=os.curdir,
+    parser.add_argument('--path', type=str, default=curdir,
                         help='path to look for the files')
     parser.add_argument('--ignore', type=str,
                         help='command separated list of patterns to ignore',
@@ -87,8 +84,8 @@ def output_files():
         max_size = 40
         max_time_without_write = 0.005
         last_write_time = time.time()
-        for fn in scantree(path_name, ignore):
-            curr_list.append(fn + '\n')
+        for name in scantree(path_name, ignore):
+            curr_list.append(name + '\n')
             if (len(curr_list) >= max_size or curr_list and
                     time.time() - last_write_time > max_time_without_write):
                 output_lines(curr_list)
