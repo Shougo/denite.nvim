@@ -4,10 +4,11 @@
 # License: MIT license
 # ============================================================================
 
+import argparse
 from .base import Base
 from denite.process import Process
 from os import path, pardir
-from os.path import relpath, isabs, isdir, join
+from os.path import relpath, isabs, isdir, join, normpath
 from denite.util import parse_command, abspath
 
 
@@ -25,15 +26,21 @@ class Source(Base):
         self.__cache = {}
 
     def on_init(self, context):
-        if not context['is_windows'] and not self.vars['command']:
-            self.vars['command'] = [
-                'find', '-L', ':directory',
-                '-path', '*/.git/*', '-prune', '-o',
-                '-type', 'l', '-print', '-o', '-type', 'f', '-print']
+        """scantree.py command has special meaning, using the internal
+        scantree.py Implementation"""
 
-        if context['is_windows'] and not self.vars['command']:
-            scantree = join(path.split(__file__)[0], pardir, 'scantree.py')
-            self.vars['command'] = ['python', scantree, ':directory']
+        if self.vars['command']:
+            if self.vars['command'][0] == 'scantree.py':
+                self.vars['command'] = \
+                        self.parse_command_for_scantree(self.vars['command'])
+        else:
+            if not context['is_windows']:
+                self.vars['command'] = [
+                    'find', '-L', ':directory',
+                    '-path', '*/.git/*', '-prune', '-o',
+                    '-type', 'l', '-print', '-o', '-type', 'f', '-print']
+            else:
+                self.vars['command'] = self.parse_command_for_scantree([])
 
         context['__proc'] = None
         directory = context['args'][0] if len(
@@ -98,3 +105,22 @@ class Source(Base):
             self.__cache[context['__directory']] = context[
                 '__current_candidates']
         return candidates
+
+    def parse_command_for_scantree(self, cmd):
+        """Given the user choice for --ignore get the corresponding value"""
+
+        parser = argparse.ArgumentParser(description="parse scantree options")
+        parser.add_argument('--ignore', type=str, default=None)
+
+        # the first name on the list is 'scantree.py'
+        args = parser.parse_args(cmd[1:] if cmd[0] == 'scantree.py' else cmd)
+        if args.ignore is None:
+            ignore = self.vim.options['wildignore']
+        else:
+            ignore = args.ignore
+
+        current_folder, _ = path.split(__file__)
+        scantree_py = normpath(join(current_folder, pardir, 'scantree.py'))
+
+        return ['python', scantree_py, '--ignore', ignore,
+                '--path', ':directory']

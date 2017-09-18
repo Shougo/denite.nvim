@@ -129,6 +129,9 @@ EXAMPLES						*denite-examples*
 	call denite#custom#var('file_rec', 'command',
 	\ ['pt', '--follow', '--nocolor', '--nogroup',
 	\  (has('win32') ? '-g:' : '-g='), ''])
+	"For python script scantree.py (works if python 3.5+ in path)
+	"Read bellow on this file to learn more about scantree.py
+	call denite#custom#var("file_rec", "command", ["scantree.py"])
 
 	" Change mappings.
 	call denite#custom#map(
@@ -224,6 +227,9 @@ EXAMPLES						*denite-examples*
 	call denite#custom#alias('source', 'file_rec/git', 'file_rec')
 	call denite#custom#var('file_rec/git', 'command',
 	      \ ['git', 'ls-files', '-co', '--exclude-standard'])
+
+	call denite#custom#alias('source', 'file_rec/py', 'file_rec')
+	call denite#custom#var('file_rec/py', 'command',['scantree.py'])
 
 	" Change default prompt
 	call denite#custom#option('default', 'prompt', '>')
@@ -1370,9 +1376,45 @@ file_rec	Gather files recursive and nominates all file names under the
 					\ '-type', 'f', '-print'])
 
 <
-				In windows if no command is specified file_rec
-				uses a python script scantree.py to get the list
-				of files using scandir or os.walk.
+				If python3.5+ is in your path you can use a
+				python script that comes with denite for the
+				file_rec command. It is the default on windows
+				if you don't set your own commmand.
+				To use it other environments you can do:
+
+				call denite#custom#var("file_rec", "command",
+					\ ["scantree.py"])
+
+				By default it ignores the files or folders
+				matching your wildignore setting.
+				You can change which files to ignore with the
+				following command line argument:
+				  --ignore pat1,pat2,...
+
+				  where pat1, pat2 are patterns to ignore, for
+				  example --ignore *pyc,.git
+
+				The following two examples show how to set up
+				the command:
+
+				call denite#custom#var("file_rec", "command",
+					\ ["scantree.py", "--ignore=''"])
+
+				or
+
+				let ignore=&wildignore .
+				  \ ",*.pyc,.git,.hg,.svn"
+				call denite#custom#var("file_rec", "command",
+				    \ ["scantree.py", "--ignore", ignore])
+
+				The first example doesn't ignore any files,
+				the second ignores everything matching
+				wildignore plus the given patterns.
+				Note: The patterns are based on fnmatch python
+				module.
+
+
+
 
 		min_cache_files	the minimum number of files that
 				it saves the caches.
