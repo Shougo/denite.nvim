@@ -31,13 +31,13 @@ try:
 
         try:
             for entry in (e for e in scandir(path_name)
-                          if not is_ignored(e, skip_list)):
+                          if not is_ignored(e.path, skip_list)):
                 if entry.is_dir(follow_symlinks=False):
                     yield from scantree(entry.path, skip_list)
                 else:
                     yield entry.path
         except PermissionError:
-            yield "PermissionError reading {}".format(path_name)
+            yield 'PermissionError reading {}'.format(path_name)
 
 except ImportError:
     def scantree(path_name, skip_list=None):
