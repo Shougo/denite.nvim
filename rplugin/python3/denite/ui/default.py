@@ -281,9 +281,7 @@ class Default(object):
 
         for source in [x for x in self._denite.get_current_sources()]:
             name = source.name.replace('/', '_')
-            source_name = (re.sub(r'([a-zA-Z])[a-zA-Z]+', r'\1', source.name)
-                           if self._context['short_source_names']
-                           else source.name) if self._is_multi else ''
+            source_name = self.get_display_source_name(source.name)
 
             self._vim.command(
                 'highlight default link ' +
@@ -427,16 +425,21 @@ class Default(object):
         self.update_displayed_texts()
         self.update_buffer()
 
+    def get_display_source_name(self, name):
+        source_names = self._context['source_names']
+        if not self._is_multi or source_names == 'hide':
+            source_name = ''
+        else:
+            short_name = re.sub(r'([a-zA-Z])[a-zA-Z]+', r'\1', name)
+            source_name = short_name if source_names == 'short' else name
+        return source_name
+
     def get_candidate_display_text(self, index):
+        source_names = self._context['source_names']
         candidate = self._candidates[index]
         terms = []
-        if self._is_multi:
-            if self._context['short_source_names']:
-                terms.append(
-                    re.sub(r'([a-zA-Z])[a-zA-Z]+', r'\1', candidate['source'])
-                )
-            else:
-                terms.append(candidate['source'])
+        if self._is_multi and source_names != 'hide':
+            terms.append(self.get_display_source_name(candidate['source']))
         encoding = self._context['encoding']
         abbr = candidate.get('abbr', candidate['word']).encode(
             encoding, errors='replace').decode(encoding, errors='replace')

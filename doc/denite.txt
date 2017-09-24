@@ -1189,11 +1189,6 @@ OPTIONS							*denite-options*
 		The candidates are reversed.
 		Default: false
 
-					*denite-options-short-source-names*
--short-source-names
-		Use short source names if multiple sources.
-		Default: false
-
 						*denite-options-smartcase*
 -smartcase
 		If it is true, denite ignores the case when the input contains
@@ -1215,6 +1210,15 @@ OPTIONS							*denite-options*
 		"tab": Create the new tab for denite buffer
 
 		Default: "horizontal"
+
+					*denite-options-source-names*
+-source-names={mode}
+
+		"": Use long long names if multiple sources.
+		"short": Use short long names if multiple sources.
+		"hide": Hide source names.
+
+		Default: ""
 
 						*denite-options-statusline*
 -statusline
@@ -2121,6 +2125,9 @@ If it is the same of g, your environment does not support <A-g>.
 
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
+
+2017.09.24
+* "short-source-names" option is deprecated.  Added "source-names" option.
 
 2017.06.24
 * "line" source default direction is "all" instead of "forward".

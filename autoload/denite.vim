@@ -51,6 +51,9 @@ function! s:start(sources, user_context) abort
         \ 'has_key(context, v:val[0])')
     let context[new_option] = context[old_option]
   endfor
+  if get(context, 'short_source_names', v:false)
+    let context['source_names'] = 'short'
+  endif
 
   if denite#initialize()
     return
