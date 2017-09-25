@@ -5,6 +5,7 @@
 # ============================================================================
 
 import argparse
+import shutil
 from .base import Base
 from denite.process import Process
 from os import path, pardir
@@ -124,5 +125,13 @@ class Source(Base):
         current_folder, _ = path.split(__file__)
         scantree_py = normpath(join(current_folder, pardir, 'scantree.py'))
 
-        return ['python3', scantree_py, '--ignore', ignore,
+        if shutil.which('python3') is not None:
+            python_exe = 'python3'
+        else:
+            python_exe = 'python'
+        if shutil.which(python_exe) is None:
+            raise FileNotFoundError("Coudn't find {} executable!".format(
+                                    python_exe))
+
+        return [python_exe, scantree_py, '--ignore', ignore,
                 '--path', ':directory']
