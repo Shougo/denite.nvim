@@ -655,6 +655,8 @@ class Default(object):
                               self._denite.get_action_names(
                                   self._context, candidates)
                               if x.startswith(action_name)]
+            if not prefix_actions:
+                return
             action_name = prefix_actions[0]
             action = self._denite.get_action(
                 self._context, action_name, candidates)
