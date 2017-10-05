@@ -5,6 +5,7 @@
 # License: MIT license
 # ============================================================================
 
+from os.path import sep as PATH_SEP
 from .base import Base
 
 
@@ -25,8 +26,8 @@ class Kind(Base):
     def action_narrow(self, context):
         target = context['targets'][0]
         context['input'] = target['action__path']
-        if context['input'][-1] != '/':
-            context['input'] += '/'
+        if context['input'][-1] != PATH_SEP:
+            context['input'] += PATH_SEP
 
     def action_open(self, context):
         for target in context['targets']:
