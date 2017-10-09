@@ -486,6 +486,7 @@ DEFAULT_ACTION_KEYMAP = {
         ('X', '<denite:quick_move>', 'noremap'),
 
         # Denite specific actions
+        ('e', '<denite:do_action:edit>', 'noremap'),
         ('p', '<denite:do_action:preview>', 'noremap'),
         ('d', '<denite:do_action:delete>', 'noremap'),
         ('n', '<denite:do_action:new>', 'noremap'),

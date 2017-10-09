@@ -19,3 +19,11 @@ class Kind(Base):
         target = context['targets'][0]
         self.vim.call('denite#util#execute_command',
                       target['action__command'])
+
+    def action_edit(self, context):
+        target = context['targets'][0]
+        command = self.vim.call('input', 'Command: ',
+                                target['action__command'] + ' ', 'command')
+        if command:
+            self.vim.call('denite#util#execute_command',
+                          target['action__command'])
