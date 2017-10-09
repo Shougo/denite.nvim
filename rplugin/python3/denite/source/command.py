@@ -37,16 +37,14 @@ class Source(Base):
             if not self.commands:
                 self._cache_helpfile()
             return self.commands + [{
-                'action__command': x,
-                'source__command': "execute input(':{0} ')".format(x),
+                'action__command': "execute input(':{0} ')".format(x),
                 'word': x,
             } for x in self.vim.call('getcompletion', '', 'command')]
 
         prefix = sub('\w*$', '', context['input'])
 
         return [{
-            'action__command': prefix + x,
-            'source__command': "execute input(':{0} ')".format(prefix + x),
+            'action__command': "execute input(':{0} ')".format(prefix + x),
             'word': prefix + x,
         } for x in self.vim.call(
             'getcompletion', context['input'], 'cmdline')]
@@ -60,7 +58,6 @@ class Source(Base):
                     command = "execute input(':{0} ')".format(tokens[0])
                     self.commands.append({
                         'action__command': command,
-                        'source__command': ':' + tokens[0],
                         'word': '{0:<20} -- {1}'.format(
                             tokens[0], tokens[2],
                         ),
