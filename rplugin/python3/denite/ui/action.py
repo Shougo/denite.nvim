@@ -301,6 +301,7 @@ def _quick_move(prompt, params):
         context = prompt.denite._context
         base = prompt.denite._win_cursor
         for [key, number] in context['quick_move_table'].items():
+            number = int(number)
             pos = (base - number) if context['reversed'] else (number + base)
             if pos > 0:
                 table[key] = pos
