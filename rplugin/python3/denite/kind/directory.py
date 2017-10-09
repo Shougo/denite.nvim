@@ -5,6 +5,7 @@
 # License: MIT license
 # ============================================================================
 
+import re
 from .base import Base
 
 
@@ -24,7 +25,7 @@ class Kind(Base):
 
     def action_narrow(self, context):
         target = context['targets'][0]
-        context['input'] = target['action__path']
+        context['input'] = re.sub(r'\\', '/', target['action__path'])
         if context['input'][-1] != '/':
             context['input'] += '/'
 
