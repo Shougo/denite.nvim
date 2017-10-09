@@ -189,6 +189,7 @@ class Default(object):
             'colorcolumn': '',
             'conceallevel': 3,
             'concealcursor': 'n',
+            'cursorcolumn': False,
             'foldenable': False,
             'foldcolumn': 0,
             'list': False,
