@@ -195,7 +195,7 @@ def parse_tagline(line, tagpath):
     rest = '\t'.join(elem[2:])
     m = re.search(r'.*;"', rest)
     if not m:
-        return {}
+        return None
 
     pattern = m.group(0)
     if re.match('\d+;"$', pattern):
