@@ -17,7 +17,9 @@ class Filter(Base):
         self.description = 'project files matcher'
 
     def filter(self, context):
-        project = path2project(self.vim, context.get('path', ''))
+        project = path2project(self.vim,
+                               context.get('path', ''),
+                               context.get('root_markers', ''))
         if project == '':
             project = self.vim.call('getcwd')
         project += '/'

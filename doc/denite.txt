@@ -1190,6 +1190,12 @@ OPTIONS							*denite-options*
 		The candidates are reversed.
 		Default: false
 
+						*denite-options-root-markers*
+-root-markers={markers}
+		The project root marker files.
+		It is splitted by comma.
+		Default: ""
+
 						*denite-options-smartcase*
 -smartcase
 		If it is true, denite ignores the case when the input contains

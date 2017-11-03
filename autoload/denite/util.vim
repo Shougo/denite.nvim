@@ -118,8 +118,7 @@ function! denite#util#split(string) abort
   return split(a:string, '\s*,\s*')
 endfunction
 
-function! denite#util#path2project_directory(path, ...) abort
-  let is_allow_empty = get(a:000, 0, 0)
+function! denite#util#path2project_directory(path, root_markers) abort
   let search_directory = s:path2directory(a:path)
   let directory = ''
 
@@ -137,11 +136,12 @@ function! denite#util#path2project_directory(path, ...) abort
     endif
   endfor
 
-  " Search project file.
+  " Search project root marker file.
   if directory ==# ''
     for d in ['build.xml', 'prj.el', '.project', 'pom.xml', 'package.json',
           \ 'Makefile', 'configure', 'Rakefile', 'NAnt.build',
           \ 'P4CONFIG', 'tags', 'gtags', 'stack.yaml']
+          \ + split(a:root_markers, ',')
       let d = findfile(d, s:escape_file_searching(search_directory) . ';')
       if d !=# ''
         let directory = fnamemodify(d, ':p:h')
@@ -158,7 +158,7 @@ function! denite#util#path2project_directory(path, ...) abort
     endif
   endif
 
-  if directory ==# '' && !is_allow_empty
+  if directory ==# ''
     " Use original path.
     let directory = search_directory
   endif

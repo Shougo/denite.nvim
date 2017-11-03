@@ -57,10 +57,9 @@ endfunction
 
 function! denite#init#_context() abort
   return {
-        \ 'runtimepath': &runtimepath,
         \ 'encoding': &encoding,
         \ 'is_windows': ((has('win32') || has('win64')) ? v:true : v:false),
-        \ 'selected_icon': '*',
+        \ 'messages': [],
         \ 'prev_winid': win_getid(),
         \ 'quick_move_table': {
         \   'a' : 0, 's' : 1, 'd' : 2, 'f' : 3, 'g' : 4,
@@ -70,7 +69,8 @@ function! denite#init#_context() abort
         \   '1' : 20, '2' : 21, '3' : 22, '4' : 23, '5' : 24,
         \   '6' : 25, '7' : 26, '8' : 27, '9' : 28, '0' : 29,
         \ },
-        \ 'messages': [],
+        \ 'runtimepath': &runtimepath,
+        \ 'selected_icon': '*',
         \}
 endfunction
 function! denite#init#_user_options() abort
@@ -110,6 +110,7 @@ function! denite#init#_user_options() abort
         \ 'refresh': v:false,
         \ 'resume': v:false,
         \ 'reversed': v:false,
+        \ 'root_markers': '',
         \ 'scroll': 0,
         \ 'smartcase': v:false,
         \ 'sorters': '',

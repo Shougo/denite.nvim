@@ -96,8 +96,8 @@ def path2dir(path):
     return path if os.path.isdir(path) else os.path.dirname(path)
 
 
-def path2project(vim, path):
-    return vim.call('denite#util#path2project_directory', path)
+def path2project(vim, path, root_markers):
+    return vim.call('denite#util#path2project_directory', path, root_markers)
 
 
 def parse_jump_line(path_head, line):
