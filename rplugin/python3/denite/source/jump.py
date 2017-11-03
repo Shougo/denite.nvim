@@ -18,12 +18,13 @@ class Source(Base):
     def on_init(self, context):
         jumps = []
         for jump in self.vim.call('execute', 'jumps').split('\n')[2:]:
-            l = jump.split()
-            if len(l) < 4:
+            texts = jump.split()
+            if len(texts) < 4:
                 continue
 
-            [linenr, col, file_text] = [int(l[1]), int(l[2]) + 1,
-                                        ' '.join(l[3:])]
+            [linenr, col, file_text] = [int(texts[1]),
+                                        int(texts[2]) + 1,
+                                        ' '.join(texts[3:])]
 
             lines = self.vim.call('getbufline', file_text, linenr)
 

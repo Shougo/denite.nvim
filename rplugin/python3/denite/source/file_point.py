@@ -53,5 +53,5 @@ def _checkhost(path):
         return ''
     try:
         return gethostbyname(sub(r'/.*$', '', sub(r'^\w+://', '', path)))
-    except:
+    except Exception as e:
         return ''
