@@ -146,6 +146,13 @@ function! denite#util#path2project_directory(path, root_markers) abort
       if d !=# ''
         let directory = fnamemodify(d, ':p:h')
         break
+      else
+        " Allow the directory.
+        let d = finddir(d, s:escape_file_searching(search_directory) . ';')
+        if d !=# ''
+          let directory = fnamemodify(d, ':p')
+          break
+        endif
       endif
     endfor
   endif
