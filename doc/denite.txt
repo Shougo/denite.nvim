@@ -1654,7 +1654,7 @@ openable	An interface to open the object.
 
 			switch
 				Switch to the window that is opening the
-				object.
+				object. If it isn't opened, fallback open.
 
 			tabswitch
 				Switch to the window that is opening the
