@@ -10,7 +10,7 @@ from .base import Base
 class Source(Base):
 
     def __init__(self, vim):
-        Base.__init__(self, vim)
+        super().__init__(self, vim)
 
         self.name = 'jump'
         self.kind = 'file'
