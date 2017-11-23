@@ -1919,6 +1919,14 @@ After create new Kind class, alias it to your source by >
 <
 in the "__init__" method of your source class.
 
+Note: If you want to change the source in the action, you can change
+"context['sources_queue']" like this: >
+
+    def action_refine(self, context):
+        context['sources_queue'].append([
+            {'name': 'myplugin', 'args': []},
+        ])
+
 ------------------------------------------------------------------------------
 KIND ATTRIBUTES					*denite-kind-attributes*
 
