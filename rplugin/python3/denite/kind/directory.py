@@ -5,7 +5,6 @@
 # License: MIT license
 # ============================================================================
 
-import re
 from .base import Base
 
 
