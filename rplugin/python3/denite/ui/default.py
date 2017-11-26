@@ -157,7 +157,8 @@ class Default(object):
             self._guicursor = self._vim.options['guicursor']
             self._vim.options['guicursor'] = 'a:None'
 
-        if self._winid > 0 and self._vim.call('win_gotoid', self._winid):
+        if (self._context['split'] != 'no' and self._winid > 0 and
+                self._vim.call('win_gotoid', self._winid)):
             # Move the window to bottom
             self._vim.command('wincmd J')
             self._winrestcmd = ''
