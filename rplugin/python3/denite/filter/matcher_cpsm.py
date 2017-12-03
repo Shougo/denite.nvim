@@ -5,7 +5,7 @@
 # ============================================================================
 
 from .base import Base
-from denite.util import globruntime, error, convert2fuzzy_pattern
+from denite.util import globruntime, convert2fuzzy_pattern
 import sys
 import os
 
@@ -36,10 +36,12 @@ class Filter(Base):
                                 'bin/cpsm_py' + ext)[0]))
                 self.__initialized = True
             else:
-                error(self.vim, 'matcher_cpsm: bin/cpsm_py' + ext +
-                      ' is not found in your runtimepath.')
-                error(self.vim, 'matcher_cpsm: You must install/build' +
-                      ' Python3 support enabled cpsm.')
+                self.error_message(context,
+                                   'matcher_cpsm: bin/cpsm_py' + ext +
+                                   ' is not found in your runtimepath.')
+                self.error_message(context,
+                                   'matcher_cpsm: You must install/build' +
+                                   ' Python3 support enabled cpsm.')
                 self.__disabled = True
                 return []
 

@@ -34,12 +34,14 @@ class Base(object):
     def print_message(self, context, expr):
         context['messages'].append(self.name + ': ' + str(expr))
 
-    def error_message(self, expr):
+    def error_message(self, context, expr):
+        prefix = self.name + ': '
         if isinstance(expr, list):
             for line in expr:
-                denite.util.error(self.vim, self.name + ': ' + line)
+                denite.util.error(self.vim, prefix + line)
         else:
-            denite.util.error(self.vim, self.name + ': ' + str(expr))
+            denite.util.error(self.vim, prefix + str(expr))
+        context['error_messages'].append(prefix + str(expr))
 
     @abstractmethod
     def gather_candidate(self, context):

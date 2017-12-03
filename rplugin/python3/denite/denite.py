@@ -52,6 +52,7 @@ class Denite(object):
             ctx = source.context
             ctx['is_redraw'] = context['is_redraw']
             ctx['messages'] = context['messages']
+            ctx['error_messages'] = context['error_messages']
             ctx['mode'] = context['mode']
             ctx['input'] = context['input']
             ctx['prev_input'] = context['input']

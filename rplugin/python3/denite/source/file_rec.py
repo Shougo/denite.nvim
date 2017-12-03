@@ -85,7 +85,7 @@ class Source(Base):
     def __async_gather_candidates(self, context, timeout):
         outs, errs = context['__proc'].communicate(timeout=timeout)
         if errs:
-            self.error_message(errs)
+            self.error_message(context, errs)
         context['is_async'] = not context['__proc'].eof()
         if context['__proc'].eof():
             context['__proc'] = None

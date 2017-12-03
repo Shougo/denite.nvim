@@ -58,6 +58,7 @@ endfunction
 function! denite#init#_context() abort
   return {
         \ 'encoding': &encoding,
+        \ 'error_messages': [],
         \ 'is_windows': ((has('win32') || has('win64')) ? v:true : v:false),
         \ 'messages': [],
         \ 'prev_winid': win_getid(),
