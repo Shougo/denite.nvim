@@ -103,7 +103,7 @@ class Kind(Openable):
         for bufnr in self._previewed_buffers.values():
             if not self.vim.call('win_findbuf', bufnr) and self.vim.call(
                     'buflisted', bufnr):
-                self.vim.command('bdelete ' + str(bufnr))
+                self.vim.command('silent bdelete ' + str(bufnr))
 
     def __highlight(self, context, line):
         clearmatch(self.vim)
