@@ -14,7 +14,7 @@ class Base(object):
         self.name = 'base'
         self.default_action = 'echo'
         self.persist_actions = ['echo', 'preview']
-        self.redraw_actions = ['preview']
+        self.redraw_actions = []
 
     def debug(self, expr):
         denite.util.debug(self.vim, expr)

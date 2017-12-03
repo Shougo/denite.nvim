@@ -21,6 +21,7 @@ class Kind(Openable):
         self.default_action = 'open'
         self.persist_actions += ['preview', 'highlight']
         self._previewed_target = {}
+        self._previewed_buffers = {}
 
     def action_open(self, context):
         cwd = self.vim.call('getcwd')
@@ -44,6 +45,9 @@ class Kind(Openable):
                                  str(self.vim.call('bufnr', path)))
             self.__jump(context, target)
 
+            if path in self._previewed_buffers:
+                self._previewed_buffers.pop(path)
+
     def action_preview(self, context):
         target = context['targets'][0]
 
@@ -53,14 +57,23 @@ class Kind(Openable):
             self.vim.command('pclose!')
             return
 
+        listed = self.vim.call('buflisted', target['action__path'])
         path = target['action__path'].replace('/./', '/')
         prev_id = self.vim.call('win_getid')
+
         self.vim.call('denite#helper#preview_file', context, path)
         self.vim.command('wincmd P')
+
+        if not listed:
+            self._previewed_buffers[
+                target['action__path']] = self.vim.call('bufnr', '%')
         self.__jump(context, target)
         self.__highlight(context, int(target.get('action__line', 0)))
+
         self.vim.call('win_gotoid', prev_id)
         self._previewed_target = target
+
+        self.__cleanup()
 
     def action_highlight(self, context):
         target = context['targets'][0]
@@ -85,6 +98,12 @@ class Kind(Openable):
                   if 'action__line' in x and 'action__text' in x]
         self.vim.call('setqflist', qflist)
         self.vim.command('copen')
+
+    def __cleanup(self):
+        for bufnr in self._previewed_buffers.values():
+            if not self.vim.call('win_findbuf', bufnr) and self.vim.call(
+                    'buflisted', bufnr):
+                self.vim.command('bdelete ' + str(bufnr))
 
     def __highlight(self, context, line):
         clearmatch(self.vim)

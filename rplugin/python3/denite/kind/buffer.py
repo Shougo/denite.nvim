@@ -15,7 +15,7 @@ class Kind(Openable):
 
         self.name = 'buffer'
         self.default_action = 'open'
-        self.redraw_actions += ['delete', 'preview']
+        self.redraw_actions += ['delete']
         self.persist_actions += ['delete', 'preview']
         self._previewed_target = {}
 
