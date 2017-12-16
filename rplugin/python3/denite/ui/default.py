@@ -69,6 +69,7 @@ class Default(object):
             while context['sources_queue']:
                 self._start(context['sources_queue'][0], context)
                 context['sources_queue'] = context['sources_queue'][1:]
+                context['path'] = self._context['path']
         finally:
             self.cleanup()
 

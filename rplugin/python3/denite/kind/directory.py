@@ -23,9 +23,10 @@ class Kind(Base):
     def action_narrow(self, context):
         target = context['targets'][0]
         context['sources_queue'].append([
-            {'name': 'file', 'args': ['', target['action__path']]},
-            {'name': 'file', 'args': ['new', target['action__path']]},
+            {'name': 'file', 'args': []},
+            {'name': 'file', 'args': ['new']},
         ])
+        context['path'] = target['action__path']
 
     def action_open(self, context):
         for target in context['targets']:
