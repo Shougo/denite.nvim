@@ -560,6 +560,10 @@ are on the neovim-prompt's builtin actions/mappings.
 <denite:move_to_bottom>
 		Move to the bottom visible candidate like |L|.
 
+				*denite-map-move_up_path*
+<denite:move_up_path>
+		Move to the upper path and restart Denite buffer.
+
 				*denite-map-paste_from_register*
 <denite:paste_from_register>
 		Paste the text from a specified register.
@@ -771,6 +775,7 @@ I		<denite:insert_to_head>
 L		<denite:move_to_bottom>
 M		<denite:print_messages>
 P		<denite:change_path>
+U		<denite:move_up_path>
 S		<denite:change_line>
 X		<denite:quick_move>
 a		<denite:append>
