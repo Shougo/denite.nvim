@@ -5,7 +5,6 @@
 # ============================================================================
 
 from .base import Base
-from os import path
 from ..kind.file import Kind as File
 from denite.util import expand
 
