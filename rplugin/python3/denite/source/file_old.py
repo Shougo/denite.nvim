@@ -24,7 +24,8 @@ class Source(Base):
 
     def gather_candidates(self, context):
         return [{'word': x, 'action__path': x}
-                for x in [expand(x) for x in self.vim.eval('v:oldfiles')]]
+                for x in [expand(x) for x in
+                          self.vim.call('denite#helper#_get_oldfiles')]]
 
 
 class Kind(File):

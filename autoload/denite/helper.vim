@@ -180,3 +180,6 @@ endfunction
 function! denite#helper#_set_oldfiles(oldfiles) abort
   let v:oldfiles = a:oldfiles
 endfunction
+function! denite#helper#_get_oldfiles() abort
+  return filter(copy(v:oldfiles), 'filereadable(v:val) || buflisted(v:val)')
+endfunction
