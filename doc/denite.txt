@@ -1745,6 +1745,10 @@ sorter_sublime
 		Uses the scoring algorithm from this article and its implementation:
 		https://bit.ly/reverse-engineering-sublime-text-s-fuzzy-match
 
+						*denite-filter-sorter_word*
+sorter_word
+		Simple filter to sort candidates by ascii order of word
+
 				*denite-filter-converter_abbr_word*
 converter_abbr_word
 		Convert candidate abbr to word.
