@@ -2160,7 +2160,8 @@ If it is the same of g, your environment does not support <A-g>.
 Q: I want to narrow by path in grep source.
 
 A: >
-	call denite#custom#source('grep', 'filters', ['converter_abbr_word'])
+	call denite#custom#source('grep',
+	\ 'converters', ['converter_abbr_word'])
 
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
