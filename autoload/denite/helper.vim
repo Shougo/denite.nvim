@@ -126,9 +126,9 @@ function! s:parse_options(cmdline) abort
     let name = substitute(tr(arg_key, '-', '_'), '=$', '', '')[1:]
     if name =~# '^no_'
       let name = name[3:]
-      let value = 0
+      let value = v:false
     else
-      let value = (arg_key =~# '=$') ? arg[len(arg_key) :] : 1
+      let value = (arg_key =~# '=$') ? arg[len(arg_key) :] : v:true
     endif
 
     if index(keys(denite#init#_user_options())
