@@ -75,3 +75,7 @@ Note: You need to install Python3.5+ or `pip3 install typing`.
 * [`defx`](https://github.com/Shougo/defx.nvim) support
 
 * match highlight improvement
+
+## Screenshots
+
+![file_rec source](https://user-images.githubusercontent.com/13142418/34324674-b8ddd5b8-e840-11e7-9b77-d94e1b084bda.gif)
