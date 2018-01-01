@@ -22,6 +22,5 @@ class Filter(Base):
             if isabs(candidate['word']):
                 candidate['word'] = relpath(
                     self.vim,
-                    candidate.get('action__path', candidate['word']),
-                    start=context['path'])
+                    candidate.get('action__path', candidate['word']))
         return context['candidates']
