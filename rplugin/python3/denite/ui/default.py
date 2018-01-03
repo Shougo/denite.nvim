@@ -3,6 +3,7 @@
 # AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
 # License: MIT license
 # ============================================================================
+import os
 import re
 import weakref
 from itertools import groupby, takewhile
@@ -329,8 +330,15 @@ class Default(object):
             unique_candidates = []
             unique_words = set()
             for candidate in self._candidates:
-                if candidate['word'] not in unique_words:
-                    unique_words.add(candidate['word'])
+                # Normalize file paths
+                word = candidate['word']
+                if word.startswith('~') and os.path.exists(
+                        os.path.expanduser(word)):
+                    word = os.path.expanduser(word)
+                if os.path.exists(word):
+                    word = os.path.abspath(word)
+                if word not in unique_words:
+                    unique_words.add(word)
                     unique_candidates.append(candidate)
             self._candidates = unique_candidates
         if self._context['reversed']:
