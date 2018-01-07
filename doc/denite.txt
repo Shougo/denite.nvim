@@ -1492,6 +1492,11 @@ line		Gather current buffer lines as candidates.
 		Note: If the direction is "all" or omitted, it searches from
 		the buffer top.
 
+		2. the line emptiness:
+		"empty":     Include empty lines
+		"noempty":   Do not include empty lines
+		Note: By default, empty lines are included.
+
 						*denite-source-menu*
 menu		Gather custom menus.
 
