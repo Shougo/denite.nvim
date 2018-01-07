@@ -593,9 +593,12 @@ class Default(object):
         else:
             if self._context['split'] == 'tab':
                 self._vim.command('tabclose!')
-            else:
-                self._vim.command('close!')
+
             self._vim.call('win_gotoid', self._prev_winid)
+
+            if self._context['split'] != 'tab':
+                self._vim.command(
+                    str(self._vim.call('win_id2win', self._winid)) + 'close!')
 
             # Restore the buffer
             if self._vim.call('bufwinnr', self._prev_bufnr) < 0:
