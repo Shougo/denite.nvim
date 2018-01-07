@@ -226,13 +226,6 @@ class Default(object):
 
         self.init_syntax()
 
-        if self._context['statusline']:
-            self._window_options['statusline'] = (
-                '%#deniteMode#%{denite#get_status_mode()}%* ' +
-                '%{denite#get_status_sources()} %=' +
-                '%#deniteStatusLinePath# %{denite#get_status_path()} %*' +
-                '%#deniteStatusLineNumber#%{denite#get_status_linenr()}%*')
-
     def _get_direction(self):
         direction = self._context['direction']
         if direction == 'dynamictop' or direction == 'dynamicbottom':
@@ -433,6 +426,13 @@ class Default(object):
             bufvars['denite_statusline_linenr'] = linenr
             self._vim.command('redrawstatus')
             self._prev_status = status
+
+        if self._context['statusline']:
+            self._window_options['statusline'] = (
+                '%#deniteMode#%{denite#get_status_mode()}%* ' +
+                '%{denite#get_status_sources()} %=' +
+                '%#deniteStatusLinePath# %{denite#get_status_path()} %*' +
+                '%#deniteStatusLineNumber#%{denite#get_status_linenr()}%*')
 
     def update_cursor(self):
         self.update_displayed_texts()
