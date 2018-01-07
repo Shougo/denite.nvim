@@ -215,10 +215,7 @@ class Default(object):
         self._bufnr = self._vim.current.buffer.number
         self._winid = self._vim.call('win_getid')
 
-        self._bufvars['denite_statusline_mode'] = ''
-        self._bufvars['denite_statusline_sources'] = ''
-        self._bufvars['denite_statusline_path'] = ''
-        self._bufvars['denite_statusline_linenr'] = ''
+        self._bufvars['denite_statusline'] = {}
 
         self._vim.command('silent doautocmd WinEnter')
         self._vim.command('silent doautocmd BufWinEnter')
@@ -416,23 +413,24 @@ class Default(object):
         if self._context['error_messages']:
             mode = '[ERROR] ' + mode
         path = '[' + self._context['path'] + ']'
-        bufvars = self._bufvars
 
         status = mode + self._statusline_sources + path + linenr
         if status != self._prev_status:
-            bufvars['denite_statusline_mode'] = mode
-            bufvars['denite_statusline_sources'] = self._statusline_sources
-            bufvars['denite_statusline_path'] = path
-            bufvars['denite_statusline_linenr'] = linenr
+            st_vars = {}
+            st_vars['mode'] = mode
+            st_vars['sources'] = self._statusline_sources
+            st_vars['path'] = path
+            st_vars['linenr'] = linenr
+            self._bufvars['denite_statusline'] = st_vars
             self._vim.command('redrawstatus')
             self._prev_status = status
 
         if self._context['statusline']:
             self._window_options['statusline'] = (
-                '%#deniteMode#%{denite#get_status_mode()}%* ' +
-                '%{denite#get_status_sources()} %=' +
-                '%#deniteStatusLinePath# %{denite#get_status_path()} %*' +
-                '%#deniteStatusLineNumber#%{denite#get_status_linenr()}%*')
+                "%#deniteMode#%{denite#get_status('mode')}%* " +
+                "%{denite#get_status('sources')} %=" +
+                "%#deniteStatusLinePath# %{denite#get_status('path')} %*" +
+                "%#deniteStatusLineNumber#%{denite#get_status('linenr')}%*")
 
     def update_cursor(self):
         self.update_displayed_texts()

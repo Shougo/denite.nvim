@@ -959,21 +959,27 @@ denite#do_action({context}, {action-name}, {targets})
 		Runs an action {action-name} against {targets}.  This will
 		mainly be used in |denite#custom#action()|.
 
-denite#get_status_mode()			 *denite#get_status_mode()*
-		Returns the mode part of the status string.  It is useful to
+denite#get_status({name})				*denite#get_status()*
+		Returns the {name} part of the status string.  It is useful to
 		customize the statusline.
+
+		The available status names:
+		"mode": Current mode
+		"sources": Current sources and candidates number
+		"path": Specified |denite-options-path|
+		"linenr": Current line number
+
+denite#get_status_mode()			 *denite#get_status_mode()*
+		Please use |denite#get_status()| instead.
 
 denite#get_status_sources()			 *denite#get_status_sources()*
-		Returns the sources part of the status string.  It is useful to
-		customize the statusline.
+		Please use |denite#get_status()| instead.
 
 denite#get_status_path()			 *denite#get_status_path()*
-		Returns the path part of the status string.  It is useful to
-		customize the statusline.
+		Please use |denite#get_status()| instead.
 
 denite#get_status_linenr()			 *denite#get_status_linenr()*
-		Returns the line number part of the status string.  It is
-		useful to customize the statusline.
+		Please use |denite#get_status()| instead.
 
 							*denite#initialize()*
 denite#initialize()
