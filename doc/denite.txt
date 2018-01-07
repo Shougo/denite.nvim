@@ -1491,12 +1491,14 @@ line		Gather current buffer lines as candidates.
 		"args":      Search from the argument buffers
 		Note: If the direction is "all" or omitted, it searches from
 		the buffer top.
+		Note: If you use "buffers", 'hidden' option must be set to
+		gather the all buffers.  If 'hidden' is not set, not shown
+		buffers lines will be empty.
 
 		2. the line emptiness:
 		"empty":     Include empty lines
 		"noempty":   Do not include empty lines
 		Note: By default, empty lines are included.
-
 						*denite-source-menu*
 menu		Gather custom menus.
 
