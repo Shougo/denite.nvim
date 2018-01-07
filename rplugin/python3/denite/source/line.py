@@ -35,7 +35,8 @@ class Source(Base):
                     direction == 'backward'):
                 context['__direction'] = direction
             elif direction == 'buffers':
-                context['__bufnrs'] = [x.number for x in self.vim.buffers]
+                context['__bufnrs'] = [x.number for x in self.vim.buffers
+                                       if x.options['buflisted']]
             elif direction == 'args':
                 context['__bufnrs'] = [self.vim.call('bufnr', x) for x
                                        in self.vim.call('argv')]
