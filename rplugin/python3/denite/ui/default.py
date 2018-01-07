@@ -597,15 +597,10 @@ class Default(object):
             self._vim.call('win_gotoid', self._prev_winid)
 
             if self._context['split'] != 'tab':
+                # Close the denite window after jump
+                # Note: "close!" moves to the non previous buffer!
                 self._vim.command(
                     str(self._vim.call('win_id2win', self._winid)) + 'close!')
-
-            # Restore the buffer
-            if self._vim.call('bufwinnr', self._prev_bufnr) < 0:
-                if not self._vim.call('buflisted', self._prev_bufnr):
-                    # Not listed
-                    return
-                self._switch_prev_buffer()
 
         # Restore the position
         self._vim.call('setpos', '.', self._prev_curpos)
