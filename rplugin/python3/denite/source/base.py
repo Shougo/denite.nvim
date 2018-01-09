@@ -50,5 +50,5 @@ class Base(object):
     def debug(self, expr):
         denite.util.debug(self.vim, expr)
 
-    def get_status_line(self):
+    def get_statusline(self):
         return self.name
