@@ -1870,6 +1870,7 @@ on_close	(Function)			(Optional)
 					*denite-source-attribute-get_statusline*
 get_statusline	(Function)			(Optional)
 		It is called to calculate the status line for the source
+		It takes {self} and {context} as its parameter.
 
 		Default value is the source name
 
