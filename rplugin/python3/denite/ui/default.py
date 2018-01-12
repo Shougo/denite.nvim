@@ -306,10 +306,12 @@ class Default(object):
         pattern = ''
         sources = ''
         self._candidates = []
-        for name, entire, partial, patterns in self._denite.filter_candidates(
-                self._context):
+        for source, entire, partial, patterns in (
+                self._denite.filter_candidates(self._context)):
             self._candidates += partial
-            sources += '{}({}/{}) '.format(name, len(partial), len(entire))
+            sources += '{}({}/{}) '.format(
+                source.get_statusline(self._context), len(partial),
+                len(entire))
 
             if pattern == '' and patterns:
                 pattern = next(patterns, '')
