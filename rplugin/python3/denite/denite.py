@@ -94,7 +94,8 @@ class Denite(object):
                 ctx['event'] = 'async'
                 entire += self._gather_source_candidates(ctx, source)
             if not entire:
-                yield source.name, entire, [], []
+                yield self._get_source_status(
+                    ctx, source, entire, []), [], []
                 continue
             partial = []
             ctx['candidates'] = entire
@@ -122,7 +123,13 @@ class Denite(object):
                 self._filters[x].convert_pattern(context['input'])
                 for x in source.matchers if self._filters[x]))
 
-            yield source.name, entire, partial, patterns
+            yield self._get_source_status(
+                ctx, source, entire, partial), partial, patterns
+
+    def _get_source_status(self, context, source, entire, partial):
+        return (source.get_status(context) if not partial else
+                '{}({}/{})'.format(
+                    source.get_status(context), len(partial), len(entire)))
 
     def match_candidates(self, context, matchers):
         for pattern in split_input(context['input']):

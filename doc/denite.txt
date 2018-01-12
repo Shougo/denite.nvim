@@ -1867,12 +1867,12 @@ on_close	(Function)			(Optional)
 		It is called before quit.
 		It takes {self} and {context} as its parameter.
 
-					*denite-source-attribute-get_statusline*
-get_statusline	(Function)			(Optional)
-		It is called to calculate the status line for the source
+					*denite-source-attribute-get_status*
+get_status	(Function)			(Optional)
+		It is called to get the status for the |statusline|.
 		It takes {self} and {context} as its parameter.
 
-		Default value is the source name
+		If you omit it, |denite-source-attribute-name| is used.
 
 						*denite-source-attribute-__*
 __{name}	(Unknown)			(Optional)
