@@ -450,7 +450,8 @@ class Default(object):
         candidate = self._candidates[index]
         terms = []
         if self._is_multi and source_names != 'hide':
-            terms.append(self.get_display_source_name(candidate['source']))
+            terms.append(self.get_display_source_name(
+                candidate['source_name']))
         encoding = self._context['encoding']
         abbr = candidate.get('abbr', candidate['word']).encode(
             encoding, errors='replace').decode(encoding, errors='replace')

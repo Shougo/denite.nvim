@@ -116,7 +116,7 @@ class Denite(object):
                 ctx['candidates'] = f.filter(ctx)
             partial = ctx['candidates']
             for c in partial:
-                c['source'] = source.name
+                c['source_name'] = source.name
                 c['source_index'] = source.index
             ctx['candidates'] = []
 
@@ -263,7 +263,7 @@ class Denite(object):
 
         sources = set()
         for target in targets:
-            sources.add(target['source'])
+            sources.add(target['source_name'])
         context['source'] = self._sources[
             sources.pop()].context if len(sources) == 1 else {}
 
@@ -279,7 +279,7 @@ class Denite(object):
         kinds = set()
         for target in targets:
             k = target['kind'] if 'kind' in target else (
-                self._sources[target['source']].kind)
+                self._sources[target['source_name']].kind)
             kinds.add(k)
         if len(kinds) != 1:
             self.error('Multiple kinds are detected')
@@ -305,7 +305,7 @@ class Denite(object):
 
         sources = set()
         for target in targets:
-            sources.add(self._sources[target['source']])
+            sources.add(self._sources[target['source_name']])
         if len(sources) != 1:
             self.error('Multiple sources are detected')
             return {}
