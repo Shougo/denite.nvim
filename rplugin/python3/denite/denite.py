@@ -117,6 +117,7 @@ class Denite(object):
             partial = ctx['candidates']
             for c in partial:
                 c['source'] = source.name
+                c['source_index'] = source.index
             ctx['candidates'] = []
 
             patterns = filterfalse(lambda x: x == '', (
@@ -152,6 +153,7 @@ class Denite(object):
 
     def on_init(self, context):
         self._current_sources = []
+        index = 0
         for [name, args] in [[x['name'], x['args']]
                              for x in context['sources']]:
             if name not in self._sources:
@@ -164,6 +166,7 @@ class Denite(object):
             source.context['is_interactive'] = False
             source.context['all_candidates'] = []
             source.context['candidates'] = []
+            source.index = index
 
             # Set the source attributes.
             source.matchers = get_custom_source(
@@ -185,6 +188,7 @@ class Denite(object):
             if hasattr(source, 'on_init'):
                 source.on_init(source.context)
             self._current_sources.append(source)
+            index += 1
 
         for filter in [x for x in self._filters.values()
                        if x.vars and x.name in self._custom['filter']]:
