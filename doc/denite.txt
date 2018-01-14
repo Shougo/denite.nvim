@@ -1994,14 +1994,13 @@ action_{name} (Function) 			(Optional)
 
                     targets = context['targets']
 <
-
 		To get the source context, you could use "source" attribute in
-		{context}: >
+		"target": >
 
-		    source_context = context['source']
+		    for target in context['targets']:
+		      source_context = target['source']
 <
-		Note: If the candidates source is not single, the "source"
-		attribute is empty.
+		Note: The source context is readonly.  You cannot change it.
 
 ==============================================================================
 CREATE FILTER						*denite-create-filter*
@@ -2185,6 +2184,10 @@ A: >
 
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
+
+2018.01.14
+* context['source'] is deprecated.  Please use target['source_context']
+  instead.
 
 2017.09.24
 * "short-source-names" option is deprecated.  Added "source-names" option.
