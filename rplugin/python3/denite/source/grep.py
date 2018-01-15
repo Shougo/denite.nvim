@@ -166,7 +166,10 @@ class Source(Base):
         args += self.vars['recursive_opts']
         args += context['__arguments']
         for pattern in context['__patterns']:
-            args += self.vars['pattern_opt'] + [pattern]
+            args += self.vars['pattern_opt']
+            # Escaping firts '-' symbol to prevent
+            # pattern being interpreted as an option.
+            args += ['\\' + pattern if pattern[0] == '-' else pattern]
         args += self.vars['separator']
         if context['__paths']:
             args += context['__paths']
