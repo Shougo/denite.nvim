@@ -263,7 +263,7 @@ class Denite(object):
 
         for target in targets:
             target['source_context'] = {
-                k:v for k, v in
+                k: v for k, v in
                 self._current_sources[target['source_index']].context.items()
                 if k.startswith('__')
             }
