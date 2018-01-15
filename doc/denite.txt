@@ -1907,6 +1907,11 @@ __{name}	(Unknown)			(Optional)
 			If the gather is updated interactively, the source
 			must set it "True".
 
+		__			(Unknown)
+			Additional source information.
+		Note: Recommend sources save variables instead of
+		global variables.
+
 ------------------------------------------------------------------------------
 CANDIDATE ATTRIBUTES			*denite-candidate-attributes*
 
@@ -2000,7 +2005,8 @@ action_{name} (Function) 			(Optional)
 		    for target in context['targets']:
 		      source_context = target['source']
 <
-		Note: The source context is readonly.  You cannot change it.
+		Note: The source context is "__" prefixed keys (source
+		specific keys) only.
 
 ==============================================================================
 CREATE FILTER						*denite-create-filter*

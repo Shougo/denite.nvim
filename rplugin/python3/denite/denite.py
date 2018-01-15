@@ -262,10 +262,11 @@ class Denite(object):
             return True
 
         for target in targets:
-            # It must be deepcopy.
-            # If it is copied, it will be too recursive object.
-            target['source_context'] = copy.deepcopy(
-                self._current_sources[target['source_index']].context)
+            target['source_context'] = {
+                k:v for k, v in
+                self._current_sources[target['source_index']].context.items()
+                if k.startswith('__')
+            }
 
         context['targets'] = targets
         return action['func'](context) if action['func'] else self._vim.call(
