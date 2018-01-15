@@ -165,9 +165,13 @@ class Source(Base):
         args += self.vars['default_opts']
         args += self.vars['recursive_opts']
         args += context['__arguments']
-        for pattern in context['__patterns']:
-            args += self.vars['pattern_opt'] + [pattern]
-        args += self.vars['separator']
+        if self.vars['pattern_opt']:
+            for pattern in context['__patterns']:
+                args += self.vars['pattern_opt'] + [pattern]
+            args += self.vars['separator']
+        else:
+            args += self.vars['separator']
+            args += context['__patterns']
         if context['__paths']:
             args += context['__paths']
         else:
