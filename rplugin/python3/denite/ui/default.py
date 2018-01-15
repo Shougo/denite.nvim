@@ -650,10 +650,8 @@ class Default(object):
         self._winwidth = int(self._context['winwidth'])
 
     def gather_candidates(self):
-        self._context['is_redraw'] = True
         self._selected_candidates = []
         self._denite.gather_candidates(self._context)
-        self._context['is_redraw'] = False
 
     def do_action(self, action_name):
         candidates = self.get_selected_candidates()
