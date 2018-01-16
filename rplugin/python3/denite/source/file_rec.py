@@ -22,9 +22,7 @@ class Source(Base):
         self.kind = 'file'
         self.vars = {
             'command': [],
-            'min_cache_files': 10000,
         }
-        self.__cache = {}
 
     def on_init(self, context):
         """scantree.py command has special meaning, using the internal
@@ -62,15 +60,9 @@ class Source(Base):
             return self.__async_gather_candidates(
                 context, context['async_timeout'])
 
-        if context['is_redraw']:
-            self.__cache = {}
-
         directory = context['__directory']
         if not isdir(directory):
             return []
-
-        if directory in self.__cache:
-            return self.__cache[directory]
 
         if ':directory' in self.vars['command']:
             args = parse_command(
@@ -102,10 +94,6 @@ class Source(Base):
                 'action__path': join(context['__directory'], x),
                 } for x in outs if x != '']
         context['__current_candidates'] += candidates
-        if (len(context['__current_candidates']) >=
-                self.vars['min_cache_files']):
-            self.__cache[context['__directory']] = context[
-                '__current_candidates']
         return candidates
 
     def parse_command_for_scantree(self, cmd):

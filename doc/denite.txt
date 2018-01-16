@@ -1431,10 +1431,6 @@ file_rec	Gather files recursive and nominates all file names under the
 				Note: The patterns are based on fnmatch python
 				module.
 
-		min_cache_files	the minimum number of files that
-				it saves the caches.
-				(default is 10000)
-
 						*denite-source-filetype*
 filetype	Gather filetypes and change the filetype of the current
 		buffer.
