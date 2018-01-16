@@ -1853,6 +1853,11 @@ highlight
 		(Function)			(Optional)
 		Apply the source specific syntax highlight.
 
+				*denite-source-attribute-is_public_context*
+is_public_context
+		(Bool)			(Optional)
+		If it is True, the source context can be accessed by action.
+
 					*denite-source-attribute-on_init*
 on_init		(Function)			(Optional)
 		It is called after the source is initialized.
@@ -2001,6 +2006,8 @@ action_{name} (Function) 			(Optional)
 		    for target in context['targets']:
 		      source_context = target['source']
 <
+		Note: The source must be
+		|denite-source-attribute-is_public_context|.
 		Note: The source context is "__" prefixed keys (source
 		specific keys) only.
 

@@ -22,6 +22,7 @@ class Base(object):
         self.converters = []
         self.context = {}
         self.vars = {}
+        self.is_public_context = False
 
     def highlight(self):
         pass

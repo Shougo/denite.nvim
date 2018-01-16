@@ -262,11 +262,12 @@ class Denite(object):
             return True
 
         for target in targets:
+            source = self._current_sources[target['source_index']]
             target['source_context'] = {
                 k: v for k, v in
-                self._current_sources[target['source_index']].context.items()
+                source.context.items()
                 if k.startswith('__')
-            }
+            } if source.is_public_context else {}
 
         context['targets'] = targets
         return action['func'](context) if action['func'] else self._vim.call(
