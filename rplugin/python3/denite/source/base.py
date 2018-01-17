@@ -16,7 +16,7 @@ class Base(object):
         self.syntax_name = ''
         self.kind = 'base'
         self.default_action = 'default'
-        self.max_candidates = 10000
+        self.max_candidates = 1000
         self.matchers = ['matcher_fuzzy']
         self.sorters = ['sorter_rank']
         self.converters = []

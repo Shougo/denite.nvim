@@ -1804,9 +1804,9 @@ syntax_name		(String)		(Optional)
 				*denite-source-attribute-max_candidates*
 max_candidates		(Number)		(Optional)
 		If the candidates are more than it, denite will ignore the
-		filtering in asynchronous mode.
+		filtering.
 
-		If you omit it, 10000 is used.
+		If you omit it, 1000 is used.
 
 					*denite-source-attribute-matchers*
 matchers	(List)				(Optional)
