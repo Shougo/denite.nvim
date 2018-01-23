@@ -119,6 +119,7 @@ function! denite#init#_user_options() abort
         \ 'source_names': '',
         \ 'statusline': v:true,
         \ 'updatetime': 100,
+        \ 'skiptime': 500,
         \ 'unique': v:false,
         \ 'use_default_mappings': v:true,
         \ 'vertical_preview': v:false,

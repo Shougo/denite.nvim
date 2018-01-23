@@ -1240,6 +1240,12 @@ OPTIONS							*denite-options*
 		Enable statusline.
 		Default: true
 
+						*denite-options-skiptime*
+-skiptime={time}
+		Specify the filtering skiptime when narrowing in huge
+		candidates(over 10000).
+		Default: 500
+
 						*denite-options-unique*
 -unique
 		Unique the candidates by word attribute.

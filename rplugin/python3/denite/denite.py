@@ -14,6 +14,7 @@ import denite.kind    # noqa
 import importlib.machinery
 import copy
 import re
+import time
 from collections import ChainMap
 from itertools import filterfalse
 
@@ -93,10 +94,19 @@ class Denite(object):
             if ctx['is_async']:
                 ctx['event'] = 'async'
                 entire += self._gather_source_candidates(ctx, source)
+            elif len(entire) > 10000 and (time.time() - ctx['prev_time'] <
+                                          context['skiptime'] / 1000.0):
+                ctx['is_skipped'] = True
+                yield self._get_source_status(
+                    ctx, source, entire, []), [], []
+                continue
             if not entire:
                 yield self._get_source_status(
                     ctx, source, entire, []), [], []
                 continue
+
+            ctx['is_skipped'] = False
+            ctx['prev_time'] = time.time()
             partial = []
             ctx['candidates'] = entire
             for i in range(0, len(entire), 1000):
@@ -163,9 +173,11 @@ class Denite(object):
             source.context = copy.copy(context)
             source.context['args'] = args
             source.context['is_async'] = False
+            source.context['is_skipped'] = False
             source.context['is_interactive'] = False
             source.context['all_candidates'] = []
             source.context['candidates'] = []
+            source.context['prev_time'] = time.time()
             source.index = index
 
             # Set the source attributes.
@@ -364,4 +376,5 @@ class Denite(object):
 
     def is_async(self):
         return len([x for x in self._current_sources
-                    if x.context['is_async']]) > 0
+                    if x.context['is_async'] or x.context['is_skipped']
+                    ]) > 0
