@@ -95,7 +95,7 @@ class Denite(object):
                 ctx['event'] = 'async'
                 entire += self._gather_source_candidates(ctx, source)
             elif len(entire) > 10000 and (time.time() - ctx['prev_time'] <
-                                          context['skiptime'] / 1000.0):
+                                          int(context['skiptime']) / 1000.0):
                 ctx['is_skipped'] = True
                 yield self._get_source_status(
                     ctx, source, entire, []), [], []
