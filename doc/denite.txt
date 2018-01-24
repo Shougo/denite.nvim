@@ -1243,7 +1243,7 @@ OPTIONS							*denite-options*
 						*denite-options-skiptime*
 -skiptime={time}
 		Specify the filtering skiptime when narrowing in huge
-		candidates(over 10000).
+		candidates(over 20000).
 		Default: 500
 
 						*denite-options-unique*

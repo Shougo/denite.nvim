@@ -85,16 +85,18 @@ class Denite(object):
                 ctx['ignorecase'] = re.search(r'[A-Z]', ctx['input']) is None
             ctx['mode'] = context['mode']
             ctx['async_timeout'] = 0.03 if ctx['mode'] != 'insert' else 0.02
-            if ctx['prev_input'] != ctx['input'] and ctx['is_interactive']:
-                ctx['event'] = 'interactive'
-                ctx['all_candidates'] = self._gather_source_candidates(
-                    ctx, source)
+            if ctx['prev_input'] != ctx['input']:
+                ctx['prev_time'] = time.time()
+                if ctx['is_interactive']:
+                    ctx['event'] = 'interactive'
+                    ctx['all_candidates'] = self._gather_source_candidates(
+                        ctx, source)
             ctx['prev_input'] = ctx['input']
             entire = ctx['all_candidates']
             if ctx['is_async']:
                 ctx['event'] = 'async'
                 entire += self._gather_source_candidates(ctx, source)
-            elif len(entire) > 10000 and (time.time() - ctx['prev_time'] <
+            if len(entire) > 20000 and (time.time() - ctx['prev_time'] <
                                           int(context['skiptime']) / 1000.0):
                 ctx['is_skipped'] = True
                 yield self._get_source_status(
@@ -106,7 +108,6 @@ class Denite(object):
                 continue
 
             ctx['is_skipped'] = False
-            ctx['prev_time'] = time.time()
             partial = []
             ctx['candidates'] = entire
             for i in range(0, len(entire), 1000):
