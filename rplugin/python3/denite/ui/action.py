@@ -158,6 +158,7 @@ def _wincmd(prompt, params):
             't': 'wincmd t',
             'b': 'wincmd b',
             'p': 'wincmd p',
+            'P': 'wincmd P',
             }
     if params not in mapping:
         return
@@ -508,5 +509,6 @@ DEFAULT_ACTION_KEYMAP = {
         ('<C-w>t', '<denite:wincmd:t>', 'noremap'),
         ('<C-w>b', '<denite:wincmd:b>', 'noremap'),
         ('<C-w>p', '<denite:wincmd:p>', 'noremap'),
+        ('<C-w>P', '<denite:wincmd:P>', 'noremap'),
     ],
 }

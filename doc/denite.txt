@@ -758,6 +758,7 @@ $		<denite:move_caret_to_tail>
 <C-R>		<denite:restart>
 <C-U>		<denite:scroll_window_upwards>
 <C-Y>		<denite:scroll_window_down_one_line>
+<C-w>P		<denite:wincmd:P>
 <C-w>W		<denite:wincmd:W>
 <C-w>b		<denite:wincmd:b>
 <C-w>h		<denite:wincmd:h>
