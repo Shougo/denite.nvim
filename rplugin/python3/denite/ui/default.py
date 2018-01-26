@@ -518,7 +518,6 @@ class Default(object):
 
         if self._context['auto_preview']:
             self.do_action('preview')
-            self.redraw()
         if self._context['auto_highlight']:
             self.do_action('highlight')
 
