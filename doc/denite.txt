@@ -1137,7 +1137,7 @@ OPTIONS							*denite-options*
 		Default: ""
 
 					*denite-options-max-candidate-width*
--max-candidate-width={mode}
+-max-candidate-width={width}
 		Specify the max candidate width.
 		Note: Denite skip the match after the width.
 		Default: 200
