@@ -32,7 +32,7 @@ class Kind(Openable):
             if re.match('https?://', path):
                 # URI
                 self.vim.call('denite#util#open', path)
-                return
+                continue
             if path.startswith(cwd):
                 path = os.path.relpath(path, cwd)
 
