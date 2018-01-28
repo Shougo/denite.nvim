@@ -21,8 +21,8 @@ class Source(Base):
         self.kind = 'command'
         self.commands = []
 
-        self.__re_command = re.compile(r'^\|:.+\|')
-        self.__re_tokens = re.compile(
+        self._re_command = re.compile(r'^\|:.+\|')
+        self._re_tokens = re.compile(
             r'^\|:(.+)\|[\t\s]+:([^\t]+)[\t\s]+(.+)')
 
     def on_init(self, context):
@@ -53,8 +53,8 @@ class Source(Base):
         for helpfile in self._helpfiles:
             with open(helpfile) as doc:
                 for line in [x for x in doc.readlines()
-                             if self.__re_command.match(x)]:
-                    tokens = self.__re_tokens.match(line).groups()
+                             if self._re_command.match(x)]:
+                    tokens = self._re_tokens.match(line).groups()
                     command = "execute input(':{0} ')".format(tokens[0])
                     self.commands.append({
                         'action__command': command,

@@ -23,7 +23,7 @@ class Kind(Base):
         pass
 
     def action_split(self, context):
-        if self.__is_current_buffer_empty():
+        if self._is_current_buffer_empty():
             self.action_open(context)
             return
 
@@ -35,7 +35,7 @@ class Kind(Base):
             self.action_open(new_context)
 
     def action_vsplit(self, context):
-        if self.__is_current_buffer_empty():
+        if self._is_current_buffer_empty():
             self.action_open(context)
             return
 
@@ -47,7 +47,7 @@ class Kind(Base):
             self.action_open(new_context)
 
     def action_tabopen(self, context):
-        if self.__is_current_buffer_empty():
+        if self._is_current_buffer_empty():
             self.action_open(context)
             return
 
@@ -64,25 +64,25 @@ class Kind(Base):
             self.vim.options['hidden'] = hidden
 
     def action_switch(self, context):
-        self.__action_switch(context, self.action_open)
+        self._action_switch(context, self.action_open)
 
     def action_tabswitch(self, context):
-        self.__action_switch(context, self.action_tabopen)
+        self._action_switch(context, self.action_tabopen)
 
     def action_splitswitch(self, context):
-        self.__action_switch(context, self.action_split)
+        self._action_switch(context, self.action_split)
 
     def action_vsplitswitch(self, context):
-        self.__action_switch(context, self.action_vsplit)
+        self._action_switch(context, self.action_vsplit)
 
-    def __action_switch(self, context, fallback):
+    def _action_switch(self, context, fallback):
         for target in context['targets']:
-            winid = self.__winid(target)
+            winid = self._winid(target)
             if winid:
                 self.vim.call('win_gotoid', winid)
             else:
                 fallback(context)
 
-    def __is_current_buffer_empty(self):
+    def _is_current_buffer_empty(self):
         buffer = self.vim.current.buffer
         return buffer.name == '' and len(buffer) == 1 and buffer[0] == ''

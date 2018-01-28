@@ -20,11 +20,11 @@ class Source(Base):
         self.kind = 'file'
 
     def on_init(self, context):
-        self.__tags = self.__get_tagfiles(context)
+        self._tags = self._get_tagfiles(context)
 
     def gather_candidates(self, context):
         candidates = []
-        for f in self.__tags:
+        for f in self._tags:
             with open(f, 'r', encoding=context['encoding'],
                       errors='replace') as ins:
                 for line in ins:
@@ -46,7 +46,7 @@ class Source(Base):
 
         return sorted(candidates, key=lambda value: value['word'])
 
-    def __get_tagfiles(self, context):
+    def _get_tagfiles(self, context):
         if (context['args'] and context['args'][0] == 'include' and
                 self.vim.call('exists', '*neoinclude#include#get_tag_files')):
             tagfiles = self.vim.call('neoinclude#include#get_tag_files')

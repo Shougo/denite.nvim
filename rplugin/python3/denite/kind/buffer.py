@@ -32,7 +32,7 @@ class Kind(Openable):
         target = context['targets'][0]
 
         if (not context['auto_preview'] and
-                self.__get_preview_window() and
+                self._get_preview_window() and
                 self._previewed_target == target):
             self.vim.command('pclose!')
             return
@@ -44,12 +44,12 @@ class Kind(Openable):
         self.vim.call('win_gotoid', prev_id)
         self._previewed_target = target
 
-    def __get_preview_window(self):
+    def _get_preview_window(self):
         return next(filterfalse(lambda x:
                                 not x.options['previewwindow'],
                                 self.vim.windows), None)
 
     # Needed for openable actions
-    def __winid(self, target):
+    def _winid(self, target):
         winids = self.vim.call('win_findbuf', target['action__bufnr'])
         return None if len(winids) == 0 else winids[0]
