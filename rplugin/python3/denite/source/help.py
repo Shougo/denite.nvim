@@ -17,14 +17,10 @@ class Source(Base):
         self.kind = 'command'
 
     def gather_candidates(self, context):
-        help_docs = {}
         for f in globruntime(context['runtimepath'], 'doc/tags'):
             with open(f, 'r') as ins:
-                for line in ins:
-                    name = line.split("\t", 1)[0]
-                    help_docs[name] = {
-                        'word': name,
-                        'action__command': 'silent help ' + name
-                    }
-
-        return sorted(help_docs.values(), key=lambda value: value['word'])
+                canidates = list(map(lambda canidate: {
+                    'word': canidate.split("\t", 1)[0],
+                    'action__command': 'silent h ' + canidate.split("\t", 1)[0]
+                }, ins))
+        return canidates
