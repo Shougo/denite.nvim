@@ -90,11 +90,10 @@ class DenitePrompt(Prompt):
         if m:
             bufvars = self.denite._bufvars
             bufvars['denite_context'] = self.context
-            ret = self.action.call(self, m.group('action'))
             if bufvars['denite_context'] != self.context:
                 # Update context
                 self.context = bufvars['denite_context']
-            return ret
+            return self.action.call(self, m.group('action'))
         elif self.denite.current_mode == 'insert':
             # Updating text from a keystroke is a feature of 'insert' mode
             self.update_text(str(keystroke))
