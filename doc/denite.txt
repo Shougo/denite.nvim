@@ -325,26 +325,26 @@ are on the neovim-prompt's builtin actions/mappings.
 		Recall next command-line from history that matches pattern in
 		front of the cursor.
 		Like |c_<Down>| in a native Vim's command-line.
-		Note this is a neovim-prompt's builtin action.
+		Note: this is a neovim-prompt's builtin action.
 
 				*denite-map-assign_next_text*
 <denite:assign_next_text>
 		Recall next command-line from history.
 		Like |c_<S-Down>| in a native Vim's command-line.
-		Note this is a neovim-prompt's builtin action.
+		Note: this is a neovim-prompt's builtin action.
 
 				*denite-map-assign_previous_matched_text*
 <denite:assign_previous_matched_text>
 		Recall previous command-line from history that matches
 		pattern in front of the cursor.
 		Like |c_<Up>| in a native Vim's command-line.
-		Note this is a neovim-prompt's builtin action.
+		Note: this is a neovim-prompt's builtin action.
 
 				*denite-map-assign_previous_text*
 <denite:assign_previous_text>
 		Recall previous command-line from history.
 		Like |c_<S-Up>| in a native Vim's command-line.
-		Note this is a neovim-prompt's builtin action.
+		Note: this is a neovim-prompt's builtin action.
 
 				*denite-map-change_line*
 <denite:change_line>
@@ -369,47 +369,47 @@ are on the neovim-prompt's builtin actions/mappings.
 				*denite-map-delete_char_after_caret*
 <denite:delete_char_after_caret>
 		Delete a character after the caret.
-		Note this is a neovim-prompt's builtin action.
+		Note: this is a neovim-prompt's builtin action.
 
 				*denite-map-delete_char_before_caret*
 <denite:delete_char_before_caret>
 		Delete a character before the caret.
-		Note this is a neovim-prompt's builtin action.
+		Note: this is a neovim-prompt's builtin action.
 
 				*denite-map-delete_char_under_caret*
 <denite:delete_char_under_caret>
 		Delete a character under the caret.
-		Note this is a neovim-prompt's builtin action.
+		Note: this is a neovim-prompt's builtin action.
 
 				*denite-map-delete_word_after_caret*
 <denite:delete_word_after_caret>
 		Delete a word after the caret.
-		Note this is a neovim-prompt's builtin action.
+		Note: this is a neovim-prompt's builtin action.
 
 				*denite-map-delete_word_before_caret*
 <denite:delete_word_before_caret>
 		Delete a word before the caret.
-		Note this is a neovim-prompt's builtin action.
+		Note: this is a neovim-prompt's builtin action.
 
 				*denite-map-delete_word_under_caret*
 <denite:delete_word_under_caret>
 		Delete a word under the caret.
-		Note this is a neovim-prompt's builtin action.
+		Note: this is a neovim-prompt's builtin action.
 
 				*denite-map-delete_text_after_caret*
 <denite:delete_text_after_caret>
 		Delete a text after the caret.
-		Note this is a neovim-prompt's builtin action.
+		Note: this is a neovim-prompt's builtin action.
 
 				*denite-map-delete_text_before_caret*
 <denite:delete_text_before_caret>
 		Delete a text before the caret.
-		Note this is a neovim-prompt's builtin action.
+		Note: this is a neovim-prompt's builtin action.
 
 				*denite-map-delete_entire_text*
 <denite:delete_entire_text>
 		Delete an entire text.
-		Note this is a neovim-prompt's builtin action.
+		Note: this is a neovim-prompt's builtin action.
 
 				*denite-map-do_action*
 <denite:do_action:{action}>
@@ -430,7 +430,7 @@ are on the neovim-prompt's builtin actions/mappings.
 		Insert or overstrike a |digraph| at the caret.
 		Like |c_<C-K>| in a Vim's native command-line.
 		See also |denite-map-toggle_insert_mode|.
-		Note this is a neovim-prompt's builtin action.
+		Note: this is a neovim-prompt's builtin action.
 
 				*denite-map-insert_to_head*
 <denite:insert_to_head>
@@ -441,7 +441,7 @@ are on the neovim-prompt's builtin actions/mappings.
 		Insert or overstrike a special character at the caret.
 		Like |c_<C-V>| in a Vim's native command-line.
 		See also |denite-map-toggle_insert_mode|.
-		Note this is a neovim-prompt's builtin action.
+		Note: this is a neovim-prompt's builtin action.
 
 				*denite-map-insert_word*
 <denite:insert_word:{word}>
@@ -490,47 +490,47 @@ are on the neovim-prompt's builtin actions/mappings.
 				*denite-map-move_caret_to_left*
 <denite:move_caret_to_left>
 		Move the caret to a one character left.
-		Note this is a neovim-prompt's builtin action.
+		Note: this is a neovim-prompt's builtin action.
 
 				*denite-map-move_caret_to_one_word_left*
 <denite:move_caret_to_one_word_left>
 		Move the caret to a one word left.
-		Note this is a neovim-prompt's builtin action.
+		Note: this is a neovim-prompt's builtin action.
 
 				*denite-map-move_caret_to_left_anchor*
 <denite:move_caret_to_left_anchor>
 		Move the caret like |F| in Vim's normal mode.
-		Note this is a neovim-prompt's builtin action.
+		Note: this is a neovim-prompt's builtin action.
 
 				*denite-map-move_caret_to_right*
 <denite:move_caret_to_right>
 		Move the caret to a one character right.
-		Note this is a neovim-prompt's builtin action.
+		Note: this is a neovim-prompt's builtin action.
 
 				*denite-map-move_caret_to_one_word_right*
 <denite:move_caret_to_one_word_right>
 		Move the caret to a one word right.
-		Note this is a neovim-prompt's builtin action.
+		Note: this is a neovim-prompt's builtin action.
 
 				*denite-map-move_caret_to_right_anchor*
 <denite:move_caret_to_right_anchor>
 		Move the caret like |f| in Vim's normal mode.
-		Note this is a neovim-prompt's builtin action.
+		Note: this is a neovim-prompt's builtin action.
 
 				*denite-map-move_caret_to_head*
 <denite:move_caret_to_head>
 		Move the caret to the head (a start of the text.)
-		Note this is a neovim-prompt's builtin action.
+		Note: this is a neovim-prompt's builtin action.
 
 				*denite-map-move_caret_to_lead*
 <denite:move_caret_to_lead>
 		Move the caret to the lead (a first printable character).
-		Note this is a neovim-prompt's builtin action.
+		Note: this is a neovim-prompt's builtin action.
 
 				*denite-map-move_caret_to_tail*
 <denite:move_caret_to_tail>
 		Move the caret to the tail (a end of the text).
-		Note this is a neovim-prompt's builtin action.
+		Note: this is a neovim-prompt's builtin action.
 
 				*denite-map-move_to_first_line*
 <denite:move_to_first_line>
@@ -568,12 +568,12 @@ are on the neovim-prompt's builtin actions/mappings.
 <denite:paste_from_register>
 		Paste the text from a specified register.
 		Like |c_<C-R>| in a Vim's native command-line.
-		Note this is a neovim-prompt's builtin action.
+		Note: this is a neovim-prompt's builtin action.
 
 				*denite-map-paste_from_default_register*
 <denite:paste_from_default_register>
 		Paste the text from a default register (|v:register|).
-		Note this is a neovim-prompt's builtin action.
+		Note: this is a neovim-prompt's builtin action.
 
 				*denite-map-print_messages*
 <denite:print_messages>
@@ -650,7 +650,7 @@ are on the neovim-prompt's builtin actions/mappings.
 <denite:toggle_insert_mode>
 		Toggle insert mode (insert or overstrike).
 		Like |c_<Insert>| in a Vim's native command-line.
-		Note this is a neovim-prompt's builtin action.
+		Note: this is a neovim-prompt's builtin action.
 
 				*denite-map-toggle_select*
 <denite:toggle_select>
@@ -681,22 +681,22 @@ are on the neovim-prompt's builtin actions/mappings.
 				*denite-map-yank_to_register*
 <denite:yank_to_register>
 		Yank a text into a specified register.
-		Note this is a neovim-prompt's builtin action.
+		Note: this is a neovim-prompt's builtin action.
 
 				*denite-map-yank_to_default_register*
 <denite:yank_to_default_register>
 		Yank a text into a default register (|v:register|).
-		Note this is a neovim-prompt's builtin action.
+		Note: this is a neovim-prompt's builtin action.
 
 				*denite-map-wincmd*
 <denite:wincmd:{arg}>
 		Suspend and execute 'wincmd %arg%'
-		Note 'arg' supports only h,j,k,l,w,W,t,b,p.
+		Note: 'arg' supports only h,j,k,l,w,W,t,b,p.
 
 						*denite_default_key_mappings*
 Following keymappings are the default keymappings.
 
-Note when user hit <C-c>, denite stop any operations and close its window.
+Note: when user hit <C-c>, denite stop any operations and close its window.
 
 All mode mappings (override by mode mappings).
 {key}		{mapping}
@@ -914,12 +914,20 @@ denite#custom#map({mode}, {lhs}, {rhs}[, {params}])
 		      \ 'Success',
 		      \ 'noremap'
 		      \)
+		call denite#custom#map(
+		      \ 'insert',
+		      \ '<C-r>%',
+		      \ 'bufname(b:denite_context["bufnr"])',
+		      \ 'noremap expr'
+		      \)
 <
-		Note the posterior mappings have higher priority.
-		Note <Nop> cannot be used while <Nop> is equal to <C-J> in
+		Note: the posterior mappings have higher priority.
+		Note: <Nop> cannot be used while <Nop> is equal to <C-J> in
 		neovim-prompt internally.
-		Note <C-c> cannot be used in custom mapping.
+		Note: <C-c> cannot be used in custom mapping.
 		See |denite-key-mappings|.
+		Note: the mapping can get/change the context by
+		"b:denite_context" variable.
 
 						*denite#custom#source()*
 denite#custom#source({source-name}, {option-name}, {value})
@@ -1261,7 +1269,7 @@ OPTIONS							*denite-options*
 -use-default-mappings
 		Enable default key mappings.
 
-		Note that fundamental mappings including <Esc> or <Enter> are
+		Note: that fundamental mappings including <Esc> or <Enter> are
 		also provided by the default key mappings. So disabling this
 		option without proper custom mappings would make denite
 		useless. Use <C-c> to quit the denite if you accidentally
