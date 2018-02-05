@@ -212,7 +212,7 @@ def _toggle_matchers(prompt, params):
     return prompt.denite.redraw()
 
 
-def _toggle_sorters(prompt, params):
+def _change_sorters(prompt, params):
     sorters = ''.join(params)
     context = prompt.denite._context
     if context['sorters'] != sorters:
@@ -358,6 +358,7 @@ DEFAULT_ACTION_RULES = [
     ('denite:change_char', _change_char),
     ('denite:change_line', _change_line),
     ('denite:change_path', _change_path),
+    ('denite:change_sorters', _change_sorters),
     ('denite:change_word', _change_word),
     ('denite:choose_action', _choose_action),
     ('denite:do_action', _do_action),
@@ -402,7 +403,6 @@ DEFAULT_ACTION_RULES = [
     ('denite:toggle_select_all', _toggle_select_all),
     ('denite:toggle_select_down', _toggle_select_down),
     ('denite:toggle_select_up', _toggle_select_up),
-    ('denite:toggle_sorters', _toggle_sorters),
     ('denite:wincmd', _wincmd),
 ]
 

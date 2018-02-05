@@ -358,6 +358,11 @@ are on the neovim-prompt's builtin actions/mappings.
 <denite:change_path>
 		Change and restart Denite buffer.
 
+				*denite-map-change_sorters*
+<denite:change_sorters:{arg}>
+		Change |denite-options-sorters| to {arg}.
+		If |denite-options-sorters| is {arg}, it will be disabled.
+
 				*denite-map-change_word*
 <denite:change_word>
 		Change word, like |cw| in normal mode in vim buffer.
@@ -672,11 +677,6 @@ are on the neovim-prompt's builtin actions/mappings.
 <denite:toggle_matchers{arg}>
 		Change |denite-options-matchers| to {arg}.
 		If |denite-options-matchers| is {arg}, it will be disabled.
-
-				*denite-map-toggle_sorters*
-<denite:toggle_sorters:{arg}>
-		Change |denite-options-sorters| to {arg}.
-		If |denite-options-sorters| is {arg}, it will be disabled.
 
 				*denite-map-yank_to_register*
 <denite:yank_to_register>
@@ -2208,6 +2208,10 @@ A: >
 
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
+
+2018.02.06
+* <denite:toggle_sorters> is deprecated.  Please use <denite:change_sorters>
+ instead.
 
 2018.01.14
 * context['source'] is deprecated.  Please use target['source_context']
