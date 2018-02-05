@@ -1,3 +1,4 @@
+from copy import copy
 from .action import DEFAULT_ACTION_RULES
 from datetime import timedelta, datetime
 from ..prompt.prompt import (
@@ -90,8 +91,9 @@ class DenitePrompt(Prompt):
         if m:
             bufvars = self.denite._bufvars
             bufvars['denite_context'] = self.context
+            prev_context = copy(self.context)
             ret = self.action.call(self, m.group('action'))
-            if bufvars['denite_context'] != self.context:
+            if bufvars['denite_context'] != prev_context:
                 # Update context
                 self.context = bufvars['denite_context']
             return ret
