@@ -18,10 +18,6 @@ class DenitePrompt(Prompt):
         self.action.unregister('prompt:accept', fail_silently=True)
         self.action.unregister('prompt:cancel', fail_silently=True)
 
-        self.harvest_interval = 0.01
-        self._previous_text = self.text
-        self._timeout = datetime.now()
-
     @property
     def text(self):
         return self.context.get('input', '')
@@ -50,7 +46,9 @@ class DenitePrompt(Prompt):
         # NOTE:
         # 'inputsave' is not required to be called while denite call it
         # at denite#start
-        pass
+        self.harvest_interval = 0.03
+        self._previous_text = self.text
+        self._timeout = datetime.now()
 
     def on_term(self, status):
         # NOTE:
