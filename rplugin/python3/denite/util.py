@@ -175,9 +175,9 @@ def find_rplugins(context, source, loaded_paths):
     Searches $VIMRUNTIME/*/rplugin/python3/denite/$source/
     """
 
-    src = join('rplugin/python3/denite', source, '**/*.py')
+    src = join('rplugin/python3/denite', source, '*.py')
     for runtime in context.get('runtimepath', '').split(','):
-        for path in glob.iglob(os.path.join(runtime, src), recursive=True):
+        for path in glob.iglob(os.path.join(runtime, src)):
             name = os.path.splitext(os.path.basename(path))[0]
             if ((source != 'kind' and name == 'base') or
                     name == '__init__' or path in loaded_paths):
