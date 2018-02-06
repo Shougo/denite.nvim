@@ -85,6 +85,10 @@ class DenitePrompt(Prompt):
         self.redraw_prompt()
 
     def on_keypress(self, keystroke):
+        self._timeout = datetime.now() + timedelta(
+            milliseconds=int(self.context['updatetime'])
+        )
+
         m = ACTION_KEYSTROKE_PATTERN.match(str(keystroke))
         if m:
             bufvars = self.denite._bufvars
@@ -98,7 +102,3 @@ class DenitePrompt(Prompt):
         elif self.denite.current_mode == 'insert':
             # Updating text from a keystroke is a feature of 'insert' mode
             self.update_text(str(keystroke))
-
-        self._timeout = datetime.now() + timedelta(
-                milliseconds=int(self.context['updatetime'])
-            )
