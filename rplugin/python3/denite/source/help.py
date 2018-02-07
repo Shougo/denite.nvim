@@ -17,10 +17,12 @@ class Source(Base):
         self.kind = 'command'
 
     def gather_candidates(self, context):
+        candidates = []
+        extend = candidates.extend
         for f in globruntime(context['runtimepath'], 'doc/tags'):
             with open(f, 'r') as ins:
-                canidates = list(map(lambda canidate: {
+                extend(list(map(lambda canidate: {
                     'word': canidate.split("\t", 1)[0],
                     'action__command': 'silent h ' + canidate.split("\t", 1)[0]
-                }, ins))
-        return canidates
+                }, ins)))
+        return candidates
