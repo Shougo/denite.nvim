@@ -22,7 +22,7 @@ function! denite#util#print_warning(string) abort
 endfunction
 
 function! denite#util#convert2list(expr) abort
-  return type(a:expr) ==# type([]) ? a:expr : [a:expr]
+  return type(a:expr) ==# v:t_list ? a:expr : [a:expr]
 endfunction
 
 function! denite#util#execute_path(command, path) abort
