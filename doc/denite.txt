@@ -569,6 +569,10 @@ are on the neovim-prompt's builtin actions/mappings.
 <denite:move_up_path>
 		Move to the upper path and restart Denite buffer.
 
+				*denite-map-nop*
+<denite:nop>
+		No operation.
+
 				*denite-map-paste_from_register*
 <denite:paste_from_register>
 		Paste the text from a specified register.
