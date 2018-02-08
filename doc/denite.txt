@@ -924,14 +924,31 @@ denite#custom#map({mode}, {lhs}, {rhs}[, {params}])
 		      \ 'bufname(b:denite_context["bufnr"])',
 		      \ 'noremap expr'
 		      \)
+
+		function! ToggleSorter(sorter) abort
+		    let sorters = split(b:denite_context.sorters, ',')
+		    let idx = index(sorters, a:sorter)
+		    if idx < 0
+		        call add(sorters, a:sorter)
+		    else
+		        call remove(sorters, idx)
+		    endif
+		    let b:denite_new_context = {}
+		    let b:denite_new_context.sorters = join(sorters, ',')
+		    return '<denite:nop>'
+		endfunction
+		call denite#custom#map('insert', '<C-f>',
+		    \ 'ToggleSorter("sorter_reverse")', 'noremap expr nowait')
 <
 		Note: the posterior mappings have higher priority.
 		Note: <Nop> cannot be used while <Nop> is equal to <C-J> in
 		neovim-prompt internally.
 		Note: <C-c> cannot be used in custom mapping.
 		See |denite-key-mappings|.
-		Note: the mapping can get/change the context by
-		"b:denite_context" variable.
+		Note: the mapping can get the context by "b:denite_context"
+		variable.
+		Note: the mapping can change the context by
+		"b:denite_new_context" variable.
 
 						*denite#custom#source()*
 denite#custom#source({source-name}, {option-name}, {value})

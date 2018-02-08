@@ -1,4 +1,3 @@
-from copy import copy
 from .action import DEFAULT_ACTION_RULES
 from datetime import timedelta, datetime
 from ..prompt.prompt import (
@@ -63,6 +62,9 @@ class DenitePrompt(Prompt):
         return super().on_update(status)
 
     def on_harvest(self):
+        # Set b:denite_context
+        self.denite._bufvars['denite_context'] = self.context
+
         if self._timeout > datetime.now():
             return
 
@@ -91,13 +93,14 @@ class DenitePrompt(Prompt):
 
         m = ACTION_KEYSTROKE_PATTERN.match(str(keystroke))
         if m:
-            bufvars = self.denite._bufvars
-            bufvars['denite_context'] = self.context
-            prev_context = copy(self.context)
             ret = self.action.call(self, m.group('action'))
-            if bufvars['denite_context'] != prev_context:
-                # Update context
-                self.context = bufvars['denite_context']
+            bufvars = self.denite._bufvars
+            if ('denite_new_context' in bufvars
+                    and bufvars['denite_new_context']):
+                 # Update context
+                self.context.update(bufvars['denite_new_context'])
+                bufvars['denite_new_context'] = {}
+                self.denite.redraw()
             return ret
         elif self.denite.current_mode == 'insert':
             # Updating text from a keystroke is a feature of 'insert' mode
