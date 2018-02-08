@@ -97,7 +97,7 @@ class DenitePrompt(Prompt):
             bufvars = self.denite._bufvars
             if ('denite_new_context' in bufvars
                     and bufvars['denite_new_context']):
-                 # Update context
+                # Update context
                 self.context.update(bufvars['denite_new_context'])
                 bufvars['denite_new_context'] = {}
                 self.denite.redraw()

@@ -351,6 +351,7 @@ def _quick_move(prompt, params):
     prompt.denite._win_cursor = quick_move_table[char]
     prompt.denite.update_cursor()
 
+
 def _nop(prompt, params):
     pass
 
