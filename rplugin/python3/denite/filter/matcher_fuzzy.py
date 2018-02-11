@@ -1,36 +1,8 @@
-# ============================================================================
-# FILE: matcher_fuzzy.py
-# AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
-# License: MIT license
-# ============================================================================
-
-import re
-from .base import Base
-from denite.util import escape_fuzzy, convert2fuzzy_pattern
+# For backward compatibility
+from .matcher.fuzzy import Filter as Base
 
 
 class Filter(Base):
-
     def __init__(self, vim):
         super().__init__(vim)
-
-        self.name = 'matcher_fuzzy'
-        self.description = 'fuzzy matcher'
-
-    def filter(self, context):
-        if context['input'] == '':
-            return context['candidates']
-        pattern = context['input']
-        if context['ignorecase']:
-            pattern = pattern.lower()
-        p = re.compile(escape_fuzzy(re.escape(pattern), True))
-        if context['ignorecase']:
-            context['candidates'] = [x for x in context['candidates']
-                                     if p.search(x['word'].lower())]
-        else:
-            context['candidates'] = [x for x in context['candidates']
-                                     if p.search(x['word'])]
-        return context['candidates']
-
-    def convert_pattern(self, input_str):
-        return convert2fuzzy_pattern(input_str)
+        self.name = self.name.replace('/', '_')

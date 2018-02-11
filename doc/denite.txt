@@ -1385,8 +1385,9 @@ file
 			0. if it is "new", file source create the file.
 			1. the search directory
 
+						*denite-source-file/old*
 						*denite-source-file_old*
-file_old
+file/old (fild_old)
 		Gather files from |v:oldfiles|.
 
 		Note: This source cannot be update the candidates until Vim
@@ -1395,12 +1396,15 @@ file_old
 		Source actions:
 		delete		Remove the files from |v:oldfiles|
 
+						*denite-source-file/point*
 						*denite-source-file_point*
-file_point
+file/point (file_point)
 		Gather current line of "file:line" format as candidates.
 
+						*denite-source-file/rec*
 						*denite-source-file_rec*
-file_rec	Gather files recursive and nominates all file names under the
+file/rec (file_rec)
+		Gather files recursive and nominates all file names under the
 		search directory (argument 0) or the current directory (if
 		argument is omitted) as candidates.
 
@@ -1727,26 +1731,30 @@ word		An interface to paste the text.
 ==============================================================================
 FILTERS							*denite-filters*
 
+						*denite-filter-matcher/cpsm*
 						*denite-filter-matcher_cpsm*
-matcher_cpsm
+matcher/cpsm (matcher_cpsm)
 		A matcher which filters the candidates using cpsm.
 		Note: cpsm plugin build/install is needed in 'runtimepath'.
 		https://github.com/nixprime/cpsm
 		Note: You must use Python3 support enabled cpsm. >
 			$ PY3=ON ./install.sh
 <
+						*denite-filter-matcher/fuzzy*
 						*denite-filter-matcher_fuzzy*
-matcher_fuzzy
+matcher/fuzzy (matcher_fuzzy)
 		A matcher which filters the candidates with user given fuzzy
 		string.
 
+				*denite-filter-matcher/hide_hidden_files*
 				*denite-filter-matcher_hide_hidden_files*
-matcher_hide_hidden_files
+matcher/hide_hidden_files (matcher_hide_hidden_files)
 		A matcher which hides the hidden files.  If your input
 		contains ".", the hidden files will be appeared.
 
+					*denite-filter-matcher/ignore_globs*
 					*denite-filter-matcher_ignore_globs*
-matcher_ignore_globs
+matcher/ignore_globs (matcher_ignore_globs)
 		A matcher which ignores the globs matched files.
 		Note: This filtering is slow.
 
@@ -1761,46 +1769,55 @@ matcher_ignore_globs
 		]
 <
 		)
+						*denite-filter-matcher/regexp*
 						*denite-filter-matcher_regexp*
-matcher_regexp
+matcher/regexp (matcher_regexp)
 		A matcher which filters the candidates with user given
 		regular expression.
-						denite-filter-matcher_substring
-matcher_substring
+					*denite-filter-matcher/substring*
+					*denite-filter-matcher_substring*
+matcher/substring (matcher_substring)
 		A matcher which filters the candidates using simple substring
 		matching.
 
+						*denite-filter-sorter/rank*
 						*denite-filter-sorter_rank*
-sorter_rank
+sorter/rank (sorter_rank)
 		Uses the scoring algorithm from selecta:
 		https://github.com/garybernhardt/selecta.  If the matched
 		length is shorter, the rank is higher.  This sorter is useful
 		for file candidate source.
 
 
+						*denite-filter-sorter/reverse*
 						*denite-filter-sorter_reverse*
-sorter_reverse
+sorter/reverse (sorter_reverse)
 		Simple filter to reverse the order of candidates.
 
+						*denite-filter-sorter/sublime*
 						*denite-filter-sorter_sublime*
-sorter_sublime
+sorter/sublime (sorter_sublime)
 		Uses the scoring algorithm from this article and its implementation:
 		https://bit.ly/reverse-engineering-sublime-text-s-fuzzy-match
 
+						*denite-filter-sorter/word*
 						*denite-filter-sorter_word*
-sorter_word
+sorter/word (sorter_word)
 		Simple filter to sort candidates by ascii order of word
 
+				*denite-filter-converter/abbr_word*
 				*denite-filter-converter_abbr_word*
-converter_abbr_word
+converter/abbr_word (converter_abbr_word)
 		Convert candidate abbr to word.
 
-				*denite-filter-converter_relative_abbr*
-converter_relative_abbr
+				*denite-filter-converter/relative_abbr*
+				*denite-filter-converter-relative_abbr*
+converter/relative_abbr (converter_relative_abbr)
 		Convert candidate's abbr to the relative path.
 
+				*denite-filter-converter/relative_word*
 				*denite-filter-converter_relative_word*
-converter_relative_word
+converter/relative_word (converter_relative_word)
 		Convert candidate's word to the relative path.
 
 ==============================================================================
