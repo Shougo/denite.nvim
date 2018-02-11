@@ -174,7 +174,7 @@ def find_rplugins(context, source, loaded_paths):
     """Find available modules from runtimepath and yield
 
     It searches modules from rplugin/python3/denite/{source} recursvely
-    and yields path, module name, and module path
+    and yields path and module path (dot separated path)
 
     Search will be performed with the following rules
 
