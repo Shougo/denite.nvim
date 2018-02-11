@@ -273,7 +273,7 @@ class Denite(object):
 
     def load_kinds(self, context):
         # Load kinds from runtimepath
-        rplugins = import_rplugins('Filter', context, 'filter', [
+        rplugins = import_rplugins('Kind', context, 'kind', [
             normcase(normpath(x.path))
             for x in self._kinds.values()
         ])
