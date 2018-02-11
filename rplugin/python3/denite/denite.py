@@ -5,7 +5,6 @@
 # ============================================================================
 
 from denite.util import (get_custom_source,
-                         find_rplugins,
                          import_rplugins,
                          split_input, abspath)
 
@@ -13,7 +12,6 @@ import denite.source  # noqa
 import denite.filter  # noqa
 import denite.kind    # noqa
 
-import importlib.machinery
 import copy
 import re
 import time
