@@ -997,7 +997,11 @@ denite#get_status({name})				*denite#get_status()*
 		"mode": Current mode
 		"sources": Current sources and candidates number
 		"path": Specified |denite-options-path|
-		"linenr": Current line number
+		"linenr": Equivalent to "line_cursor/line_total"
+		"raw_mode": Current mode, without any processing
+		"buffer_name": Current |denite-options-buffer-name|
+		"line_cursor": Cursor position. Part of "linenr".
+		"line_total": Total candidates. Part of "linenr".
 
 denite#get_status_mode()			 *denite#get_status_mode()*
 		Please use |denite#get_status()| instead.
