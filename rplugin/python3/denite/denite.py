@@ -243,6 +243,11 @@ class Denite(object):
                     self._sources[alias].name = alias
                     self._sources[alias].path = path
                     self._sources[alias].syntax_name = syntax_name
+        # Update source_names for completion
+        self._vim.call(
+            'denite#helper#_set_available_sources',
+            list(self._sources.keys()),
+        )
 
     def load_filters(self, context):
         # Load filters from runtimepath
