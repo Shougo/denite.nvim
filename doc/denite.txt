@@ -1387,7 +1387,7 @@ file
 
 						*denite-source-file/old*
 						*denite-source-file_old*
-file/old (fild_old)
+file/old (file_old)
 		Gather files from |v:oldfiles|.
 
 		Note: This source cannot be update the candidates until Vim
