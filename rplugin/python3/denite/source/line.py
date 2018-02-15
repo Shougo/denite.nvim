@@ -59,9 +59,10 @@ class Source(Base):
                 'word': x,
                 'abbr': (context['__fmt'] % (i + 1, x)),
                 'action__path': self.vim.call('bufname', bufnr),
-                'action__line': (i + 1)}
-                for [i, x] in
-                enumerate(self.vim.call('getbufline', bufnr, 1, '$'))]
+                'action__line': (i + 1),
+                'action__text': x,
+            } for [i, x] in enumerate(
+                self.vim.call('getbufline', bufnr, 1, '$'))]
             if context['__emptiness'] == 'noempty':
                 lines = list(filter(lambda c: c['word'] != '', lines))
             if context['__direction'] == 'all':
