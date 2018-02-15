@@ -627,12 +627,14 @@ class Default(object):
 
     def redraw(self, is_force=True):
         self._context['is_redraw'] = is_force
+        prev_curpos = self._vim.call('getcurpos')
         if is_force:
             self.gather_candidates()
         if self.update_candidates():
             self.update_buffer()
         else:
             self.update_status()
+        self._vim.call('setpos', '.', prev_curpos)
         self._context['is_redraw'] = False
 
     def quit(self):
