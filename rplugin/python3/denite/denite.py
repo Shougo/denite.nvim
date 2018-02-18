@@ -303,7 +303,7 @@ class Denite(object):
             return True
 
         for target in targets:
-            source = self._current_sources[target['source_index']]
+            source = self._current_sources[int(target['source_index'])]
             target['source_context'] = {
                 k: v for k, v in
                 source.context.items()
@@ -317,7 +317,7 @@ class Denite(object):
 
     def _get_kind(self, context, target):
         k = target['kind'] if 'kind' in target else (
-                self._current_sources[target['source_index']].kind)
+                self._current_sources[int(target['source_index'])].kind)
 
         if isinstance(k, str):
             # k is kind name
@@ -336,7 +336,7 @@ class Denite(object):
         if not kind:
             return {}
 
-        source = self._current_sources[target['source_index']]
+        source = self._current_sources[int(target['source_index'])]
 
         if action_name == 'default':
             action_name = context['default_action']
