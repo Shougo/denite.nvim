@@ -9,7 +9,7 @@ import os
 from itertools import filterfalse
 
 from .openable import Kind as Openable
-from denite.util import clearmatch
+from denite import util
 
 
 class Kind(Openable):
@@ -47,6 +47,16 @@ class Kind(Openable):
 
             if path in self._previewed_buffers:
                 self._previewed_buffers.pop(path)
+
+    def action_new(self, context):
+        path = util.input(self.vim, context, 'New file: ', completion='file')
+        if not path:
+            return
+        context['targets'] = [{
+            'word': path,
+            'action__path': util.abspath(self.vim, path),
+        }]
+        self.action_open(context)
 
     def action_preview(self, context):
         target = context['targets'][0]
@@ -106,7 +116,7 @@ class Kind(Openable):
                 self.vim.command('silent bdelete ' + str(bufnr))
 
     def _highlight(self, context, line):
-        clearmatch(self.vim)
+        util.clearmatch(self.vim)
         self.vim.current.window.vars['denite_match_id'] = self.vim.call(
             'matchaddpos', context['highlight_preview_line'], [line])
 
