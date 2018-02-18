@@ -375,7 +375,8 @@ class Denite(object):
         action = None
         for target in targets:
             action = self._get_action(context, action_name, target)
-            actions.add(action['name'])
+            if action:
+                actions.add(action['name'])
         if len(actions) > 1:
             self.error('Multiple actions are detected: ' + action_name)
             return {}
