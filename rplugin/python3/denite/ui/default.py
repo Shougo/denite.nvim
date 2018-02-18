@@ -627,15 +627,12 @@ class Default(object):
 
     def redraw(self, is_force=True):
         self._context['is_redraw'] = is_force
-        prev_curpos = self._cursor + self._win_cursor
         if is_force:
             self.gather_candidates()
         if self.update_candidates():
-            # Note: move_to_pos() executes update_buffer()
-            self.move_to_pos(prev_curpos)
+            self.update_buffer()
         else:
             self.update_status()
-        self._vim.call('setpos', '.', prev_curpos)
         self._context['is_redraw'] = False
 
     def quit(self):
@@ -699,11 +696,9 @@ class Default(object):
             # Disable quit flag
             is_quit = False
 
-        if not is_quit and action['is_redraw']:
-            self.init_cursor()
-            self.redraw()
-            if self._context['input'] != prev_input:
-                self._prompt.caret.locus = self._prompt.caret.tail
+        if not is_quit:
+            self._selected_candidates = []
+            self.redraw(action['is_redraw'])
 
         self._result = candidates
         return STATUS_ACCEPT if is_quit else None
