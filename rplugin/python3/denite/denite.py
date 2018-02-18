@@ -218,6 +218,7 @@ class Denite(object):
 
     def error(self, msg):
         self._vim.call('denite#util#print_error', msg)
+        self._vim.call('getchar')
 
     def get_current_sources(self):
         return self._current_sources

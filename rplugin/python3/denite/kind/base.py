@@ -20,7 +20,10 @@ class Base(object):
         denite.util.debug(self.vim, expr)
 
     def action_echo(self, context):
-        context['messages'].append(str(context['targets']))
+        self.vim.command('redraw')
+        for target in context['targets']:
+            self.debug(target)
+        self.vim.call('getchar')
 
     def action_yank(self, context):
         _yank(self.vim, "\n".join([
