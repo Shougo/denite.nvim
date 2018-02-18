@@ -22,10 +22,7 @@ function! denite#helper#complete(arglead, cmdline, cursorpos) abort
     let _ += map(copy(bool_options), "'-no-' . tr(v:val, '_', '-')")
   else
     " Source name completion.
-    let _ += filter(map(globpath(&runtimepath,
-          \             'rplugin/python3/denite/source/*.py', 1, 1),
-          \             "fnamemodify(v:val, ':t:r')"),
-          \         "v:val !=# 'base' && v:val !=# '__init__'")
+    let _ += denite#helper#_get_available_sources()
   endif
 
   return uniq(sort(filter(_, 'stridx(v:val, a:arglead) == 0')))
@@ -182,4 +179,32 @@ function! denite#helper#_set_oldfiles(oldfiles) abort
 endfunction
 function! denite#helper#_get_oldfiles() abort
   return filter(copy(v:oldfiles), 'filereadable(v:val) || buflisted(v:val)')
+endfunction
+
+
+function! denite#helper#_get_available_sources() abort
+  if exists('s:source_names')
+    return copy(s:source_names)
+  endif
+  let s:source_names = map(
+        \ globpath(&runtimepath, 'rplugin/python3/denite/source/**/*.py', 1, 1),
+        \ 's:_get_source_name(v:val)',
+        \)
+  return copy(filter(s:source_names, '!empty(v:val)'))
+endfunction
+function! denite#helper#_set_available_sources(source_names) abort
+  " Called from rplugin/python3/denite/denite.py#load_sources
+  let s:source_names = a:source_names
+endfunction
+function! s:_get_source_name(path) abort
+  if a:path ==# '__init__.py' || a:path ==# 'base.py'
+    return ''
+  elseif a:path[-12:] ==# '/__init__.py'
+    if getfsize(a:path) == 0
+      " Probably the file exists for making a namespace so ignore
+      return ''
+    endif
+    return fnamemodify(a:path, ':h:s?.*/rplugin/python3/denite/source/??:r')
+  endif
+  return fnamemodify(a:path, ':s?.*/rplugin/python3/denite/source/??:r')
 endfunction

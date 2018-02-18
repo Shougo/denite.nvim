@@ -7,9 +7,10 @@
 import re
 import os
 import sys
-import glob
 
-from os.path import normpath, join, dirname
+from glob import glob, iglob
+from os.path import normpath, normcase, join, dirname
+from importlib.machinery import SourceFileLoader
 
 
 def set_default(vim, var, val):
@@ -23,7 +24,7 @@ def convert2list(expr):
 def globruntime(runtimepath, path):
     ret = []
     for rtp in re.split(',', runtimepath):
-        ret += glob.glob(rtp + '/' + path)
+        ret += glob(rtp + '/' + path)
     return ret
 
 
@@ -170,19 +171,77 @@ def input(vim, context, prompt='', text='', completion=''):
 
 
 def find_rplugins(context, source, loaded_paths):
-    """Search for *.py
+    """Find available modules from runtimepath and yield
 
-    Searches $VIMRUNTIME/*/rplugin/python3/denite/$source/
+    It searches modules from rplugin/python3/denite/{source} recursvely
+    and yields path and module path (dot separated path)
+
+    Search will be performed with the following rules
+
+    1.  Ignore {source,kind,filter}/__init__.py while it has no
+        implementation
+    2.  Ignore {source,filter}/base.py while it only has an abstract
+        implementation. Note that kind/base.py DOES have an
+        implementation so it should NOT be ignored
+    3   {source,kind,filter}/{foo.py,foo/__init__.py} is handled as
+        a module foo
+    4.  {source,kind,filter}/foo/{bar.py,bar/__init__.py} is handled
+        as a module foo.bar
+
+    Args:
+        context (dict): A context dictionary
+        source (str): 'source', 'kind', or 'filter'
+        loaded_paths: (str[]): Loaded module path list
+
+    Yields:
+        (path, module_path)
+
+        path (str): A path of the module
+        module_path (str): A dot separated module path used to import
     """
-
-    src = join('rplugin/python3/denite', source, '*.py')
+    base = join('rplugin', 'python3', 'denite', source)
     for runtime in context.get('runtimepath', '').split(','):
-        for path in glob.iglob(os.path.join(runtime, src)):
-            name = os.path.splitext(os.path.basename(path))[0]
-            if ((source != 'kind' and name == 'base') or
-                    name == '__init__' or path in loaded_paths):
+        root = os.path.normpath(join(runtime, base))
+        for path in filter(lambda p: normcase(normpath(p)) not in loaded_paths,
+                           iglob(join(root, '**', '*.py'), recursive=True)):
+            module_path = os.path.relpath(str(path), root)
+            module_path = os.path.splitext(module_path)[0]
+            if module_path == '__init__':
+                # __init__.py in {root} does not have implementation so skip
                 continue
-            yield path, name
+            elif module_path == 'base' and source != 'kind':
+                # base.py in {root} does not have implementation so skip
+                # NOTE: kind/base.py DOES have implementation so do NOT skip
+                continue
+            if os.path.basename(module_path) == '__init__':
+                # 'foo/__init__.py' should be loaded as a module 'foo'
+                module_path = os.path.dirname(module_path)
+            # Convert IO path to module path
+            module_path = module_path.replace(os.sep, '.')
+            yield (path, module_path)
+
+
+def import_rplugins(name, context, source, loaded_paths):
+    """Import available module and yield specified attr
+
+    It uses 'find_rplugins' to find available modules and yield
+    a specified attribute.
+
+    It raises AttributeError when the module does not have a
+    specified attribute except the module file name is '__init__.py'
+    which may exist only for making a module namespace.
+    """
+    for path, module_path in find_rplugins(context, source, loaded_paths):
+        loader = SourceFileLoader('denite.%s.%s' % (source, module_path), path)
+        # XXX: load_module is deprecated since Python 3.4
+        module = loader.load_module()
+        try:
+            yield (getattr(module, name), path, module_path)
+        except AttributeError:
+            if os.path.basename(path) == '__init__.py':
+                # the file exists for making a module so ignore
+                continue
+            raise
 
 
 def parse_tagline(line, tagpath):
