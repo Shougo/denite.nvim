@@ -683,7 +683,6 @@ class Default(object):
         if is_quit:
             self.quit()
 
-        prev_input = self._context['input']
         self._denite.do_action(self._context, action_name, candidates)
 
         if is_quit and not self._context['quit']:

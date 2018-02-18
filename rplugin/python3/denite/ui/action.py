@@ -225,7 +225,7 @@ def _change_sorters(prompt, params):
 def _print_messages(prompt, params):
     for mes in prompt.denite._context['messages']:
         debug(prompt.nvim, mes)
-    self._vim.call('getchar')
+    prompt.nvim.call('getchar')
 
 
 def _change_path(prompt, params):
