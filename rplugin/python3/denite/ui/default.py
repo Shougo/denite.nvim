@@ -386,7 +386,7 @@ class Default(object):
             self._vim.command('silent! syntax clear deniteMatchedChar')
         if self._matched_pattern != '':
             self._vim.command(
-                'silent! syntax match deniteMatchedRange /%s/ contained' % (
+                'silent! syntax match deniteMatchedRange /\c%s/ contained' % (
                     regex_convert_py_vim(self._matched_pattern),
                 )
             )
