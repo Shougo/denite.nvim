@@ -16,6 +16,9 @@ class Source(Base):
         self.kind = 'file'
 
     def on_init(self, context):
+        context['__jumps'] = self._parse(context)
+
+    def _parse(self, context):
         jumps = []
         for jump in self.vim.call('execute', 'jumps').split('\n')[2:]:
             texts = jump.split()
@@ -49,7 +52,7 @@ class Source(Base):
                 'action__line': linenr,
                 'action__col': col,
             })
-        context['__jumps'] = reversed(jumps)
+        return list(reversed(jumps))
 
     def gather_candidates(self, context):
-        return list(context['__jumps'])
+        return context['__jumps']

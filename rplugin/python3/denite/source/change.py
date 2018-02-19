@@ -16,6 +16,9 @@ class Source(Base):
         self.kind = 'file'
 
     def on_init(self, context):
+        context['__changes'] = self._parse(context)
+
+    def _parse(self, context):
         changes = []
         for change in self.vim.call('execute', 'changes').split('\n')[2:]:
             texts = change.split()
@@ -33,7 +36,7 @@ class Source(Base):
                 'action__line': linenr,
                 'action__col': col,
             })
-        context['__changes'] = reversed(changes)
+        return list(reversed(changes))
 
     def gather_candidates(self, context):
-        return list(context['__changes'])
+        return context['__changes']
