@@ -21,8 +21,8 @@ class Source(Base):
         self.kind = 'command'
         self.commands = []
 
-        self.__re_command = re.compile(r'^\|:.+\|')
-        self.__re_tokens = re.compile(
+        self._re_command = re.compile(r'^\|:.+\|')
+        self._re_tokens = re.compile(
             r'^\|:(.+)\|[\t\s]+:([^\t]+)[\t\s]+(.+)')
 
     def on_init(self, context):
@@ -37,16 +37,14 @@ class Source(Base):
             if not self.commands:
                 self._cache_helpfile()
             return self.commands + [{
-                'action__command': x,
-                'source__command': "execute input(':{0} ')".format(x),
+                'action__command': "execute input(':{0} ')".format(x),
                 'word': x,
             } for x in self.vim.call('getcompletion', '', 'command')]
 
         prefix = sub('\w*$', '', context['input'])
 
         return [{
-            'action__command': prefix + x,
-            'source__command': "execute input(':{0} ')".format(prefix + x),
+            'action__command': "execute input(':{0} ')".format(prefix + x),
             'word': prefix + x,
         } for x in self.vim.call(
             'getcompletion', context['input'], 'cmdline')]
@@ -55,12 +53,11 @@ class Source(Base):
         for helpfile in self._helpfiles:
             with open(helpfile) as doc:
                 for line in [x for x in doc.readlines()
-                             if self.__re_command.match(x)]:
-                    tokens = self.__re_tokens.match(line).groups()
+                             if self._re_command.match(x)]:
+                    tokens = self._re_tokens.match(line).groups()
                     command = "execute input(':{0} ')".format(tokens[0])
                     self.commands.append({
                         'action__command': command,
-                        'source__command': ':' + tokens[0],
                         'word': '{0:<20} -- {1}'.format(
                             tokens[0], tokens[2],
                         ),

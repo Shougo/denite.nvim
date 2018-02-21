@@ -17,19 +17,23 @@ function! denite#start(sources, ...) abort
   endtry
 endfunction
 
+" Statusline functions
+function! denite#get_status(name) abort
+  return !exists('b:denite_statusline') ? '' :
+        \ get(b:denite_statusline, a:name, '')
+endfunction
 function! denite#get_status_mode() abort
-  return get(b:, 'denite_statusline_mode', '')
+  return denite#get_status('mode')
 endfunction
 function! denite#get_status_sources() abort
-  return get(b:, 'denite_statusline_sources', '')
+  return denite#get_status('sources')
 endfunction
 function! denite#get_status_path() abort
-  return get(b:, 'denite_statusline_path', '')
+  return denite#get_status('path')
 endfunction
 function! denite#get_status_linenr() abort
-  return get(b:, 'denite_statusline_linenr', '')
+  return denite#get_status('linenr')
 endfunction
-
 
 function! s:start(sources, user_context) abort
   let buffer_name = get(a:user_context, 'buffer_name', 'default')

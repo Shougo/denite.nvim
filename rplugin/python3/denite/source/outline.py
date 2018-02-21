@@ -68,6 +68,8 @@ class Source(Base):
                     if re.match('!', line) or not line:
                         continue
                     info = parse_tagline(line.rstrip(), tf.name)
+                    if not info:
+                        continue
                     if info['type'] in self.vars['ignore_types']:
                         continue
 

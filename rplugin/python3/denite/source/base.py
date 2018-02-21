@@ -16,12 +16,13 @@ class Base(object):
         self.syntax_name = ''
         self.kind = 'base'
         self.default_action = 'default'
-        self.max_candidates = 10000
+        self.max_candidates = 1000
         self.matchers = ['matcher_fuzzy']
         self.sorters = ['sorter_rank']
         self.converters = []
         self.context = {}
         self.vars = {}
+        self.is_public_context = False
 
     def highlight(self):
         pass
@@ -34,12 +35,14 @@ class Base(object):
     def print_message(self, context, expr):
         context['messages'].append(self.name + ': ' + str(expr))
 
-    def error_message(self, expr):
+    def error_message(self, context, expr):
+        prefix = self.name + ': '
         if isinstance(expr, list):
             for line in expr:
-                denite.util.error(self.vim, self.name + ': ' + line)
+                denite.util.error(self.vim, prefix + line)
         else:
-            denite.util.error(self.vim, self.name + ': ' + str(expr))
+            denite.util.error(self.vim, prefix + str(expr))
+        context['error_messages'].append(prefix + str(expr))
 
     @abstractmethod
     def gather_candidate(self, context):
@@ -47,3 +50,6 @@ class Base(object):
 
     def debug(self, expr):
         denite.util.debug(self.vim, expr)
+
+    def get_status(self, context):
+        return ':'.join([self.name] + context['args'])

@@ -27,18 +27,25 @@ class Source(Base):
         context['__linenr'] = self.vim.current.window.cursor[0]
         context['__bufnrs'] = [self.vim.current.buffer.number]
         context['__direction'] = 'all'
+        context['__emptiness'] = 'empty'
         context['__fmt'] = '%' + str(len(
             str(self.vim.call('line', '$')))) + 'd: %s'
-        if context['args']:
-            direction = context['args'][0]
-            if (direction == 'all' or direction == 'forward' or
-                    direction == 'backward'):
-                context['__direction'] = direction
-            elif direction == 'buffers':
-                context['__bufnrs'] = [x.number for x in self.vim.buffers]
-            elif direction == 'args':
-                context['__bufnrs'] = [self.vim.call('bufnr', x) for x
-                                       in self.vim.call('argv')]
+        argc = len(context['args'])
+
+        direction = context['args'][0] if argc >= 1 else None
+        if (direction == 'all' or direction == 'forward' or
+                direction == 'backward'):
+            context['__direction'] = direction
+        elif direction == 'buffers':
+            context['__bufnrs'] = [x.number for x in self.vim.buffers
+                                   if x.options['buflisted']]
+        elif direction == 'args':
+            context['__bufnrs'] = [self.vim.call('bufnr', x) for x
+                                   in self.vim.call('argv')]
+
+        emptiness = context['args'][1] if argc >= 2 else None
+        if emptiness == 'noempty':
+            context['__emptiness'] = emptiness
 
     def highlight(self):
         self.vim.command(LINE_NUMBER_SYNTAX + self.syntax_name)
@@ -52,9 +59,12 @@ class Source(Base):
                 'word': x,
                 'abbr': (context['__fmt'] % (i + 1, x)),
                 'action__path': self.vim.call('bufname', bufnr),
-                'action__line': (i + 1)}
-                for [i, x] in
-                enumerate(self.vim.call('getbufline', bufnr, 1, '$'))]
+                'action__line': (i + 1),
+                'action__text': x,
+            } for [i, x] in enumerate(
+                self.vim.call('getbufline', bufnr, 1, '$'))]
+            if context['__emptiness'] == 'noempty':
+                lines = list(filter(lambda c: c['word'] != '', lines))
             if context['__direction'] == 'all':
                 candidates += lines
             elif context['__direction'] == 'backward':

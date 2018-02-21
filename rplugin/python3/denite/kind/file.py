@@ -9,7 +9,7 @@ import os
 from itertools import filterfalse
 
 from .openable import Kind as Openable
-from denite.util import clearmatch
+from denite import util
 
 
 class Kind(Openable):
@@ -21,6 +21,7 @@ class Kind(Openable):
         self.default_action = 'open'
         self.persist_actions += ['preview', 'highlight']
         self._previewed_target = {}
+        self._previewed_buffers = {}
 
     def action_open(self, context):
         cwd = self.vim.call('getcwd')
@@ -31,7 +32,7 @@ class Kind(Openable):
             if re.match('https?://', path):
                 # URI
                 self.vim.call('denite#util#open', path)
-                return
+                continue
             if path.startswith(cwd):
                 path = os.path.relpath(path, cwd)
 
@@ -42,25 +43,47 @@ class Kind(Openable):
                                match_path) != self.vim.current.buffer:
                 self.vim.command('buffer' +
                                  str(self.vim.call('bufnr', path)))
-            self.__jump(context, target)
+            self._jump(context, target)
+
+            if path in self._previewed_buffers:
+                self._previewed_buffers.pop(path)
+
+    def action_new(self, context):
+        path = util.input(self.vim, context, 'New file: ', completion='file')
+        if not path:
+            return
+        context['targets'] = [{
+            'word': path,
+            'action__path': util.abspath(self.vim, path),
+        }]
+        self.action_open(context)
 
     def action_preview(self, context):
         target = context['targets'][0]
 
         if (not context['auto_preview'] and
-                self.__get_preview_window() and
+                self._get_preview_window() and
                 self._previewed_target == target):
             self.vim.command('pclose!')
             return
 
+        listed = self.vim.call('buflisted', target['action__path'])
         path = target['action__path'].replace('/./', '/')
         prev_id = self.vim.call('win_getid')
+
         self.vim.call('denite#helper#preview_file', context, path)
         self.vim.command('wincmd P')
-        self.__jump(context, target)
-        self.__highlight(context, int(target.get('action__line', 0)))
+
+        if not listed:
+            self._previewed_buffers[
+                target['action__path']] = self.vim.call('bufnr', '%')
+        self._jump(context, target)
+        self._highlight(context, int(target.get('action__line', 0)))
+
         self.vim.call('win_gotoid', prev_id)
         self._previewed_target = target
+
+        self._cleanup()
 
     def action_highlight(self, context):
         target = context['targets'][0]
@@ -72,8 +95,8 @@ class Kind(Openable):
 
         prev_id = self.vim.call('win_getid')
         self.vim.call('win_gotoid', context['prev_winid'])
-        self.__jump(context, target)
-        self.__highlight(context, int(target.get('action__line', 0)))
+        self._jump(context, target)
+        self._highlight(context, int(target.get('action__line', 0)))
         self.vim.call('win_gotoid', prev_id)
 
     def action_quickfix(self, context):
@@ -86,17 +109,23 @@ class Kind(Openable):
         self.vim.call('setqflist', qflist)
         self.vim.command('copen')
 
-    def __highlight(self, context, line):
-        clearmatch(self.vim)
+    def _cleanup(self):
+        for bufnr in self._previewed_buffers.values():
+            if not self.vim.call('win_findbuf', bufnr) and self.vim.call(
+                    'buflisted', bufnr):
+                self.vim.command('silent bdelete ' + str(bufnr))
+
+    def _highlight(self, context, line):
+        util.clearmatch(self.vim)
         self.vim.current.window.vars['denite_match_id'] = self.vim.call(
             'matchaddpos', context['highlight_preview_line'], [line])
 
-    def __get_preview_window(self):
+    def _get_preview_window(self):
         return next(filterfalse(lambda x:
                                 not x.options['previewwindow'],
                                 self.vim.windows), None)
 
-    def __jump(self, context, target):
+    def _jump(self, context, target):
         if 'action__pattern' in target:
             self.vim.call('search', target['action__pattern'], 'w')
 
@@ -120,7 +149,7 @@ class Kind(Openable):
         self.vim.command('normal! zv')
 
     # Needed for openable actions
-    def __winid(self, target):
+    def _winid(self, target):
         path = target['action__path']
         bufnr = self.vim.call('bufnr', path)
         if bufnr == -1:

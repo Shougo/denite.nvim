@@ -75,3 +75,10 @@ Note: You need to install Python3.5+ or `pip3 install typing`.
 * [`defx`](https://github.com/Shougo/defx.nvim) support
 
 * match highlight improvement
+
+## Screenshots
+
+![file_rec source](https://user-images.githubusercontent.com/13142418/34324674-b8ddd5b8-e840-11e7-9b77-d94e1b084bda.gif)
+![SpaceVim Guide](https://user-images.githubusercontent.com/13142418/34324752-e5a89900-e842-11e7-9f87-6d8789ba3871.gif)
+![colorscheme source](https://user-images.githubusercontent.com/13142418/34324786-f4dd39a2-e843-11e7-97ef-7a48ee04d27b.gif)
+

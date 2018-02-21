@@ -22,7 +22,8 @@ function! denite#custom#get() abort
 endfunction
 
 function! denite#custom#source(source_name, option_name, value) abort
-  if index(['matchers', 'sorters', 'converters', 'vars', 'args'],
+  if index(['matchers', 'sorters', 'converters',
+        \   'vars', 'args', 'max_candidates'],
         \ a:option_name) < 0
     call denite#util#print_error('Invalid option_name: ' . a:option_name)
     return

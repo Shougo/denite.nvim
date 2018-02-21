@@ -15,8 +15,6 @@ class Kind(Base):
 
         self.name = 'directory'
         self.default_action = 'narrow'
-        self.redraw_actions += ['narrow']
-        self.persist_actions += ['narrow']
 
     def action_cd(self, context):
         target = context['targets'][0]
@@ -24,9 +22,11 @@ class Kind(Base):
 
     def action_narrow(self, context):
         target = context['targets'][0]
-        context['input'] = target['action__path']
-        if context['input'][-1] != '/':
-            context['input'] += '/'
+        context['sources_queue'].append([
+            {'name': 'file', 'args': []},
+            {'name': 'file', 'args': ['new']},
+        ])
+        context['path'] = target['action__path']
 
     def action_open(self, context):
         for target in context['targets']:
