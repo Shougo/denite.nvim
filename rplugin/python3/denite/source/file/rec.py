@@ -111,7 +111,8 @@ class Source(Base):
             ignore = args.ignore
 
         current_folder, _ = path.split(__file__)
-        scantree_py = normpath(join(current_folder, pardir, 'scantree.py'))
+        scantree_py = normpath(join(current_folder,
+                                    pardir, pardir, 'scantree.py'))
 
         if shutil.which('python3') is not None:
             python_exe = 'python3'
