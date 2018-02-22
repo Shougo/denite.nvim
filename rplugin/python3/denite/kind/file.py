@@ -103,6 +103,7 @@ class Kind(Openable):
         qflist = [{
             'filename': x['action__path'],
             'lnum': x['action__line'],
+            'col': x['action__col'],
             'text': x['action__text'],
         } for x in context['targets']
                   if 'action__line' in x and 'action__text' in x]
