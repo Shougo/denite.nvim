@@ -222,6 +222,10 @@ EXAMPLES						*denite-examples*
 	call denite#custom#var('grep', 'separator', [])
 	call denite#custom#var('grep', 'final_opts', [])
 
+	" Specify multiple paths in grep source
+	"call denite#start([{'name': 'grep',
+	"      \ 'args': [['a.vim', 'b.vim'], '', 'pattern']}])
+
 	" Define alias
 	call denite#custom#alias('source', 'file_rec/git', 'file_rec')
 	call denite#custom#var('file_rec/git', 'command',
