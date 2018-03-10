@@ -8,7 +8,7 @@ import re
 import os
 import sys
 
-from glob import glob, iglob
+from glob import glob
 from os.path import normpath, normcase, join, dirname
 from importlib.machinery import SourceFileLoader
 
