@@ -66,9 +66,9 @@ def test_parse_tag_line():
         }
 
 
-@patch('denite.util.iglob')
-def test_find_rplugins_source(iglob):
-    iglob.side_effect = _iglob_side_effect
+@patch('denite.util.os.walk')
+def test_find_rplugins_source(walk):
+    walk.side_effect = _walk_side_effect
 
     context = { 'runtimepath': '/a,/b' }
     source = 'source'
@@ -79,41 +79,40 @@ def test_find_rplugins_source(iglob):
     )]
 
     it = util.find_rplugins(context, source, loaded_paths)
-    iglob.assert_not_called()
+    walk.assert_not_called()
 
     assert next(it) == ('/a/%s/foo.py' % prefix, 'foo')
     assert next(it) == ('/a/%s/bar/__init__.py' % prefix, 'bar')
-    assert next(it) == ('/a/%s/bar/base.py' % prefix, 'bar.base')
     assert next(it) == ('/a/%s/bar/foo.py' % prefix, 'bar.foo')
+    assert next(it) == ('/a/%s/bar/base.py' % prefix, 'bar.base')
     assert next(it) == ('/a/%s/bar/hoge/__init__.py' % prefix, 'bar.hoge')
-    assert next(it) == ('/a/%s/bar/hoge/base.py' % prefix, 'bar.hoge.base')
     assert next(it) == ('/a/%s/bar/hoge/foo.py' % prefix, 'bar.hoge.foo')
-    iglob.assert_called_once_with(
-        os.path.normpath('/a/%s/**/*.py' % prefix),
-        recursive=True,
+    assert next(it) == ('/a/%s/bar/hoge/base.py' % prefix, 'bar.hoge.base')
+    walk.assert_called_once_with(
+        os.path.normpath('/a/%s' % prefix),
     )
-    iglob.reset_mock()
+    walk.reset_mock()
 
     assert next(it) == ('/b/%s/foo.py' % prefix, 'foo')
     assert next(it) == ('/b/%s/bar/__init__.py' % prefix, 'bar')
-    assert next(it) == ('/b/%s/bar/base.py' % prefix, 'bar.base')
     assert next(it) == ('/b/%s/bar/foo.py' % prefix, 'bar.foo')
+    assert next(it) == ('/b/%s/bar/base.py' % prefix, 'bar.base')
     assert next(it) == ('/b/%s/bar/hoge/__init__.py' % prefix, 'bar.hoge')
-    assert next(it) == ('/b/%s/bar/hoge/base.py' % prefix, 'bar.hoge.base')
     assert next(it) == ('/b/%s/bar/hoge/foo.py' % prefix, 'bar.hoge.foo')
-    iglob.assert_called_once_with(
-        os.path.normpath('/b/%s/**/*.py' % prefix),
-        recursive=True,
+    assert next(it) == ('/b/%s/bar/hoge/base.py' % prefix, 'bar.hoge.base')
+    walk.assert_called_once_with(
+        os.path.normpath('/b/%s' % prefix),
     )
-    iglob.reset_mock()
+    walk.reset_mock()
 
     with pytest.raises(StopIteration):
         next(it)
-    iglob.assert_not_called()
+    walk.assert_not_called()
 
-@patch('denite.util.iglob')
-def test_find_rplugins_filter(iglob):
-    iglob.side_effect = _iglob_side_effect
+
+@patch('denite.util.os.walk')
+def test_find_rplugins_filter(walk):
+    walk.side_effect = _walk_side_effect
 
     context = { 'runtimepath': '/a,/b' }
     source = 'filter'
@@ -124,42 +123,40 @@ def test_find_rplugins_filter(iglob):
     )]
 
     it = util.find_rplugins(context, source, loaded_paths)
-    iglob.assert_not_called()
+    walk.assert_not_called()
 
     assert next(it) == ('/a/%s/foo.py' % prefix, 'foo')
     assert next(it) == ('/a/%s/bar/__init__.py' % prefix, 'bar')
-    assert next(it) == ('/a/%s/bar/base.py' % prefix, 'bar.base')
     assert next(it) == ('/a/%s/bar/foo.py' % prefix, 'bar.foo')
+    assert next(it) == ('/a/%s/bar/base.py' % prefix, 'bar.base')
     assert next(it) == ('/a/%s/bar/hoge/__init__.py' % prefix, 'bar.hoge')
-    assert next(it) == ('/a/%s/bar/hoge/base.py' % prefix, 'bar.hoge.base')
     assert next(it) == ('/a/%s/bar/hoge/foo.py' % prefix, 'bar.hoge.foo')
-    iglob.assert_called_once_with(
-        os.path.normpath('/a/%s/**/*.py' % prefix),
-        recursive=True,
+    assert next(it) == ('/a/%s/bar/hoge/base.py' % prefix, 'bar.hoge.base')
+    walk.assert_called_once_with(
+        os.path.normpath('/a/%s' % prefix),
     )
-    iglob.reset_mock()
+    walk.reset_mock()
 
     assert next(it) == ('/b/%s/foo.py' % prefix, 'foo')
     assert next(it) == ('/b/%s/bar/__init__.py' % prefix, 'bar')
-    assert next(it) == ('/b/%s/bar/base.py' % prefix, 'bar.base')
     assert next(it) == ('/b/%s/bar/foo.py' % prefix, 'bar.foo')
+    assert next(it) == ('/b/%s/bar/base.py' % prefix, 'bar.base')
     assert next(it) == ('/b/%s/bar/hoge/__init__.py' % prefix, 'bar.hoge')
-    assert next(it) == ('/b/%s/bar/hoge/base.py' % prefix, 'bar.hoge.base')
     assert next(it) == ('/b/%s/bar/hoge/foo.py' % prefix, 'bar.hoge.foo')
-    iglob.assert_called_once_with(
-        os.path.normpath('/b/%s/**/*.py' % prefix),
-        recursive=True,
+    assert next(it) == ('/b/%s/bar/hoge/base.py' % prefix, 'bar.hoge.base')
+    walk.assert_called_once_with(
+        os.path.normpath('/b/%s' % prefix),
     )
-    iglob.reset_mock()
+    walk.reset_mock()
 
     with pytest.raises(StopIteration):
         next(it)
-    iglob.assert_not_called()
+    walk.assert_not_called()
 
 
-@patch('denite.util.iglob')
-def test_find_rplugins_kind(iglob):
-    iglob.side_effect = _iglob_side_effect
+@patch('denite.util.os.walk')
+def test_find_rplugins_kind(walk):
+    walk.side_effect = _walk_side_effect
 
     context = { 'runtimepath': '/a,/b' }
     source = 'kind'
@@ -170,58 +167,52 @@ def test_find_rplugins_kind(iglob):
     )]
 
     it = util.find_rplugins(context, source, loaded_paths)
-    iglob.assert_not_called()
+    walk.assert_not_called()
 
-    assert next(it) == ('/a/%s/base.py' % prefix, 'base')
     assert next(it) == ('/a/%s/foo.py' % prefix, 'foo')
+    assert next(it) == ('/a/%s/base.py' % prefix, 'base')
     assert next(it) == ('/a/%s/bar/__init__.py' % prefix, 'bar')
-    assert next(it) == ('/a/%s/bar/base.py' % prefix, 'bar.base')
     assert next(it) == ('/a/%s/bar/foo.py' % prefix, 'bar.foo')
+    assert next(it) == ('/a/%s/bar/base.py' % prefix, 'bar.base')
     assert next(it) == ('/a/%s/bar/hoge/__init__.py' % prefix, 'bar.hoge')
-    assert next(it) == ('/a/%s/bar/hoge/base.py' % prefix, 'bar.hoge.base')
     assert next(it) == ('/a/%s/bar/hoge/foo.py' % prefix, 'bar.hoge.foo')
-    iglob.assert_called_once_with(
-        os.path.normpath('/a/%s/**/*.py' % prefix),
-        recursive=True,
+    assert next(it) == ('/a/%s/bar/hoge/base.py' % prefix, 'bar.hoge.base')
+    walk.assert_called_once_with(
+        os.path.normpath('/a/%s' % prefix),
     )
-    iglob.reset_mock()
+    walk.reset_mock()
 
-    assert next(it) == ('/b/%s/base.py' % prefix, 'base')
     assert next(it) == ('/b/%s/foo.py' % prefix, 'foo')
+    assert next(it) == ('/b/%s/base.py' % prefix, 'base')
     assert next(it) == ('/b/%s/bar/__init__.py' % prefix, 'bar')
-    assert next(it) == ('/b/%s/bar/base.py' % prefix, 'bar.base')
     assert next(it) == ('/b/%s/bar/foo.py' % prefix, 'bar.foo')
+    assert next(it) == ('/b/%s/bar/base.py' % prefix, 'bar.base')
     assert next(it) == ('/b/%s/bar/hoge/__init__.py' % prefix, 'bar.hoge')
-    assert next(it) == ('/b/%s/bar/hoge/base.py' % prefix, 'bar.hoge.base')
     assert next(it) == ('/b/%s/bar/hoge/foo.py' % prefix, 'bar.hoge.foo')
-    iglob.assert_called_once_with(
-        os.path.normpath('/b/%s/**/*.py' % prefix),
-        recursive=True,
+    assert next(it) == ('/b/%s/bar/hoge/base.py' % prefix, 'bar.hoge.base')
+    walk.assert_called_once_with(
+        os.path.normpath('/b/%s' % prefix),
     )
-    iglob.reset_mock()
+    walk.reset_mock()
 
     with pytest.raises(StopIteration):
         next(it)
-    iglob.assert_not_called()
+    walk.assert_not_called()
 
 
-def _iglob_side_effect(pathname, *, recursive=False):
-    root = pathname.replace(os.path.join('**', '*.py'), '')
-    candidates = (
-        '__init__.py',
-        'base.py',
-        'foo.py',
-        'loaded.py',
-        'bar/__init__.py',
-        'bar/base.py',
-        'bar/foo.py',
-        'bar/loaded.py',
-        'bar/hoge/__init__.py',
-        'bar/hoge/base.py',
-        'bar/hoge/foo.py',
-        'bar/hoge/loaded.py',
+def _walk_side_effect(top, topdown=True, onerror=None, followlinks=False):
+    yield (
+        top,
+        ['bar'],
+        ['__init__.py', 'foo.py', 'base.py', 'loaded.py'],
     )
-    return (
-        os.path.normpath(os.path.join(root, x))
-        for x in candidates
+    yield (
+        os.path.join(top, 'bar'),
+        ['hoge'],
+        ['__init__.py', 'foo.py', 'base.py', 'loaded.py'],
+    )
+    yield (
+        os.path.join(top, 'bar', 'hoge'),
+        ['hoge'],
+        ['__init__.py', 'foo.py', 'base.py', 'loaded.py'],
     )
