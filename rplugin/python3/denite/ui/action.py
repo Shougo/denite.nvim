@@ -118,11 +118,11 @@ def _jump_to_previous_by(prompt, params):
 
 
 def _jump_to_next_source(prompt, params):
-    return prompt.denite.jump_to_next_by('source')
+    return prompt.denite.jump_to_next_by('source_name')
 
 
 def _jump_to_previous_source(prompt, params):
-    return prompt.denite.jump_to_prev_by('source')
+    return prompt.denite.jump_to_prev_by('source_name')
 
 
 def _input_command_line(prompt, params):
