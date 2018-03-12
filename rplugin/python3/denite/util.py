@@ -8,7 +8,7 @@ import re
 import os
 import sys
 
-from glob import glob, iglob
+from glob import glob
 from os.path import normpath, normcase, join, dirname
 from importlib.machinery import SourceFileLoader
 
@@ -201,24 +201,29 @@ def find_rplugins(context, source, loaded_paths):
     """
     base = join('rplugin', 'python3', 'denite', source)
     for runtime in context.get('runtimepath', '').split(','):
-        root = os.path.normpath(join(runtime, base))
-        for path in filter(lambda p: normcase(normpath(p)) not in loaded_paths,
-                           iglob(join(root, '**', '*.py'), recursive=True)):
-            module_path = os.path.relpath(str(path), root)
-            module_path = os.path.splitext(module_path)[0]
-            if module_path == '__init__':
-                # __init__.py in {root} does not have implementation so skip
-                continue
-            elif module_path == 'base' and source != 'kind':
-                # base.py in {root} does not have implementation so skip
-                # NOTE: kind/base.py DOES have implementation so do NOT skip
-                continue
-            if os.path.basename(module_path) == '__init__':
-                # 'foo/__init__.py' should be loaded as a module 'foo'
-                module_path = os.path.dirname(module_path)
-            # Convert IO path to module path
-            module_path = module_path.replace(os.sep, '.')
-            yield (path, module_path)
+        root = normcase(normpath(join(runtime, base)))
+        for r, _, fs in os.walk(root):
+            for f in fs:
+                path = normcase(normpath(join(r, f)))
+                if not path.endswith('.py') or path in loaded_paths:
+                    continue
+                module_path = os.path.relpath(path, root)
+                module_path = os.path.splitext(module_path)[0]
+                if module_path == '__init__':
+                    # __init__.py in {root} does not have implementation
+                    # so skip
+                    continue
+                elif module_path == 'base' and source != 'kind':
+                    # base.py in {root} does not have implementation so skip
+                    # NOTE: kind/base.py DOES have implementation so do
+                    # NOT skip
+                    continue
+                if os.path.basename(module_path) == '__init__':
+                    # 'foo/__init__.py' should be loaded as a module 'foo'
+                    module_path = os.path.dirname(module_path)
+                # Convert IO path to module path
+                module_path = module_path.replace(os.sep, '.')
+                yield (path, module_path)
 
 
 def import_rplugins(name, context, source, loaded_paths):
