@@ -128,8 +128,8 @@ EXAMPLES						*denite-examples*
 	call denite#custom#var('file_rec', 'command',
 	\ ['pt', '--follow', '--nocolor', '--nogroup',
 	\  (has('win32') ? '-g:' : '-g='), ''])
-	"For python script scantree.py (works if python 3.5+ in path)
-	"Read bellow on this file to learn more about scantree.py
+	" For python script scantree.py (works if python 3.5+ in path)
+	" Read bellow on this file to learn more about scantree.py
 	call denite#custom#var('file_rec', 'command', ['scantree.py'])
 
 	" Change mappings.
