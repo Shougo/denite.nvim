@@ -1,7 +1,9 @@
-# -*- coding: utf-8 -*-
+# ============================================================================
 # FILE: command_history.py
 # AUTHOR: pocari <caffelattenonsugar at gmail.com>
 # License: MIT license
+# ============================================================================
+
 import re
 
 from denite import util
@@ -77,9 +79,8 @@ class Kind(Command):
 
     def action_edit_and_execute(self, context):
         target = context['targets'][0]
-        edited = util.input(self.vim, context,
-                            "command > ",
-                            target['action__command'],
-                            'command')
-        if edited:
-            self.vim.call('denite#util#execute_command', edited)
+        command = util.input(self.vim, context,
+                             "command > ",
+                             target['action__command'],
+                             'command')
+        self._execute(command)

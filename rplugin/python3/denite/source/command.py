@@ -32,22 +32,29 @@ class Source(Base):
     def gather_candidates(self, context):
         context['is_interactive'] = True
 
-        if ' ' not in context['input'] or not self.vim.call(
-                'denite#helper#has_cmdline'):
+        has_cmdline = self.vim.call('denite#helper#has_cmdline')
+        template = "echo execute(input(':', '{0}', 'command'))"
+        if ' ' not in context['input'] or not has_cmdline:
             if not self.commands:
                 self._cache_helpfile()
             return self.commands + [{
-                'action__command': "execute input(':{0} ')".format(x),
+                'action__command': template.format(x),
                 'word': x,
             } for x in self.vim.call('getcompletion', '', 'command')]
 
         prefix = sub('\w*$', '', context['input'])
 
-        return [{
-            'action__command': "execute input(':{0} ')".format(prefix + x),
+        candidates = [{
+            'action__command': template.format(prefix + x),
             'word': prefix + x,
         } for x in self.vim.call(
             'getcompletion', context['input'], 'cmdline')]
+        if not candidates:
+            candidates = [{
+                'action__command': template.format(context['input']),
+                'word': context['input'],
+            }]
+        return candidates
 
     def _cache_helpfile(self):
         for helpfile in self._helpfiles:

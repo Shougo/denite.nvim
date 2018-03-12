@@ -5,6 +5,7 @@
 # ============================================================================
 
 from .base import Base
+from denite import util
 
 
 class Kind(Base):
@@ -17,13 +18,22 @@ class Kind(Base):
 
     def action_execute(self, context):
         target = context['targets'][0]
-        self.vim.call('denite#util#execute_command',
-                      target['action__command'])
+        self._execute(target['action__command'])
 
     def action_edit(self, context):
         target = context['targets'][0]
-        command = self.vim.call('input', 'Command: ',
-                                target['action__command'] + ' ', 'command')
-        if command:
-            self.vim.call('denite#util#execute_command',
-                          target['action__command'])
+        command = util.input(self.vim, context,
+                             "command > ",
+                             target['action__command'],
+                             'command')
+        self._execute(command)
+
+    def _execute(self, command):
+        if not command:
+            return
+        output = self.vim.call('denite#util#execute_command', command)
+        if not output or output == '\n':
+            return
+        self.vim.command('redraw')
+        self.debug(output)
+        self.vim.call('getchar')

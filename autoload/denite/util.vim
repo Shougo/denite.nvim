@@ -50,11 +50,13 @@ function! denite#util#execute_path(command, path) abort
   endtry
 endfunction
 function! denite#util#execute_command(command) abort
+  let msg = ''
   try
-    execute a:command
+    let msg = execute(a:command)
   catch /^Vim\%((\a\+)\)\=:E/
     call denite#util#print_error(v:errmsg)
   endtry
+  return msg
 endfunction
 
 function! denite#util#echo(color, string) abort
