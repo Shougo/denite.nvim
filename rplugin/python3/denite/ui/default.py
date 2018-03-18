@@ -188,6 +188,7 @@ class Default(object):
         self._options['buftype'] = 'nofile'
         self._options['swapfile'] = False
         self._options['buflisted'] = False
+        self._options['modeline'] = False
         self._options['filetype'] = 'denite'
 
         self._window_options = self._vim.current.window.options
