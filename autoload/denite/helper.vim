@@ -54,7 +54,8 @@ endfunction
 function! denite#helper#preview_file(context, filename) abort
   if a:context.vertical_preview
     let denite_winwidth = &columns
-    call denite#util#execute_path('silent vertical pedit!', a:filename)
+    call denite#util#execute_path(
+          \ 'silent rightbelow vertical pedit!', a:filename)
     wincmd P
     execute 'vert resize ' . (denite_winwidth / 2)
   else
