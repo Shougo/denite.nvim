@@ -61,7 +61,7 @@ class Source(Base):
             'recursive_opts': ['-r'],
             'pattern_opt': ['-e'],
             'separator': ['--'],
-            'final_opts': ['.'],
+            'final_opts': [''],
             'min_interactive_pattern': 3,
         }
         self.matchers = ['matcher_ignore_globs', 'matcher_regexp']
@@ -165,6 +165,7 @@ class Source(Base):
         args += self.vars['default_opts']
         args += self.vars['recursive_opts']
         args += context['__arguments']
+
         if self.vars['pattern_opt']:
             for pattern in context['__patterns']:
                 args += self.vars['pattern_opt'] + [pattern]
@@ -172,10 +173,12 @@ class Source(Base):
         else:
             args += self.vars['separator']
             args += context['__patterns']
-        if context['__paths']:
-            args += context['__paths']
+
+        final_opts = self.vars['final_opts']
+        if len(final_opts) != 1 or final_opts[0] != '':
+            args += final_opts
         else:
-            args += self.vars['final_opts']
+            args += context['__paths']
 
         self.print_message(context, args)
 

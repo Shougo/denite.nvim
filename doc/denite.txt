@@ -1511,7 +1511,8 @@ grep		Gather grep results and nominates them.
 		separator	the argument separator
 				(default: ["--"])
 		final_opts	the final arguments
-				(default: ["."] path to search argument)
+				(usually specifying the path to search in)
+				(default: [""] will expand to the run path)
 
 						*denite-source-help*
 help		Search through doc tags
