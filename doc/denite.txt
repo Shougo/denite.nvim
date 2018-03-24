@@ -1451,7 +1451,7 @@ file/rec (file_rec)
 					\ ['scantree.py'])
 <
 				By default it ignores the files or folders
-				matching your wildignore setting.
+				matching your |'wildignore'| setting.
 				You can change which files to ignore with the
 				following command line argument:
 				  --ignore pat1,pat2,...
@@ -1461,20 +1461,20 @@ file/rec (file_rec)
 
 				The following two examples show how to set up
 				the command:
-
+>
 				call denite#custom#var('file_rec', 'command',
 					\ ['scantree.py', "--ignore=''"])
-
+<
 				or
-
+>
 				let ignore=&wildignore .
-				  \ ',*.pyc,.git,.hg,.svn'
+				    \ ',*.pyc,.git,.hg,.svn'
 				call denite#custom#var('file_rec', 'command',
 				    \ ['scantree.py', '--ignore', ignore])
-
+<
 				The first example doesn't ignore any files,
 				the second ignores everything matching
-				wildignore plus the given patterns.
+				|'wildignore'| plus the given patterns.
 				Note: The patterns are based on fnmatch python
 				module.
 
