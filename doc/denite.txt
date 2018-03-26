@@ -1494,6 +1494,7 @@ grep		Gather grep results and nominates them.
 			1. string or list of arguments
 			2. pattern string or list of patterns
 
+		Note: If the args 0 is empty, |denite-options-path| is used.
 		Note: If the args 2 is "!", it is the interactive mode.
 		The results are updated when the input is changed.
 		Note: If the args 2 is empty, |denite-options-input| or user
@@ -1511,7 +1512,7 @@ grep		Gather grep results and nominates them.
 		separator	the argument separator
 				(default: ["--"])
 		final_opts	the final arguments
-				(default: ["."] path to search argument)
+				(default: [])
 
 						*denite-source-help*
 help		Search through doc tags
