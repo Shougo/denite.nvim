@@ -573,7 +573,7 @@ class Default(object):
         self.update_status()
 
     def cleanup(self):
-        if not self._is_suspend:
+        if not self._is_suspend and not self._context['has_preview_window']:
             self._vim.command('pclose!')
         clearmatch(self._vim)
         if not self._context['immediately']:

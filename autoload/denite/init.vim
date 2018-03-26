@@ -62,6 +62,8 @@ function! denite#init#_context() abort
         \ 'is_windows': ((has('win32') || has('win64')) ? v:true : v:false),
         \ 'messages': [],
         \ 'prev_winid': win_getid(),
+        \ 'has_preview_window': len(filter(range(1, winnr('$')),
+        \   'getwinvar(v:val, "&previewwindow")')) > 0,
         \ 'quick_move_table': {
         \   'a' : 0, 's' : 1, 'd' : 2, 'f' : 3, 'g' : 4,
         \   'h' : 5, 'j' : 6, 'k' : 7, 'l' : 8, ';' : 9,
