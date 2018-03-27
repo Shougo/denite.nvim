@@ -19,6 +19,9 @@ def test_regex_convert_py_vim():
     assert util.regex_convert_py_vim(r'/foo/') == r'\v\/foo\/'
     assert util.regex_convert_py_vim(r'~foo') == r'\v\~foo'
 
+def test_regex_convert_str_vim():
+    assert util.regex_convert_str_vim(r'file') == 'file'
+
 def test_parse_jump_line():
     assert util.parse_jump_line(
         '', 'file:text') == []

@@ -294,6 +294,7 @@ class Default(object):
                 regex_convert_str_vim(source_name),
                 source.syntax_name,
             )
+            error(self._vim, regex_convert_str_vim(source_name))
             self._vim.command(syntax_line)
             source.highlight()
             source.define_syntax()
@@ -450,7 +451,8 @@ class Default(object):
         if not self._is_multi or source_names == 'hide':
             source_name = ''
         else:
-            short_name = re.sub(r'([a-zA-Z])[a-zA-Z]+', r'\1', name)
+            short_name = (re.sub(r'([a-zA-Z])[a-zA-Z]+', r'\1', name)
+                          if re.search(r'[^a-zA-Z]', name) else name[:2])
             source_name = short_name if source_names == 'short' else name
         return source_name
 
