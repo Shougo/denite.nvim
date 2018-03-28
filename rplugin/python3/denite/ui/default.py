@@ -294,7 +294,6 @@ class Default(object):
                 regex_convert_str_vim(source_name),
                 source.syntax_name,
             )
-            error(self._vim, regex_convert_str_vim(source_name))
             self._vim.command(syntax_line)
             source.highlight()
             source.define_syntax()
