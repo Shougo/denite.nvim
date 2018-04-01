@@ -55,7 +55,32 @@ function! denite#init#_initialize() abort
   endtry
 endfunction
 
-function! denite#init#_context() abort
+function! denite#init#_context(user_context) abort
+  let buffer_name = get(a:user_context, 'buffer_name', 'default')
+  let context = s:internal_options()
+  call extend(context, denite#init#_user_options())
+  let context.custom = denite#custom#get()
+  if has_key(context.custom.option, '_')
+    call extend(context, context.custom.option['_'])
+  endif
+  if has_key(context.custom.option, buffer_name)
+    call extend(context, context.custom.option[buffer_name])
+  endif
+  call extend(context, a:user_context)
+
+  " For compatibility(deprecated variables)
+  for [old_option, new_option] in filter(items(
+        \ denite#init#_deprecated_options()),
+        \ 'has_key(context, v:val[0])')
+    let context[new_option] = context[old_option]
+  endfor
+  if get(context, 'short_source_names', v:false)
+    let context['source_names'] = 'short'
+  endif
+
+  return context
+endfunction
+function! s:internal_options() abort
   return {
         \ 'encoding': &encoding,
         \ 'error_messages': [],

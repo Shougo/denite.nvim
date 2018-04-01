@@ -36,29 +36,6 @@ function! denite#get_status_linenr() abort
 endfunction
 
 function! s:start(sources, user_context) abort
-  let buffer_name = get(a:user_context, 'buffer_name', 'default')
-
-  let context = denite#init#_context()
-  call extend(context, denite#init#_user_options())
-  let context.custom = denite#custom#get()
-  if has_key(context.custom.option, '_')
-    call extend(context, context.custom.option['_'])
-  endif
-  if has_key(context.custom.option, buffer_name)
-    call extend(context, context.custom.option[buffer_name])
-  endif
-  call extend(context, a:user_context)
-
-  " For compatibility(deprecated variables)
-  for [old_option, new_option] in filter(items(
-        \ denite#init#_deprecated_options()),
-        \ 'has_key(context, v:val[0])')
-    let context[new_option] = context[old_option]
-  endfor
-  if get(context, 'short_source_names', v:false)
-    let context['source_names'] = 'short'
-  endif
-
   if denite#initialize()
     return
   endif
@@ -68,6 +45,7 @@ function! s:start(sources, user_context) abort
   execute line('.')
   call setpos('.', pos)
 
+  let context = denite#init#_context(a:user_context)
   return has('nvim') ? _denite_start(a:sources, context)
         \            : denite#vim#_start(a:sources, context)
 endfunction

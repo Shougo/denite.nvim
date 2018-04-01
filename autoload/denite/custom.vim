@@ -6,19 +6,23 @@
 
 function! denite#custom#get() abort
   if !exists('s:custom')
-    let s:custom = {}
-    let s:custom.source = {}
-    let s:custom.source._ = {}
-    let s:custom.map = {}
-    let s:custom.map._ = []
-    let s:custom.alias_source = {}
-    let s:custom.alias_filter = {}
-    let s:custom.option = {}
-    let s:custom.filter = {}
-    let s:custom.action = {}
+    call denite#custom#init()
   endif
 
   return s:custom
+endfunction
+
+function! denite#custom#init() abort
+  let s:custom = {}
+  let s:custom.source = {}
+  let s:custom.source._ = {}
+  let s:custom.map = {}
+  let s:custom.map._ = []
+  let s:custom.alias_source = {}
+  let s:custom.alias_filter = {}
+  let s:custom.option = {}
+  let s:custom.filter = {}
+  let s:custom.action = {}
 endfunction
 
 function! denite#custom#source(source_name, option_name, value) abort
