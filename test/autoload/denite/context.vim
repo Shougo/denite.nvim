@@ -4,7 +4,7 @@ let s:suite = themis#suite('custom')
 let s:assert = themis#helper('assert')
 
 function! s:suite.before_each() abort
-  call denite#custom#init()
+  call denite#custom#_init()
 endfunction
 
 function! s:suite.init_context() abort

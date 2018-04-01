@@ -313,7 +313,7 @@ class Denite(object):
 
         context['targets'] = targets
         return action['func'](context) if action['func'] else self._vim.call(
-            'denite#custom#call_action',
+            'denite#custom#_call_action',
             action['kind'], action['name'], context)
 
     def _get_kind(self, context, target):

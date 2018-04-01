@@ -59,7 +59,7 @@ function! denite#init#_context(user_context) abort
   let buffer_name = get(a:user_context, 'buffer_name', 'default')
   let context = s:internal_options()
   call extend(context, denite#init#_user_options())
-  let context.custom = denite#custom#get()
+  let context.custom = denite#custom#_get()
   if has_key(context.custom.option, '_')
     call extend(context, context.custom.option['_'])
   endif
