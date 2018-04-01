@@ -71,11 +71,17 @@ function! denite#init#_context(user_context) abort
   " For compatibility(deprecated variables)
   for [old_option, new_option] in filter(items(
         \ denite#init#_deprecated_options()),
-        \ 'has_key(context, v:val[0])')
+        \ "has_key(context, v:val[0]) && v:val[1] !=# ''")
     let context[new_option] = context[old_option]
   endfor
   if get(context, 'short_source_names', v:false)
     let context['source_names'] = 'short'
+  endif
+  if has_key(context, 'quit') && !context['quit']
+    let context['post_action'] = 'open'
+  endif
+  if get(context, 'force_quit', v:false)
+    let context['post_action'] = 'quit'
   endif
 
   return context
@@ -133,8 +139,7 @@ function! denite#init#_user_options() abort
         \ 'previewheight': &previewheight,
         \ 'prompt': '#',
         \ 'prompt_highlight': 'Statement',
-        \ 'quit': v:true,
-        \ 'force_quit': v:false,
+        \ 'post_action': 'none',
         \ 'refresh': v:false,
         \ 'resume': v:false,
         \ 'reversed': v:false,
@@ -158,5 +163,7 @@ endfunction
 function! denite#init#_deprecated_options() abort
   return {
         \ 'select': 'cursor_pos',
+        \ 'force_quit': '',
+        \ 'quit': '',
         \}
 endfunction

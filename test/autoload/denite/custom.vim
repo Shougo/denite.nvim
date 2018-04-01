@@ -1,9 +1,7 @@
 " set verbose=1
 
-let s:suite = themis#suite('parse')
+let s:suite = themis#suite('custom')
 let s:assert = themis#helper('assert')
-
-let s:path = tempname()
 
 function! s:suite.before_each() abort
   call denite#custom#init()

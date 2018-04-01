@@ -1188,6 +1188,17 @@ OPTIONS							*denite-options*
 		Specify an initial narrowing path.
 		Default: ""
 
+						*denite-options-post-action*
+-post-action={action}
+		Specify the action after action.
+
+		"quit": quit the denite buffer.
+		"open": open the denite buffer.
+		"suspend": suspend the denite buffer.
+		Otherwise: Nothing.
+
+		Default: "none"
+
 					*denite-options-quick-move-table*
 -quick-move
 
@@ -1205,18 +1216,7 @@ OPTIONS							*denite-options*
         		\   '1' : 20, '2' : 21, '3' : 22, '4' : 23, '5' : 24,
         		\   '6' : 25, '7' : 26, '8' : 27, '9' : 28, '0' : 29,
         		\ }
-
-							*denite-options-quit*
--quit
-		Quit the denite buffer after the action is executed.
-		Default: true
-
-						*denite-options-force-quit*
--force-quit
-		Quit the denite buffer after the action is executed even if
-		the action causes quit.
-		Default: false
-
+<
 						*denite-options-refresh*
 -refresh
 		Refresh the candidates when |denite-options-resume| is true.
@@ -2254,6 +2254,10 @@ A: >
 
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
+
+2018.04.01
+* Remove "-force-quit" and "-no-quit" options.  Please use "post-action"
+  option instead.
 
 2018.02.06
 * <denite:toggle_sorters> is deprecated.  Please use <denite:change_sorters>

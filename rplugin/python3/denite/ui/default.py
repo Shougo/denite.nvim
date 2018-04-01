@@ -89,7 +89,7 @@ class Default(object):
                 self._current_mode = context['mode']
 
             update = ('immediately', 'immediately_1',
-                      'cursor_wrap', 'cursor_pos', 'force_quit')
+                      'cursor_wrap', 'cursor_pos')
             for key in update:
                 self._context[key] = context[key]
 
@@ -682,13 +682,16 @@ class Default(object):
             action = self._denite.get_action(
                 self._context, action_name, candidates)
 
-        is_quit = action['is_quit'] or self._context['force_quit']
+        post_action = self._context['post_action']
+
+        is_quit = action['is_quit'] or post_action == 'quit'
         if is_quit:
             self.quit()
 
         self._denite.do_action(self._context, action_name, candidates)
+        self._result = candidates
 
-        if is_quit and not self._context['quit']:
+        if is_quit and (post_action == 'open' or post_action == 'suspend'):
             # Re-open denite buffer
 
             self.init_buffer()
@@ -702,7 +705,11 @@ class Default(object):
             self._selected_candidates = []
             self.redraw(action['is_redraw'])
 
-        self._result = candidates
+        if post_action == 'suspend':
+            self.suspend()
+            self._vim.command('wincmd p')
+            return STATUS_ACCEPT
+
         return STATUS_ACCEPT if is_quit else None
 
     def choose_action(self):
