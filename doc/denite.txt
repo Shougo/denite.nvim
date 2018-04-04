@@ -2250,7 +2250,7 @@ Q: I want to narrow by path in grep source.
 
 A: >
 	call denite#custom#source('grep',
-	\ 'converters', ['converter_abbr_word'])
+	\ 'converters', ['converter/abbr_word'])
 
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*

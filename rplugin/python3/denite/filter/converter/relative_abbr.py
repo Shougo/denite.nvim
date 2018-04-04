@@ -1,5 +1,5 @@
 # ============================================================================
-# FILE: converter_relative_abbr.py
+# FILE: converter/relative_abbr.py
 # AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
 # License: MIT license
 # ============================================================================

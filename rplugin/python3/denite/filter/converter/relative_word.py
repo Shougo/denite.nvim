@@ -1,5 +1,5 @@
 # ============================================================================
-# FILE: converter_relative_word.py
+# FILE: converter/relative_word.py
 # AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
 # License: MIT license
 # ============================================================================

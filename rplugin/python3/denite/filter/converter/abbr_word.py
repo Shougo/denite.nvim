@@ -1,5 +1,5 @@
 # ============================================================================
-# FILE: converter_abbr_word.py
+# FILE: converter/abbr_word.py
 # AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
 # License: MIT license
 # ============================================================================
