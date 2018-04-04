@@ -1,5 +1,5 @@
 # ============================================================================
-# FILE: sorter_reverse.py
+# FILE: sorter/reverse.py
 # AUTHOR: Jacob Niehus <jacob.niehus at gmail.com>
 # DESCRIPTION: Simple filter to reverse the order of candidates
 # License: MIT license

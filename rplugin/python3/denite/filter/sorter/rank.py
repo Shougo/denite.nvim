@@ -1,5 +1,5 @@
 # ============================================================================
-# FILE: sorter_rank.py
+# FILE: sorter/rank.py
 # AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
 # CONTRIBUTOR: David Lee
 #              Jean Cavallo

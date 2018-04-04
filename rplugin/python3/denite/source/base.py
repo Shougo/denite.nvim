@@ -18,7 +18,7 @@ class Base(object):
         self.default_action = 'default'
         self.max_candidates = 1000
         self.matchers = ['matcher_fuzzy']
-        self.sorters = ['sorter_rank']
+        self.sorters = ['sorter/rank']
         self.converters = []
         self.context = {}
         self.vars = {}

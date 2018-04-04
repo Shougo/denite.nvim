@@ -1,5 +1,5 @@
 # ============================================================================
-# FILE: sorter_word.py
+# FILE: sorter/word.py
 # AUTHOR: Tomohito OZAKI <ozaki at yuroyoro.com>
 # DESCRIPTION: Simple filter to sort candidates by ascii order of word
 # License: MIT license

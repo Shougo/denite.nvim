@@ -154,7 +154,7 @@ EXAMPLES						*denite-examples*
 
 	" Change sorters.
 	call denite#custom#source(
-	\ 'file/rec', 'sorters', ['sorter_sublime'])
+	\ 'file/rec', 'sorters', ['sorter/sublime'])
 
 	" Add custom menus
 	let s:menus = {}
@@ -941,7 +941,7 @@ denite#custom#map({mode}, {lhs}, {rhs}[, {params}])
 		    return '<denite:nop>'
 		endfunction
 		call denite#custom#map('insert', '<C-f>',
-		    \ 'ToggleSorter("sorter_reverse")', 'noremap expr nowait')
+		    \ 'ToggleSorter("sorter/reverse")', 'noremap expr nowait')
 <
 		Note: the posterior mappings have higher priority.
 		Note: <Nop> cannot be used while <Nop> is equal to <C-J> in
@@ -970,7 +970,7 @@ denite#custom#source({source-name}, {option-name}, {value})
 		sorters				(List)
 		Specify a list of sorter names.  The filters overwrite source
 		default sorters.
-		Default:  ['sorter_rank']
+		Default:  ['sorter/rank']
 
 		converters			(List)
 		Specify a list of converter names.  The filters overwrite
@@ -1879,8 +1879,7 @@ matchers	(List)				(Optional)
 sorters		(List)				(Optional)
 		Source default sorters list.
 
-		If you omit it, ['sorter_rank'] is
-		used.
+		If you omit it, ['sorter/rank'] is used.
 
 					*denite-source-attribute-converters*
 converters	(List)				(Optional)

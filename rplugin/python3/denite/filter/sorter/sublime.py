@@ -1,5 +1,5 @@
 # ============================================================================
-# FILE: sorter_sublime.py
+# FILE: sorter/sublime.py
 # AUTHOR: Tomoki Ohno <wh11e7rue@icloud.com>
 # DESCRIPTION: Base code is from
 # https://github.com/forrestthewoods/lib_fts/blob/master/code/fts_fuzzy_match.js
