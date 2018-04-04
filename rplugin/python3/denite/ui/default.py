@@ -581,6 +581,7 @@ class Default(object):
             # Redraw to clear prompt
             self._vim.command('redraw | echo ""')
         self._vim.command('highlight! link CursorLine CursorLine')
+        self._window_options['cursorline'] = False
         if self._vim.call('exists', '#ColorScheme'):
             self._vim.command('silent doautocmd ColorScheme')
             self._vim.command('normal! zv')
