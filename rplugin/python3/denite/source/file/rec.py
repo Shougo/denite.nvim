@@ -1,5 +1,5 @@
 # ============================================================================
-# FILE: file_rec.py
+# FILE: file/rec.py
 # AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
 # License: MIT license
 # ============================================================================

@@ -60,16 +60,16 @@ USAGE							*denite-usage*
 	To browse recursive list of all the files under the current working
 	directory.
 >
-	:Denite file_rec
+	:Denite file/rec
 <
 	Or you can combine sources, to browse files and buffers.
 >
-	:Denite file_rec buffer
+	:Denite file/rec buffer
 <
 	There are a number of command line flags (see |denite-options|), for
 	example to set an initial search term (foo) to filter files search.
 >
-	:Denite -input=foo file_rec
+	:Denite -input=foo file/rec
 <
 	Multiple keywords can be used to narrow down the candidates.  They are
 	separated by either a space " ", and act like a logical AND.
@@ -116,21 +116,21 @@ Use |:python3| enabled Vim.
 ==============================================================================
 EXAMPLES						*denite-examples*
 >
-	" Change file_rec command.
-	call denite#custom#var('file_rec', 'command',
+	" Change file/rec command.
+	call denite#custom#var('file/rec', 'command',
 	\ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
 	" For ripgrep
 	" Note: It is slower than ag
-	call denite#custom#var('file_rec', 'command',
+	call denite#custom#var('file/rec', 'command',
 	\ ['rg', '--files', '--glob', '!.git'])
 	" For Pt(the platinum searcher)
 	" NOTE: It also supports windows.
-	call denite#custom#var('file_rec', 'command',
+	call denite#custom#var('file/rec', 'command',
 	\ ['pt', '--follow', '--nocolor', '--nogroup',
 	\  (has('win32') ? '-g:' : '-g='), ''])
 	" For python script scantree.py (works if python 3.5+ in path)
 	" Read bellow on this file to learn more about scantree.py
-	call denite#custom#var('file_rec', 'command', ['scantree.py'])
+	call denite#custom#var('file/rec', 'command', ['scantree.py'])
 
 	" Change mappings.
 	call denite#custom#map(
@@ -150,11 +150,11 @@ EXAMPLES						*denite-examples*
 	call denite#custom#source(
 	\ 'file_mru', 'matchers', ['matcher_fuzzy', 'matcher_project_files'])
 	call denite#custom#source(
-	\ 'file_rec', 'matchers', ['matcher_cpsm'])
+	\ 'file/rec', 'matchers', ['matcher_cpsm'])
 
 	" Change sorters.
 	call denite#custom#source(
-	\ 'file_rec', 'sorters', ['sorter_sublime'])
+	\ 'file/rec', 'sorters', ['sorter_sublime'])
 
 	" Add custom menus
 	let s:menus = {}
@@ -227,12 +227,12 @@ EXAMPLES						*denite-examples*
 	"      \ 'args': [['a.vim', 'b.vim'], '', 'pattern']}])
 
 	" Define alias
-	call denite#custom#alias('source', 'file_rec/git', 'file_rec')
-	call denite#custom#var('file_rec/git', 'command',
+	call denite#custom#alias('source', 'file/rec/git', 'file/rec')
+	call denite#custom#var('file/rec/git', 'command',
 	      \ ['git', 'ls-files', '-co', '--exclude-standard'])
 
-	call denite#custom#alias('source', 'file_rec/py', 'file_rec')
-	call denite#custom#var('file_rec/py', 'command',['scantree.py'])
+	call denite#custom#alias('source', 'file/rec/py', 'file/rec')
+	call denite#custom#var('file/rec/py', 'command',['scantree.py'])
 
 	" Change default prompt
 	call denite#custom#option('default', 'prompt', '>')
@@ -265,7 +265,7 @@ COMMANDS 						*denite-commands*
 
 		For example:
 
-		:Denite file_rec line
+		:Denite file/rec line
 
 		Will first list the files, then lines of the current buffer.
 
@@ -276,13 +276,13 @@ COMMANDS 						*denite-commands*
 		in parameters themselves, or surround the parameter with quotes.
 
 		Examples:
-		"file_rec:foo:bar": the parameters of source file are
+		"file/rec:foo:bar": the parameters of source file are
 		                    ["foo", "bar"].
-		"file_rec:foo\:bar": the parameter of source file is
+		"file/rec:foo\:bar": the parameter of source file is
 		                     ["foo:bar"].
-		"file_rec:'foo:bar'": the parameter of source file is
+		"file/rec:'foo:bar'": the parameter of source file is
 		                     ["foo:bar"].
-		"file_rec:foo::bar": the parameters of source file are
+		"file/rec:foo::bar": the parameters of source file are
 		                     ["foo", "", "bar"].
 
 		You can use evaluation cmdline by ``.
@@ -1033,7 +1033,7 @@ denite#start({sources}[, {context}])
 		Refer to |denite-notation-{context}| about {context}.  If you
 		skip a value, it uses the default value.
 >
-		call denite#start([{'name': 'file_rec', 'args': []}])
+		call denite#start([{'name': 'file/rec', 'args': []}])
 <
 
 ------------------------------------------------------------------------------
@@ -1435,7 +1435,7 @@ file/rec (file_rec)
 				it's last parameter one can use the positional
 				"directory" argument:
 >
-				call denite#custom#var('file_rec', 'command',
+				call denite#custom#var('file/rec', 'command',
 					\ ['find', '-L', ':directory',
 					\ '-path', '*/.svn/*', '-prune', '-o',
 					\ '-type', 'l', '-print', '-o',
@@ -1443,11 +1443,11 @@ file/rec (file_rec)
 <
 				If python3.5+ is in your path you can use a
 				python script that comes with denite for the
-				file_rec command. It is the default on windows
+				file/rec command. It is the default on windows
 				if you don't set your own commmand.
 				To use it other environments you can do:
 >
-				call denite#custom#var('file_rec', 'command',
+				call denite#custom#var('file/rec', 'command',
 					\ ['scantree.py'])
 <
 				By default it ignores the files or folders
@@ -1462,14 +1462,14 @@ file/rec (file_rec)
 				The following two examples show how to set up
 				the command:
 >
-				call denite#custom#var('file_rec', 'command',
+				call denite#custom#var('file/rec', 'command',
 					\ ['scantree.py', "--ignore=''"])
 <
 				or
 >
 				let ignore=&wildignore .
 				    \ ',*.pyc,.git,.hg,.svn'
-				call denite#custom#var('file_rec', 'command',
+				call denite#custom#var('file/rec', 'command',
 				    \ ['scantree.py', '--ignore', ignore])
 <
 				The first example doesn't ignore any files,
@@ -2132,7 +2132,7 @@ Q: I want to change the cursor line color in Denite buffer.
 A: denite uses 'cursorline' feature.
 So you can change the color by |hl-CursorLine| highlight or
 |denite-options-highlight-mode-{mode}|. >
-	Denite file_rec -highlight-mode-insert=Search
+	Denite file/rec -highlight-mode-insert=Search
 
 Q: I want to use unite source in denite.
 
@@ -2141,14 +2141,14 @@ A: You can use |unite-denite-source-unite| for it. >
 Note: unite installation is needed.
 
 Q: What is the correct way to say "if I'm in a git directory, git ls-files for
-file_rec" ?
+file/rec" ?
 
 A: >
-	call denite#custom#alias('source', 'file_rec/git', 'file_rec')
-	call denite#custom#var('file_rec/git', 'command',
+	call denite#custom#alias('source', 'file/rec/git', 'file/rec')
+	call denite#custom#var('file/rec/git', 'command',
 	\ ['git', 'ls-files', '-co', '--exclude-standard'])
 	nnoremap <silent> <C-p> :<C-u>Denite
-	\ `finddir('.git', ';') != '' ? 'file_rec/git' : 'file_rec'`<CR>
+	\ `finddir('.git', ';') != '' ? 'file/rec/git' : 'file/rec'`<CR>
 
 Q: Where is "file_mru" source for denite.nvim?
 
