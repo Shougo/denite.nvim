@@ -64,7 +64,7 @@ class Source(Base):
             'final_opts': [],
             'min_interactive_pattern': 3,
         }
-        self.matchers = ['matcher_ignore_globs', 'matcher_regexp']
+        self.matchers = ['matcher/ignore_globs', 'matcher/regexp']
 
     def on_init(self, context):
         context['__proc'] = None

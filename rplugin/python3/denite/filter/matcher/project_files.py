@@ -1,5 +1,5 @@
 # ============================================================================
-# FILE: matcher_project_files.py
+# FILE: matcher/project_files.py
 # AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
 # License: MIT license
 # ============================================================================

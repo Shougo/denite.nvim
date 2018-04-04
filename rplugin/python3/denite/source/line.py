@@ -20,7 +20,7 @@ class Source(Base):
 
         self.name = 'line'
         self.kind = 'file'
-        self.matchers = ['matcher_regexp']
+        self.matchers = ['matcher/regexp']
         self.sorters = []
 
     def on_init(self, context):

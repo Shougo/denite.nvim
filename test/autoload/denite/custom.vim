@@ -10,21 +10,21 @@ endfunction
 function! s:suite.custom_source() abort
   let custom = denite#custom#_get().source
   call denite#custom#source(
-        \ 'file_mru', 'matchers', ['matcher_fuzzy', 'matcher_project_files'])
+        \ 'file_mru', 'matchers', ['matcher/fuzzy', 'matcher/project_files'])
   call denite#custom#source(
-        \ 'file/rec', 'matchers', ['matcher_cpsm'])
+        \ 'file/rec', 'matchers', ['matcher/cpsm'])
   call s:assert.equals(custom.file_mru.matchers,
-        \ ['matcher_fuzzy', 'matcher_project_files'])
+        \ ['matcher/fuzzy', 'matcher/project_files'])
   call s:assert.equals(custom['file/rec'].matchers,
-        \ ['matcher_cpsm'])
+        \ ['matcher/cpsm'])
 endfunction
 
 function! s:suite.custom_filter() abort
   let custom = denite#custom#_get().filter
 
-  call denite#custom#filter('matcher_ignore_globs', 'ignore_globs',
+  call denite#custom#filter('matcher/ignore_globs', 'ignore_globs',
         \ [])
-  call s:assert.equals(custom.matcher_ignore_globs.ignore_globs,
+  call s:assert.equals(custom['matcher/ignore_globs'].ignore_globs,
         \ [])
 endfunction
 
@@ -55,8 +55,8 @@ function! s:suite.custom_alias() abort
   call s:assert.equals(custom['file/rec'], ['file/rec/git'])
 
   let custom = denite#custom#_get().alias_filter
-  call denite#custom#alias('filter', 'matcher_bar', 'matcher_foo')
-  call s:assert.equals(custom['matcher_foo'], ['matcher_bar'])
+  call denite#custom#alias('filter', 'matcher/bar', 'matcher/foo')
+  call s:assert.equals(custom['matcher/foo'], ['matcher/bar'])
 endfunction
 
 function! s:suite.custom_option() abort

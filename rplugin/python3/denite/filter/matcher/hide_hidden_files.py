@@ -1,5 +1,5 @@
 # ============================================================================
-# FILE: matcher_hide_hidden_files.py
+# FILE: matcher/hide_hidden_files.py
 # AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
 # License: MIT license
 # ============================================================================

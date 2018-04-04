@@ -148,9 +148,9 @@ EXAMPLES						*denite-examples*
 
 	" Change matchers.
 	call denite#custom#source(
-	\ 'file_mru', 'matchers', ['matcher_fuzzy', 'matcher_project_files'])
+	\ 'file_mru', 'matchers', ['matcher/fuzzy', 'matcher/project_files'])
 	call denite#custom#source(
-	\ 'file/rec', 'matchers', ['matcher_cpsm'])
+	\ 'file/rec', 'matchers', ['matcher/cpsm'])
 
 	" Change sorters.
 	call denite#custom#source(
@@ -238,7 +238,7 @@ EXAMPLES						*denite-examples*
 	call denite#custom#option('default', 'prompt', '>')
 
 	" Change ignore_globs
-	call denite#custom#filter('matcher_ignore_globs', 'ignore_globs',
+	call denite#custom#filter('matcher/ignore_globs', 'ignore_globs',
 	      \ [ '.git/', '.ropeproject/', '__pycache__/',
 	      \   'venv/', 'images/', '*.min.*', 'img/', 'fonts/'])
 
@@ -965,7 +965,7 @@ denite#custom#source({source-name}, {option-name}, {value})
 		matchers			(List)
 		Specify a list of matcher names.  The filters overwrite source
 		default matchers.
-		Default:  ['matcher_fuzzy']
+		Default:  ['matcher/fuzzy']
 
 		sorters				(List)
 		Specify a list of sorter names.  The filters overwrite source
@@ -1873,7 +1873,7 @@ max_candidates		(Number)		(Optional)
 matchers	(List)				(Optional)
 		Source default matchers list.
 
-		If you omit it, ['matcher_fuzzy'] is used.
+		If you omit it, ['matcher/fuzzy'] is used.
 
 					*denite-source-attribute-sorters*
 sorters		(List)				(Optional)

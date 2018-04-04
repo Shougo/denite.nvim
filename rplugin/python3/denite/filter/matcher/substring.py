@@ -1,5 +1,5 @@
 # ============================================================================
-# FILE: matcher_substring.py
+# FILE: matcher/substring.py
 # AUTHOR: Andrew Ruder <andy at aeruder.net>
 # License: MIT license
 # ============================================================================

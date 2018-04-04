@@ -1,5 +1,5 @@
 # ============================================================================
-# FILE: matcher_ignore_globs.py
+# FILE: matcher/ignore_globs.py
 # AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
 # License: MIT license
 # ============================================================================

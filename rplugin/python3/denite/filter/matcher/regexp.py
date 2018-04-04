@@ -1,5 +1,5 @@
 # ============================================================================
-# FILE: matcher_regexp.py
+# FILE: matcher/regexp.py
 # AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
 # License: MIT license
 # ============================================================================

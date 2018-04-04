@@ -1,5 +1,5 @@
 # ============================================================================
-# FILE: matcher_cpsm.py
+# FILE: matcher/cpsm.py
 # AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
 # License: MIT license
 # ============================================================================
@@ -37,10 +37,10 @@ class Filter(Base):
                 self._initialized = True
             else:
                 self.error_message(context,
-                                   'matcher_cpsm: bin/cpsm_py' + ext +
+                                   'matcher/cpsm: bin/cpsm_py' + ext +
                                    ' is not found in your runtimepath.')
                 self.error_message(context,
-                                   'matcher_cpsm: You must install/build' +
+                                   'matcher/cpsm: You must install/build' +
                                    ' Python3 support enabled cpsm.')
                 self._disabled = True
                 return []
