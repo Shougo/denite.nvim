@@ -291,7 +291,8 @@ class Default(object):
             syntax_line = ('syntax match %s /^ %s/ nextgroup=%s keepend' +
                            ' contains=deniteConcealedMark') % (
                 'deniteSourceLine_' + name,
-                regex_convert_str_vim(source_name),
+                regex_convert_str_vim(source_name) +
+                               (' ' if source_name else ''),
                 source.syntax_name,
             )
             self._vim.command(syntax_line)
