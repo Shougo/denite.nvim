@@ -1495,6 +1495,7 @@ grep		Gather grep results and nominates them.
 			2. pattern string or list of patterns
 
 		Note: If the args 0 is empty, |denite-options-path| is used.
+		Note: If the args 1 is "!", it is the interactive mode.
 		Note: If the args 2 is "!", it is the interactive mode.
 		The results are updated when the input is changed.
 		Note: If the args 2 is empty, |denite-options-input| or user

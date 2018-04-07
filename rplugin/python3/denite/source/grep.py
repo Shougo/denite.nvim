@@ -92,6 +92,8 @@ class Source(Base):
         arg = args.get(1, [])
         if arg:
             if isinstance(arg, str):
+                if arg == '!':
+                    arg = util.input(self.vim, context, 'Argument: ')
                 arg = shlex.split(arg)
             elif not isinstance(arg, list):
                 raise AttributeError('`args[1]` needs to be a `str` or `list`')
