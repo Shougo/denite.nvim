@@ -39,6 +39,7 @@ class Source(Base):
                 self._cache_helpfile()
             return self.commands + [{
                 'action__command': template.format(x),
+                'action__is_pause': True,
                 'word': x,
             } for x in self.vim.call('getcompletion', '', 'command')]
 
@@ -46,12 +47,14 @@ class Source(Base):
 
         candidates = [{
             'action__command': template.format(prefix + x),
+            'action__is_pause': True,
             'word': prefix + x,
         } for x in self.vim.call(
             'getcompletion', context['input'], 'cmdline')]
         if not candidates:
             candidates = [{
                 'action__command': template.format(context['input']),
+                'action__is_pause': True,
                 'word': context['input'],
             }]
         return candidates

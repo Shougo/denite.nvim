@@ -49,10 +49,14 @@ function! denite#util#execute_path(command, path) abort
     let &wildignore = save_wildignore
   endtry
 endfunction
-function! denite#util#execute_command(command) abort
+function! denite#util#execute_command(command, is_pause) abort
   let msg = ''
   try
-    let msg = execute(a:command)
+    if a:is_pause
+      let msg = execute(a:command)
+    else
+      execute a:command
+    endif
   catch /^Vim\%((\a\+)\)\=:E/
     call denite#util#print_error(v:errmsg)
   endtry
