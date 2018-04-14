@@ -49,10 +49,10 @@ function! denite#util#execute_path(command, path) abort
     let &wildignore = save_wildignore
   endtry
 endfunction
-function! denite#util#execute_command(command, is_pause) abort
+function! denite#util#execute_command(command, is_capture) abort
   let msg = ''
   try
-    if a:is_pause
+    if a:is_capture
       let msg = execute(a:command)
     else
       execute a:command
