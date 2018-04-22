@@ -510,7 +510,7 @@ class Default(object):
                 self.update_cursor()
             self.do_action('default')
             candidate = self.get_cursor_candidate()
-            echo(self._vim, 'Normal', '[{0}/{1}] {2}]'.format(
+            echo(self._vim, 'Normal', '[{0}/{1}] {2}'.format(
                 self._cursor + self._win_cursor, self._candidates_len,
                 candidate.get('abbr', candidate['word'])))
             if goto:
