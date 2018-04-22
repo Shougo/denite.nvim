@@ -126,7 +126,7 @@ function! denite#custom#_call_action(kind, name, context) abort
 endfunction
 
 function! s:set_custom(dest, name_or_dict, value) abort
-  if type(a:name_or_dict) == type({})
+  if type(a:name_or_dict) == v:t_dict
     call extend(a:dest, a:name_or_dict)
   else
     let a:dest[a:name_or_dict] = a:value
