@@ -685,6 +685,11 @@ are on the neovim-prompt's builtin actions/mappings.
 		Change |denite-options-matchers| to {arg}.
 		If |denite-options-matchers| is {arg}, it will be disabled.
 
+				*denite-map-wincmd*
+<denite:wincmd:{arg}>
+		Suspend and execute 'wincmd %arg%'
+		Note: 'arg' supports only h,j,k,l,w,W,t,b,p.
+
 				*denite-map-yank_to_register*
 <denite:yank_to_register>
 		Yank a text into a specified register.
@@ -694,11 +699,6 @@ are on the neovim-prompt's builtin actions/mappings.
 <denite:yank_to_default_register>
 		Yank a text into a default register (|v:register|).
 		Note: this is a neovim-prompt's builtin action.
-
-				*denite-map-wincmd*
-<denite:wincmd:{arg}>
-		Suspend and execute 'wincmd %arg%'
-		Note: 'arg' supports only h,j,k,l,w,W,t,b,p.
 
 						*denite_default_key_mappings*
 Following keymappings are the default keymappings.
@@ -783,8 +783,8 @@ I		<denite:insert_to_head>
 L		<denite:move_to_bottom>
 M		<denite:print_messages>
 P		<denite:change_path>
-U		<denite:move_up_path>
 S		<denite:change_line>
+U		<denite:move_up_path>
 X		<denite:quick_move>
 a		<denite:append>
 b		<denite:move_caret_to_one_word_left>
@@ -1560,9 +1560,6 @@ menu		Gather custom menus.
 				include menus previously defined in Unite
 				configurations.
 
-						*denite-source-register*
-register	Gather the registers.
-
 						*denite-source-outline*
 outline		Gather outline and jump to the target.
 
@@ -1597,6 +1594,9 @@ output		Gather executed command output as candidates.
 
 		" Gather the output of ls
 		:Denite output:!ls
+
+						*denite-source-register*
+register	Gather the registers.
 
 						*denite-source-tag*
 tag		Gather results of |tagfiles()|.
@@ -1849,44 +1849,22 @@ __init__	(Function)
 		must call super() constructor.  This function takes {self} and
 		{vim} as its parameters.
 
-					*denite-source-attribute-name*
-name		(String)			(Required)
-		The name of a source.
-
-					*denite-source-attribute-kind*
-kind		(String) or (Kind)		(Optional)
-		The candidates kind name or source specific Kind object.
-
-					*denite-source-attribute-syntax_name*
-syntax_name		(String)		(Optional)
-		The source syntax highlight name.
-
-		If you omit it, "deniteSource_{source-name}" is used.
-
-				*denite-source-attribute-max_candidates*
-max_candidates		(Number)		(Optional)
-		If the candidates are more than it, denite will ignore the
-		filtering.
-
-		If you omit it, 1000 is used.
-
-					*denite-source-attribute-matchers*
-matchers	(List)				(Optional)
-		Source default matchers list.
-
-		If you omit it, ['matcher/fuzzy'] is used.
-
-					*denite-source-attribute-sorters*
-sorters		(List)				(Optional)
-		Source default sorters list.
-
-		If you omit it, ['sorter/rank'] is used.
+						*denite-source-attribute-__*
+__{name}	(Unknown)			(Optional)
+		Additional source information.
+		Note: Recommend sources save variables instead of
+		global variables.
 
 					*denite-source-attribute-converters*
 converters	(List)				(Optional)
 		Source default converters list.
 
-		If you omit it, [] is used.
+		Default: []
+
+				*denite-source-attribute-define-syntax*
+define_syntax
+		(Function)			(Optional)
+		Define the source specific syntax.
 
 				*denite-source-attribute-gather_candidates*
 gather_candidates
@@ -1904,10 +1882,12 @@ gather_candidates
 		Note: If the asynchronous gather is done, you must set
 		"context['is_async']" to "False"
 
-				*denite-source-attribute-define-syntax*
-define_syntax
-		(Function)			(Optional)
-		Define the source specific syntax.
+					*denite-source-attribute-get_status*
+get_status	(Function)			(Optional)
+		It is called to get the status for the |statusline|.
+		It takes {self} and {context} as its parameter.
+
+		Default: |denite-source-attribute-name|
 
 				*denite-source-attribute-highlight*
 highlight
@@ -1919,6 +1899,27 @@ is_public_context
 		(Bool)			(Optional)
 		If it is True, the source context can be accessed by action.
 
+					*denite-source-attribute-kind*
+kind		(String) or (Kind)		(Optional)
+		The candidates kind name or source specific Kind object.
+
+					*denite-source-attribute-matchers*
+matchers	(List)				(Optional)
+		Source default matchers list.
+
+		Default: ['matcher/fuzzy']
+
+				*denite-source-attribute-max_candidates*
+max_candidates		(Number)		(Optional)
+		If the candidates are more than it, denite will ignore the
+		filtering.
+
+		Default: 1000
+
+					*denite-source-attribute-name*
+name		(String)			(Required)
+		The name of a source.
+
 					*denite-source-attribute-on_init*
 on_init		(Function)			(Optional)
 		It is called after the source is initialized.
@@ -1929,25 +1930,21 @@ on_close	(Function)			(Optional)
 		It is called before quit.
 		It takes {self} and {context} as its parameter.
 
-					*denite-source-attribute-get_status*
-get_status	(Function)			(Optional)
-		It is called to get the status for the |statusline|.
-		It takes {self} and {context} as its parameter.
+					*denite-source-attribute-sorters*
+sorters		(List)				(Optional)
+		Source default sorters list.
 
-		If you omit it, |denite-source-attribute-name| is used.
+		Default: ['sorter/rank']
 
-						*denite-source-attribute-__*
-__{name}	(Unknown)			(Optional)
-		Additional source information.
-		Note: Recommend sources save variables instead of
-		global variables.
+					*denite-source-attribute-syntax_name*
+syntax_name		(String)		(Optional)
+		The source syntax highlight name.
+
+		Default: "deniteSource_{source-name}"
 
 {context}					*denite-notation-{context}*
 		A dictionary to give context information.
 		The followings are the primary information.
-
-		input			(String)
-			The input string of current line.
 
 		args			(List)
 			The current source arguments.
@@ -1960,6 +1957,9 @@ __{name}	(Unknown)			(Optional)
 			"gather": normal gather update
 			"interactive": interactive update
 			"async": asynchronous update
+
+		input			(String)
+			The input string of current line.
 
 		is_async		(Bool)
 			If the gather is asynchronous, the source must set
@@ -2033,24 +2033,6 @@ __init__	(Function)
 		must call super() constructor.  This function takes {self} and
 		{vim} as its parameters.
 
-					*denite-kind-attribute-name*
-name 		(String) 			(Required)
-		The name of a Kind.
-
-					*denite-kind-attribute-default_action*
-default_action  (String)
-		Default action name.
-
-					*denite-kind-attribute-persist_actions*
-persist_actions (List) 				(Optional)
-		List of action names which not close Denite buffer after
-		executed.
-
-					*denite-kind-attribute-redraw_actions*
-redraw_actions (List) 				(Optional)
-		List of action names which redraw Denite buffer after
-		executed.
-
 					*denite-kind-attribute-action_*
 action_{name} (Function) 			(Optional)
 		Custom action logic with {name} as action name. The function
@@ -2072,6 +2054,24 @@ action_{name} (Function) 			(Optional)
 		Note: The source context is "__" prefixed keys (source
 		specific keys) only.
 
+					*denite-kind-attribute-default_action*
+default_action  (String)
+		Default action name.
+
+					*denite-kind-attribute-name*
+name 		(String) 			(Required)
+		The name of a Kind.
+
+					*denite-kind-attribute-persist_actions*
+persist_actions (List) 				(Optional)
+		List of action names which not close Denite buffer after
+		executed.
+
+					*denite-kind-attribute-redraw_actions*
+redraw_actions (List) 				(Optional)
+		List of action names which redraw Denite buffer after
+		executed.
+
 ==============================================================================
 CREATE FILTER						*denite-create-filter*
 
@@ -2092,10 +2092,6 @@ __init__	(Function)
 		must call Base constructor.  This function takes {self} and
 		{vim} as its parameters.
 
-					*denite-filter-attribute-name*
-name		(String)			(Required)
-		The name of a source.
-
 					*denite-filter-attribute-filter*
 filter
 		(Function)			(Required)
@@ -2106,6 +2102,10 @@ filter
 		|denite-candidate-attributes|.
 		Here, {context} is the context information when the source is
 		called(|denite-notation-{context}|).
+
+					*denite-filter-attribute-name*
+name		(String)			(Required)
+		The name of a source.
 
 ==============================================================================
 EXTERNAL SOURCES				*denite-external-sources*
