@@ -240,13 +240,9 @@ def import_rplugins(name, context, source, loaded_paths):
         loader = SourceFileLoader('denite.%s.%s' % (source, module_path), path)
         # XXX: load_module is deprecated since Python 3.4
         module = loader.load_module()
-        try:
-            yield (getattr(module, name), path, module_path)
-        except AttributeError:
-            if os.path.basename(path) == '__init__.py':
-                # the file exists for making a module so ignore
-                continue
-            raise
+        if not hasattr(module, name):
+            continue
+        yield (getattr(module, name), path, module_path)
 
 
 def parse_tagline(line, tagpath):
