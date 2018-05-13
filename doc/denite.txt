@@ -17,7 +17,6 @@ Interface		|denite-interface|
   Options		  |denite-options|
 Sources			|denite-sources|
 Kinds			|denite-kinds|
-Actions			|denite-actions|
 Filters			|denite-filters|
 Create source		|denite-create-source|
 Create kind		|denite-create-kind|
@@ -422,6 +421,7 @@ are on the neovim-prompt's builtin actions/mappings.
 				*denite-map-do_action*
 <denite:do_action:{action}>
 		Close current Denite buffer and fire {action} action.
+		You can find the actions list in |denite-kinds|.
 
 				*denite-map-enter_mode*
 <denite:enter_mode:{mode}>
