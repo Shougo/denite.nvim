@@ -354,7 +354,7 @@ class Default(object):
 
         updated = (self._displayed_texts != prev_displayed_texts or
                    self._matched_pattern != prev_matched_pattern)
-        if updated and self._context['reversed']:
+        if updated and self._denite.is_async() and self._context['reversed']:
             self.init_cursor()
 
         return updated
