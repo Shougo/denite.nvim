@@ -117,9 +117,9 @@ class Default(object):
                 return
 
             self.init_denite()
-            self.init_cursor()
             self.gather_candidates()
             self.update_candidates()
+            self.init_cursor()
 
             if self.check_empty():
                 return
