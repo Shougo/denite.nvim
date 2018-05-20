@@ -28,6 +28,7 @@ class Source(Base):
     def on_init(self, context):
         runtimepath = self.vim.eval('&runtimepath')
         self._helpfiles = globruntime(runtimepath, 'doc/index.txt')
+        self._commands = globruntime(runtimepath, 'doc/index.txt')
 
     def gather_candidates(self, context):
         context['is_interactive'] = True
@@ -35,7 +36,7 @@ class Source(Base):
         has_cmdline = self.vim.call('denite#helper#has_cmdline')
         if ' ' not in context['input'] or not has_cmdline:
             if not self.commands:
-                self._cache_helpfile()
+                self._init_commands()
             return self.commands + [{
                 'action__command': x,
                 'action__is_pause': True,
@@ -58,7 +59,7 @@ class Source(Base):
             }]
         return candidates
 
-    def _cache_helpfile(self):
+    def _init_commands(self):
         for helpfile in self._helpfiles:
             with open(helpfile) as doc:
                 for line in [x for x in doc.readlines()
