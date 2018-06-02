@@ -69,6 +69,9 @@ class Source(Base):
                 self.vars['command'], directory=directory)
         else:
             args = self.vars['command'] + [directory]
+        if shutil.which(args[0]) is None:
+            self.error_message(context, args[0] + ' is not executable.')
+            return []
         self.print_message(context, args)
         context['__proc'] = Process(args, context, directory)
         context['__current_candidates'] = []
