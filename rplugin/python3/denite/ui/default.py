@@ -161,8 +161,9 @@ class Default(object):
 
         if (self._context['split'] != 'no' and self._winid > 0 and
                 self._vim.call('win_gotoid', self._winid)):
-            # Move the window to bottom
-            self._vim.command('wincmd J')
+            if self._context['split'] != 'vertical':
+                # Move the window to bottom
+                self._vim.command('wincmd J')
             self._winrestcmd = ''
         else:
             # Create new buffer
