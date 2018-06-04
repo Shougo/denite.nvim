@@ -1761,6 +1761,11 @@ matcher/hide_hidden_files (matcher_hide_hidden_files)
 		A matcher which hides the hidden files.  If your input
 		contains ".", the hidden files will be appeared.
 
+				*denite-filter-matcher/project_files*
+				*denite-filter-matcher_project_files*
+matcher/project_files (matcher_project_files)
+		A matcher which removes removes non project files.
+
 					*denite-filter-matcher/ignore_globs*
 					*denite-filter-matcher_ignore_globs*
 matcher/ignore_globs (matcher_ignore_globs)
@@ -2252,6 +2257,13 @@ A: >
 	call denite#custom#source('grep',
 	\ 'converters', ['converter/abbr_word'])
 
+Q: I want to list buffers in current directory.
+
+A:
+>
+	call denite#custom#source(
+	\ 'buffer', 'matchers', ['matcher/fuzzy', 'matcher/project_files'])
+<
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
 
