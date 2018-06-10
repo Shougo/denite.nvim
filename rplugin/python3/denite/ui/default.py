@@ -222,7 +222,7 @@ class Default(object):
 
         self._vim.command('silent doautocmd WinEnter')
         self._vim.command('silent doautocmd BufWinEnter')
-        self._vim.command('silent doautocmd FileType denite')
+        self._vim.command('doautocmd FileType denite')
 
         self.init_syntax()
 
