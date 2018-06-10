@@ -304,7 +304,7 @@ COMMANDS 						*denite-commands*
 		Equivalent to |:Denite| except that it targets the project
 		directory.
 		Note: You can change the rooted directory by
-		|denite-options-path| instead of |getcwd()|.
+		|denite-option-path| instead of |getcwd()|.
 
 ------------------------------------------------------------------------------
 KEY MAPPINGS 						*denite-key-mappings*
@@ -362,8 +362,8 @@ are on the neovim-prompt's builtin actions/mappings.
 
 				*denite-map-change_sorters*
 <denite:change_sorters:{arg}>
-		Change |denite-options-sorters| to {arg}.
-		If |denite-options-sorters| is {arg}, it will be disabled.
+		Change |denite-option-sorters| to {arg}.
+		If |denite-option-sorters| is {arg}, it will be disabled.
 
 				*denite-map-change_word*
 <denite:change_word>
@@ -682,8 +682,8 @@ are on the neovim-prompt's builtin actions/mappings.
 
 				*denite-map-toggle_matchers*
 <denite:toggle_matchers{arg}>
-		Change |denite-options-matchers| to {arg}.
-		If |denite-options-matchers| is {arg}, it will be disabled.
+		Change |denite-option-matchers| to {arg}.
+		If |denite-option-matchers| is {arg}, it will be disabled.
 
 				*denite-map-wincmd*
 <denite:wincmd:{arg}>
@@ -999,10 +999,10 @@ denite#get_status({name})				*denite#get_status()*
 		The available status names:
 		"mode": Current mode
 		"sources": Current sources and candidates number
-		"path": Specified |denite-options-path|
+		"path": Specified |denite-option-path|
 		"linenr": Equivalent to "line_cursor/line_total"
 		"raw_mode": Current mode, without any processing
-		"buffer_name": Current |denite-options-buffer-name|
+		"buffer_name": Current |denite-option-buffer-name|
 		"line_cursor": Cursor position. Part of "linenr".
 		"line_total": Total candidates. Part of "linenr".
 
@@ -1039,50 +1039,50 @@ denite#start({sources}[, {context}])
 ------------------------------------------------------------------------------
 OPTIONS							*denite-options*
 
-							*denite-options-no-*
+							*denite-option-no-*
 		-no-{option-name}
 		Disable {option-name} flag.
 		Note: If you use both {option-name} and -no-{option-name} in
 		the same denite buffer, it is undefined.
 
-						*denite-options-auto-accel*
+						*denite-option-auto-accel*
 -auto-accel
 		Accelerate the cursor moving automatically.
 		Default: false
 
-						*denite-options-auto-highlight*
+						*denite-option-auto-highlight*
 -auto-highlight
 		When you select a candidate, it runs the "highlight" action
 		automatically.
 		Default: false
 
-						*denite-options-auto-preview*
+						*denite-option-auto-preview*
 -auto-preview
 		When you select a candidate, it runs the "preview" action
 		automatically.
 		Default: false
 
-						*denite-options-auto-resize*
+						*denite-option-auto-resize*
 -auto-resize
 		Auto resize the Denite window height automatically.
 		Default: false
 
-						*denite-options-auto-resume*
+						*denite-option-auto-resume*
 -auto-resume
 		Auto resume when enter the Denite window.
 		Default: false
 
-						*denite-options-buffer-name*
+						*denite-option-buffer-name*
 -buffer-name={buffer-name}
 		Specify the name of denite buffer.
 		Default: "default"
 
-						*denite-options-default-action*
+						*denite-option-default-action*
 -default-action={action}
 		Specify the default action as {action}.
 		Default: "default"
 
-						*denite-options-cursor-pos*
+						*denite-option-cursor-pos*
 -cursor-pos={number}
 		Select {number} candidate.
 		If {number} is "+{N}" or "-{N}" when resume, selects the next
@@ -1092,18 +1092,18 @@ OPTIONS							*denite-options*
 		Note: "$" is the last candidate.
 		Default: ""
 
-						*denite-options-cursor-shape*
+						*denite-option-cursor-shape*
 -cursor-shape
 		Enable 'guicursor' support.
 		Default: v:true if has("gui_running")
 
-						*denite-options-cursor-wrap*
+						*denite-option-cursor-wrap*
 -cursor-wrap
 		If you move when the cursor reaches the top or bottom edge,
 		the cursor moves to the opposite side.
 		Default: false
 
-						*denite-options-direction*
+						*denite-option-direction*
 -direction={direction}
 		Specify the Denite window direction as {direction}.
 
@@ -1117,78 +1117,78 @@ OPTIONS							*denite-options*
 
 		Default: "botright"
 
-						*denite-options-empty*
+						*denite-option-empty*
 -empty
 		Open any denite buffer if the candidate is empty.
 		Default: true
 
-					*denite-options-highlight-matched-char*
+					*denite-option-highlight-matched-char*
 -highlight-matched-char
 		Matched characters highlight.
 		Default: "Search"
 
-					*denite-options-highlight-matched-range*
+					*denite-option-highlight-matched-range*
 -highlight-matched-range
 		Matched range highlight.
 		Default: "Underlined"
 
-					*denite-options-highlight-mode-{mode}*
+					*denite-option-highlight-mode-{mode}*
 -highlight-mode-{mode}
 		Change |hl-CursorLine| in {mode}.
 		Default:
 		"CursorLine" in "insert" mode
 		"WildMenu" in "normal" mode
 
-					*denite-options-highlight-preview-line*
+					*denite-option-highlight-preview-line*
 -highlight-preview-line
 		Previewed line highlight.
 		Default: "Search"
 
-						*denite-options-ignorecase*
+						*denite-option-ignorecase*
 -ignorecase
 		If it is true, denite ignores the case.
 		Default: true
 
-						*denite-options-immediately*
+						*denite-option-immediately*
 -immediately
 		If candidates exist, it runs the default action
 		immediately.
 		Default: false
 
-						*denite-options-immediately-1*
+						*denite-option-immediately-1*
 -immediately-1
 		If the number of candidates is exactly one, it runs the default action
 		immediately.
 		Default: false
 
-							*denite-options-input*
+							*denite-option-input*
 -input={input-text}
 		Specify an initial narrowing text.
 		Default: ""
 
-						*denite-options-matchers*
+						*denite-option-matchers*
 -matchers
 		Specify a list of matcher names.  They overwrite the source
 		matchers.
 		Default: ""
 
-					*denite-options-max-candidate-width*
+					*denite-option-max-candidate-width*
 -max-candidate-width={width}
 		Specify the max candidate width.
 		Note: Denite skip the match after the width.
 		Default: 200
 
-							*denite-options-mode*
+							*denite-option-mode*
 -mode={mode}
 		Specify the default mode.
 		Default: "insert"
 
-							*denite-options-path*
+							*denite-option-path*
 -path={input-text}
 		Specify an initial narrowing path.
 		Default: ""
 
-						*denite-options-post-action*
+						*denite-option-post-action*
 -post-action={action}
 		Specify the action after action.
 
@@ -1199,7 +1199,7 @@ OPTIONS							*denite-options*
 
 		Default: "none"
 
-					*denite-options-quick-move-table*
+					*denite-option-quick-move-table*
 -quick-move
 
 		The table of completion candidates of quick move list,
@@ -1217,42 +1217,42 @@ OPTIONS							*denite-options*
         		\   '6' : 25, '7' : 26, '8' : 27, '9' : 28, '0' : 29,
         		\ }
 <
-						*denite-options-refresh*
+						*denite-option-refresh*
 -refresh
-		Refresh the candidates when |denite-options-resume| is true.
+		Refresh the candidates when |denite-option-resume| is true.
 		Default: false
 
-							*denite-options-resume*
+							*denite-option-resume*
 -resume
 		Reuse the previous buffer.  If none exist, a new denite
 		buffer gets created.
-		Note: Uses |denite-options-buffer-name| to search for
+		Note: Uses |denite-option-buffer-name| to search for
 		previous buffers.
 		Default: false
 
-						*denite-options-reversed*
+						*denite-option-reversed*
 -reversed
 		The candidates are reversed.
 		Default: false
 
-						*denite-options-root-markers*
+						*denite-option-root-markers*
 -root-markers={markers}
 		The project root marker files.
 		It is splitted by comma.
 		Default: ""
 
-						*denite-options-smartcase*
+						*denite-option-smartcase*
 -smartcase
 		If it is true, denite ignores the case when the input contains
 		the uppercase characters.
 		Default: false
 
-						*denite-options-sorters*
+						*denite-option-sorters*
 -sorters
 		Specify a list of sorter names.  They are source independent.
 		Default: ""
 
-						*denite-options-split*
+						*denite-option-split*
 -split={direction}
 		Specify the split direction.
 
@@ -1263,7 +1263,7 @@ OPTIONS							*denite-options*
 
 		Default: "horizontal"
 
-					*denite-options-source-names*
+					*denite-option-source-names*
 -source-names={mode}
 
 		"": Use long long names if multiple sources.
@@ -1272,28 +1272,28 @@ OPTIONS							*denite-options*
 
 		Default: ""
 
-						*denite-options-statusline*
+						*denite-option-statusline*
 -statusline
 		Enable statusline.
 		Default: true
 
-						*denite-options-skiptime*
+						*denite-option-skiptime*
 -skiptime={time}
 		Specify the filtering skiptime when narrowing in huge
 		candidates(over 20000).
 		Default: 500
 
-						*denite-options-unique*
+						*denite-option-unique*
 -unique
 		Unique the candidates by word attribute.
 		Default: false
 
-						*denite-options-updatetime*
+						*denite-option-updatetime*
 -updatetime={time}
 		Specify the buffer updatetime when narrowing.
 		Default: 100
 
-					*denite-options-use-default-mappings*
+					*denite-option-use-default-mappings*
 -use-default-mappings
 		Enable default key mappings.
 
@@ -1305,31 +1305,31 @@ OPTIONS							*denite-options*
 
 		Default: true
 
-					*denite-options-vertical-preview*
+					*denite-option-vertical-preview*
 -vertical-preview
 		Open the preview window vertically.
 		Default: false
 
-						*denite-options-winheight*
+						*denite-option-winheight*
 -winheight={window-height}
-		Set the height of the Denite window if |denite-options-split|
+		Set the height of the Denite window if |denite-option-split|
 		is "horizontal".
-		If auto-resize is set, |denite-options-winheight| is the
+		If auto-resize is set, |denite-option-winheight| is the
 		maximum size of the window.
 
 		Default: 20
 
-						*denite-options-winwidth*
+						*denite-option-winwidth*
 -winwidth={window-width}
-		Set the width of the Denite window if |denite-options-split|
+		Set the width of the Denite window if |denite-option-split|
 		is "vertical".
 
 		Default: 90
 
-						*denite-options-winminheight*
+						*denite-option-winminheight*
 -winminheight={window-height}
 		Set the minimum height of an auto-resize window.
-		Note: a value of -1 for |denite-options-winminheight| leaves
+		Note: a value of -1 for |denite-option-winminheight| leaves
 		the minimum height unset.
 
 		Default: -1
@@ -1494,11 +1494,11 @@ grep		Gather grep results and nominates them.
 			1. string or list of arguments
 			2. pattern string or list of patterns
 
-		Note: If the args 0 is empty, |denite-options-path| is used.
+		Note: If the args 0 is empty, |denite-option-path| is used.
 		Note: If the args 1 is "!", it is the interactive mode.
 		Note: If the args 2 is "!", it is the interactive mode.
 		The results are updated when the input is changed.
-		Note: If the args 2 is empty, |denite-options-input| or user
+		Note: If the args 2 is empty, |denite-option-input| or user
 		input pattern is used.
 
 		Source custom variables:
@@ -2139,7 +2139,7 @@ Q: I want to change the cursor line color in Denite buffer.
 
 A: denite uses 'cursorline' feature.
 So you can change the color by |hl-CursorLine| highlight or
-|denite-options-highlight-mode-{mode}|. >
+|denite-option-highlight-mode-{mode}|. >
 	Denite file/rec -highlight-mode-insert=Search
 
 Q: I want to use unite source in denite.
@@ -2186,7 +2186,7 @@ Q: grep source is very slow.
 A: Because your machine is very slow.  The modern grep command like ripgrep is
 optimized for modern multi core processors.  It uses 4 processes heavily.
 More than a quad core CPU is recommended.  A dual core CPU is very slow.
-And you can change |denite-options-updatetime| option.
+And you can change |denite-option-updatetime| option.
 
 Q: I want to use the cursor keys to move the candidates.
 
@@ -2218,7 +2218,7 @@ Q: What is "ch x was closed by the client"?
 
 A: Python process was crashed.  I cannot fix the error.
 I think the process was under heavy load.  You should change
-|denite-options-updatetime| option.
+|denite-option-updatetime| option.
 
 Q: Does hw (highway) work in denite.nvim?
 
