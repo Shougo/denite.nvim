@@ -24,29 +24,10 @@ class Kind(Openable):
         self._previewed_buffers = {}
 
     def action_open(self, context):
-        cwd = self.vim.call('getcwd')
-        for target in context['targets']:
-            path = target['action__path']
-            match_path = '^{0}$'.format(path)
+        self._open(context, 'edit')
 
-            if re.match('https?://', path):
-                # URI
-                self.vim.call('denite#util#open', path)
-                continue
-            if path.startswith(cwd):
-                path = os.path.relpath(path, cwd)
-
-            if self.vim.call('bufwinnr', match_path) <= 0:
-                self.vim.call(
-                    'denite#util#execute_path', 'edit', path)
-            elif self.vim.call('bufwinnr',
-                               match_path) != self.vim.current.buffer:
-                self.vim.command('buffer' +
-                                 str(self.vim.call('bufnr', path)))
-            self._jump(context, target)
-
-            if path in self._previewed_buffers:
-                self._previewed_buffers.pop(path)
+    def action_drop(self, context):
+        self._open(context, 'drop')
 
     def action_new(self, context):
         path = util.input(self.vim, context, 'New file: ', completion='file')
@@ -109,6 +90,31 @@ class Kind(Openable):
                   if 'action__line' in x and 'action__text' in x]
         self.vim.call('setqflist', qflist)
         self.vim.command('copen')
+
+    def _open(self, context, command):
+        cwd = self.vim.call('getcwd')
+        for target in context['targets']:
+            path = target['action__path']
+            match_path = '^{0}$'.format(path)
+
+            if re.match('https?://', path):
+                # URI
+                self.vim.call('denite#util#open', path)
+                continue
+            if path.startswith(cwd):
+                path = os.path.relpath(path, cwd)
+
+            if self.vim.call('bufwinnr', match_path) <= 0:
+                self.vim.call(
+                    'denite#util#execute_path', command, path)
+            elif self.vim.call('bufwinnr',
+                               match_path) != self.vim.current.buffer:
+                self.vim.command('buffer' +
+                                 str(self.vim.call('bufnr', path)))
+            self._jump(context, target)
+
+            if path in self._previewed_buffers:
+                self._previewed_buffers.pop(path)
 
     def _cleanup(self):
         for bufnr in self._previewed_buffers.values():

@@ -1681,7 +1681,10 @@ file		An interface to jump to the file position.
 
 						*denite-kind-file-actions*
 			open (default)
-				Open the file.
+				|:edit| the file.
+
+			drop
+				|:drop| the file.
 
 			preview
 				Preview and highlight the file.  Close the
