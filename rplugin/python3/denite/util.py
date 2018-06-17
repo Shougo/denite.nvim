@@ -98,7 +98,8 @@ def path2dir(path):
 
 
 def path2project(vim, path, root_markers):
-    return vim.call('denite#util#path2project_directory', path, root_markers)
+    return vim.call('denite#project#path2project_directory',
+                    path, root_markers)
 
 
 def parse_jump_line(path_head, line):
