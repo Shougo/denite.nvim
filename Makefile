@@ -18,7 +18,7 @@ lint:
 	flake8 --version
 	flake8 rplugin/python3/denite
 	mypy --version
-	mypy --silent-imports rplugin/python3/denite
+	mypy --ignore-missing-imports --follow-imports=skip rplugin/python3/denite
 
 test:
 	themis --version
