@@ -142,16 +142,16 @@ endfunction
 function! s:eval_cmdline(cmdline) abort
   let cmdline = ''
   let prev_match = 0
-  let match = match(a:cmdline, '\\\@<!`.\{-}\\\@<!`')
-  while match >= 0
-    if match - prev_match > 0
-      let cmdline .= a:cmdline[prev_match : match - 1]
+  let eval_pos = match(a:cmdline, '\\\@<!`.\{-}\\\@<!`')
+  while eval_pos >= 0
+    if eval_pos - prev_match > 0
+      let cmdline .= a:cmdline[prev_match : eval_pos - 1]
     endif
     let prev_match = matchend(a:cmdline,
-          \ '\\\@<!`.\{-}\\\@<!`', match)
-    let cmdline .= escape(eval(a:cmdline[match+1 : prev_match - 2]), '\ ')
+          \ '\\\@<!`.\{-}\\\@<!`', eval_pos)
+    let cmdline .= escape(eval(a:cmdline[eval_pos+1 : prev_match - 2]), '\ ')
 
-    let match = match(a:cmdline, '\\\@<!`.\{-}\\\@<!`', prev_match)
+    let eval_pos = match(a:cmdline, '\\\@<!`.\{-}\\\@<!`', prev_match)
   endwhile
   if prev_match >= 0
     let cmdline .= a:cmdline[prev_match :]
