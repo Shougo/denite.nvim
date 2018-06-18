@@ -681,7 +681,7 @@ are on the neovim-prompt's builtin actions/mappings.
 		Toggle cursor candidate select and move to previous line.
 
 				*denite-map-toggle_matchers*
-<denite:toggle_matchers{arg}>
+<denite:toggle_matchers:{arg}>
 		Change |denite-option-matchers| to {arg}.
 		If |denite-option-matchers| is {arg}, it will be disabled.
 
