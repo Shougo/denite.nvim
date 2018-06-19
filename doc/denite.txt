@@ -237,7 +237,7 @@ EXAMPLES						*denite-examples*
 	call denite#custom#option('default', 'prompt', '>')
 
 	" Change ignore_globs
-	call denite#custom#filter('matcher/ignore_globs', 'ignore_globs',
+	call denite#custom#filter('matcher_ignore_globs', 'ignore_globs',
 	      \ [ '.git/', '.ropeproject/', '__pycache__/',
 	      \   'venv/', 'images/', '*.min.*', 'img/', 'fonts/'])
 
