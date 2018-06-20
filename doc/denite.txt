@@ -37,7 +37,7 @@ search through any arbitrary source, from files and directories to buffers.
 * Theoretically more stable while no other processes can be performed when
 denite.nvim is executed.
 
-* The implementation is relatively simple than unite.vim
+* The implementation is relatively simpler than unite.vim
 
 * Denite.nvim has great potential to implement a new feature
 
