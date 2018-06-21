@@ -4,7 +4,7 @@
 # License: MIT license
 # ============================================================================
 
-from os.path import isabs
+from os.path import isabs, sep
 from ..base import Base
 from fnmatch import translate
 from re import search
@@ -26,15 +26,16 @@ class Filter(Base):
             ]
         }
 
+
     def filter(self, context):
         # Convert globs
         patterns = []
         for glob in self.vars['ignore_globs']:
             if not isabs(glob):
-                glob = '*/' + glob
-            if search('^\./', glob):
+                glob = '*' + sep + glob
+            if glob[:2] == '.' + sep:
                 glob = context['path'] + glob[1:]
-            if glob[-1] == '/':
+            if glob[-1] == sep:
                 glob += '*'
             patterns.append(translate(glob))
         pattern = '|'.join(patterns)
