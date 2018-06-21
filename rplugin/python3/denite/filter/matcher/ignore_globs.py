@@ -26,7 +26,6 @@ class Filter(Base):
             ]
         }
 
-
     def filter(self, context):
         # Convert globs
         patterns = []
