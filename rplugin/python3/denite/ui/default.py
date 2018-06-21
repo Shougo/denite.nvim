@@ -470,7 +470,7 @@ class Default(object):
         terms.append(abbr[:int(self._context['max_candidate_width'])])
         return (self._context['selected_icon']
                 if index in self._selected_candidates
-                else ' ') + ' '.join(terms)
+                else ' ') + ' '.join(terms).replace('\n', '')
 
     def resize_buffer(self):
         split = self._context['split']
