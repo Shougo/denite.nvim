@@ -28,10 +28,12 @@ class Source(Base):
            'u', 'v', 'w', 'x', 'y', 'z',
            '-', '.', ':', '#', '%', '/', '=']:
             register = self.vim.call('getreg', reg, 1)
-            if register:
-                candidates.append({
-                    'word': reg + ': ' + re.sub(
-                        r'\n', r'\\n', register)[:200],
-                    'action__text': register,
-                })
+            if not register:
+                continue
+
+            candidates.append({
+                'word': reg + ': ' + re.sub(
+                    r'\n', r'\\n', register)[:200],
+                'action__text': register,
+            })
         return candidates
