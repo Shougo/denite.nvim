@@ -572,6 +572,17 @@ are on the neovim-prompt's builtin actions/mappings.
 <denite:move_up_path>
 		Move to the upper path and restart Denite buffer.
 
+				*denite-map-multiple_mappings*
+<denite:multiple_mappings:{mappings}>
+		Fire the multiple {mappings} mappings.
+		{mappings} must be separated by ",".
+		And you must remove "<" and ">" from mappings.
+
+		Example: >
+		call denite#custom#map('normal', '<C-a>',
+		\ '<denite:multiple_mappings:denite:toggle_select_all'.
+		\ ',denite:do_action:vsplit>', 'noremap')
+
 				*denite-map-nop*
 <denite:nop>
 		No operation.
