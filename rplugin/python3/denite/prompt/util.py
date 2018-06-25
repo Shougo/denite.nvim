@@ -189,7 +189,8 @@ def build_echon_expr(text, hl='None'):
     p = 'echohl %s|echon "%%s"' % hl
     i = 'echohl %s|echon "%%s"' % ('SpecialKey' if hl == 'None' else hl)
     return '|'.join(
-        p % term if index % 2 == 0 else i % IMPRINTABLE_REPRESENTS[term]
+        p % term.translate(ESCAPE_ECHO)
+        if index % 2 == 0 else i % IMPRINTABLE_REPRESENTS[term]
         for index, term in enumerate(IMPRINTABLE_PATTERN.split(text))
     )
 
