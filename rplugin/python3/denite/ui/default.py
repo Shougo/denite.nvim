@@ -398,7 +398,7 @@ class Default(object):
                 'silent! syntax match deniteMatchedChar /[%s]/ '
                 'containedin=deniteMatchedRange contained'
             ) % re.sub(
-                r'([[\]\\^-])',
+                r'([\[\]\\^-])',
                 r'\\\1',
                 self._context['input'].replace(' ', '')
             ))
