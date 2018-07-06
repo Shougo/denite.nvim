@@ -669,6 +669,11 @@ are on the neovim-prompt's builtin actions/mappings.
 <denite:scroll_cursor_to_bottom>
 		Scroll the cursor to the bottom of the window like |zb|.
 
+				*denite-map-smart_delete_char_before_caret*
+<denite:smart_delete_char_before_caret>
+		If no character being typed, |denite-map-quit|.
+		Otherwise, |denite-map-delete_char_before_caret|.
+
 				*denite-map-toggle_insert_mode*
 <denite:toggle_insert_mode>
 		Toggle insert mode (insert or overstrike).

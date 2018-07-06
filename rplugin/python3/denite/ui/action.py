@@ -360,6 +360,17 @@ def _multiple_mappings(prompt, params):
     return ret
 
 
+def _smart_delete_char_before_caret(prompt, params):
+    text = ''.join([
+        prompt.caret.get_backward_text(),
+        prompt.caret.get_forward_text(),
+    ])
+    if text:
+        return prompt.action.call(prompt, 'denite:delete_char_before_caret')
+    else:
+        return _quit(prompt, params)
+
+
 def _nop(prompt, params):
     pass
 
@@ -411,6 +422,8 @@ DEFAULT_ACTION_RULES = [
     ('denite:scroll_window_downwards', _scroll_window_downwards),
     ('denite:scroll_window_up_one_line', _scroll_window_up_one_line),
     ('denite:scroll_window_upwards', _scroll_window_upwards),
+    ('denite:smart_delete_char_before_caret',
+     _smart_delete_char_before_caret),
     ('denite:suspend', _suspend),
     ('denite:toggle_matchers', _toggle_matchers),
     ('denite:toggle_select', _toggle_select),
