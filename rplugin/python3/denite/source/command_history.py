@@ -28,7 +28,8 @@ class Source(Base):
             return []
 
         max_len = len(histories[0][0])
-        return [self._convert(r, max_len) for r in histories if len(r) > 1]
+        return [self._convert(r, max_len) for r in histories
+                if len(r) > 1 and r[1]]
 
     def _get_histories(self):
         histories = [
