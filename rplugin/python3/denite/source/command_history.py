@@ -65,7 +65,7 @@ class Source(Base):
 
     def _convert(self, history, size):
         return {
-            'word': '%*s %s' % (size, history[0], history[1]),
+            'word': ':' + history[1],
             'action__command': history[1],
             'action__is_pause': True,
         }
