@@ -582,7 +582,7 @@ are on the neovim-prompt's builtin actions/mappings.
 		call denite#custom#map('normal', '<C-a>',
 		\ '<denite:multiple_mappings:denite:toggle_select_all'.
 		\ ',denite:do_action:vsplit>', 'noremap')
-
+<
 				*denite-map-nop*
 <denite:nop>
 		No operation.
