@@ -8,7 +8,7 @@
 
 ## Environment Information (Required!)
 
- * denite version(SHA1):
+ * denite version (SHA1):
 
  * OS:
 
@@ -24,7 +24,7 @@ set runtimepath+=~/path/to/denite.nvim/
 ```
 
 
-## The reproduce ways from neovim starting (Required!)
+## How to reproduce problems from neovim startup (Required!)
 
  1. foo
  2. bar
@@ -40,7 +40,7 @@ set runtimepath+=~/path/to/denite.nvim/
  5. cat /tmp/log_{PID}
 
 
-## Screen shot (if possible)
+## Screenshot (if possible)
 
 
 ## Upload the log file
