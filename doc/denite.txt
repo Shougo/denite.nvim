@@ -32,22 +32,22 @@ INTRODUCTION						*denite-introduction*
 displaying lists of information from within NeoVim/Vim. It can display and
 search through any arbitrary source, from files and directories to buffers.
 
-* Theoretically faster while the main process is executed by python
+* Theoretically faster while the main process is executed by python.
 
 * Theoretically more stable while no other processes can be performed when
 denite.nvim is executed.
 
 * The implementation is relatively simpler than unite.vim
 
-* Denite.nvim has great potential to implement a new feature
+* Denite.nvim has great potential to implement a new feature.
 
-* To send the pull request by Python3 is easier than Vim script
+* Sending pull requests using Python3 is easier than when using Vimscript.
 
 * There are a lot of useful tools to keep code simple (linter, tester, etc...)
 in Python3.
 
 * The unite.vim is officially obsolete, minor bugs (or even major bugs) are
-not fixed anymore
+not fixed anymore.
 
 ==============================================================================
 USAGE							*denite-usage*
