@@ -41,7 +41,7 @@ denite.nvim is executed.
 
 * Denite.nvim has great potential to implement a new feature.
 
-* Sending pull requests using Python3 is easier than when using Vimscript.
+* Sending pull requests using Python3 is easier than when using Vim script.
 
 * There are a lot of useful tools to keep code simple (linter, tester, etc...)
 in Python3.
