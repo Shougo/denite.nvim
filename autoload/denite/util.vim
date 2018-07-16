@@ -53,7 +53,7 @@ function! denite#util#execute_command(command, is_capture) abort
   let msg = ''
   try
     if a:is_capture
-      let msg = execute(a:command)
+      let msg = execute(a:command, 'silent!')
     else
       execute a:command
     endif
