@@ -31,13 +31,15 @@ class Source(Base):
                     if re.match('!', line) or not line:
                         continue
                     info = parse_tagline(line.rstrip(), f)
-                    if not info:
-                        continue
                     candidate = {
                         'word': info['name'],
-                        'abbr': '{name} [{type}] {file} {ref}'.format(**info),
                         'action__path': info['file'],
                     }
+                    if info['type']:
+                        fmt = '{name} [{type}] {file} {ref}'
+                    else:
+                        fmt = '{name} {file} {ref}'
+                    candidate['abbr'] = fmt.format(**info)
                     if info['line']:
                         candidate['action__line'] = info['line']
                     else:

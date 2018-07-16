@@ -251,24 +251,29 @@ def parse_tagline(line, tagpath):
     info = {
         'name': elem[0],
         'file': normpath(join(dirname(tagpath), elem[1])),
+        'pattern': '',
+        'line': '',
+        'type': '',
+        'ref': '',
     }
 
     rest = '\t'.join(elem[2:])
     m = re.search(r'.*;"', rest)
     if not m:
-        return None
+        if len(elem) >= 3:
+            info['line'] = elem[2]
+        return info
 
     pattern = m.group(0)
     if re.match('\d+;"$', pattern):
-        info['pattern'] = ''
         info['line'] = re.sub(r';"$', '', pattern)
     else:
         info['pattern'] = re.sub(r'([~.*\[\]\\])', r'\\\1',
                                  re.sub(r'^/|/;"$', '', pattern))
-        info['line'] = ''
 
     elem = rest[len(pattern)+1:].split("\t")
-    info['type'] = (elem[0] if len(elem) >= 1 else '')
+    if len(elem) >= 1:
+        info['type'] = elem[0]
     info['ref'] = ' '.join(elem[1:])
 
     return info
