@@ -281,7 +281,7 @@ class Default(object):
                                self._context['selected_icon']))
 
         for source in [x for x in self._denite.get_current_sources()]:
-            name = source.name.replace('/', '_')
+            name = re.sub('[^a-zA-Z0-9_]', '_', source.name)
             source_name = self.get_display_source_name(source.name)
 
             self._vim.command(
