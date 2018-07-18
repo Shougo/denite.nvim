@@ -11,7 +11,7 @@ import re
 import tempfile
 
 OUTLINE_HIGHLIGHT_SYNTAX = [
-    {'name': 'Name', 'link': 'Identifier', 're': '\s\S\+\%(\s\+\[\)\@='},
+    {'name': 'Name', 'link': 'Identifier', 're': '\S\+\%(\s\+\[\)\@='},
     {'name': 'Type', 'link': 'Type',       're': '\[.\{-}\]'},
     {'name': 'Ref',  'link': 'Comment',    're': '\s\s.\+'}
 ]
@@ -68,14 +68,15 @@ class Source(Base):
                     if re.match('!', line) or not line:
                         continue
                     info = parse_tagline(line.rstrip(), tf.name)
-                    if not info:
-                        continue
-                    if info['type'] in self.vars['ignore_types']:
-                        continue
-
-                    candidates.append({
-                        'word': '{name} [{type}]  {ref}'.format(**info),
-                        'action__path': context['__path'],
-                        'action__pattern': info['pattern']
-                    })
+                    candidate = {
+                        'word': info['name'],
+                        'action__path': info['file'],
+                    }
+                    fmt = '{name} [{type}] {file} {ref}'
+                    candidate['abbr'] = fmt.format(**info)
+                    if info['line']:
+                        candidate['action__line'] = info['line']
+                    else:
+                        candidate['action__pattern'] = info['pattern']
+                    candidates.append(candidate)
         return candidates
