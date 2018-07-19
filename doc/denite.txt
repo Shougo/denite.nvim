@@ -729,6 +729,8 @@ All mode mappings (override by mode mappings).
 <CR>		<denite:do_action:default>
 <Esc>		<denite:leave_mode>
 <Tab>		<denite:choose_action>
+<ScrollWheelUp>		<denite:move_to_previous_line>
+<ScrollWheelDown>	<denite:move_to_next_line>
 
 "insert" mode mappings.
 {key}		{mapping}

@@ -440,6 +440,8 @@ DEFAULT_ACTION_KEYMAP = {
         ('<C-M>', '<denite:do_action:default>', 'noremap'),
         ('<C-Z>', '<denite:suspend>', 'noremap'),
         ('<Tab>', '<denite:choose_action>', 'noremap'),
+        ('<ScrollWheelUp>', '<denite:move_to_previous_line>', 'noremap'),
+        ('<ScrollWheelDown>', '<denite:move_to_next_line>', 'noremap'),
     ],
     'insert': [
         # Behave like Vim's builtin command-line
