@@ -2067,11 +2067,11 @@ action_{name} (Function) 			(Optional)
 
                     targets = context['targets']
 <
-		To get the source context, you could use "source" attribute in
-		"target": >
+		To get the source context, you could use "source_context"
+		attribute in "target": >
 
 		    for target in context['targets']:
-		      source_context = target['source']
+		      source_context = target['source_context']
 <
 		Note: The source must be
 		|denite-source-attribute-is_public_context|.
