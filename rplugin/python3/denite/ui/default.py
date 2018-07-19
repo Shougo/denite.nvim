@@ -504,24 +504,27 @@ class Default(object):
 
         if (self._candidates and self._context['immediately'] or
                 len(self._candidates) == 1 and self._context['immediately_1']):
-            goto = self._winid > 0 and self._vim.call(
-                'win_gotoid', self._winid)
-            if goto:
-                # Jump to denite window
-                self.init_buffer()
-                self.update_cursor()
-            self.do_action('default')
-            candidate = self.get_cursor_candidate()
-            echo(self._vim, 'Normal', '[{0}/{1}] {2}'.format(
-                self._cursor + self._win_cursor, self._candidates_len,
-                candidate.get('abbr', candidate['word'])))
-            if goto:
-                # Move to the previous window
-                self.suspend()
-                self._vim.command('wincmd p')
+            self.do_default_action()
             return True
         return not (self._context['empty'] or
                     self._denite.is_async() or self._candidates)
+
+    def do_default_action(self):
+        goto = self._winid > 0 and self._vim.call(
+            'win_gotoid', self._winid)
+        if goto:
+            # Jump to denite window
+            self.init_buffer()
+            self.update_cursor()
+        self.do_action('default')
+        candidate = self.get_cursor_candidate()
+        echo(self._vim, 'Normal', '[{0}/{1}] {2}'.format(
+            self._cursor + self._win_cursor, self._candidates_len,
+            candidate.get('abbr', candidate['word'])))
+        if goto:
+            # Move to the previous window
+            self.suspend()
+            self._vim.command('wincmd p')
 
     def move_cursor(self):
         if self._win_cursor > self._vim.call('line', '$'):
