@@ -440,8 +440,6 @@ DEFAULT_ACTION_KEYMAP = {
         ('<C-M>', '<denite:do_action:default>', 'noremap'),
         ('<C-Z>', '<denite:suspend>', 'noremap'),
         ('<Tab>', '<denite:choose_action>', 'noremap'),
-        ('<ScrollWheelUp>', '<denite:move_to_previous_line>', 'noremap'),
-        ('<ScrollWheelDown>', '<denite:move_to_next_line>', 'noremap'),
     ],
     'insert': [
         # Behave like Vim's builtin command-line
@@ -521,6 +519,8 @@ DEFAULT_ACTION_KEYMAP = {
         ('A', '<denite:append_to_line>', 'noremap'),
         ('I', '<denite:insert_to_head>', 'noremap'),
         ('X', '<denite:quick_move>', 'noremap'),
+        ('<ScrollWheelUp>', '<denite:scroll_window_up_one_line>', 'noremap'),
+        ('<ScrollWheelDown>', '<denite:scroll_window_downwards>', 'noremap'),
 
         # Denite specific actions
         ('e', '<denite:do_action:edit>', 'noremap'),

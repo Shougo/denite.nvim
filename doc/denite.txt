@@ -729,8 +729,6 @@ All mode mappings (override by mode mappings).
 <CR>		<denite:do_action:default>
 <Esc>		<denite:leave_mode>
 <Tab>		<denite:choose_action>
-<ScrollWheelUp>		<denite:move_to_previous_line>
-<ScrollWheelDown>	<denite:move_to_next_line>
 
 "insert" mode mappings.
 {key}		{mapping}
@@ -827,6 +825,8 @@ y		<denite:do_action:yank>
 zb		<denite:scroll_cursor_to_bottom>
 zt		<denite:scroll_cursor_to_top>
 zz		<denite:scroll_cursor_to_middle>
+<ScrollWheelUp>		<denite:scroll_window_down_one_line>
+<ScrollWheelDown>	<denite:scroll_window_downwards>
 
 ------------------------------------------------------------------------------
 FUNCTIONS						*denite-functions*
