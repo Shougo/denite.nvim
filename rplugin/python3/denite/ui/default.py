@@ -504,12 +504,12 @@ class Default(object):
 
         if (self._candidates and self._context['immediately'] or
                 len(self._candidates) == 1 and self._context['immediately_1']):
-            self.do_default_action()
+            self.do_immediately()
             return True
         return not (self._context['empty'] or
                     self._denite.is_async() or self._candidates)
 
-    def do_default_action(self):
+    def do_immediately(self):
         goto = self._winid > 0 and self._vim.call(
             'win_gotoid', self._winid)
         if goto:
