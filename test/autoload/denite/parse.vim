@@ -24,4 +24,9 @@ function! s:suite.parse_options_args() abort
         \ 'file/rec:"foo:bar"'), [[
         \ {'name': 'file/rec', 'args': ['foo:bar']},
         \ ], {}])
+
+  call s:assert.equals(denite#helper#_parse_options_args(
+        \ '-do="hoge" file/rec:"foo:bar"'), [[
+        \ {'name': 'file/rec', 'args': ['foo:bar']},
+        \ ], {'do': 'hoge'}])
 endfunction

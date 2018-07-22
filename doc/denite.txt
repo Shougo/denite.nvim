@@ -1135,6 +1135,13 @@ OPTIONS							*denite-options*
 
 		Default: "botright"
 
+						*denite-option-do*
+-do={command}
+		Execute a {command} for each candidate's default action.
+		You can use it like |:argdo|.
+
+		Default: ""
+
 						*denite-option-empty*
 -empty
 		Open any denite buffer if the candidate is empty.
@@ -2193,6 +2200,12 @@ A: >
 
 	:Denite -resume -cursor-pos=+1 -immediately
 	:Denite -resume -cursor-pos=-1 -immediately
+
+Q: ":UniteNext"/":UniteDo" like commands are available?
+
+A: >
+
+	:Denite -resume -do='normal! A;'
 
 Q: I want to close denite buffer if grep results are empty.
 

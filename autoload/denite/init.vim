@@ -121,6 +121,7 @@ function! denite#init#_user_options() abort
         \ 'cursorline': v:true,
         \ 'default_action': 'default',
         \ 'direction': 'botright',
+        \ 'do': '',
         \ 'empty': v:true,
         \ 'highlight_cursor': 'Cursor',
         \ 'highlight_matched_range': 'Underlined',
