@@ -93,6 +93,8 @@ SPECIAL_KEYS = {
     'K9': b'\x80KL',
     'SCROLLWHEELUP': b'\x80\xfdK',
     'SCROLLWHEELDOWN': b'\x80\xfdL',
+    'TSCROLLWHEELUP': b'\x80ku',
+    'TSCROLLWHEELDOWN': b'\x80kd',
 }
 SPECIAL_KEYS_REVRESE = {v: k for k, v in SPECIAL_KEYS.items()}
 

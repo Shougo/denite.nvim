@@ -521,6 +521,8 @@ DEFAULT_ACTION_KEYMAP = {
         ('X', '<denite:quick_move>', 'noremap'),
         ('<ScrollWheelUp>', '<denite:scroll_window_up_one_line>', 'noremap'),
         ('<ScrollWheelDown>', '<denite:scroll_window_downwards>', 'noremap'),
+        ('<TScrollWheelUp>', '<denite:scroll_window_up_one_line>', 'noremap'),
+        ('<TScrollWheelDown>', '<denite:scroll_window_downwards>', 'noremap'),
 
         # Denite specific actions
         ('e', '<denite:do_action:edit>', 'noremap'),
