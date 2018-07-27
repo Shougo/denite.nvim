@@ -35,8 +35,12 @@ class Process(object):
     def kill(self):
         if not self._proc:
             return
-        self._proc.kill()
-        self._proc.wait()
+
+        if self._proc.poll() is None:
+            # _proc is running
+            self._proc.kill()
+            self._proc.wait()
+
         self._proc = None
         self._queue_out = None
         self._thread.join(1.0)
