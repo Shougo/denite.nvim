@@ -100,13 +100,14 @@ function! s:re_unquoted_match(match) abort
         \ . "'" . ']*$'
 endfunction
 function! s:remove_quote_pairs(s) abort
-  let s = substitute(a:s, '\\\(.\)', "\\1", 'g')
+  let s = substitute(a:s, '\\\(["'']\)', "\\1", 'g')
   " remove leading/ending quote pairs
   if s[0] ==# '"' && s[len(s) - 1] ==# '"'
     let s = s[1: len(s) - 2]
-  endif
-  if s[0] ==# "'" && s[len(s) - 1] ==# "'"
+  elseif s[0] ==# "'" && s[len(s) - 1] ==# "'"
     let s = s[1: len(s) - 2]
+  else
+    let s = substitute(a:s, '\\\(.\)', "\\1", 'g')
   endif
   return s
 endfunction
