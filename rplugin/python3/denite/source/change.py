@@ -6,7 +6,9 @@
 
 from .base import Base
 
-import re
+CHANGE_HIGHLIGHT_SYNTAX = [
+    {'name': 'Text', 'link': 'Function', 're': r'\v(\d+\s+\d+\s+\d+\s+)\zs.*'},
+]
 
 
 class Source(Base):
@@ -20,24 +22,46 @@ class Source(Base):
     def on_init(self, context):
         context['__parse'] = self._parse(context)
 
+    def highlight(self):
+        for syn in CHANGE_HIGHLIGHT_SYNTAX:
+            self.vim.command(
+                'syntax match {0}_{1} /{2}/ contained containedin={0}'.format(
+                    self.syntax_name, syn['name'], syn['re']))
+            self.vim.command(
+                'highlight default link {0}_{1} {2}'.format(
+                    self.syntax_name, syn['name'], syn['link']))
+
     def _parse(self, context):
-        changes = []
-        for change in self.vim.call('execute', 'changes').split('\n'):
-            texts = change.split()
-            if len(texts) < 4 or not re.search('^\d+$', texts[1]):
+        change_list = []
+        for row_data in self.vim.call('execute', 'changes').split('\n'):
+            elements = row_data.split()
+
+            if [] == elements:
                 continue
 
-            [linenr, col, text] = [
-                int(texts[1]), int(texts[2]) + 1, ' '.join(texts[3:])]
+            # skip the '>' sign
+            if elements[0] == '>' and len(elements) > 1:
+                elements = elements[1:]
 
-            changes.append({
-                'word': '%4d-%-3d  %s' % (linenr, col, text),
-                'action__path': self.vim.call(
-                    'fnamemodify', self.vim.call('bufname', '%'), ':p'),
-                'action__line': linenr,
+            # if '>' point nothing
+            if elements[0] == '>' and len(elements) == 1:
+                cur_pos = self.vim.call('getcurpos')
+                lnum, col = cur_pos[1], cur_pos[2]
+            # if '>' point something, and first three filed is digit
+            elif elements[0].isdigit() and elements[1].isdigit and \
+                    elements[2].isdigit():
+                lnum, col = int(elements[1]), int(elements[2]) + 1
+            else:
+                continue
+
+            change_list.append({
+                'word': row_data,
+                'action__path': self.vim.current.buffer.name,
+                'action__line': lnum,
                 'action__col': col,
             })
-        return list(reversed(changes))
+
+        return change_list
 
     def gather_candidates(self, context):
         return context['__parse']
