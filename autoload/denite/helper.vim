@@ -212,3 +212,13 @@ function! s:_get_source_name(path) abort
   endif
   return fnamemodify(a:path, ':s?.*/rplugin/python3/denite/source/??:r')
 endfunction
+
+function! denite#helper#_get_wininfo() abort
+  let wininfo = getwininfo(win_getid())[0]
+  return {
+        \ 'bufnr': wininfo['bufnr'],
+        \ 'winnr': wininfo['winnr'],
+        \ 'winid': wininfo['winid'],
+        \ 'tabnr': wininfo['tabnr'],
+        \}
+endfunction

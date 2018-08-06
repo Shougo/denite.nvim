@@ -241,10 +241,7 @@ class Default(object):
         return direction
 
     def _get_wininfo(self):
-        if not self._vim.call('exists', '*getwininfo'):
-            return []
-
-        wininfo = self._vim.call('getwininfo', self._vim.call('win_getid'))[0]
+        wininfo = self._vim.call('denite#helper#_get_wininfo')
         return [
             self._vim.options['columns'], self._vim.options['lines'],
             self._vim.call('tabpagebuflist'),
