@@ -9,7 +9,7 @@ import os
 import sys
 
 from glob import glob
-from os.path import normpath, normcase, join, dirname
+from os.path import normpath, normcase, join, dirname, exists
 from importlib.machinery import SourceFileLoader
 
 
@@ -248,9 +248,10 @@ def import_rplugins(name, context, source, loaded_paths):
 
 def parse_tagline(line, tagpath):
     elem = line.split("\t")
+    file_path = elem[1] if exists(elem[1]) else normpath(join(dirname(tagpath), elem[1]))
     info = {
         'name': elem[0],
-        'file': normpath(join(dirname(tagpath), elem[1])),
+        'file': file_path,
         'pattern': '',
         'line': '',
         'type': '',
