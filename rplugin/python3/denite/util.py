@@ -248,7 +248,9 @@ def import_rplugins(name, context, source, loaded_paths):
 
 def parse_tagline(line, tagpath):
     elem = line.split("\t")
-    file_path = elem[1] if exists(elem[1]) else normpath(join(dirname(tagpath), elem[1]))
+    file_path = elem[1]
+    if not exists(file_path):
+        file_path = normpath(join(dirname(tagpath), elem[1]))
     info = {
         'name': elem[0],
         'file': file_path,
