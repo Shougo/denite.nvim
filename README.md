@@ -71,14 +71,6 @@ Note: You need to install Python3.5+ or `pip3 install typing`.
 
 **Note:** You need to do 1. and 2. with the common-arch files (x86 or x64).
 
-## Future works (not implemented yet)
-
-* source completion support: `completion(args, arglead)`
-
-* [`defx`](https://github.com/Shougo/defx.nvim) support
-
-* match highlight improvement
-
 ## Screenshots
 
 ![file/rec source](https://user-images.githubusercontent.com/13142418/34324674-b8ddd5b8-e840-11e7-9b77-d94e1b084bda.gif)
