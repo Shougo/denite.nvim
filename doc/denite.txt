@@ -2191,8 +2191,9 @@ https://github.com/Shougo/neomru.vim
 
 Q: Vimfiler will support denite?
 
-A: Denite file explorer interface should be implemented by another de-***
-plugin.  It is not vimfiler work.
+A: Denite file explorer interface should be implemented by defx.nvim plugin.
+It is not vimfiler work.
+https://github.com/Shougo/defx.nvim
 
 Q: ":UniteNext"/":UnitePrevious" like commands are available?
 
@@ -2298,6 +2299,11 @@ A:
 	call denite#custom#source(
 	\ 'buffer', 'matchers', ['matcher/fuzzy', 'matcher/project_files'])
 <
+Q: Where is bookmark source?
+
+A: You can use denite-dirmark instead.
+https://github.com/kmnk/denite-dirmark
+
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
 
