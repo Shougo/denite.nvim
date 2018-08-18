@@ -78,46 +78,13 @@ class Source(Base):
         args = dict(enumerate(context['args']))
 
         # paths
-        arg = args.get(0, [])
-        if arg:
-            if isinstance(arg, str):
-                arg = [arg]
-            elif not isinstance(arg, list):
-                raise AttributeError('`args[0]` needs to be a `str` or `list`')
-        elif context['path']:
-            arg = [context['path']]
-        context['__paths'] = [util.abspath(self.vim, x) for x in arg]
+        context['__paths'] = self._init_paths(context, args)
 
         # arguments
-        arg = args.get(1, [])
-        if arg:
-            if isinstance(arg, str):
-                if arg == '!':
-                    arg = util.input(self.vim, context, 'Argument: ')
-                arg = shlex.split(arg)
-            elif not isinstance(arg, list):
-                raise AttributeError('`args[1]` needs to be a `str` or `list`')
-        context['__arguments'] = arg
+        context['__arguments'] = self._init_arguments(context, args)
 
         # patterns
-        arg = args.get(2, [])
-        if arg:
-            if isinstance(arg, str):
-                if arg == '!':
-                    # Interactive mode
-                    context['is_interactive'] = True
-                    arg = [context['input']] if context['input'] else []
-                else:
-                    arg = [arg]
-            elif not isinstance(arg, list):
-                raise AttributeError('`args[2]` needs to be a `str` or `list`')
-        elif context['input']:
-            arg = [context['input']]
-        else:
-            pattern = util.input(self.vim, context, 'Pattern: ')
-            if pattern:
-                arg = [pattern]
-        context['__patterns'] = arg
+        context['__patterns'] = self._init_patterns(context, args)
 
     def on_close(self, context):
         if context['__proc']:
@@ -202,3 +169,49 @@ class Source(Base):
             path = relpath(result[0], start=context['path'])
             candidates.append(_candidate(result, path))
         return candidates
+
+    def _init_paths(self, context, args):
+        paths = []
+        arg = args.get(0, [])
+        if arg:
+            if isinstance(arg, str):
+                paths = [arg]
+            elif not isinstance(arg, list):
+                raise AttributeError(
+                    '`args[0]` needs to be a `str` or `list`')
+        elif context['path']:
+            paths = [context['path']]
+        return [util.abspath(self.vim, x) for x in paths]
+
+    def _init_arguments(self, context, args):
+        arguments = []
+        arg = args.get(1, [])
+        if arg:
+            if isinstance(arg, str):
+                if arg == '!':
+                    arg = util.input(self.vim, context, 'Argument: ')
+                arguments = shlex.split(arg)
+            elif not isinstance(arg, list):
+                raise AttributeError(
+                    '`args[1]` needs to be a `str` or `list`')
+        return arguments
+
+    def _init_patterns(self, context, args):
+        patterns = []
+        arg = args.get(2, [])
+        if arg:
+            if isinstance(arg, str):
+                if arg == '!':
+                    # Interactive mode
+                    context['is_interactive'] = True
+                    patterns = [context['input']]
+                else:
+                    patterns = [arg]
+            elif not isinstance(arg, list):
+                raise AttributeError(
+                    '`args[2]` needs to be a `str` or `list`')
+        elif context['input']:
+            patterns = [context['input']]
+        else:
+            patterns = [util.input(self.vim, context, 'Pattern: ')]
+        return [x for x in patterns if x]
