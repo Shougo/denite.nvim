@@ -136,11 +136,13 @@ class Source(Base):
         self.vim.command(
             'syntax region ' + self.syntax_name + ' start=// end=/$/ '
             'contains=deniteSource_grepHeader,deniteMatchedRange contained')
-        self.vim.command(
-            'syntax match deniteGrepPatterns ' +
-            r'/%s/ ' % r'\|'.join(util.regex_convert_str_vim(pattern)
-                                  for pattern in self.context['__patterns']) +
-            'contained containedin=' + self.syntax_name)
+        if self.context['__patterns']:
+            self.vim.command(
+                'syntax match deniteGrepPatterns ' +
+                r'/%s/ ' % r'\|'.join(
+                    util.regex_convert_str_vim(pattern)
+                    for pattern in self.context['__patterns']) +
+                'contained containedin=' + self.syntax_name)
 
     def gather_candidates(self, context):
         if context['event'] == 'interactive':
