@@ -20,8 +20,8 @@ class Source(Base):
     def gather_candidates(self, context):
         colorschemes = {}
 
-        for file in globruntime(context['runtimepath'], 'colors/*.vim'):
-            colorscheme = path.splitext(path.basename(file))[0]
+        for filename in globruntime(context['runtimepath'], 'colors/*.vim'):
+            colorscheme = path.splitext(path.basename(filename))[0]
             colorschemes[colorscheme] = {
                 'word': colorscheme,
                 'action__command': 'colorscheme ' + colorscheme
