@@ -41,7 +41,7 @@ function! denite#helper#call_denite(command, args, line1, line2) abort
   if a:command ==# 'DeniteCursorWord'
     let context.input = expand('<cword>')
   elseif a:command ==# 'DeniteBufferDir'
-    let context.path = fnamemodify(bufname('%'), ':p:h')
+    let context.path = expand('%:p:h')
   elseif a:command ==# 'DeniteProjectDir'
     let context.path = denite#project#path2project_directory(
           \ get(context, 'path', getcwd()),
