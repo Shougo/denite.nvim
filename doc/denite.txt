@@ -1090,6 +1090,11 @@ OPTIONS							*denite-options*
 		Auto resume when enter the Denite window.
 		Default: false
 
+						*denite-option-autoclose-preview*
+-autoclose-preview
+		Auto close the preview window when quit the Denite window.
+		Default: true
+
 						*denite-option-buffer-name*
 -buffer-name={buffer-name}
 		Specify the name of denite buffer.

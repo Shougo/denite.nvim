@@ -655,6 +655,8 @@ class Default(object):
         self._context['is_redraw'] = False
 
     def quit(self):
+        if self._context['autoclose_preview']:
+            self._vim.command('silent pclose!')
         self._denite.on_close(self._context)
         self.quit_buffer()
         self._result = []
