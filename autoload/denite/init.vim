@@ -114,6 +114,7 @@ function! denite#init#_user_options() abort
         \ 'auto_preview': v:false,
         \ 'auto_resize': v:false,
         \ 'auto_resume': v:false,
+        \ 'autoclose_preview': v:true,
         \ 'buffer_name': 'default',
         \ 'cursor_pos': '',
         \ 'cursor_wrap': v:false,
