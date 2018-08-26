@@ -89,7 +89,7 @@ class Default(object):
                 self._current_mode = context['mode']
 
             update = ('immediately', 'immediately_1',
-                      'cursor_wrap', 'cursor_pos')
+                      'cursor_wrap', 'cursor_pos', 'prev_winid')
             for key in update:
                 self._context[key] = context[key]
 
