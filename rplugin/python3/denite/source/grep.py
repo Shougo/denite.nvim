@@ -210,7 +210,8 @@ class Source(Base):
             elif not isinstance(arg, list):
                 raise AttributeError(
                     '`args[2]` needs to be a `str` or `list`')
+        elif context['input']:
+            patterns = [context['input']]
         else:
-            patterns = [util.input(self.vim, context,
-                                   'Pattern: ', context['input'])]
+            patterns = [util.input(self.vim, context, 'Pattern: ')]
         return [x for x in patterns if x]
