@@ -1397,6 +1397,7 @@ command_history	Gather command histories and run it.
 directory_rec	Gather directories recursive and nominates all directory names
 		under the search directory (argument 0) or the current directory
 		(if argument is omitted) as candidates.
+		Note: Windows environment is not supported.
 
 		Source args:
 			0. the search directory
