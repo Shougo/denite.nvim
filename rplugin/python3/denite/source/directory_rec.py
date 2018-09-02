@@ -25,7 +25,7 @@ class Source(Rec):
 
         super().on_init(context)
 
-        if context['is_windows']
+        if context['is_windows']:
             self.vars['command'] = []
             self.error_message(context,
                                'Windows environment is not supported.')
