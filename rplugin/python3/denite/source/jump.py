@@ -33,9 +33,10 @@ class Source(Base):
 
     def on_init(self, context):
         if self.vim.call('exists', '*getjumplist'):
-            context['__jumps'] = self._get_jumplist(context)
+            jumps = self._get_jumplist(context)
         else:
-            context['__jumps'] = self._parse(context)
+            jumps = self._parse(context)
+        context['__jumps'] = jumps[::-1]
 
     def _get_jumplist(self, context):
         [jump_info, pointer] = self.vim.call('getjumplist')

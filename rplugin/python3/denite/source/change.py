@@ -20,7 +20,7 @@ class Source(Base):
         self.kind = 'file'
 
     def on_init(self, context):
-        context['__parse'] = self._parse(context)
+        context['__parse'] = self._parse(context)[::-1]
 
     def highlight(self):
         for syn in CHANGE_HIGHLIGHT_SYNTAX:
