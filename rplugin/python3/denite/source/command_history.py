@@ -34,7 +34,7 @@ class Source(Base):
     def _get_histories(self):
         histories = [
             [str(x), self.vim.call('histget', ':', x)]
-            for x in reversed(range(1, self.vim.call('histnr', ':')))
+            for x in reversed(range(1, self.vim.call('histnr', ':')+1))
         ]
         histories = self._remove_duplicate_entry(histories)
         if self.vars['ignore_command_regexp']:
