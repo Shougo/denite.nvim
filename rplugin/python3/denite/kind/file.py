@@ -48,8 +48,12 @@ class Kind(Openable):
             self.vim.command('pclose!')
             return
 
-        listed = self.vim.call('buflisted', target['action__path'])
-        path = target['action__path'].replace('/./', '/')
+        if 'action__bufnr' in target:
+            listed = self.vim.call('buflisted', target['action__bufnr'])
+            path = self.vim.call('bufname', target['action__bufnr'])
+        else:
+            listed = self.vim.call('buflisted', target['action__path'])
+            path = target['action__path'].replace('/./', '/')
         prev_id = self.vim.call('win_getid')
 
         self.vim.call('denite#helper#preview_file', context, path)
@@ -68,7 +72,10 @@ class Kind(Openable):
 
     def action_highlight(self, context):
         target = context['targets'][0]
-        bufnr = self.vim.call('bufnr', target['action__path'])
+        if 'action__bufnr' in target:
+            bufnr = target['action__bufnr']
+        else:
+            bufnr = self.vim.call('bufnr', target['action__path'])
 
         if not (self.vim.call('win_id2win', context['prev_winid']) and
                 context['prev_winid'] in self.vim.call('win_findbuf', bufnr)):
@@ -81,40 +88,48 @@ class Kind(Openable):
         self.vim.call('win_gotoid', prev_id)
 
     def action_quickfix(self, context):
-        qflist = [{
-            'filename': x['action__path'],
-            'lnum': x['action__line'],
-            'col': x['action__col'],
-            'text': x['action__text'],
-        } for x in context['targets']
-                  if 'action__line' in x and 'action__text' in x]
+        qflist = []
+        for target in [x for x in context['targets']
+                       if 'action__line' in x and 'action__text' in x]:
+            qf = {
+                'lnum': target['action__line'],
+                'col': target['action__col'],
+                'text': target['action__text'],
+            }
+            if 'action__bufnr 'in target:
+                qf['bufnr'] = target['action__bufnr']
+            else:
+                qf['filename'] = target['action__path']
+            qflist.append(qf)
         self.vim.call('setqflist', qflist)
         self.vim.command('copen')
 
     def _open(self, context, command):
         cwd = self.vim.call('getcwd')
         for target in context['targets']:
-            path = target['action__path']
-            match_path = '^{0}$'.format(path)
+            if 'action__bufnr' in target:
+                self.vim.command('buffer' + str(target['action__bufnr']))
+            else:
+                path = target['action__path']
+                match_path = '^{0}$'.format(path)
 
-            if re.match('https?://', path):
-                # URI
-                self.vim.call('denite#util#open', path)
-                continue
-            if path.startswith(cwd):
-                path = os.path.relpath(path, cwd)
+                if re.match('https?://', path):
+                    # URI
+                    self.vim.call('denite#util#open', path)
+                    continue
+                if path.startswith(cwd):
+                    path = os.path.relpath(path, cwd)
 
-            if self.vim.call('bufwinnr', match_path) <= 0:
-                self.vim.call(
-                    'denite#util#execute_path', command, path)
-            elif self.vim.call('bufwinnr',
-                               match_path) != self.vim.current.buffer:
-                self.vim.command('buffer' +
-                                 str(self.vim.call('bufnr', path)))
+                bufnr = self.vim.call('bufwinnr', match_path)
+                if bufnr <= 0:
+                    self.vim.call(
+                        'denite#util#execute_path', command, path)
+                elif bufnr != self.vim.current.buffer:
+                    self.vim.command('buffer' + str(bufnr))
+
+                if path in self._previewed_buffers:
+                    self._previewed_buffers.pop(path)
             self._jump(context, target)
-
-            if path in self._previewed_buffers:
-                self._previewed_buffers.pop(path)
 
     def _cleanup(self):
         for bufnr in self._previewed_buffers.values():
@@ -157,8 +172,11 @@ class Kind(Openable):
 
     # Needed for openable actions
     def _winid(self, target):
-        path = target['action__path']
-        bufnr = self.vim.call('bufnr', path)
+        if 'action__bufnr' in target:
+            bufnr = target['action__bufnr']
+        else:
+            path = target['action__path']
+            bufnr = self.vim.call('bufnr', path)
         if bufnr == -1:
             return None
         winids = self.vim.call('win_findbuf', bufnr)
