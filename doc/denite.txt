@@ -13,6 +13,7 @@ Configuration Examples	|denite-examples|
 Interface		|denite-interface|
   Commands		  |denite-commands|
   Key mappings		  |denite-key-mappings|
+  Default key mappings	  |denite-default-key-mappings|
   Functions		  |denite-functions|
   Options		  |denite-options|
 Sources			|denite-sources|
@@ -716,7 +717,7 @@ are on the neovim-prompt's builtin actions/mappings.
 		Yank a text into a default register (|v:register|).
 		Note: this is a neovim-prompt's builtin action.
 
-						*denite_default_key_mappings*
+						*denite-default-key-mappings*
 Following keymappings are the default keymappings.
 
 Note: when user hit <C-c>, denite stop any operations and close its window.
