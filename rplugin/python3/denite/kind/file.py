@@ -120,11 +120,11 @@ class Kind(Openable):
                 if path.startswith(cwd):
                     path = os.path.relpath(path, cwd)
 
-                bufnr = self.vim.call('bufwinnr', match_path)
+                bufnr = self.vim.call('bufnr', match_path)
                 if bufnr <= 0:
                     self.vim.call(
                         'denite#util#execute_path', command, path)
-                elif bufnr != self.vim.current.buffer:
+                elif bufnr != self.vim.current.buffer.number:
                     self.vim.command('buffer' + str(bufnr))
 
                 if path in self._previewed_buffers:
