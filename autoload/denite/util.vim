@@ -36,6 +36,7 @@ function! denite#util#execute_path(command, path) abort
 
   let save_wildignore = &wildignore
   try
+    let &wildignore = ''
     execute a:command '`=s:expand(a:path)`'
   catch /^Vim\%((\a\+)\)\=:E325/
     " Ignore swap file error
