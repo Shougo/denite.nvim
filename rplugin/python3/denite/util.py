@@ -138,7 +138,7 @@ def relpath(vim, path):
 def convert2fuzzy_pattern(text):
     def esc(string):
         # Escape string for convert2fuzzy_pattern.
-        p = re.sub(r'([a-zA-Z0-9_-])(?!$)', r'\1.{-}', string)
+        p = re.sub(r'([a-zA-Z0-9_-])(?!$)', r'\1[^\1]{-}', string)
         if re.search(r'[A-Z](?!$)', string):
             p = re.sub(r'([a-z])(?!$)',
                        (lambda pat:
