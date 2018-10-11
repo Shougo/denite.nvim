@@ -7,6 +7,11 @@
 let s:vcs_markers = ['.git', '.bzr', '.hg', '.svn']
 
 function! denite#project#path2project_directory(path, root_markers) abort
+  return denite#util#substitute_path_separator(
+        \ s:path2project_directory(a:path, a:root_markers))
+endfunction
+
+function! s:path2project_directory(path, root_markers) abort
   let search_directory = denite#util#path2directory(a:path)
   let directory = ''
 
@@ -14,15 +19,13 @@ function! denite#project#path2project_directory(path, root_markers) abort
   for d in split(a:root_markers, ',')
     let d = findfile(d, s:escape_file_searching(search_directory) . ';')
     if d !=# ''
-      let directory = fnamemodify(d, ':p:h')
-      break
-    else
-      " Allow the directory.
-      let d = finddir(d, s:escape_file_searching(search_directory) . ';')
-      if d !=# ''
-        let directory = fnamemodify(d, ':p')
-        break
-      endif
+      return fnamemodify(d, ':p:h')
+    endif
+
+    " Allow the directory.
+    let d = finddir(d, s:escape_file_searching(search_directory) . ';')
+    if d !=# ''
+      return fnamemodify(d, ':p')
     endif
   endfor
 
@@ -36,16 +39,14 @@ function! denite#project#path2project_directory(path, root_markers) abort
       let directory = s:_path2project_directory_others(vcs, search_directory)
     endif
     if directory !=# ''
-      break
+      return directory
     endif
   endfor
 
-  if directory ==# ''
-    " Search /src/ directory.
-    let base = denite#util#substitute_path_separator(search_directory)
-    if base =~# '/src/'
-      let directory = base[: strridx(base, '/src/') + 3]
-    endif
+  " Search /src/ directory.
+  let base = denite#util#substitute_path_separator(search_directory)
+  if base =~# '/src/'
+    let directory = base[: strridx(base, '/src/') + 3]
   endif
 
   if directory ==# ''
@@ -53,7 +54,7 @@ function! denite#project#path2project_directory(path, root_markers) abort
     let directory = search_directory
   endif
 
-  return denite#util#substitute_path_separator(directory)
+  return directory
 endfunction
 function! s:escape_file_searching(buffer_name) abort
   return escape(a:buffer_name, '*[]?{}, ')
