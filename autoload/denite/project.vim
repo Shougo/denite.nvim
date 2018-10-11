@@ -6,15 +6,25 @@
 
 let s:vcs_markers = ['.git', '.bzr', '.hg', '.svn']
 
-let s:default_markers = [
-      \ 'build.xml', 'prj.el', '.project', 'pom.xml', 'package.json',
-      \ 'Makefile', 'configure', 'Rakefile', 'NAnt.build',
-      \ 'P4CONFIG', 'tags', 'gtags', 'stack.yaml'
-      \]
-
 function! denite#project#path2project_directory(path, root_markers) abort
   let search_directory = denite#util#path2directory(a:path)
   let directory = ''
+
+  " Search project root marker file.
+  for d in split(a:root_markers, ',')
+    let d = findfile(d, s:escape_file_searching(search_directory) . ';')
+    if d !=# ''
+      let directory = fnamemodify(d, ':p:h')
+      break
+    else
+      " Allow the directory.
+      let d = finddir(d, s:escape_file_searching(search_directory) . ';')
+      if d !=# ''
+        let directory = fnamemodify(d, ':p')
+        break
+      endif
+    endif
+  endfor
 
   " Search VCS directory.
   for vcs in s:vcs_markers
@@ -29,24 +39,6 @@ function! denite#project#path2project_directory(path, root_markers) abort
       break
     endif
   endfor
-
-  " Search project root marker file.
-  if directory ==# ''
-    for d in s:default_markers + split(a:root_markers, ',')
-      let d = findfile(d, s:escape_file_searching(search_directory) . ';')
-      if d !=# ''
-        let directory = fnamemodify(d, ':p:h')
-        break
-      else
-        " Allow the directory.
-        let d = finddir(d, s:escape_file_searching(search_directory) . ';')
-        if d !=# ''
-          let directory = fnamemodify(d, ':p')
-          break
-        endif
-      endif
-    endfor
-  endif
 
   if directory ==# ''
     " Search /src/ directory.
