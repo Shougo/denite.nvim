@@ -2306,6 +2306,11 @@ Q: Where is bookmark source?
 A: You can use denite-dirmark instead.
 https://github.com/kmnk/denite-dirmark
 
+Q: I want to use better matcher.
+
+A: You can use fruzzy matcher instead.
+https://github.com/raghur/fruzzy
+
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
 
