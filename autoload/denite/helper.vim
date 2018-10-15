@@ -37,7 +37,6 @@ function! denite#helper#call_denite(command, args, line1, line2) abort
 
   let context.firstline = a:line1
   let context.lastline = a:line2
-  let context.bufnr = bufnr('%')
   if a:command ==# 'DeniteCursorWord'
     let context.input = expand('<cword>')
   elseif a:command ==# 'DeniteBufferDir'
