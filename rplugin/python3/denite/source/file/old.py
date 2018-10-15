@@ -23,9 +23,11 @@ class Source(Base):
             self.vim.command('wviminfo | rviminfo!')
 
     def gather_candidates(self, context):
-        return [{'word': x, 'action__path': x}
-                for x in [expand(x) for x in
-                          self.vim.call('denite#helper#_get_oldfiles')]]
+        oldfiles = [
+            expand(x) for x in self.vim.call('denite#helper#_get_oldfiles')
+            if not self.vim.call('bufexists', x) or
+            self.vim.call('getbufvar', x, 'buftype') == '']
+        return [{'word': x, 'action__path': x} for x in oldfiles]
 
 
 class Kind(File):
