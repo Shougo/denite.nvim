@@ -88,8 +88,11 @@ function! denite#init#_context(user_context) abort
 endfunction
 function! s:internal_options() abort
   return {
+        \ 'bufnr': bufnr('%'),
         \ 'encoding': &encoding,
         \ 'error_messages': [],
+        \ 'firstline': 0,
+        \ 'lastline': 0,
         \ 'is_windows': ((has('win32') || has('win64')) ? v:true : v:false),
         \ 'messages': [],
         \ 'prev_winid': win_getid(),
