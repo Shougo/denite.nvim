@@ -40,4 +40,5 @@ class Filter(Base):
         pattern = '|'.join(patterns)
         max_width = int(context['max_candidate_width'])
         return [x for x in context['candidates']
-                if not search(pattern, x['action__path'][:max_width])]
+                if 'action__path' not in x or
+                not search(pattern, x['action__path'][:max_width])]
