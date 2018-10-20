@@ -4,13 +4,13 @@
 # License: MIT license
 # ============================================================================
 
+import importlib.util
 import re
 import os
 import sys
 
 from glob import glob
 from os.path import normpath, normcase, join, dirname, exists
-from importlib.machinery import SourceFileLoader
 
 
 def set_default(vim, var, val):
@@ -247,9 +247,10 @@ def import_rplugins(name, context, source, loaded_paths):
     which may exist only for making a module namespace.
     """
     for path, module_path in find_rplugins(context, source, loaded_paths):
-        loader = SourceFileLoader('denite.%s.%s' % (source, module_path), path)
-        # XXX: load_module is deprecated since Python 3.4
-        module = loader.load_module()
+        module_name = 'denite.%s.%s' % (source, module_path)
+        spec = importlib.util.spec_from_file_location(module_name, path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
         if not hasattr(module, name):
             continue
         yield (getattr(module, name), path, module_path)
