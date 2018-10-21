@@ -2314,6 +2314,9 @@ https://github.com/raghur/fruzzy
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
 
+2018.10.20
+* Python 3.5+ is required.
+
 2018.04.01
 * Remove "-force-quit" and "-no-quit" options.  Please use "post-action"
   option instead.
