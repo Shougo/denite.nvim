@@ -88,7 +88,7 @@ INSTALL							*denite-install*
 Note: denite requires Neovim(the latest is recommended) or Vim8.0+ with
 |:python3| enabled.
 
-Note: You need to install Python3.5+ or Python3.4 with "pip3 install typing".
+Note: You need to install Python3.5+.
 
 For neovim install:
 
