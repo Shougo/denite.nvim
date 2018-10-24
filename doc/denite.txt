@@ -1505,6 +1505,12 @@ file/rec (file_rec)
 				Note: The patterns are based on fnmatch python
 				module.
 
+		cache_threshold
+				The cache feature is disabled if the number of
+				files is less than this value or this value is
+				0.
+				(default: 10000)
+
 						*denite-source-filetype*
 filetype	Gather filetypes and change the filetype of the current
 		buffer.
