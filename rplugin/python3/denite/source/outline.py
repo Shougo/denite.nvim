@@ -11,9 +11,9 @@ import re
 import tempfile
 
 OUTLINE_HIGHLIGHT_SYNTAX = [
-    {'name': 'Name', 'link': 'Identifier', 're': '\S\+\%(\s\+\[\)\@='},
-    {'name': 'Type', 'link': 'Type',       're': '\[.\{-}\]'},
-    {'name': 'Ref',  'link': 'Comment',    're': '\s\s.\+'}
+    {'name': 'Name', 'link': 'Identifier', 're': r'\S\+\%(\s\+\[\)\@='},
+    {'name': 'Type', 'link': 'Type',       're': r'\[.\{-}\]'},
+    {'name': 'Ref',  'link': 'Comment',    're': r'\s\s.\+'}
 ]
 
 

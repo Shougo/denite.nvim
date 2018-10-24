@@ -139,7 +139,7 @@ class Source(Base):
                     path = self.vim.current.buffer.name
                     prefix = 'text: ' if file_text != '-invalid-' else ''
 
-                m = re.search('(^>*\s+\w+\s+\w+\s+\w+)', row_data)
+                m = re.search(r'(^>*\s+\w+\s+\w+\s+\w+)', row_data)
                 word = m.group(0) + ' ' + prefix + file_text
 
             else:

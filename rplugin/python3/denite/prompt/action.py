@@ -304,7 +304,7 @@ def _move_caret_to_one_word_left(prompt, params):
     # At least Neovim 0.2.0 or Vim 8.0, <S-Left> in command line does not
     # respect 'iskeyword' and a definition of the 'word' seems a chunk of
     # printable characters.
-    pattern = re.compile('\S+\s?$')
+    pattern = re.compile(r'\S+\s?$')
     original_text = prompt.caret.get_backward_text()
     substituted_text = pattern.sub('', original_text)
     offset = len(original_text) - len(substituted_text)
@@ -328,7 +328,7 @@ def _move_caret_to_one_word_right(prompt, params):
     # At least Neovim 0.2.0 or Vim 8.0, <S-Left> in command line does not
     # respect 'iskeyword' and a definition of the 'word' seems a chunk of
     # printable characters.
-    pattern = re.compile('^\S+')
+    pattern = re.compile(r'^\S+')
     original_text = prompt.caret.get_forward_text()
     substituted_text = pattern.sub('', original_text)
     prompt.caret.locus += 1 + len(original_text) - len(substituted_text)

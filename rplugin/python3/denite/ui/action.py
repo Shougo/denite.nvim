@@ -271,14 +271,14 @@ def _change_char(prompt, params):
 
 
 def _move_caret_to_next_word(prompt, params):
-    pattern = re.compile('^\S+\s+\S')
+    pattern = re.compile(r'^\S+\s+\S')
     original_text = prompt.caret.get_forward_text()
     substituted_text = pattern.sub('', original_text)
     prompt.caret.locus += len(original_text) - len(substituted_text)
 
 
 def _move_caret_to_end_of_word(prompt, params):
-    pattern = re.compile('^\S+')
+    pattern = re.compile(r'^\S+')
     original_text = prompt.caret.get_forward_text()
     if original_text and original_text[0] == ' ':
         _move_caret_to_next_word(prompt, params)

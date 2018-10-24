@@ -22,4 +22,4 @@ class Filter(Base):
             return context['candidates']
 
         return [x for x in context['candidates']
-                if not match('\.', basename(x['action__path']))]
+                if not match(r'\.', basename(x['action__path']))]

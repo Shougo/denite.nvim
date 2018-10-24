@@ -43,7 +43,7 @@ class Source(Base):
                 'word': x,
             } for x in self.vim.call('getcompletion', '', 'command')]
 
-        prefix = sub('\w*$', '', context['input'])
+        prefix = sub(r'\w*$', '', context['input'])
 
         candidates = [{
             'action__command': prefix + x,

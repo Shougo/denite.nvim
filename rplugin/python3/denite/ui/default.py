@@ -79,7 +79,7 @@ class Default(object):
     def _start(self, sources, context):
         self._vim.command('silent! autocmd! denite')
 
-        if re.search('\[Command Line\]$', self._vim.current.buffer.name):
+        if re.search(r'\[Command Line\]$', self._vim.current.buffer.name):
             # Ignore command line window.
             return
 
@@ -388,9 +388,8 @@ class Default(object):
             self._vim.command('silent! syntax clear deniteMatchedChar')
         if self._matched_pattern != '':
             self._vim.command(
-                'silent! syntax match deniteMatchedRange /\c%s/ contained' % (
-                    regex_convert_py_vim(self._matched_pattern),
-                )
+                r'silent! syntax match deniteMatchedRange /\c%s/ contained' %
+                (regex_convert_py_vim(self._matched_pattern))
             )
             self._vim.command((
                 'silent! syntax match deniteMatchedChar /[%s]/ '
