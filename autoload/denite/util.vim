@@ -34,17 +34,13 @@ function! denite#util#execute_path(command, path) abort
     call mkdir(dir, 'p')
   endif
 
-  let save_wildignore = &wildignore
   try
-    let &wildignore = ''
-    execute a:command '`=s:expand(a:path)`'
+    execute a:command s:expand(a:path)
   catch /^Vim\%((\a\+)\)\=:E325/
     " Ignore swap file error
   catch
     call denite#util#print_error(v:throwpoint)
     call denite#util#print_error(v:exception)
-  finally
-    let &wildignore = save_wildignore
   endtry
 endfunction
 function! denite#util#execute_command(command, is_capture) abort
