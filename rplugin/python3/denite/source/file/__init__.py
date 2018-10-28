@@ -4,9 +4,10 @@
 # License: MIT license
 # ============================================================================
 
-from ..base import Base
 import glob
 import os
+
+from denite.source.base import Base
 from denite.util import abspath, expand
 
 

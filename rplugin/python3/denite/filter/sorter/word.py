@@ -4,7 +4,8 @@
 # DESCRIPTION: Simple filter to sort candidates by ascii order of word
 # License: MIT license
 # ============================================================================
-from ..base import Base
+
+from denite.filter.base import Base
 
 
 class Filter(Base):

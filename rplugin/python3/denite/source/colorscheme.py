@@ -4,8 +4,9 @@
 # License: MIT license
 # ============================================================================
 
-from .base import Base
 from os import path
+
+from denite.source.base import Base
 from denite.util import globruntime
 
 

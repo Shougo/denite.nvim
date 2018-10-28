@@ -4,10 +4,11 @@
 # License: MIT license
 # ============================================================================
 
-from ..base import Base
-from denite.util import globruntime, convert2fuzzy_pattern
 import sys
 import os
+
+from denite.filter.base import Base
+from denite.util import globruntime, convert2fuzzy_pattern
 
 
 class Filter(Base):

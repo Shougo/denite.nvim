@@ -5,9 +5,10 @@
 # ============================================================================
 
 from os.path import isabs, sep
-from ..base import Base
 from fnmatch import translate
 from re import search
+
+from denite.filter.base import Base
 
 
 class Filter(Base):

@@ -4,7 +4,7 @@
 # License: MIT license
 # ============================================================================
 
-from .base import Base
+from denite.source.base import Base
 
 LINE_NUMBER_SYNTAX = (
     'syntax match deniteSource_lineNumber '

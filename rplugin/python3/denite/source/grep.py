@@ -5,11 +5,10 @@
 # ============================================================================
 
 import shlex
-
-from denite import util, process
 from os.path import relpath
 
-from .base import Base
+from denite import util, process
+from denite.source.base import Base
 
 
 GREP_HEADER_SYNTAX = (

@@ -4,9 +4,10 @@
 # License: MIT license
 # ============================================================================
 
-from ..base import Base
-from denite.util import relpath
 from os.path import isabs
+
+from denite.filter.base import Base
+from denite.util import relpath
 
 
 class Filter(Base):

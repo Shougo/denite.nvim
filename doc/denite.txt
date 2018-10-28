@@ -2038,7 +2038,7 @@ rplugin/python3/denite/kind/**/*.py
 Instead of create new kind from scratch, you can extend one of the existing
 Kind class, let's take "openable" for example: >
 
-    from ..kind.openable import Kind as Openable
+    from denite.kind.openable import Kind as Openable
 
     class Kind(Openable):
         def __init__(self, vim):

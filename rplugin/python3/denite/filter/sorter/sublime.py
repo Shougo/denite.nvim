@@ -7,8 +7,11 @@
 #              http://bit.ly/reverse-engineering-sublime-text-s-fuzzy-match
 # License: MIT license
 # ============================================================================
-from ..base import Base
+
 from unicodedata import category
+
+from denite.filter.base import Base
+
 
 # Score consts
 # bonus for adjacent matches

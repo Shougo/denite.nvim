@@ -7,8 +7,8 @@
 import re
 
 from denite import util
-from .base import Base
-from ..kind.command import Kind as Command
+from denite.source.base import Base
+from denite.kind.command import Kind as Command
 
 
 class Source(Base):

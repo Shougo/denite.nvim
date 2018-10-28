@@ -5,7 +5,8 @@
 # ============================================================================
 
 import re
-from ..base import Base
+
+from denite.filter.base import Base
 from denite.util import convert2regex_pattern
 
 

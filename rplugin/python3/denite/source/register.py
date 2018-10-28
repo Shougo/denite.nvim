@@ -4,8 +4,9 @@
 # License: MIT license
 # ============================================================================
 
-from .base import Base
 import re
+
+from denite.source.base import Base
 
 
 class Source(Base):

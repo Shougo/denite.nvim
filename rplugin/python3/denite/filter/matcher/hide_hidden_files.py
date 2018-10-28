@@ -4,9 +4,10 @@
 # License: MIT license
 # ============================================================================
 
-from ..base import Base
 from os.path import basename
 from re import match
+
+from denite.filter.base import Base
 
 
 class Filter(Base):

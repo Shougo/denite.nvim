@@ -10,7 +10,8 @@
 # ============================================================================
 
 import string
-from ..base import Base
+
+from denite.filter.base import Base
 from denite.util import split_input
 
 

@@ -6,10 +6,11 @@
 
 import argparse
 import shutil
-from ..base import Base
-from denite.process import Process
 from os import path, pardir
 from os.path import relpath, isabs, isdir, join, normpath
+
+from denite.source.base import Base
+from denite.process import Process
 from denite.util import parse_command, abspath
 
 

@@ -4,11 +4,12 @@
 # License: MIT license
 # ============================================================================
 
-from ..base import Base
-from denite.util import parse_jump_line, expand, abspath
 from socket import gethostbyname
 from re import sub, match
 import os
+
+from denite.source.base import Base
+from denite.util import parse_jump_line, expand, abspath
 
 
 class Source(Base):

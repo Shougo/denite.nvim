@@ -4,9 +4,10 @@
 # License: MIT license
 # ============================================================================
 
-from .base import Base
-from denite.util import relpath
 import re
+
+from denite.source.base import Base
+from denite.util import relpath
 
 JUMP_HIGHLIGHT_SYNTAX = [
     {'name': 'File',     'link': 'Constant',   're': r'file: .*'},

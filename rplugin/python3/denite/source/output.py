@@ -5,7 +5,7 @@
 
 import re
 
-from .base import Base
+from denite.source.base import Base
 
 
 class Source(Base):

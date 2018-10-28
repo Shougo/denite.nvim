@@ -7,9 +7,8 @@
 
 import re
 
-from .base import Base
+from denite.source.base import Base
 from denite.util import globruntime
-from re import sub
 
 
 class Source(Base):
@@ -43,7 +42,7 @@ class Source(Base):
                 'word': x,
             } for x in self.vim.call('getcompletion', '', 'command')]
 
-        prefix = sub(r'\w*$', '', context['input'])
+        prefix = re.sub(r'\w*$', '', context['input'])
 
         candidates = [{
             'action__command': prefix + x,
