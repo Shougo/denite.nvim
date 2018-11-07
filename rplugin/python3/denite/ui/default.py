@@ -85,13 +85,15 @@ class Default(object):
 
         if self._initialized and context['resume']:
             # Skip the initialization
-            if context['mode']:
-                self._current_mode = context['mode']
 
-            update = ('immediately', 'immediately_1',
-                      'cursor_wrap', 'cursor_pos', 'prev_winid')
-            for key in update:
-                self._context[key] = context[key]
+            if not self._is_suspend:
+                if context['mode']:
+                    self._current_mode = context['mode']
+
+                update = ('immediately', 'immediately_1',
+                          'cursor_wrap', 'cursor_pos', 'prev_winid')
+                for key in update:
+                    self._context[key] = context[key]
 
             if self.check_empty():
                 return
