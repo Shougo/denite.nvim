@@ -35,9 +35,9 @@ class Denite(object):
 
         if self._vim.options['runtimepath'] != self._runtimepath:
             # Recache
-            self.load_sources(context)
-            self.load_filters(context)
-            self.load_kinds(context)
+            self._load_sources(context)
+            self._load_filters(context)
+            self._load_kinds(context)
             self._runtimepath = self._vim.options['runtimepath']
 
         for alias, base in [[x, y] for [x, y] in
@@ -69,13 +69,6 @@ class Denite(object):
             ctx['candidates'] = candidates
 
             context['messages'] = ctx['messages']
-
-    def _gather_source_candidates(self, context, source):
-        max_len = int(context['max_candidate_width']) * 2
-        candidates = source.gather_candidates(context)
-        for candidate in [x for x in candidates if len(x['word']) > max_len]:
-            candidate['word'] = candidate['word'][: max_len]
-        return candidates
 
     def filter_candidates(self, context):
         for source in self._current_sources:
@@ -117,7 +110,7 @@ class Denite(object):
                             (ctx['matchers'].split(',') if ctx['matchers']
                              else source.matchers)
                             if x in self._filters]
-                self.match_candidates(ctx, matchers)
+                self._match_candidates(ctx, matchers)
                 partial += ctx['candidates']
                 if len(partial) >= source.max_candidates:
                     break
@@ -138,30 +131,6 @@ class Denite(object):
 
             yield self._get_source_status(
                 ctx, source, entire, partial), partial, patterns
-
-    def _get_source_status(self, context, source, entire, partial):
-        return (source.get_status(context) if not partial else
-                '{}({}/{})'.format(
-                    source.get_status(context), len(partial), len(entire)))
-
-    def match_candidates(self, context, matchers):
-        for pattern in split_input(context['input']):
-            ctx = copy.copy(context)
-            if pattern and pattern[0] == '!':
-                if pattern == '!':
-                    continue
-                ctx['input'] = pattern[1:]
-                ignore = self.call_matchers(ctx, matchers)
-                context['candidates'] = [x for x in context['candidates']
-                                         if x not in ignore]
-            else:
-                ctx['input'] = pattern
-                context['candidates'] = self.call_matchers(ctx, matchers)
-
-    def call_matchers(self, ctx, matchers):
-        for matcher in matchers:
-            ctx['candidates'] = matcher.filter(ctx)
-        return ctx['candidates']
 
     def on_init(self, context):
         self._current_sources = []
@@ -203,11 +172,6 @@ class Denite(object):
                        if x.vars and x.name in self._custom['filter']]:
             filter.vars.update(self._custom['filter'][filter.name])
 
-    def _set_source_attribute(self, source, attr):
-        source_attr = getattr(source, attr)
-        setattr(source, attr, get_custom_source(
-            self._custom, source.name, attr, source_attr))
-
     def on_close(self, context):
         for source in self._current_sources:
             if hasattr(source, 'on_close'):
@@ -223,7 +187,93 @@ class Denite(object):
     def get_current_sources(self):
         return self._current_sources
 
-    def load_sources(self, context):
+    def do_action(self, context, action_name, targets):
+        action = self.get_action(context, action_name, targets)
+        if not action:
+            return True
+
+        for target in targets:
+            source = self._current_sources[int(target['source_index'])]
+            target['source_context'] = {
+                k: v for k, v in
+                source.context.items()
+                if k.startswith('__')
+            } if source.is_public_context else {}
+
+        context['targets'] = targets
+        return action['func'](context) if action['func'] else self._vim.call(
+            'denite#custom#_call_action',
+            action['kind'], action['name'], context)
+
+    def get_action(self, context, action_name, targets):
+        actions = set()
+        action = None
+        for target in targets:
+            action = self._get_action(context, action_name, target)
+            if action:
+                actions.add(action['name'])
+        if len(actions) > 1:
+            self.error('Multiple actions are detected: ' + action_name)
+            return {}
+        return action if actions else {}
+
+    def get_action_names(self, context, targets):
+        kinds = set()
+        for target in targets:
+            kinds.add(self._get_kind(context, target))
+        if len(kinds) != 1:
+            self.error('Multiple kinds are detected')
+            return []
+
+        kind = kinds.pop()
+        if not kind:
+            return []
+        actions = kind.get_action_names()
+        actions += self._get_custom_actions(kind.name).keys()
+        return actions
+
+    def is_async(self):
+        return len([x for x in self._current_sources
+                    if x.context['is_async'] or x.context['is_skipped']
+                    ]) > 0
+
+    def _gather_source_candidates(self, context, source):
+        max_len = int(context['max_candidate_width']) * 2
+        candidates = source.gather_candidates(context)
+        for candidate in [x for x in candidates if len(x['word']) > max_len]:
+            candidate['word'] = candidate['word'][: max_len]
+        return candidates
+
+    def _get_source_status(self, context, source, entire, partial):
+        return (source.get_status(context) if not partial else
+                '{}({}/{})'.format(
+                    source.get_status(context), len(partial), len(entire)))
+
+    def _match_candidates(self, context, matchers):
+        for pattern in split_input(context['input']):
+            ctx = copy.copy(context)
+            if pattern and pattern[0] == '!':
+                if pattern == '!':
+                    continue
+                ctx['input'] = pattern[1:]
+                ignore = self._call_matchers(ctx, matchers)
+                context['candidates'] = [x for x in context['candidates']
+                                         if x not in ignore]
+            else:
+                ctx['input'] = pattern
+                context['candidates'] = self._call_matchers(ctx, matchers)
+
+    def _call_matchers(self, ctx, matchers):
+        for matcher in matchers:
+            ctx['candidates'] = matcher.filter(ctx)
+        return ctx['candidates']
+
+    def _set_source_attribute(self, source, attr):
+        source_attr = getattr(source, attr)
+        setattr(source, attr, get_custom_source(
+            self._custom, source.name, attr, source_attr))
+
+    def _load_sources(self, context):
         # Load sources from runtimepath
         rplugins = import_rplugins('Source', context, 'source', [
             normcase(normpath(x.path))
@@ -250,7 +300,7 @@ class Denite(object):
             list(self._sources.keys()),
         )
 
-    def load_filters(self, context):
+    def _load_filters(self, context):
         # Load filters from runtimepath
         rplugins = import_rplugins('Filter', context, 'filter', [
             normcase(normpath(x.path))
@@ -277,7 +327,7 @@ class Denite(object):
                     self._filters[alias].name = alias
                     self._filters[alias].path = path
 
-    def load_kinds(self, context):
+    def _load_kinds(self, context):
         # Load kinds from runtimepath
         rplugins = import_rplugins('Kind', context, 'kind', [
             normcase(normpath(x.path))
@@ -297,24 +347,6 @@ class Denite(object):
                 setattr(kind, 'name', module_path.replace('.', '/'))
             kind.path = path
             self._kinds[kind.name] = kind
-
-    def do_action(self, context, action_name, targets):
-        action = self.get_action(context, action_name, targets)
-        if not action:
-            return True
-
-        for target in targets:
-            source = self._current_sources[int(target['source_index'])]
-            target['source_context'] = {
-                k: v for k, v in
-                source.context.items()
-                if k.startswith('__')
-            } if source.is_public_context else {}
-
-        context['targets'] = targets
-        return action['func'](context) if action['func'] else self._vim.call(
-            'denite#custom#_call_action',
-            action['kind'], action['name'], context)
 
     def _get_kind(self, context, target):
         k = target['kind'] if 'kind' in target else (
@@ -347,7 +379,7 @@ class Denite(object):
                 action_name = kind.default_action
 
         # Custom action
-        custom_actions = self.get_custom_actions(kind.name)
+        custom_actions = self._get_custom_actions(kind.name)
         if action_name in custom_actions:
             _, user_attrs = custom_actions[action_name]
             return ChainMap(user_attrs, {
@@ -370,42 +402,10 @@ class Denite(object):
             'is_redraw': (action_name in kind.redraw_actions),
         }
 
-    def get_action(self, context, action_name, targets):
-        actions = set()
-        action = None
-        for target in targets:
-            action = self._get_action(context, action_name, target)
-            if action:
-                actions.add(action['name'])
-        if len(actions) > 1:
-            self.error('Multiple actions are detected: ' + action_name)
-            return {}
-        return action if actions else {}
-
-    def get_custom_actions(self, kind_name):
+    def _get_custom_actions(self, kind_name):
         actions = {}
         if '_' in self._custom['action']:
             actions.update(self._custom['action']['_'])
         if kind_name in self._custom['action']:
             actions.update(self._custom['action'][kind_name])
         return actions
-
-    def get_action_names(self, context, targets):
-        kinds = set()
-        for target in targets:
-            kinds.add(self._get_kind(context, target))
-        if len(kinds) != 1:
-            self.error('Multiple kinds are detected')
-            return []
-
-        kind = kinds.pop()
-        if not kind:
-            return []
-        actions = kind.get_action_names()
-        actions += self.get_custom_actions(kind.name).keys()
-        return actions
-
-    def is_async(self):
-        return len([x for x in self._current_sources
-                    if x.context['is_async'] or x.context['is_skipped']
-                    ]) > 0
