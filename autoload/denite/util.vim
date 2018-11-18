@@ -35,7 +35,7 @@ function! denite#util#execute_path(command, path) abort
   endif
 
   try
-    execute a:command s:expand(a:path)
+    execute a:command escape(s:expand(a:path), '$')
   catch /^Vim\%((\a\+)\)\=:E325/
     " Ignore swap file error
   catch
@@ -128,8 +128,6 @@ endfunction
 function! s:expand(path) abort
   return denite#util#substitute_path_separator(
         \ (a:path =~# '^\~') ? fnamemodify(a:path, ':p') :
-        \ (a:path =~# '^\$\h\w*') ? substitute(a:path,
-        \             '^\$\h\w*', '\=eval(submatch(0))', '') :
         \ a:path)
 endfunction
 
