@@ -13,6 +13,7 @@ import denite.filter  # noqa
 import denite.kind    # noqa
 
 import copy
+import os
 import re
 import time
 from os.path import normpath, normcase
@@ -71,6 +72,44 @@ class Denite(object):
             context['messages'] = ctx['messages']
 
     def filter_candidates(self, context):
+        pattern = ''
+        statuses = []
+        candidates = []
+        for status, partial, patterns in self._filter_candidates(context):
+            candidates += partial
+            statuses.append(status)
+
+            if pattern == '' and patterns:
+                pattern = next(patterns, '')
+
+        if context['sorters']:
+            for sorter in context['sorters'].split(','):
+                ctx = copy.copy(context)
+                ctx['candidates'] = candidates
+                candidates = self._filters[sorter].filter(ctx)
+
+        if context['unique']:
+            unique_candidates = []
+            unique_words = set()
+            for candidate in candidates:
+                # Normalize file paths
+                word = candidate['word']
+                if word.startswith('~') and os.path.exists(
+                        os.path.expanduser(word)):
+                    word = os.path.expanduser(word)
+                if os.path.exists(word):
+                    word = os.path.abspath(word)
+                if word not in unique_words:
+                    unique_words.add(word)
+                    unique_candidates.append(candidate)
+            candidates = unique_candidates
+        if context['reversed']:
+            candidates.reverse()
+        if self.is_async():
+            statuses.append('[async]')
+        return (pattern, statuses, candidates)
+
+    def _filter_candidates(self, context):
         for source in self._current_sources:
             ctx = source.context
             ctx['matchers'] = context['matchers']
