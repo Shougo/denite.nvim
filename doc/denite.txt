@@ -85,8 +85,7 @@ USAGE							*denite-usage*
 ==============================================================================
 INSTALL							*denite-install*
 
-Note: denite requires Neovim(the latest is recommended) or Vim8.0+ with
-|:python3| enabled.
+Note: denite requires Neovim 0.3.0+ or Vim 8.0+ with |:python3| enabled.
 
 Note: You need to install Python3.5+.
 

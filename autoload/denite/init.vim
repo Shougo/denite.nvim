@@ -33,11 +33,9 @@ function! denite#init#_initialize() abort
     return 1
   endif
 
-  if !exists('*execute')
+  if has('nvim') && !has('nvim-0.3.0')
     call denite#util#print_error(
-          \ 'denite.nvim does not work with this version.')
-    call denite#util#print_error(
-          \ 'It requires Neovim +v0.1.5.')
+          \ 'denite.nvim requires nvim +v0.3.0.')
     return 1
   endif
 
