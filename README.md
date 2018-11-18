@@ -54,7 +54,7 @@ If `:echo has("python3")` returns `1`, then you're done; otherwise, see below.
 
 You can enable Python3 interface with `pip`:
 
-    pip3 --user install pynvim
+    pip3 install --user pynvim
 
 If you want to read the Neovim-python/python3 interface install documentation,
 you should read `:help provider-python`.
