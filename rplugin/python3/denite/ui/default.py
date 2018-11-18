@@ -171,15 +171,13 @@ class Default(object):
             if self._context['split'] == 'tab':
                 self._vim.command('tabnew')
             elif self._context['split'] != 'no':
-                self._vim.command('new')
-            vertical = ('vertical'
-                        if self._context['split'] == 'vertical' else '')
+                vertical = ('vertical'
+                            if self._context['split'] == 'vertical' else '')
+                self._vim.command('{} {} new'.format(
+                    self._get_direction(), vertical))
             self._vim.call(
                 'denite#util#execute_path',
-                'silent keepalt %s %s edit' % (
-                    self._get_direction(), vertical
-                ),
-                '[denite]')
+                'silent keepalt edit', '[denite]')
         self.resize_buffer()
 
         self._winheight = self._vim.current.window.height
