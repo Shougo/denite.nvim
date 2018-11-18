@@ -3,7 +3,7 @@
 # AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
 # License: MIT license
 # ============================================================================
-import os
+
 import re
 import weakref
 from itertools import groupby, takewhile
