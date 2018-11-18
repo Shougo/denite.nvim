@@ -6,23 +6,32 @@
 
 from importlib import find_loader
 
-
-if not find_loader('vim'):
+if find_loader('yarp'):
+    import vim
+elif find_loader('pynvim'):
+    import pynvim
+    vim = pynvim
+else:
     import neovim
+    vim = neovim
+
+if hasattr(vim, 'plugin'):
+    # Neovim only
+
     from denite.ui.default import Default
 
-    @neovim.plugin
+    @vim.plugin
     class DeniteHandlers(object):
         def __init__(self, vim):
             self._vim = vim
 
-        @neovim.function('_denite_init', sync=True)
+        @vim.function('_denite_init', sync=True)
         def init_python(self, args):
             self._uis = {}
             self._vim.vars['denite#_channel_id'] = self._vim.channel_id
             return
 
-        @neovim.function('_denite_start', sync=True)
+        @vim.function('_denite_start', sync=True)
         def start(self, args):
             try:
                 ui = self.get_ui(args[1]['buffer_name'])
@@ -35,7 +44,7 @@ if not find_loader('vim'):
                 denite.util.error(self._vim,
                                   'Please execute :messages command.')
 
-        @neovim.function('_denite_do_action', sync=True)
+        @vim.function('_denite_do_action', sync=True)
         def take_action(self, args):
             try:
                 ui = self.get_ui(args[0]['buffer_name'])
