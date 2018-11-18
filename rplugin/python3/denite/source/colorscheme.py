@@ -21,11 +21,11 @@ class Source(Base):
         self.kind = Kind(vim)
 
     def on_init(self, context):
-        context['currentColor'] = self.vim.vars['colors_name']
+        context['__current_color'] = self.vim.vars['colors_name']
 
     def on_close(self, context):
         self.vim.command('silent colorscheme {}'.format(
-            context['currentColor']))
+            context['__current_color']))
 
     def gather_candidates(self, context):
         colorschemes = {}
