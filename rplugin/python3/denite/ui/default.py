@@ -170,15 +170,14 @@ class Default(object):
             # Create new buffer
             if self._context['split'] == 'tab':
                 self._vim.command('tabnew')
+            elif self._context['split'] != 'no':
+                self._vim.command('new')
+            vertical = ('vertical'
+                        if self._context['split'] == 'vertical' else '')
             self._vim.call(
                 'denite#util#execute_path',
-                'silent keepalt %s %s %s ' % (
-                    self._get_direction(),
-                    ('vertical'
-                     if self._context['split'] == 'vertical' else ''),
-                    ('edit'
-                     if self._context['split'] == 'no' or
-                     self._context['split'] == 'tab' else 'new'),
+                'silent keepalt %s %s edit' % (
+                    self._get_direction(), vertical
                 ),
                 '[denite]')
         self.resize_buffer()
