@@ -16,7 +16,14 @@ class Source(Base):
         super().__init__(vim)
 
         self.name = 'colorscheme'
-        self.kind = 'command'
+        self.kind = 'colorscheme'
+
+    def on_init(self, context):
+        context['currentColor'] = self.vim.vars['colors_name']
+
+
+    def on_close(self, context):
+        self.vim.command('silent colorscheme {}'.format(context['currentColor']))
 
     def gather_candidates(self, context):
         colorschemes = {}
