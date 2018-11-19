@@ -6,9 +6,7 @@
 
 from importlib import find_loader
 
-if find_loader('yarp'):
-    import vim
-elif find_loader('pynvim'):
+if find_loader('pynvim'):
     import pynvim
     vim = pynvim
 else:
