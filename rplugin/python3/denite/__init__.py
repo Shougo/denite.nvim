@@ -4,16 +4,16 @@
 # License: MIT license
 # =============================================================================
 
-from importlib import find_loader
+from importlib.util import find_spec
 
-if find_loader('pynvim'):
+if find_spec('vim'):
+    import vim
+elif find_spec('pynvim'):
     import pynvim
     vim = pynvim
-elif find_loader('neovim'):
+else:
     import neovim
     vim = neovim
-else:
-    import vim
 
 if hasattr(vim, 'plugin'):
     # Neovim only
