@@ -9,9 +9,11 @@ from importlib import find_loader
 if find_loader('pynvim'):
     import pynvim
     vim = pynvim
-else:
+elif find_loader('neovim'):
     import neovim
     vim = neovim
+else:
+    import vim
 
 if hasattr(vim, 'plugin'):
     # Neovim only
