@@ -1801,6 +1801,10 @@ matcher/hide_hidden_files (matcher_hide_hidden_files)
 matcher/project_files (matcher_project_files)
 		A matcher which removes removes non project files.
 
+				*denite-filter-matcher/ignore_current_buffer*
+matcher/current_buffer
+		A matcher which ignores the current buffer path.
+
 					*denite-filter-matcher/ignore_globs*
 					*denite-filter-matcher_ignore_globs*
 matcher/ignore_globs (matcher_ignore_globs)
