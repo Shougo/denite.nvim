@@ -188,7 +188,7 @@ EXAMPLES						*denite-examples*
 	" Ack command on grep source
 	call denite#custom#var('grep', 'command', ['ack'])
 	call denite#custom#var('grep', 'default_opts',
-			\ ['--ackrc', $HOME.'/.ackrc', '-H',
+			\ ['--ackrc', $HOME.'/.ackrc', '-H', '-i',
 			\  '--nopager', '--nocolor', '--nogroup', '--column'])
 	call denite#custom#var('grep', 'recursive_opts', [])
 	call denite#custom#var('grep', 'pattern_opt', ['--match'])
@@ -198,7 +198,7 @@ EXAMPLES						*denite-examples*
 	" Ripgrep command on grep source
 	call denite#custom#var('grep', 'command', ['rg'])
 	call denite#custom#var('grep', 'default_opts',
-			\ ['--vimgrep', '--no-heading'])
+			\ ['-i', '--vimgrep', '--no-heading'])
 	call denite#custom#var('grep', 'recursive_opts', [])
 	call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
 	call denite#custom#var('grep', 'separator', ['--'])
@@ -207,7 +207,7 @@ EXAMPLES						*denite-examples*
 	" Pt command on grep source
 	call denite#custom#var('grep', 'command', ['pt'])
 	call denite#custom#var('grep', 'default_opts',
-			\ ['--nogroup', '--nocolor', '--smart-case'])
+			\ ['-i', '--nogroup', '--nocolor', '--smart-case'])
 	call denite#custom#var('grep', 'recursive_opts', [])
 	call denite#custom#var('grep', 'pattern_opt', [])
 	call denite#custom#var('grep', 'separator', ['--'])
@@ -215,7 +215,7 @@ EXAMPLES						*denite-examples*
 
 	" jvgrep command on grep source
 	call denite#custom#var('grep', 'command', ['jvgrep'])
-	call denite#custom#var('grep', 'default_opts', [])
+	call denite#custom#var('grep', 'default_opts', ['-i'])
 	call denite#custom#var('grep', 'recursive_opts', ['-R'])
 	call denite#custom#var('grep', 'pattern_opt', [])
 	call denite#custom#var('grep', 'separator', [])
