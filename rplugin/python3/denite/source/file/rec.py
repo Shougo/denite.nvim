@@ -107,7 +107,7 @@ class Source(Base):
                 } for x in outs if x != '']
         context['__current_candidates'] += candidates
 
-        threshold = self.vars['cache_threshold']
+        threshold = int(self.vars['cache_threshold'])
         if (not context['__proc'] and threshold > 0 and
                 len(context['__current_candidates']) > threshold):
             self._cache[directory] = context['__current_candidates']
