@@ -632,6 +632,7 @@ class Default(object):
         self.update_buffer()
 
     def init_denite(self):
+        self._prompt.history.reset()
         self._denite.start(self._context)
         self._denite.on_init(self._context)
         self._initialized = True

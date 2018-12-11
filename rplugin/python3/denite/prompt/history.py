@@ -21,15 +21,18 @@ class History:
             prompt (Prompt): The ``prompt.prompt.Prompt`` instance.
         """
         self.prompt = prompt
-        self._index = 0
-        self._cached = prompt.text
-        self._backward = prompt.caret.get_backward_text()
-        self._threshold = 0
+        self.reset()
 
     @property
     def nvim(self):
         """A ``neovim.Nvim`` instance."""
         return self.prompt.nvim
+
+    def reset(self):
+        self._index = 0
+        self._cached = self.prompt.text
+        self._backward = self.prompt.caret.get_backward_text()
+        self._threshold = 0
 
     def current(self):
         """Current command-line history value of input.
