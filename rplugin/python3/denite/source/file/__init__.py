@@ -8,7 +8,7 @@ import glob
 import os
 
 from denite.source.base import Base
-from denite.util import abspath, expand
+from denite.util import abspath, expand, relpath
 
 
 class Source(Base):
@@ -30,7 +30,7 @@ class Source(Base):
         if context['args'] and context['args'][0] == 'new':
             candidates.append({
                 'word': filename,
-                'abbr': '[new] ' + filename,
+                'abbr': os.path.relpath('[new] ' + filename, path),
                 'action__path': abspath(self.vim, filename),
             })
         else:
@@ -41,7 +41,8 @@ class Source(Base):
             for f in glob.glob(glb):
                 candidates.append({
                     'word': f,
-                    'abbr': f + ('/' if os.path.isdir(f) else ''),
+                    'abbr': os.path.relpath(
+                        f + ('/' if os.path.isdir(f) else ''), path),
                     'kind': ('directory' if os.path.isdir(f) else 'file'),
                     'action__path': abspath(self.vim, f),
                 })
