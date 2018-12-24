@@ -34,8 +34,8 @@ class Source(Base):
         if not filetype:
             return candidates
 
-        [candidate for candidate in candidates
-         if len(candidate) < 3 or filetype in candidate[2].split(',')]
+        return [candidate for candidate in candidates
+                if len(candidate) < 3 or filetype in candidate[2].split(',')]
 
     def gather_candidates(self, context):
         # If no menus have been defined, just exit
