@@ -30,7 +30,7 @@ class Source(Base):
         if context['args'] and context['args'][0] == 'new':
             candidates.append({
                 'word': filename,
-                'abbr': os.path.relpath('[new] ' + filename, path),
+                'abbr': '[new] ' + filename,
                 'action__path': abspath(self.vim, filename),
             })
         else:
