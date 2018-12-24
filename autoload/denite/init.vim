@@ -90,6 +90,7 @@ function! s:internal_options() abort
         \ 'encoding': &encoding,
         \ 'error_messages': [],
         \ 'firstline': 0,
+        \ 'filetype': &l:filetype,
         \ 'lastline': 0,
         \ 'is_windows': ((has('win32') || has('win64')) ? v:true : v:false),
         \ 'messages': [],

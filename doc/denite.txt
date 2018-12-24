@@ -172,6 +172,7 @@ EXAMPLES						*denite-examples*
 	let s:menus.my_commands.command_candidates = [
 		\ ['Split the window', 'vnew'],
 		\ ['Open zsh menu', 'Denite menu:zsh'],
+		\ ['Format code', 'FormatCode', 'go,python'],
 		\ ]
 
 	call denite#custom#var('menu', 'menus', s:menus)
