@@ -30,6 +30,14 @@ class Source(Base):
                 self.vim.vars['unite_source_menu_menus']
             )
 
+    def filter_candidates(self, candidates, file_type=None):
+        if file_type:
+            return [candidate for candidate in candidates
+                    if (len(candidate) < 3 or
+                        file_type in candidate[2].split(','))]
+
+        return candidates
+
     def gather_candidates(self, context):
         # If no menus have been defined, just exit
         if 'menus' not in self.vars or self.vars['menus'] == {}:
@@ -38,6 +46,7 @@ class Source(Base):
         lines = []
         menus = self.vars['menus']
         args = context['args']
+        file_type = self.vim.command_output('silent echo &ft')
 
         if args:
             # Loop through each menu option
@@ -53,7 +62,8 @@ class Source(Base):
                          'kind': 'file',
                          'action__path': candidate[1],
                          }
-                        for candidate in menus[menu]['file_candidates']
+                        for candidate in self.filter_candidates(
+                            menus[menu]['file_candidates'], file_type)
                     ])
 
                 # Handle command candidates
@@ -64,7 +74,8 @@ class Source(Base):
                             'kind': 'command',
                             'action__command': candidate[1]
                          }
-                        for candidate in menus[menu]['command_candidates']
+                        for candidate in self.filter_candidates(
+                            menus[menu]['command_candidates'], file_type)
                     ])
                 # Handle directory candidates
                 if 'directory_candidates' in menus[menu]:
@@ -74,8 +85,8 @@ class Source(Base):
                             'kind': 'directory',
                             'action__path': candidate[1]
                          }
-                        for candidate in menus[menu][
-                                'directory_candidates']
+                        for candidate in self.filter_candidates(menus[menu][
+                                'directory_candidates'], file_type)
                         ])
         else:
             # Display all the registered menus
