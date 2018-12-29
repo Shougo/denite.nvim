@@ -150,6 +150,11 @@ class Kind(Openable):
     def _jump(self, context, target):
         if 'action__pattern' in target:
             self.vim.call('search', target['action__pattern'], 'w')
+        if 'action__line' in target and type(target['action__line']) is str:
+            pattern = target['action__line'].replace('*', '\*')
+            self.vim.call('search', pattern, 'n')
+            self.vim.call('execute', 'normal! ggn')
+            target['action__line'] = 0
 
         line = int(target.get('action__line', 0))
         col = int(target.get('action__col', 0))
