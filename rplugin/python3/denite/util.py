@@ -273,8 +273,14 @@ def parse_tagline(line, tagpath):
     rest = '\t'.join(elem[2:])
     m = re.search(r'.*;"', rest)
     if not m:
+        # Old format
         if len(elem) >= 3:
-            info['line'] = elem[2]
+            if re.match(r'\d+$', elem[2]):
+                info['line'] = elem[2]
+            else:
+                info['pattern'] = re.sub(
+                    r'([~.*\[\]\\])', r'\\\1',
+                    re.sub(r'^/|/;"$', '', elem[2]))
         return info
 
     pattern = m.group(0)

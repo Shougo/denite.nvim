@@ -48,6 +48,13 @@ def test_parse_tag_line():
         }
 
     assert util.parse_tagline(
+        'name	file	/*foo*', '') == {
+            'name': 'name', 'file': 'file',
+            'pattern': '\*foo\*', 'line': '',
+            'type': '', 'ref': '',
+        }
+
+    assert util.parse_tagline(
         'name	file	1;"	f', '') == {
             'name': 'name', 'file': 'file',
             'pattern': '', 'line': '1',
