@@ -41,8 +41,8 @@ class Source(Base):
             for f in glob.glob(glb):
                 candidates.append({
                     'word': f,
-                    'abbr': os.path.relpath(
-                        f + ('/' if os.path.isdir(f) else ''), path),
+                    'abbr': os.path.relpath(f, path) + (
+                        '/' if os.path.isdir(f) else ''),
                     'kind': ('directory' if os.path.isdir(f) else 'file'),
                     'action__path': abspath(self.vim, f),
                 })
