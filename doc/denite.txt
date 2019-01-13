@@ -1785,6 +1785,11 @@ matcher/cpsm (matcher_cpsm)
 		Note: You must use Python3 support enabled cpsm. >
 			$ PY3=ON ./install.sh
 <
+						*denite-filter-matcher/expand*
+matcher/expand
+		A matcher which filters the candidates using texts expanded
+		with any environment variable and the ~ char (`$HOME`).
+
 						*denite-filter-matcher/fuzzy*
 						*denite-filter-matcher_fuzzy*
 matcher/fuzzy (matcher_fuzzy)
