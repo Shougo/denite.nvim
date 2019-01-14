@@ -1148,6 +1148,12 @@ OPTIONS							*denite-options*
 		Open any denite buffer if the candidate is empty.
 		Default: true
 
+						*denite-option-expand*
+-expand
+		|expand()| the input.
+		Note: It is useful for file sources.
+		Default: false
+
 					*denite-option-highlight-matched-char*
 -highlight-matched-char
 		Matched characters highlight.

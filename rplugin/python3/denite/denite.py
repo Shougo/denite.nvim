@@ -5,7 +5,7 @@
 # ============================================================================
 
 from denite.util import (get_custom_source,
-                         import_rplugins,
+                         import_rplugins, expand,
                          split_input, abspath)
 
 import denite.source  # noqa
@@ -114,6 +114,8 @@ class Denite(object):
             ctx = source.context
             ctx['matchers'] = context['matchers']
             ctx['input'] = context['input']
+            if context['expand']:
+                ctx['input'] = expand(ctx['input'])
             if context['smartcase']:
                 ctx['ignorecase'] = re.search(r'[A-Z]', ctx['input']) is None
             ctx['mode'] = context['mode']
