@@ -625,6 +625,7 @@ class Default(object):
         self.gather_candidates()
         self.init_buffer()
         self.update_candidates()
+        self.change_mode(self._current_mode)
         self.update_buffer()
 
     def init_denite(self):
