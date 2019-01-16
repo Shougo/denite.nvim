@@ -167,7 +167,7 @@ class Denite(object):
             ctx['candidates'] = []
 
             patterns = filterfalse(lambda x: x == '', (
-                self._filters[x].convert_pattern(context['input'])
+                self._filters[x].convert_pattern(ctx['input'])
                 for x in source.matchers if self._filters[x]))
 
             yield self._get_source_status(
