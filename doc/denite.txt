@@ -1806,7 +1806,7 @@ matcher/hide_hidden_files (matcher_hide_hidden_files)
 				*denite-filter-matcher/project_files*
 				*denite-filter-matcher_project_files*
 matcher/project_files (matcher_project_files)
-		A matcher which removes removes non project files.
+		A matcher which removes non project files.
 
 				*denite-filter-matcher/ignore_current_buffer*
 matcher/ignore_current_buffer
