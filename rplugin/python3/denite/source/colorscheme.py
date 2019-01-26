@@ -21,7 +21,8 @@ class Source(Base):
         self.kind = Kind(vim)
 
     def on_init(self, context):
-        context['__current_color'] = self.vim.vars['colors_name']
+        context['__current_color'] = self.vim.vars.get(
+            'colors_name', 'default')
 
     def on_close(self, context):
         self.vim.command('silent colorscheme {}'.format(
