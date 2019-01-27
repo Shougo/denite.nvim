@@ -621,6 +621,11 @@ are on the neovim-prompt's builtin actions/mappings.
 <denite:restart>
 		Restart Denite buffer.
 
+				*denite-map-restore_sources*
+<denite:restore_sources>
+		Move back to the previous sources.
+		Note: It does not restore the cursor position.
+
 				*denite-map-suspend*
 <denite:suspend>
 		Suspend current Denite buffer.
@@ -820,6 +825,7 @@ p		<denite:do_action:preview>
 q		<denite:quit>
 s		<denite:change_char>
 t		<denite:do_action:tabopen>
+u		<denite:restore_sources>
 w		<denite:move_caret_to_next_word>
 x		<denite:delete_char_under_caret>
 y		<denite:do_action:yank>

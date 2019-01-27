@@ -4,6 +4,7 @@
 # License: MIT license
 # ============================================================================
 
+import copy
 import re
 import weakref
 from itertools import groupby, takewhile
@@ -61,14 +62,26 @@ class Default(object):
         self._prev_curpos = []
         self._is_suspend = False
         self._save_window_options = {}
+        self._sources_history = []
 
     def start(self, sources, context):
         self._result = []
         context['sources_queue'] = [sources]
+        self._sources_history = []
         try:
             while context['sources_queue']:
+                prev_history = copy.copy(self._sources_history)
+                prev_path = context['path']
+
                 self._start(context['sources_queue'][0], context)
-                context['sources_queue'] = context['sources_queue'][1:]
+
+                if prev_history == self._sources_history:
+                    self._sources_history.append({
+                        'sources': context['sources_queue'][0],
+                        'path': prev_path,
+                    })
+
+                context['sources_queue'].pop(0)
                 context['path'] = self._context['path']
         finally:
             self.cleanup()
@@ -628,7 +641,18 @@ class Default(object):
         self.change_mode(self._current_mode)
         self.update_buffer()
 
+    def restore_sources(self, context):
+        if not self._sources_history:
+            return
+
+        history = self._sources_history[-1]
+        context['sources_queue'].append(history['sources'])
+        context['path'] = history['path']
+        self._sources_history.pop()
+        return STATUS_ACCEPT
+
     def init_denite(self):
+        self._mode_stack = []
         self._prompt.history.reset()
         self._denite.start(self._context)
         self._denite.on_init(self._context)
@@ -914,6 +938,9 @@ class Default(object):
         return wrapped
 
     def enter_mode(self, mode):
+        if mode == self._current_mode:
+            return
+
         self._mode_stack.append(self._current_mode)
         self.change_mode(mode)
 

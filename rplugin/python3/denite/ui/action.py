@@ -171,6 +171,10 @@ def _restart(prompt, params):
     return prompt.denite.restart()
 
 
+def _restore_sources(prompt, params):
+    return prompt.denite.restore_sources(prompt.denite._context)
+
+
 def _toggle_select(prompt, params):
     index = prompt.denite._cursor + prompt.denite._win_cursor - 1
     _toggle_select_candidate(prompt, index)
@@ -411,6 +415,7 @@ DEFAULT_ACTION_RULES = [
     ('denite:quit', _quit),
     ('denite:redraw', _redraw),
     ('denite:restart', _restart),
+    ('denite:restore_sources', _restore_sources),
     ('denite:scroll_cursor_to_bottom', _scroll_cursor_to_bottom),
     ('denite:scroll_cursor_to_middle', _scroll_cursor_to_middle),
     ('denite:scroll_cursor_to_top', _scroll_cursor_to_top),
@@ -506,6 +511,7 @@ DEFAULT_ACTION_KEYMAP = {
         ('b', '<denite:move_caret_to_one_word_left>', 'noremap'),
         ('w', '<denite:move_caret_to_next_word>', 'noremap'),
         ('0', '<denite:move_caret_to_head>', 'noremap'),
+        ('u', '<denite:restore_sources>', 'noremap'),
         ('$', '<denite:move_caret_to_tail>', 'noremap'),
         ('cc', '<denite:change_line>', 'noremap'),
         ('S', '<denite:change_line>', 'noremap'),
