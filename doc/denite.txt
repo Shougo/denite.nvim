@@ -1639,9 +1639,12 @@ output		Gather executed command output as candidates.
 
 		" Gather the output of ls
 		:Denite output:!ls
-
+<
 						*denite-source-register*
 register	Gather the registers.
+
+						*denite-source-source*
+source		Gather Denite source names.
 
 						*denite-source-tag*
 tag		Gather results of |tagfiles()|.
