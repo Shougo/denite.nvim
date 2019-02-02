@@ -1779,6 +1779,13 @@ openable	An interface to open the object.
 				Switch to the window that is opening the
 				object. If it isn't opened, fallback vsplit.
 
+						*denite-kind-source*
+source		An interface to start the source.
+
+						*denite-kind-source-actions*
+			start (default)
+				Start the source.
+
 						*denite-kind-word*
 word		An interface to paste the text.
 

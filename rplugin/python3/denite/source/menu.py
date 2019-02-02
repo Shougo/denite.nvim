@@ -93,8 +93,8 @@ class Source(Base):
                 {
                     'word': '{} - {}'.format(
                         menu, candidate.get('description')),
-                    'kind': 'command',
-                    'action__command': 'Denite menu:' + menu,
+                    'kind': 'source',
+                    'action__source': ['menu', menu],
                  }
                 for menu, candidate in menus.items()
             ])
