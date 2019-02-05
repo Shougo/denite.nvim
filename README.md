@@ -3,6 +3,7 @@ denite.nvim
 
 [![Build Status](https://travis-ci.org/Shougo/denite.nvim.svg?branch=master)](https://travis-ci.org/Shougo/denite.nvim)
 
+
 ## About
 
 [![Join the chat at https://gitter.im/Shougo/denite.nvim](https://badges.gitter.im/Shougo/denite.nvim.svg)](https://gitter.im/Shougo/denite.nvim?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -61,6 +62,13 @@ you should read `:help provider-python`.
 
 Note: You need to install Python3.5+.
 
+Please install nvim-yarp plugin for Vim8.
+https://github.com/roxma/nvim-yarp
+
+Please install vim-hug-neovim-rpc plugin for Vim8.
+https://github.com/roxma/vim-hug-neovim-rpc
+
+
 ### For Windows users
 
 1. Install Vim from [Vim Win32 Installer
@@ -71,9 +79,9 @@ Note: You need to install Python3.5+.
 
 **Note:** You need to do 1. and 2. with the common-arch files (x86 or x64).
 
+
 ## Screenshots
 
 ![file/rec source](https://user-images.githubusercontent.com/13142418/34324674-b8ddd5b8-e840-11e7-9b77-d94e1b084bda.gif)
 ![SpaceVim Guide](https://user-images.githubusercontent.com/13142418/34324752-e5a89900-e842-11e7-9f87-6d8789ba3871.gif)
 ![colorscheme source](https://user-images.githubusercontent.com/13142418/34324786-f4dd39a2-e843-11e7-97ef-7a48ee04d27b.gif)
-

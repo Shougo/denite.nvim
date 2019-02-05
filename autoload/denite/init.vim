@@ -8,22 +8,18 @@ if !exists('s:is_enabled')
   let s:is_enabled = 0
 endif
 
-function! s:is_initialized() abort
+function! denite#init#_check_channel() abort
   return exists('g:denite#_channel_id')
 endfunction
 
 function! denite#init#_initialize() abort
-  if s:is_initialized()
+  if denite#init#_check_channel()
     return
   endif
 
   augroup denite
     autocmd!
   augroup END
-
-  if !has('nvim')
-    return denite#vim#_initialize()
-  endif
 
   if !has('python3')
     call denite#util#print_error(
@@ -40,15 +36,34 @@ function! denite#init#_initialize() abort
   endif
 
   try
-    if !exists('g:loaded_remote_plugins')
-      runtime! plugin/rplugin.vim
+    if denite#util#has_yarp()
+      let g:denite#_yarp = yarp#py3('denite')
+      call g:denite#_yarp.request('_denite_init')
+      let g:denite#_channel_id = 1
+    else
+      " rplugin.vim may not be loaded on VimEnter
+      if !exists('g:loaded_remote_plugins')
+        runtime! plugin/rplugin.vim
+      endif
+      call _denite_init()
     endif
-    call _denite_init()
   catch
-    call denite#util#print_error(
-          \ 'denite.nvim is not registered as Neovim remote plugins.')
-    call denite#util#print_error(
-          \ 'Please execute :UpdateRemotePlugins command and restart Neovim.')
+    if denite#util#has_yarp()
+      if !has('nvim') && !exists('*neovim_rpc#serveraddr')
+        call denite#util#print_error(
+              \ 'denite requires vim-hug-neovim-rpc plugin in Vim.')
+      endif
+
+      if !exists('*yarp#py3')
+        call denite#util#print_error(
+              \ 'denite requires nvim-yarp plugin.')
+      endif
+    else
+      call denite#util#print_error(
+          \ 'denite failed to load. '
+          \ .'Try the :UpdateRemotePlugins command and restart Neovim. '
+          \ .'See also :checkhealth.')
+    endif
     return 1
   endtry
 endfunction

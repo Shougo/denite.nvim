@@ -112,6 +112,12 @@ For Vim8.0+:
 
 Use |:python3| enabled Vim.
 
+Please install nvim-yarp plugin for Vim8.
+https://github.com/roxma/nvim-yarp
+
+Please install vim-hug-neovim-rpc plugin for Vim8.
+https://github.com/roxma/vim-hug-neovim-rpc
+
 ==============================================================================
 EXAMPLES						*denite-examples*
 >
