@@ -141,7 +141,7 @@ class Caret:
             >>> caret.get_selected_text()
             'o'
         """
-        if self.locus == self.tail:
+        if self.locus == self.tail or len(self.prompt.text) <= self.locus:
             return ''
         return self.prompt.text[self.locus]
 
