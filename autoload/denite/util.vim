@@ -215,6 +215,6 @@ function! denite#util#rpcrequest(method, args) abort
     endif
     return g:denite#_yarp.request(a:method, a:args)
   else
-    return call(a:method, a:args)
+    return rpcrequest(g:denite#_channel_id, a:method, a:args)
   endif
 endfunction

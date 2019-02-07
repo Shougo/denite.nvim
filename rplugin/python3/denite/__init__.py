@@ -29,11 +29,11 @@ if hasattr(vim, 'plugin'):
         def init_channel(self, args):
             self._rplugin.init_channel(args)
 
-        @vim.function('_denite_start', sync=True)
+        @vim.rpc_export('_denite_start', sync=True)
         def start(self, args):
             self._rplugin.start(args)
 
-        @vim.function('_denite_do_action', sync=True)
+        @vim.rpc_export('_denite_do_action', sync=True)
         def take_action(self, args):
             return self._rplugin.take_action(args)
 
