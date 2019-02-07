@@ -4,13 +4,9 @@
 # License: MIT license
 # ============================================================================
 
-from denite.util import (get_custom_source,
+from denite.util import (get_custom_source, debug,
                          import_rplugins, expand,
                          split_input, abspath)
-
-import denite.source  # noqa
-import denite.filter  # noqa
-import denite.kind    # noqa
 
 import copy
 import os
@@ -219,7 +215,7 @@ class Denite(object):
                 source.on_close(source.context)
 
     def debug(self, expr):
-        denite.util.debug(self._vim, expr)
+        debug(self._vim, expr)
 
     def error(self, msg):
         self._vim.call('denite#util#print_error', msg)
