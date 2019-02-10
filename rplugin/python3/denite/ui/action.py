@@ -339,9 +339,9 @@ def _quick_move(prompt, params):
     _vim = prompt.denite._vim
 
     quick_move_table = get_quick_move_table()
-    _vim.command('redraw')
     _vim.command('echo "Input quick match key: "')
     quick_move_redraw(quick_move_table, True)
+    _vim.command('redraw')
 
     char = ''
     while char == '':
