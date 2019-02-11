@@ -56,7 +56,7 @@ class DenitePrompt(Prompt):
         return status
 
     def on_update(self, status):
-        if self.denite.is_async and self.denite.check_empty():
+        if self.denite.is_async and self.denite.check_option():
             self.denite.quit()
             return STATUS_CANCEL
         return super().on_update(status)
