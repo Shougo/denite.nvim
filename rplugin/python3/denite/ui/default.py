@@ -103,11 +103,12 @@ class Default(object):
                     self._current_mode = context['mode']
 
                 update = ('immediately', 'immediately_1',
-                          'cursor_wrap', 'cursor_pos', 'prev_winid')
+                          'cursor_wrap', 'cursor_pos', 'prev_winid',
+                          'quick_move')
                 for key in update:
                     self._context[key] = context[key]
 
-            if self.check_empty():
+            if self.check_option():
                 return
 
             self.init_buffer()
@@ -135,7 +136,7 @@ class Default(object):
             self.update_candidates()
             self.init_cursor()
 
-            if self.check_empty():
+            if self.check_option():
                 return
 
             self.init_buffer()
@@ -144,6 +145,9 @@ class Default(object):
         self.update_displayed_texts()
         self.change_mode(self._current_mode)
         self.update_buffer()
+
+        if self._context['quick_move']:
+            self.quick_move()
 
         # Make sure that the caret position is ok
         self._prompt.caret.locus = self._prompt.caret.tail
@@ -463,7 +467,7 @@ class Default(object):
         elif is_vertical and self._vim.current.window.width != winwidth:
             self._vim.command('vertical resize ' + str(winwidth))
 
-    def check_empty(self):
+    def check_option(self):
         if self._context['cursor_pos'].isnumeric():
             self.init_cursor()
             self.move_to_pos(int(self._context['cursor_pos']))
@@ -926,6 +930,55 @@ class Default(object):
                 self._cursor -= back_times - self._win_cursor + 1
                 self._win_cursor = 1
 
+        self.update_cursor()
+
+    def quick_move(self):
+        def get_quick_move_table():
+            table = {}
+            context = self._context
+            base = self._win_cursor
+            for [key, number] in context['quick_move_table'].items():
+                number = int(number)
+                pos = ((base - number) if context['reversed']
+                       else (number + base))
+                if pos > 0:
+                    table[key] = pos
+            return table
+
+        def quick_move_redraw(table, is_define):
+            bufnr = self._vim.current.buffer.number
+            for [key, number] in table.items():
+                signid = 2000 + number
+                name = 'denite_quick_move_' + str(number)
+                if is_define:
+                    self._vim.command(
+                        'sign define {0} text={1} texthl=Special'.format(
+                            name, key))
+                    self._vim.command(
+                        'sign place {0} name={1} line={2} buffer={3}'.format(
+                            signid, name, number, bufnr))
+                else:
+                    self._vim.command(
+                        'silent! sign unplace {0} buffer={1}'.format(
+                            signid, bufnr))
+                    self._vim.command('silent! sign undefine ' + name)
+
+        quick_move_table = get_quick_move_table()
+        self._vim.command('echo "Input quick match key: "')
+        quick_move_redraw(quick_move_table, True)
+        self._vim.command('redraw')
+
+        char = ''
+        while char == '':
+            char = self._vim.call('nr2char', self._vim.call('getchar'))
+
+        quick_move_redraw(quick_move_table, False)
+
+        if (char not in quick_move_table or
+                quick_move_table[char] > self._winheight):
+            return
+
+        self._win_cursor = quick_move_table[char]
         self.update_cursor()
 
     def _keyfunc(self, key):

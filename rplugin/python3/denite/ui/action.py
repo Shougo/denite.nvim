@@ -308,53 +308,7 @@ def _insert_to_head(prompt, params):
 
 
 def _quick_move(prompt, params):
-    def get_quick_move_table():
-        table = {}
-        context = prompt.denite._context
-        base = prompt.denite._win_cursor
-        for [key, number] in context['quick_move_table'].items():
-            number = int(number)
-            pos = (base - number) if context['reversed'] else (number + base)
-            if pos > 0:
-                table[key] = pos
-        return table
-
-    def quick_move_redraw(table, is_define):
-        bufnr = _vim.current.buffer.number
-        for [key, number] in table.items():
-            signid = 2000 + number
-            name = 'denite_quick_move_' + str(number)
-            if is_define:
-                _vim.command(
-                    'sign define {0} text={1} texthl=Special'.format(
-                        name, key))
-                _vim.command(
-                    'sign place {0} name={1} line={2} buffer={3}'.format(
-                        signid, name, number, bufnr))
-            else:
-                _vim.command('silent! sign unplace {0} buffer={1}'.format(
-                    signid, bufnr))
-                _vim.command('silent! sign undefine ' + name)
-
-    _vim = prompt.denite._vim
-
-    quick_move_table = get_quick_move_table()
-    _vim.command('echo "Input quick match key: "')
-    quick_move_redraw(quick_move_table, True)
-    _vim.command('redraw')
-
-    char = ''
-    while char == '':
-        char = _vim.call('nr2char', _vim.call('getchar'))
-
-    quick_move_redraw(quick_move_table, False)
-
-    if (char not in quick_move_table or
-            quick_move_table[char] > prompt.denite._winheight):
-        return
-
-    prompt.denite._win_cursor = quick_move_table[char]
-    prompt.denite.update_cursor()
+    prompt.denite.quick_move()
 
 
 def _multiple_mappings(prompt, params):

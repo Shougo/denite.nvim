@@ -1237,8 +1237,13 @@ OPTIONS							*denite-options*
 
 		Default: "none"
 
-					*denite-option-quick-move-table*
+						*denite-option-quick-move*
 -quick-move
+		It runs |denite-map-quick_move| automatically.
+		Default: false
+
+					*denite-option-quick-move-table*
+-quick-move-table
 
 		The table of completion candidates of quick move list,
 		corresponding the narrowing text.
@@ -1254,7 +1259,6 @@ OPTIONS							*denite-options*
         		\   '1' : 20, '2' : 21, '3' : 22, '4' : 23, '5' : 24,
         		\   '6' : 25, '7' : 26, '8' : 27, '9' : 28, '0' : 29,
         		\ }
-<
 						*denite-option-refresh*
 -refresh
 		Refresh the candidates when |denite-option-resume| is true.
