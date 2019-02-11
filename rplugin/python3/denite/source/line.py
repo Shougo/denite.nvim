@@ -5,6 +5,7 @@
 # ============================================================================
 
 from denite.source.base import Base
+from denite.util import abspath
 
 LINE_NUMBER_SYNTAX = (
     'syntax match deniteSource_lineNumber '
@@ -58,7 +59,8 @@ class Source(Base):
             lines = [{
                 'word': x,
                 'abbr': (context['__fmt'] % (i + 1, x)),
-                'action__path': self.vim.current.buffer.name,
+                'action__path': abspath(self.vim,
+                                        self.vim.current.buffer.name),
                 'action__bufnr': bufnr,
                 'action__col': 0,
                 'action__line': (i + 1),
