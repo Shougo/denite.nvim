@@ -21,6 +21,10 @@ function! denite#init#_initialize() abort
     autocmd!
   augroup END
 
+  if !has('nvim')
+    return denite#vim#_initialize()
+  endif
+
   if !has('python3')
     call denite#util#print_error(
           \ 'denite.nvim does not work with this version.')

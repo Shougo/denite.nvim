@@ -89,7 +89,7 @@ Note: denite requires Neovim 0.3.0+ or Vim 8.0+ with |:python3| enabled.
 
 Note: You need to install Python3.5+.
 
-For neovim install:
+For neovim:
 
 1. Extract the files and put them in your Neovim directory
    (usually `$XDG_CONFIG_HOME/nvim/`).
@@ -97,7 +97,7 @@ For neovim install:
 
 If ":echo has('python3')" returns `1`, then you're done; otherwise, see below.
 
-You can enable Python3 interface with pip: >
+You can enable Python3 interface with pip >
 
     pip3 install --user pynvim
 
@@ -112,11 +112,9 @@ For Vim8.0+:
 
 Use |:python3| enabled Vim.
 
-Please install nvim-yarp plugin for Vim8.
-https://github.com/roxma/nvim-yarp
+You must install "pynvim" module with pip >
 
-Please install vim-hug-neovim-rpc plugin for Vim8.
-https://github.com/roxma/vim-hug-neovim-rpc
+    pip3 install --user pynvim
 
 ==============================================================================
 EXAMPLES						*denite-examples*

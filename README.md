@@ -51,22 +51,24 @@ not fixed anymore
 ## Requirements
 
 Denite requires Neovim 0.3.0+ or Vim 8.0+ with `if_python3`.
-If `:echo has("python3")` returns `1`, then you're done; otherwise, see below.
+If `:echo has("python3")` returns `1`, then you're done.
 
-You can enable Python3 interface with `pip`:
+Note: You need to install Python3.5+.
+
+For neovim:
+
+You must install "pynvim" module with pip
 
     pip3 install --user pynvim
 
 If you want to read the Neovim-python/python3 interface install documentation,
 you should read `:help provider-python`.
 
-Note: You need to install Python3.5+.
+For Vim8:
 
-Please install nvim-yarp plugin for Vim8.
-https://github.com/roxma/nvim-yarp
+You must install "pynvim" module with pip
 
-Please install vim-hug-neovim-rpc plugin for Vim8.
-https://github.com/roxma/vim-hug-neovim-rpc
+    pip3 install --user pynvim
 
 
 ### For Windows users
