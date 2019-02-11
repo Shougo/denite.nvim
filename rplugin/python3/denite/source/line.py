@@ -58,6 +58,7 @@ class Source(Base):
             lines = [{
                 'word': x,
                 'abbr': (context['__fmt'] % (i + 1, x)),
+                'action__path': self.vim.current.buffer.name,
                 'action__bufnr': bufnr,
                 'action__col': 0,
                 'action__line': (i + 1),
