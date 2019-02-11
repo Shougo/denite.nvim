@@ -61,12 +61,9 @@ def regex_convert_py_vim(expr):
     return r'\v' + re.sub(r'(?!\\)([/~])', r'\\\1', expr)
 
 
-def escape_fuzzy(string, camelcase):
+def escape_fuzzy(string):
     # Escape string for python regexp.
     p = re.sub(r'([a-zA-Z0-9_-])(?!$)', r'\1[^\1]*', string)
-    if camelcase and re.search(r'[A-Z](?!$)', string):
-        p = re.sub(r'([a-z])(?!$)',
-                   (lambda pat: '['+pat.group(1)+pat.group(1).upper()+']'), p)
     p = re.sub(r'/(?!$)', r'/[^/]*', p)
     return p
 
@@ -139,10 +136,6 @@ def convert2fuzzy_pattern(text):
     def esc(string):
         # Escape string for convert2fuzzy_pattern.
         p = re.sub(r'([a-zA-Z0-9_-])(?!$)', r'\1[^\1]{-}', string)
-        if re.search(r'[A-Z](?!$)', string):
-            p = re.sub(r'([a-z])(?!$)',
-                       (lambda pat:
-                        '['+pat.group(1)+pat.group(1).upper()+']'), p)
         p = re.sub(r'/(?!$)', r'/[^/]*', p)
         return p
     return '|'.join([esc(x) for x in split_input(text)])

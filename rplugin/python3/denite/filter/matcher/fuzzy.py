@@ -24,7 +24,7 @@ class Filter(Base):
         pattern = context['input']
         if context['ignorecase']:
             pattern = pattern.lower()
-        p = re.compile(escape_fuzzy(re.escape(pattern), True))
+        p = re.compile(escape_fuzzy(re.escape(pattern)))
         if context['ignorecase']:
             context['candidates'] = [x for x in context['candidates']
                                      if p.search(x['word'].lower())]
