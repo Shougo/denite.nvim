@@ -45,8 +45,7 @@ function! s:start(sources, user_context) abort
   execute line('.')
   call setpos('.', pos)
 
-  let context = denite#init#_context(a:user_context)
-  return denite#util#rpcrequest('_denite_start', [a:sources, context])
+  return denite#util#rpcrequest('_denite_start', [a:sources, a:user_context])
 endfunction
 
 function! denite#do_action(context, action_name, targets) abort

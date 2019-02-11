@@ -2356,6 +2356,9 @@ https://github.com/raghur/fruzzy
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
 
+2019.02.11
+* Remove some deprecated options support.
+
 2018.10.20
 * Python 3.5+ is required.
 
