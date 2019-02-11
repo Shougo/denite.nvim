@@ -3,6 +3,7 @@ denite.nvim
 
 [![Build Status](https://travis-ci.org/Shougo/denite.nvim.svg?branch=master)](https://travis-ci.org/Shougo/denite.nvim)
 
+
 ## About
 
 [![Join the chat at https://gitter.im/Shougo/denite.nvim](https://badges.gitter.im/Shougo/denite.nvim.svg)](https://gitter.im/Shougo/denite.nvim?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -50,16 +51,25 @@ not fixed anymore
 ## Requirements
 
 Denite requires Neovim 0.3.0+ or Vim 8.0+ with `if_python3`.
-If `:echo has("python3")` returns `1`, then you're done; otherwise, see below.
+If `:echo has("python3")` returns `1`, then you're done.
 
-You can enable Python3 interface with `pip`:
+Note: You need to install Python3.5+.
+
+For neovim:
+
+You must install "pynvim" module with pip
 
     pip3 install --user pynvim
 
 If you want to read the Neovim-python/python3 interface install documentation,
 you should read `:help provider-python`.
 
-Note: You need to install Python3.5+.
+For Vim8:
+
+You must install "pynvim" module with pip
+
+    pip3 install --user pynvim
+
 
 ### For Windows users
 
@@ -71,9 +81,9 @@ Note: You need to install Python3.5+.
 
 **Note:** You need to do 1. and 2. with the common-arch files (x86 or x64).
 
+
 ## Screenshots
 
 ![file/rec source](https://user-images.githubusercontent.com/13142418/34324674-b8ddd5b8-e840-11e7-9b77-d94e1b084bda.gif)
 ![SpaceVim Guide](https://user-images.githubusercontent.com/13142418/34324752-e5a89900-e842-11e7-9f87-6d8789ba3871.gif)
 ![colorscheme source](https://user-images.githubusercontent.com/13142418/34324786-f4dd39a2-e843-11e7-97ef-7a48ee04d27b.gif)
-

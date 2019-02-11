@@ -22,26 +22,21 @@ import vim
 # Add sys.path
 sys.path.insert(0, vim.eval('s:denite_path'))
 import denite.util
-import denite.ui.default
+import denite.vim
 import denite.rplugin
 # Define 'denite__uis' to store UI for individual buffers
-denite__uis = {}
+denite__rplugin = denite.rplugin.Rplugin(denite.vim.Neovim(vim))
 EOF
   let g:denite#_channel_id = getpid()
 endfunction
 
-function! denite#vim#_start(sources, context) abort
+function! denite#vim#_start(args) abort
   python3 << EOF
 def _temporary_scope():
-    nvim = denite.rplugin.Neovim(vim)
+    nvim = denite.vim.Neovim(vim)
     try:
-        buffer_name = nvim.eval('a:context')['buffer_name']
-        if nvim.eval('a:context')['buffer_name'] not in denite__uis:
-            denite__uis[buffer_name] = denite.ui.default.Default(nvim)
-        denite__uis[buffer_name].start(
-            denite.rplugin.reform_bytes(nvim.eval('a:sources')),
-            denite.rplugin.reform_bytes(nvim.eval('a:context')),
-        )
+        denite__rplugin.start(denite.vim.reform_bytes(
+            nvim.eval('a:args')))
     except Exception as e:
         import traceback
         for line in traceback.format_exc().splitlines():
@@ -54,19 +49,13 @@ EOF
   return []
 endfunction
 
-function! denite#vim#_do_action(context, action_name, targets) abort
+function! denite#vim#_do_action(args) abort
   python3 << EOF
 def _temporary_scope():
-    nvim = denite.rplugin.Neovim(vim)
+    nvim = denite.vim.Neovim(vim)
     try:
-        buffer_name = nvim.eval('a:context')['buffer_name']
-        if buffer_name not in denite__uis:
-            denite__uis[buffer_name] = denite.ui.default.Default(nvim)
-        denite__uis[buffer_name]._denite.do_action(
-            denite.rplugin.reform_bytes(nvim.eval('a:context')),
-            denite.rplugin.reform_bytes(nvim.eval('a:action_name')),
-            denite.rplugin.reform_bytes(nvim.eval('a:targets')),
-        )
+        denite__rplugin.do_action(denite.vim.reform_bytes(
+            nvim.eval('a:args')))
     except Exception as e:
         import traceback
         for line in traceback.format_exc().splitlines():

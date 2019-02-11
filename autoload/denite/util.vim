@@ -200,3 +200,21 @@ function! denite#util#input_yesno(message) abort
 
   return yesno =~? 'y\%[es]'
 endfunction
+
+function! denite#util#has_yarp() abort
+  return !has('nvim')
+endfunction
+function! denite#util#rpcrequest(method, args) abort
+  if !denite#init#_check_channel()
+    return -1
+  endif
+
+  if denite#util#has_yarp()
+    if g:denite#_yarp.job_is_dead
+      return -1
+    endif
+    return g:denite#_yarp.request(a:method, a:args)
+  else
+    return rpcrequest(g:denite#_channel_id, a:method, a:args)
+  endif
+endfunction

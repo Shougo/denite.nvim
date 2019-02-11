@@ -596,13 +596,10 @@ class Default(object):
             if self._context['split'] == 'tab':
                 self._vim.command('tabclose!')
 
-            self._vim.call('win_gotoid', self._prev_winid)
-
             if self._context['split'] != 'tab':
-                # Close the denite window after jump
-                # Note: "close!" moves to the non previous buffer!
-                self._vim.command(
-                    str(self._vim.call('win_id2win', self._winid)) + 'close!')
+                self._vim.command('close!')
+
+            self._vim.call('win_gotoid', self._prev_winid)
 
         # Restore the position
         self._vim.call('setpos', '.', self._prev_curpos)
