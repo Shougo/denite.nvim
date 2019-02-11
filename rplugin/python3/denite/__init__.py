@@ -16,7 +16,6 @@ else:
     import neovim
     vim = neovim
 
-
 if hasattr(vim, 'plugin'):
     # Neovim only
 

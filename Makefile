@@ -24,7 +24,7 @@ test:
 	themis --version
 	themis test/autoload/*
 	pytest --version
-	pytest
+	pytest test
 
 vim-themis:
 	git clone https://github.com/thinca/vim-themis vim-themis
