@@ -1237,14 +1237,19 @@ OPTIONS							*denite-options*
 		"quit": quit the denite buffer.
 		"open": open the denite buffer.
 		"suspend": suspend the denite buffer.
-		Otherwise: Nothing.
+		Otherwise: nothing.
 
 		Default: "none"
 
 						*denite-option-quick-move*
--quick-move
+-quick-move={action}
 		It runs |denite-map-quick_move| automatically.
-		Default: false
+
+		"immediately": runs the default action immediately
+		Empty string : nothing.
+		Otherwise: move to the position.
+
+		Default: ""
 
 					*denite-option-quick-move-table*
 -quick-move-table

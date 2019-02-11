@@ -107,7 +107,7 @@ function! denite#init#_user_options() abort
         \ 'prompt': '#',
         \ 'prompt_highlight': 'Statement',
         \ 'post_action': 'none',
-        \ 'quick_move': v:false,
+        \ 'quick_move': '',
         \ 'refresh': v:false,
         \ 'resume': v:false,
         \ 'reversed': v:false,

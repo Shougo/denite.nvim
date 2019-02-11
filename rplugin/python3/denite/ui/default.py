@@ -146,8 +146,8 @@ class Default(object):
         self.change_mode(self._current_mode)
         self.update_buffer()
 
-        if self._context['quick_move']:
-            self.quick_move()
+        if self._context['quick_move'] and self.quick_move():
+            return
 
         # Make sure that the caret position is ok
         self._prompt.caret.locus = self._prompt.caret.tail
@@ -977,6 +977,10 @@ class Default(object):
 
         self._win_cursor = quick_move_table[char]
         self.update_cursor()
+
+        if self._context['quick_move'] == 'immediately':
+            self.do_action('default')
+            return True
 
     def _keyfunc(self, key):
         def wrapped(candidate):
