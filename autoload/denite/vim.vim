@@ -24,7 +24,6 @@ sys.path.insert(0, vim.eval('s:denite_path'))
 import denite.util
 import denite.vim
 import denite.rplugin
-# Define 'denite__uis' to store UI for individual buffers
 denite__rplugin = denite.rplugin.Rplugin(denite.vim.Neovim(vim))
 EOF
   let g:denite#_channel_id = getpid()
