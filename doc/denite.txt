@@ -247,6 +247,7 @@ EXAMPLES						*denite-examples*
 	      \   'venv/', 'images/', '*.min.*', 'img/', 'fonts/'])
 
 	" Custom action
+	" Note: lambda function is not supported in Vim8.
 	call denite#custom#action('file', 'test',
 	      \ {context -> execute('let g:foo = 1')})
 	call denite#custom#action('file', 'test2',
@@ -849,6 +850,7 @@ denite#custom#action({kind}, {name}, {func}[, {options}])
 		{options} is an optional dictionary which overrides the
 		action behaviors "is_quit" and/or "is_redraw".
 		Note: {kind} is comma separated.
+		Note: lambda function is not supported in Vim8.
 
 							*denite#custom#alias()*
 denite#custom#alias({type}, {alias-name}, {base-name})
