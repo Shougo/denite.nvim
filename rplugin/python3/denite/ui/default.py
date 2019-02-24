@@ -241,7 +241,6 @@ class Default(object):
         self._vim.command('doautocmd FileType denite')
 
         self.init_syntax()
-        self._prompt.redraw_prompt()
 
     def _get_direction(self):
         direction = self._context['direction']
