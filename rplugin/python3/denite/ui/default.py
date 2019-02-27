@@ -58,6 +58,7 @@ class Default(object):
             weakref.proxy(self)
         )
         self._guicursor = ''
+        self._titlestring = ''
         self._prev_status = {}
         self._prev_curpos = []
         self._is_suspend = False
@@ -176,20 +177,33 @@ class Default(object):
         if self._context['cursor_shape']:
             self._guicursor = self._vim.options['guicursor']
             self._vim.options['guicursor'] = 'a:None'
+        self._titlestring = self._vim.options['titlestring']
 
-        if (self._context['split'] != 'no' and self._winid > 0 and
+        split = self._context['split']
+        if (split != 'no' and self._winid > 0 and
                 self._vim.call('win_gotoid', self._winid)):
-            if self._context['split'] != 'vertical':
+            if split != 'vertical' and split != 'floating':
                 # Move the window to bottom
                 self._vim.command('wincmd J')
             self._winrestcmd = ''
         else:
             # Create new buffer
-            if self._context['split'] == 'tab':
+            if split == 'tab':
                 self._vim.command('tabnew')
-            elif self._context['split'] != 'no':
-                vertical = ('vertical'
-                            if self._context['split'] == 'vertical' else '')
+            elif (split == 'floating' and
+                  self._vim.call('exists', '*nvim_open_win')):
+                # Use floating window
+                self._vim.call(
+                    'nvim_open_win',
+                    self._vim.call('bufnr', '%'), True,
+                    self._context['winwidth'],
+                    self._context['winheight'], {
+                        'relative': 'editor',
+                        'row': self._context['winrow'],
+                        'col': self._context['wincol'],
+                    })
+            elif split != 'no':
+                vertical = 'vertical' if split == 'vertical' else ''
                 self._vim.command('{} {} new'.format(
                     self._get_direction(), vertical))
             self._vim.call(
@@ -415,11 +429,15 @@ class Default(object):
             self._prev_status = status
 
         if self._context['statusline']:
-            self._window_options['statusline'] = (
+            status = (
                 "%#deniteMode#%{denite#get_status('mode')}%* " +
                 "%{denite#get_status('sources')} %=" +
                 "%#deniteStatusLinePath# %{denite#get_status('path')} %*" +
                 "%#deniteStatusLineNumber#%{denite#get_status('linenr')}%*")
+            if self._context['split'] == 'floating':
+                self._vim.options['titlestring'] = status
+            else:
+                self._window_options['statusline'] = status
 
     def update_cursor(self):
         self.update_displayed_texts()
@@ -578,6 +596,8 @@ class Default(object):
         if self._context['cursor_shape']:
             self._vim.command('set guicursor&')
             self._vim.options['guicursor'] = self._guicursor
+        if self._context['split'] == 'floating':
+            self._vim.options['titlestring'] = self._titlestring
 
     def quit_buffer(self):
         self.cleanup()
