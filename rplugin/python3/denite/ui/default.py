@@ -59,6 +59,7 @@ class Default(object):
         )
         self._guicursor = ''
         self._titlestring = ''
+        self._ruler = False
         self._prev_status = {}
         self._prev_curpos = []
         self._is_suspend = False
@@ -178,6 +179,7 @@ class Default(object):
             self._guicursor = self._vim.options['guicursor']
             self._vim.options['guicursor'] = 'a:None'
         self._titlestring = self._vim.options['titlestring']
+        self._ruler = self._vim.options['ruler']
 
         split = self._context['split']
         if (split != 'no' and self._winid > 0 and
@@ -222,6 +224,10 @@ class Default(object):
         self._options['modeline'] = False
         self._options['filetype'] = 'denite'
         self._options['modifiable'] = True
+
+        if split == 'floating':
+            # Disable ruler
+            self._vim.options['ruler'] = False
 
         self._window_options = self._vim.current.window.options
         window_options = {
@@ -598,6 +604,7 @@ class Default(object):
             self._vim.options['guicursor'] = self._guicursor
         if self._context['split'] == 'floating':
             self._vim.options['titlestring'] = self._titlestring
+            self._vim.options['ruler'] = self._ruler
 
     def quit_buffer(self):
         self.cleanup()
