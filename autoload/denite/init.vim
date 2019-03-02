@@ -123,7 +123,9 @@ function! denite#init#_user_options() abort
         \ 'unique': v:false,
         \ 'use_default_mappings': v:true,
         \ 'vertical_preview': v:false,
+        \ 'wincol': &columns / 4,
         \ 'winheight': 20,
+        \ 'winrow': &lines / 3,
         \ 'winwidth': 90,
         \ 'winminheight': -1,
         \}

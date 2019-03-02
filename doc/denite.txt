@@ -1313,6 +1313,7 @@ OPTIONS							*denite-options*
 		"horizontal": Split buffer horizontally
 		"no": No split
 		"tab": Create the new tab for denite buffer
+		"floating": Use neovim floating window feature
 
 		Default: "horizontal"
 
@@ -1363,6 +1364,13 @@ OPTIONS							*denite-options*
 		Open the preview window vertically.
 		Default: false
 
+						*denite-option-wincol*
+-wincol={window-column}
+		Set the column position of the Denite window if
+		|denite-option-split| is "floating".
+
+		Default: &columns / 4
+
 						*denite-option-winheight*
 -winheight={window-height}
 		Set the height of the Denite window if |denite-option-split|
@@ -1371,6 +1379,13 @@ OPTIONS							*denite-options*
 		maximum size of the window.
 
 		Default: 20
+
+						*denite-option-winrow*
+-winrow={window-row}
+		Set the row position of the Denite window if
+		|denite-option-split| is "floating".
+
+		Default: &lines / 3
 
 						*denite-option-winwidth*
 -winwidth={window-width}
