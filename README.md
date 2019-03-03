@@ -53,7 +53,7 @@ not fixed anymore
 Denite requires Neovim 0.3.0+ or Vim 8.0+ with `if_python3`.
 If `:echo has("python3")` returns `1`, then you're done.
 
-Note: You need to install Python3.5+.
+Note: You need to install Python3.6.1+.
 
 For neovim:
 

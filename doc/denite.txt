@@ -87,7 +87,7 @@ INSTALL							*denite-install*
 
 Note: denite requires Neovim 0.3.0+ or Vim 8.0+ with |:python3| enabled.
 
-Note: You need to install Python3.5+.
+Note: You need to install Python3.6.1+.
 
 For neovim:
 
@@ -131,7 +131,7 @@ EXAMPLES						*denite-examples*
 	call denite#custom#var('file/rec', 'command',
 	\ ['pt', '--follow', '--nocolor', '--nogroup',
 	\  (has('win32') ? '-g:' : '-g='), ''])
-	" For python script scantree.py (works if python 3.5+ in path)
+	" For python script scantree.py (works if python 3.6.1+ in path)
 	" Read bellow on this file to learn more about scantree.py
 	call denite#custom#var('file/rec', 'command', ['scantree.py'])
 
@@ -1510,10 +1510,10 @@ file/rec (file_rec)
 					\ '-type', 'l', '-print', '-o',
 					\ '-type', 'f', '-print'])
 <
-				If python3.5+ is in your path you can use a
-				python script that comes with denite for the
-				file/rec command. It is the default on windows
-				if you don't set your own commmand.
+				You can use a python script that comes with
+				denite for the file/rec command. It is the
+				default on windows if you don't set your own
+				commmand.
 				To use it other environments you can do:
 >
 				call denite#custom#var('file/rec', 'command',
@@ -2375,6 +2375,9 @@ https://github.com/raghur/fruzzy
 
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
+
+2019.03.04
+* Python 3.6.1+ is required.
 
 2019.02.11
 * Remove some deprecated options support.
