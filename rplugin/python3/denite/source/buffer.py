@@ -45,11 +45,11 @@ class Source(Base):
                 'syntax match {0}_{1} /{2}/ contained containedin={0}'.format(
                     self.syntax_name, syn['name'], syn['re']))
             self.vim.command(
-                'highlight default link {0}_{1} {2}'.format(
+                'highlight default link {}_{} {}'.format(
                     self.syntax_name, syn['name'], syn['link']))
 
     def gather_candidates(self, context):
-        rjust = len('{}'.format(len(self.vim.buffers))) + 1
+        rjust = len(f'{len(self.vim.buffers)}') + 1
         candidates = [
             self._convert(ba, rjust) for ba in [
                 bufattr for bufattr in [
@@ -81,12 +81,12 @@ class Source(Base):
         return {
             'bufnr': buffer_attr['number'],
             'word': name,
-            'abbr': '{0}{1} {2}{3} {4}'.format(
+            'abbr': '{}{} {}{} {}'.format(
                 str(buffer_attr['number']).rjust(rjust, ' '),
                 buffer_attr['status'],
                 name,
-                ' [{}]'.format(buffer_attr['filetype']
-                               ) if buffer_attr['filetype'] != '' else '',
+                (f' [{buffer_attr["filetype"]}]'
+                 if buffer_attr['filetype'] != '' else ''),
                 strftime('(' + self.vars['date_format'] + ')',
                          localtime(buffer_attr['timestamp'])
                          ) if self.vars['date_format'] != '' else ''
@@ -106,7 +106,7 @@ class Source(Base):
             'filetype': self.vim.call('getbufvar', buf.number, '&filetype'),
             'timestamp': getatime(
                 attr['name']) if exists(attr['name']) else time(),
-            'status': '{0}{1}{2}{3}'.format(
+            'status': '{}{}{}{}'.format(
                 ' ' if self.vim.call('buflisted', attr['number'])
                     else 'u',
                 '%' if attr['number'] == context['__caller_bufnr']

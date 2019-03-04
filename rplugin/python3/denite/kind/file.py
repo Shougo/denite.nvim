@@ -111,7 +111,7 @@ class Kind(Openable):
                 self.vim.command('buffer' + str(target['action__bufnr']))
             else:
                 path = target['action__path']
-                match_path = '^{0}$'.format(path)
+                match_path = f'^{path}$'
 
                 if re.match('https?://', path):
                     # URI

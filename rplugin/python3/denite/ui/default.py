@@ -206,8 +206,8 @@ class Default(object):
                     })
             elif split != 'no':
                 vertical = 'vertical' if split == 'vertical' else ''
-                self._vim.command('{} {} new'.format(
-                    self._get_direction(), vertical))
+                self._vim.command(
+                    f'{self._get_direction()} {vertical} new')
             self._vim.call(
                 'denite#util#execute_path',
                 'silent keepalt edit', '[denite]')
@@ -522,7 +522,7 @@ class Default(object):
             self.update_cursor()
         self.do_action('default')
         candidate = self.get_cursor_candidate()
-        echo(self._vim, 'Normal', '[{0}/{1}] {2}'.format(
+        echo(self._vim, 'Normal', '[{}/{}] {}'.format(
             self._cursor + self._win_cursor, self._candidates_len,
             candidate.get('abbr', candidate['word'])))
         if goto:
@@ -975,15 +975,13 @@ class Default(object):
                 name = 'denite_quick_move_' + str(number)
                 if is_define:
                     self._vim.command(
-                        'sign define {0} text={1} texthl=Special'.format(
-                            name, key))
+                        f'sign define {name} text={key} texthl=Special')
                     self._vim.command(
-                        'sign place {0} name={1} line={2} buffer={3}'.format(
-                            signid, name, number, bufnr))
+                        f'sign place {signid} name={name} '
+                        f'line={number} buffer={bufnr}')
                 else:
                     self._vim.command(
-                        'silent! sign unplace {0} buffer={1}'.format(
-                            signid, bufnr))
+                        f'silent! sign unplace {signid} buffer={bufnr}')
                     self._vim.command('silent! sign undefine ' + name)
 
         quick_move_table = get_quick_move_table()

@@ -45,7 +45,7 @@ class Socket(object):
 
     def sendall(self, commands):
         for command in commands:
-            self._sock.sendall('{}\n'.format(command).encode(self._enc))
+            self._sock.sendall(f'{command}\n'.encode(self._enc))
 
     def receive(self, bytes=1024):
         return self._sock.recv(bytes).decode(

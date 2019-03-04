@@ -35,7 +35,7 @@ GREP_PATTERNS_HIGHLIGHT = 'highlight default link deniteGrepPatterns Function'
 def _candidate(result, path):
     return {
         'word': result[3],
-        'abbr': '{0}:{1}{2} {3}'.format(
+        'abbr': '{}:{}{} {}'.format(
             path,
             result[1],
             (':' + result[2] if result[2] != '0' else ''),

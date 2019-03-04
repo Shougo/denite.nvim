@@ -28,7 +28,7 @@ class Source(Base):
             self.vim.call('getcwd'), context['__line'])
         if result and os.path.isfile(result[0]):
             return [{
-                'word': '{0}: {1}{2}: {3}'.format(
+                'word': '{}: {}{}: {}'.format(
                     result[0], result[1],
                     (':' + result[2] if result[2] != '0' else ''),
                     result[3]),
