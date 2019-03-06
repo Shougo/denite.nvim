@@ -21,7 +21,7 @@ class Kind(Openable):
 
     def action_open(self, context):
         for target in context['targets']:
-            self.vim.command('buffer {0}'.format(target['action__bufnr']))
+            self.vim.command(f'buffer {target["action__bufnr"]}')
 
     def action_delete(self, context):
         for target in context['targets']:

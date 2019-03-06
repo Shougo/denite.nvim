@@ -28,7 +28,7 @@ class Source(Base):
                 'syntax match {0}_{1} /{2}/ contained containedin={0}'.format(
                     self.syntax_name, syn['name'], syn['re']))
             self.vim.command(
-                'highlight default link {0}_{1} {2}'.format(
+                'highlight default link {}_{} {}'.format(
                     self.syntax_name, syn['name'], syn['link']))
 
     def _parse(self, context):

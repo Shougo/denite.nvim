@@ -18,7 +18,7 @@ class Kind(Base):
 
     def action_cd(self, context):
         target = context['targets'][0]
-        self.vim.command('lcd {}'.format(target['action__path']))
+        self.vim.command(f'lcd {target["action__path"]}')
 
     def action_narrow(self, context):
         target = context['targets'][0]
@@ -31,7 +31,7 @@ class Kind(Base):
     def action_open(self, context):
         for target in context['targets']:
             path = target['action__path']
-            match_path = '^{0}$'.format(path)
+            match_path = f'^{path}$'
 
             if self.vim.call('bufwinnr', match_path) <= 0:
                 self.vim.call(

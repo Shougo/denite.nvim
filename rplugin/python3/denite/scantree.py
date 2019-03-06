@@ -37,7 +37,7 @@ try:
                 else:
                     yield entry.path
         except PermissionError:
-            yield 'PermissionError reading {}'.format(path_name)
+            yield f'PermissionError reading {path_name}'
 
 except ImportError:
     def scantree(path_name, skip_list=None):

@@ -25,8 +25,8 @@ class Source(Base):
             'colors_name', 'default')
 
     def on_close(self, context):
-        self.vim.command('silent colorscheme {}'.format(
-            context['__current_color']))
+        self.vim.command(
+            f'silent colorscheme {context["__current_color"]}')
 
     def gather_candidates(self, context):
         colorschemes = {}
@@ -49,4 +49,4 @@ class Kind(Command):
 
     def action_preview(self, context):
         target = context['targets'][0]
-        self.vim.command('silent colorscheme {}'.format(target['word']))
+        self.vim.command(f'silent colorscheme {target["word"]}')

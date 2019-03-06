@@ -137,8 +137,8 @@ class Source(Base):
         else:
             python_exe = 'python'
         if shutil.which(python_exe) is None:
-            raise FileNotFoundError("Coudn't find {} executable!".format(
-                                    python_exe))
+            raise FileNotFoundError(
+                f'Coudn''t find {python_exe} executable!')
 
         return [python_exe, scantree_py, '--ignore', ignore,
                 '--path', ':directory']

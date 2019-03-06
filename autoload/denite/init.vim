@@ -137,3 +137,15 @@ function! denite#init#_deprecated_options() abort
         \ 'quit': '',
         \}
 endfunction
+
+function! denite#init#_python_version_check() abort
+  python3 << EOF
+import vim
+import sys
+vim.vars['denite#_python_version_check'] = (
+    sys.version_info.major,
+    sys.version_info.minor,
+    sys.version_info.micro) < (3, 6, 1)
+EOF
+  return g:denite#_python_version_check
+endfunction

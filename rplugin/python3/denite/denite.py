@@ -283,8 +283,8 @@ class Denite(object):
 
     def _get_source_status(self, context, source, entire, partial):
         return (source.get_status(context) if not partial else
-                '{}({}/{})'.format(
-                    source.get_status(context), len(partial), len(entire)))
+                f'{source.get_status(context)}'
+                f'({len(partial)}/{len(entire)})')
 
     def _match_candidates(self, context, matchers):
         for pattern in split_input(context['input']):
