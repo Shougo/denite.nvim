@@ -1,5 +1,5 @@
 # For backward compatibility
-from .matcher.hide_hidden_files import Filter as Base
+from denite.filter.matcher.hide_hidden_files import Filter as Base
 
 
 class Filter(Base):

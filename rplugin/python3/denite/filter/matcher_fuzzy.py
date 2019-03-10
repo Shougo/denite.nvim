@@ -1,5 +1,5 @@
 # For backward compatibility
-from .matcher.fuzzy import Filter as Base
+from denite.filter.matcher.fuzzy import Filter as Base
 
 
 class Filter(Base):

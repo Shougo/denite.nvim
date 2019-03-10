@@ -1,5 +1,5 @@
 # For backward compatibility
-from .matcher.cpsm import Filter as Base
+from denite.filter.matcher.cpsm import Filter as Base
 
 
 class Filter(Base):

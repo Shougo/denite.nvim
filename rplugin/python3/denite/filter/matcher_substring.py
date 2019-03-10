@@ -1,5 +1,5 @@
 # For backward compatibility
-from .matcher.substring import Filter as Base
+from denite.filter.matcher.substring import Filter as Base
 
 
 class Filter(Base):

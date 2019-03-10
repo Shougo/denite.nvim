@@ -1,5 +1,5 @@
 # For backward compatibility
-from .sorter.reverse import Filter as Base
+from denite.filter.sorter.reverse import Filter as Base
 
 
 class Filter(Base):

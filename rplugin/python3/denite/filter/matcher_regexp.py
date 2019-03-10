@@ -1,5 +1,5 @@
 # For backward compatibility
-from .matcher.regexp import Filter as Base
+from denite.filter.matcher.regexp import Filter as Base
 
 
 class Filter(Base):

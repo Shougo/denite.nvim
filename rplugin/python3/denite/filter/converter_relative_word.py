@@ -1,5 +1,5 @@
 # For backward compatibility
-from .converter.relative_word import Filter as Base
+from denite.filter.converter.relative_word import Filter as Base
 
 
 class Filter(Base):

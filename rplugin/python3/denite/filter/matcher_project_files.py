@@ -1,5 +1,5 @@
 # For backward compatibility
-from .matcher.project_files import Filter as Base
+from denite.filter.matcher.project_files import Filter as Base
 
 
 class Filter(Base):

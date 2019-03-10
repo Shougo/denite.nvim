@@ -1,5 +1,5 @@
 # For backward compatibility
-from .matcher.ignore_globs import Filter as Base
+from denite.filter.matcher.ignore_globs import Filter as Base
 
 
 class Filter(Base):

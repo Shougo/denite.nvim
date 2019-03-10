@@ -1,5 +1,5 @@
 # For backward compatibility
-from .file.rec import Source as Base
+from denite.source.file.rec import Source as Base
 
 
 class Source(Base):

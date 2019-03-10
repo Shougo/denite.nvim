@@ -1,5 +1,5 @@
 # For backward compatibility
-from .file.point import Source as Base
+from denite.source.file.point import Source as Base
 
 
 class Source(Base):

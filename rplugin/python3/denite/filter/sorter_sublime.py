@@ -1,5 +1,5 @@
 # For backward compatibility
-from .sorter.sublime import Filter as Base
+from denite.filter.sorter.sublime import Filter as Base
 
 
 class Filter(Base):
