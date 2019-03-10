@@ -17,6 +17,7 @@ class Kind(Openable):
     def __init__(self, vim):
         super().__init__(vim)
 
+        self._vim = vim
         self.name = 'file'
         self.default_action = 'open'
         self.persist_actions += ['preview', 'highlight']
@@ -88,21 +89,32 @@ class Kind(Openable):
         self.vim.call('win_gotoid', prev_id)
 
     def action_quickfix(self, context):
-        qflist = []
+        self._qfloc(context, 'qf')
+
+    def action_location(self, context):
+        self._qfloc(context, 'loc')
+
+    def _qfloc(self, context, listtype):
+        qfloclist = []
         for target in [x for x in context['targets']
                        if 'action__line' in x and 'action__text' in x]:
-            qf = {
+            qfloc = {
                 'lnum': target['action__line'],
                 'col': target['action__col'],
                 'text': target['action__text'],
             }
             if 'action__bufnr 'in target:
-                qf['bufnr'] = target['action__bufnr']
+                qfloc['bufnr'] = target['action__bufnr']
             else:
-                qf['filename'] = target['action__path']
-            qflist.append(qf)
-        self.vim.call('setqflist', qflist)
-        self.vim.command('copen')
+                qfloc['filename'] = target['action__path']
+            qfloclist.append(qfloc)
+        if listtype == 'qf':
+            self.vim.call('setqflist', qfloclist)
+            self.vim.command('copen')
+        if listtype == 'loc':
+            wininfo = self._vim.call('denite#helper#_get_wininfo')
+            self.vim.call('setloclist', wininfo['winnr'], qfloclist)
+            self.vim.command('lopen')
 
     def _open(self, context, command):
         cwd = self.vim.call('getcwd')
