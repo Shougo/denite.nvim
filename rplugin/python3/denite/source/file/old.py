@@ -5,7 +5,7 @@
 # ============================================================================
 
 from denite.kind.file import Kind as File
-from denite.source.base import Base
+from denite.base.source import Base
 from denite.util import expand
 
 

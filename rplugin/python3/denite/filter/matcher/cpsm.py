@@ -7,7 +7,7 @@
 import sys
 import os
 
-from denite.filter.base import Base
+from denite.base.filter import Base
 from denite.util import globruntime, convert2fuzzy_pattern
 
 

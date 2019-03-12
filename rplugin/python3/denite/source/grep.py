@@ -8,7 +8,7 @@ import shlex
 from os.path import relpath
 
 from denite import util, process
-from denite.source.base import Base
+from denite.base.source import Base
 
 
 GREP_HEADER_SYNTAX = (

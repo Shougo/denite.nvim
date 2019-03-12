@@ -6,7 +6,7 @@
 
 import re
 
-from denite.filter.base import Base
+from denite.base.filter import Base
 from denite.util import convert2regex_pattern
 
 

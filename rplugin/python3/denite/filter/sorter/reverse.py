@@ -5,7 +5,7 @@
 # License: MIT license
 # ============================================================================
 
-from denite.filter.base import Base
+from denite.base.filter import Base
 
 
 class Filter(Base):

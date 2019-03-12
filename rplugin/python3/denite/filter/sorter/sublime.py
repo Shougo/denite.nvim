@@ -10,7 +10,7 @@
 
 from unicodedata import category
 
-from denite.filter.base import Base
+from denite.base.filter import Base
 
 
 # Score consts

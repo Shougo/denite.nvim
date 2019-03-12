@@ -7,7 +7,7 @@
 from re import sub, match
 import os
 
-from denite.source.base import Base
+from denite.base.source import Base
 from denite.util import parse_jump_line, expand, abspath
 
 

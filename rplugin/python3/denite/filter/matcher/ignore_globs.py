@@ -8,7 +8,7 @@ from os.path import isabs, sep
 from fnmatch import translate
 from re import search
 
-from denite.filter.base import Base
+from denite.base.filter import Base
 
 
 class Filter(Base):

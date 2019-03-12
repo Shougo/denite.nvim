@@ -4,7 +4,7 @@
 # License: MIT license
 # ============================================================================
 
-from denite.source.base import Base
+from denite.base.source import Base
 
 CHANGE_HIGHLIGHT_SYNTAX = [
     {'name': 'Text', 'link': 'Function', 're': r'\v(\d+\s+\d+\s+\d+\s+)\zs.*'},

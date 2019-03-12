@@ -7,7 +7,7 @@
 from abc import abstractmethod
 from copy import copy
 
-from denite.kind.base import Base
+from denite.base.kind import Base
 
 
 class Kind(Base):

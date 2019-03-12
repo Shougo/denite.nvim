@@ -6,7 +6,7 @@
 
 from os.path import isabs
 
-from denite.filter.base import Base
+from denite.base.filter import Base
 from denite.util import relpath
 
 

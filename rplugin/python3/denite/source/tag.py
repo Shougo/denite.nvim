@@ -7,7 +7,7 @@
 from os.path import exists
 import re
 
-from denite.source.base import Base
+from denite.base.source import Base
 from denite.util import parse_tagline
 
 

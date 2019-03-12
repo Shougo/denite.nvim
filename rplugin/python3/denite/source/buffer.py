@@ -8,7 +8,7 @@ from os.path import getatime, exists
 from time import localtime, strftime, time
 from sys import maxsize
 
-from denite.source.base import Base
+from denite.base.source import Base
 
 BUFFER_HIGHLIGHT_SYNTAX = [
     {'name': 'Name',     'link': 'Function',  're': r'[^/ \[\]]\+\s'},

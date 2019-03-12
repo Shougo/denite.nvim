@@ -7,7 +7,7 @@
 import glob
 import os
 
-from denite.source.base import Base
+from denite.base.source import Base
 from denite.util import abspath, expand
 
 

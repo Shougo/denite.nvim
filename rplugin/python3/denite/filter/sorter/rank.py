@@ -11,7 +11,7 @@
 
 import string
 
-from denite.filter.base import Base
+from denite.base.filter import Base
 from denite.util import split_input
 
 

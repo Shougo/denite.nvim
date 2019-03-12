@@ -6,7 +6,7 @@
 
 from os import path
 
-from denite.source.base import Base
+from denite.base.source import Base
 from denite.kind.command import Kind as Command
 
 from denite.util import globruntime

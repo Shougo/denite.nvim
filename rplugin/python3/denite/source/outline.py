@@ -8,7 +8,7 @@ from subprocess import check_output, CalledProcessError
 import re
 import tempfile
 
-from denite.source.base import Base
+from denite.base.source import Base
 from denite.util import parse_tagline
 
 
