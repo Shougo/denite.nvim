@@ -8,6 +8,7 @@ import argparse
 import shutil
 from os import path, pardir
 from os.path import relpath, isabs, isdir, join, normpath
+from sys import executable
 
 from denite.source.base import Base
 from denite.process import Process
@@ -137,8 +138,8 @@ class Source(Base):
         else:
             python_exe = 'python'
         if shutil.which(python_exe) is None:
-            raise FileNotFoundError(
-                f'Coudn''t find {python_exe} executable!')
+            # just use the current interpreter if python is not on the path
+            python_exe = executable
 
         return [python_exe, scantree_py, '--ignore', ignore,
                 '--path', ':directory']
