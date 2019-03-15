@@ -114,6 +114,14 @@ function! denite#util#open(filename) abort
   endif
 endfunction
 
+function! denite#util#cd(path) abort
+  if exists('*nvim_set_current_dir')
+    call nvim_set_current_dir(a:path)
+  else
+    silent execute 'lcd' fnameescape(a:path)
+  endif
+endfunction
+
 function! denite#util#split(string) abort
   return split(a:string, '\s*,\s*')
 endfunction
