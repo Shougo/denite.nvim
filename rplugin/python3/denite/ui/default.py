@@ -276,12 +276,9 @@ class Default(object):
         return direction
 
     def _get_wininfo(self):
-        wininfo = self._vim.call('denite#helper#_get_wininfo')
         return [
             self._vim.options['columns'], self._vim.options['lines'],
-            self._vim.call('tabpagebuflist'),
-            wininfo['bufnr'], wininfo['winnr'],
-            wininfo['winid'], wininfo['tabnr'],
+            self._vim.call('winnr', '$'), self._vim.call('win_getid'),
         ]
 
     def _switch_prev_buffer(self):
