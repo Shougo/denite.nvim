@@ -6,6 +6,7 @@
 
 import argparse
 import shutil
+from sys import executable
 from os import path, pardir
 from os.path import relpath, isabs, isdir, join, normpath
 
@@ -132,13 +133,5 @@ class Source(Base):
         scantree_py = normpath(join(current_folder,
                                     pardir, pardir, 'scantree.py'))
 
-        if shutil.which('python3') is not None:
-            python_exe = 'python3'
-        else:
-            python_exe = 'python'
-        if shutil.which(python_exe) is None:
-            raise FileNotFoundError(
-                f'Coudn''t find {python_exe} executable!')
-
-        return [python_exe, scantree_py, '--ignore', ignore,
+        return [executable, scantree_py, '--ignore', ignore,
                 '--path', ':directory']
