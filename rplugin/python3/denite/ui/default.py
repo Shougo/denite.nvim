@@ -1036,8 +1036,8 @@ class Default(object):
                                   self._context['buffer_name'])
             for mapping in ['i', 'a', '<CR>']:
                 self._vim.command(f'nnoremap <silent><buffer> {mapping} ' +
-                                ':<C-u>Denite -resume -buffer_name=' +
-                                f"{self._context['buffer_name']}<CR>")
+                                  ':<C-u>Denite -resume -buffer_name=' +
+                                  f"{self._context['buffer_name']}<CR>")
         self._is_suspend = True
         self._options['modifiable'] = False
         return STATUS_ACCEPT
