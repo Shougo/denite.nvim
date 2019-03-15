@@ -312,6 +312,8 @@ class Denite(object):
 
     def _load_sources(self, context):
         # Load sources from runtimepath
+        # Note: load "denite.source" for old sources compatibility
+        import denite.source # noqa
         rplugins = import_rplugins('Source', context, 'source', [
             normcase(normpath(x.path))
             for x in self._sources.values()
