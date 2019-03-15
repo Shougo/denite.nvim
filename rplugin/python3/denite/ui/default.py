@@ -198,11 +198,11 @@ class Default(object):
                 self._vim.call(
                     'nvim_open_win',
                     self._vim.call('bufnr', '%'), True,
-                    self._context['winwidth'],
-                    self._context['winheight'], {
+                    int(self._context['winwidth']),
+                    int(self._context['winheight']), {
                         'relative': 'editor',
-                        'row': self._context['winrow'],
-                        'col': self._context['wincol'],
+                        'row': int(self._context['winrow']),
+                        'col': int(self._context['wincol']),
                     })
             elif split != 'no':
                 vertical = 'vertical' if split == 'vertical' else ''
