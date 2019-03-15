@@ -131,7 +131,7 @@ EXAMPLES						*denite-examples*
 	call denite#custom#var('file/rec', 'command',
 	\ ['pt', '--follow', '--nocolor', '--nogroup',
 	\  (has('win32') ? '-g:' : '-g='), ''])
-	" For python script scantree.py (works if python 3.6.1+ in path)
+	" For python script scantree.py
 	" Read bellow on this file to learn more about scantree.py
 	call denite#custom#var('file/rec', 'command', ['scantree.py'])
 
