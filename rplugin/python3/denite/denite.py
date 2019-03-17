@@ -359,12 +359,19 @@ class Denite(object):
                 setattr(f, 'name', module_path.replace('.', '/'))
             f.path = path
             self._filters[f.name] = f
-            if f.name in self._custom['alias_filter']:
-                # Load alias
-                for alias in self._custom['alias_filter'][f.name]:
-                    self._filters[alias] = Filter(self._vim)
-                    self._filters[alias].name = alias
-                    self._filters[alias].path = path
+
+            if f.name not in self._custom['alias_filter']:
+                self._custom['alias_filter'][f.name] = []
+            alias_filter = self._custom['alias_filter'][f.name]
+
+            if '/' in f.name:
+                alias_filter.append(f.name.replace('/', '_'))
+
+            # Load alias
+            for alias in alias_filter:
+                self._filters[alias] = Filter(self._vim)
+                self._filters[alias].name = alias
+                self._filters[alias].path = path
 
     def _load_kinds(self, context):
         # Load kinds from runtimepath
