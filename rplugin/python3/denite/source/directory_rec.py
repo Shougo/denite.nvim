@@ -5,7 +5,7 @@
 # License: MIT license
 # ============================================================================
 
-from denite.source.file_rec import Source as Rec
+from denite.source.file.rec import Source as Rec
 
 
 class Source(Rec):

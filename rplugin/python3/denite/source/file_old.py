@@ -9,5 +9,5 @@ class Source(Base):
 
     def gather_candidates(self, context):
         self.error_message(context,
-                           'Please use "file/old" source insead.')
+                           'Please use "file/old" source instead.')
         return super().gather_candidates(context)
