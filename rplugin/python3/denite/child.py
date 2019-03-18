@@ -17,7 +17,7 @@ from collections import ChainMap
 from itertools import filterfalse
 
 
-class Denite(object):
+class Child(object):
 
     def __init__(self, vim):
         self._vim = vim
@@ -26,6 +26,30 @@ class Denite(object):
         self._kinds = {}
         self._runtimepath = ''
         self._current_sources = []
+
+    def main(self, name, args, queue_id):
+        ret = None
+        if name == 'start':
+            self.start(args[0])
+        elif name == 'gather_candidates':
+            self.gather_candidates(args[0])
+        elif name == 'on_init':
+            self.on_init(args[0])
+        elif name == 'on_close':
+            self.on_close(args[0])
+        elif name == 'filter_candidates':
+            ret = self.filter_candidates(args[0])
+        elif name == 'get_current_sources':
+            ret = self.get_current_sources()
+        elif name == 'do_action':
+            ret = self.do_action(args[0], args[1], args[2])
+        elif name == 'get_action':
+            ret = self.get_action(args[0], args[1], args[2])
+        elif name == 'get_action_names':
+            ret = self.get_action_names(args[0], args[1])
+        elif name == 'is_async':
+            ret = self.is_async()
+        return ret
 
     def start(self, context):
         self._custom = context['custom']
@@ -67,6 +91,51 @@ class Denite(object):
 
             context['messages'] = ctx['messages']
 
+    def on_init(self, context):
+        self._current_sources = []
+        index = 0
+        for [name, args] in [[x['name'], x['args']]
+                             for x in context['sources']]:
+            if name not in self._sources:
+                raise NameError('Source "' + name + '" is not found.')
+
+            source = copy.copy(self._sources[name])
+            source.context = copy.copy(context)
+            source.context['args'] = args
+            source.context['is_async'] = False
+            source.context['is_skipped'] = False
+            source.context['is_interactive'] = False
+            source.context['all_candidates'] = []
+            source.context['candidates'] = []
+            source.context['prev_time'] = time.time()
+            source.index = index
+
+            # Set the source attributes.
+            self._set_source_attribute(source, 'matchers')
+            self._set_source_attribute(source, 'sorters')
+            self._set_source_attribute(source, 'converters')
+            self._set_source_attribute(source, 'max_candidates')
+            source.vars.update(
+                get_custom_source(self._custom, source.name,
+                                  'vars', source.vars))
+            if not source.context['args']:
+                source.context['args'] = get_custom_source(
+                    self._custom, source.name, 'args', [])
+
+            if hasattr(source, 'on_init'):
+                source.on_init(source.context)
+            self._current_sources.append(source)
+            index += 1
+
+        for filter in [x for x in self._filters.values()
+                       if x.vars and x.name in self._custom['filter']]:
+            filter.vars.update(self._custom['filter'][filter.name])
+
+    def on_close(self, context):
+        for source in self._current_sources:
+            if hasattr(source, 'on_close'):
+                source.on_close(source.context)
+
     def filter_candidates(self, context):
         pattern = ''
         statuses = []
@@ -104,6 +173,67 @@ class Denite(object):
         if self.is_async():
             statuses.append('[async]')
         return (pattern, statuses, candidates)
+
+    def get_current_sources(self):
+        return self._current_sources
+
+    def do_action(self, context, action_name, targets):
+        action = self.get_action(context, action_name, targets)
+        if not action:
+            return True
+
+        for target in targets:
+            source = self._current_sources[int(target['source_index'])]
+            target['source_context'] = {
+                k: v for k, v in
+                source.context.items()
+                if k.startswith('__')
+            } if source.is_public_context else {}
+
+        context['targets'] = targets
+        return action['func'](context) if action['func'] else self._vim.call(
+            'denite#custom#_call_action',
+            action['kind'], action['name'], context)
+
+    def get_action(self, context, action_name, targets):
+        actions = set()
+        action = None
+        for target in targets:
+            action = self._get_action(context, action_name, target)
+            if action:
+                actions.add(action['name'])
+        if len(actions) > 1:
+            self.error('Multiple actions are detected: ' + action_name)
+            return {}
+        return action if actions else {}
+
+    def get_action_names(self, context, targets):
+        kinds = set()
+        for target in targets:
+            k = self._get_kind(context, target)
+            if k:
+                kinds.add(k)
+        if len(kinds) != 1:
+            if len(kinds) > 1:
+                self.error('Multiple kinds are detected')
+            return []
+
+        kind = kinds.pop()
+        actions = kind.get_action_names()
+        actions += self._get_custom_actions(kind.name).keys()
+        return actions
+
+    def is_async(self):
+        return len([x for x in self._current_sources
+                    if x.context['is_async'] or x.context['is_skipped']
+                    ]) > 0
+
+    def debug(self, expr):
+        debug(self._vim, expr)
+
+    def error(self, msg):
+        self._vim.call('denite#util#print_error', msg)
+        self._vim.call('getchar')
 
     def _filter_candidates(self, context):
         for source in self._current_sources:
@@ -168,112 +298,6 @@ class Denite(object):
 
             yield self._get_source_status(
                 ctx, source, entire, partial), partial, patterns
-
-    def on_init(self, context):
-        self._current_sources = []
-        index = 0
-        for [name, args] in [[x['name'], x['args']]
-                             for x in context['sources']]:
-            if name not in self._sources:
-                raise NameError('Source "' + name + '" is not found.')
-
-            source = copy.copy(self._sources[name])
-            source.context = copy.copy(context)
-            source.context['args'] = args
-            source.context['is_async'] = False
-            source.context['is_skipped'] = False
-            source.context['is_interactive'] = False
-            source.context['all_candidates'] = []
-            source.context['candidates'] = []
-            source.context['prev_time'] = time.time()
-            source.index = index
-
-            # Set the source attributes.
-            self._set_source_attribute(source, 'matchers')
-            self._set_source_attribute(source, 'sorters')
-            self._set_source_attribute(source, 'converters')
-            self._set_source_attribute(source, 'max_candidates')
-            source.vars.update(
-                get_custom_source(self._custom, source.name,
-                                  'vars', source.vars))
-            if not source.context['args']:
-                source.context['args'] = get_custom_source(
-                    self._custom, source.name, 'args', [])
-
-            if hasattr(source, 'on_init'):
-                source.on_init(source.context)
-            self._current_sources.append(source)
-            index += 1
-
-        for filter in [x for x in self._filters.values()
-                       if x.vars and x.name in self._custom['filter']]:
-            filter.vars.update(self._custom['filter'][filter.name])
-
-    def on_close(self, context):
-        for source in self._current_sources:
-            if hasattr(source, 'on_close'):
-                source.on_close(source.context)
-
-    def debug(self, expr):
-        debug(self._vim, expr)
-
-    def error(self, msg):
-        self._vim.call('denite#util#print_error', msg)
-        self._vim.call('getchar')
-
-    def get_current_sources(self):
-        return self._current_sources
-
-    def do_action(self, context, action_name, targets):
-        action = self.get_action(context, action_name, targets)
-        if not action:
-            return True
-
-        for target in targets:
-            source = self._current_sources[int(target['source_index'])]
-            target['source_context'] = {
-                k: v for k, v in
-                source.context.items()
-                if k.startswith('__')
-            } if source.is_public_context else {}
-
-        context['targets'] = targets
-        return action['func'](context) if action['func'] else self._vim.call(
-            'denite#custom#_call_action',
-            action['kind'], action['name'], context)
-
-    def get_action(self, context, action_name, targets):
-        actions = set()
-        action = None
-        for target in targets:
-            action = self._get_action(context, action_name, target)
-            if action:
-                actions.add(action['name'])
-        if len(actions) > 1:
-            self.error('Multiple actions are detected: ' + action_name)
-            return {}
-        return action if actions else {}
-
-    def get_action_names(self, context, targets):
-        kinds = set()
-        for target in targets:
-            k = self._get_kind(context, target)
-            if k:
-                kinds.add(k)
-        if len(kinds) != 1:
-            if len(kinds) > 1:
-                self.error('Multiple kinds are detected')
-            return []
-
-        kind = kinds.pop()
-        actions = kind.get_action_names()
-        actions += self._get_custom_actions(kind.name).keys()
-        return actions
-
-    def is_async(self):
-        return len([x for x in self._current_sources
-                    if x.context['is_async'] or x.context['is_skipped']
-                    ]) > 0
 
     def _gather_source_candidates(self, context, source):
         max_len = int(context['max_candidate_width']) * 2

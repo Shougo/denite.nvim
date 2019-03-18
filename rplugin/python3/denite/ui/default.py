@@ -14,7 +14,7 @@ from denite.util import (
     regex_convert_str_vim, clearmatch)
 from .action import DEFAULT_ACTION_KEYMAP
 from .prompt import DenitePrompt
-from .. import denite
+from denite.parent import SyncParent
 from ..prompt.prompt import STATUS_ACCEPT, STATUS_INTERRUPT
 
 
@@ -29,7 +29,7 @@ class Default(object):
 
     def __init__(self, vim):
         self._vim = vim
-        self._denite = denite.Denite(vim)
+        self._denite = None
         self._cursor = 0
         self._win_cursor = 1
         self._selected_candidates = []
@@ -68,6 +68,9 @@ class Default(object):
         self._sources_history = []
 
     def start(self, sources, context):
+        if not self._denite:
+            self._denite = SyncParent(self._vim)
+
         self._result = []
         context['sources_queue'] = [sources]
         self._sources_history = []
