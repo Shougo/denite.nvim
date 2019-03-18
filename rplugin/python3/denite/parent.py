@@ -25,11 +25,11 @@ class _Parent(object):
     def on_close(self, context):
         self._put('on_close', [context])
 
+    def init_syntax(self, context, is_multi):
+        self._put('init_syntax', [context, is_multi])
+
     def filter_candidates(self, context):
         return self._put('filter_candidates', [context])
-
-    def get_current_sources(self):
-        return self._put('get_current_sources', [])
 
     def do_action(self, context, action_name, targets):
         return self._put('do_action', [context, action_name, targets])

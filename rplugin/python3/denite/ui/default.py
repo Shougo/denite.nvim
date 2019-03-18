@@ -10,8 +10,7 @@ import weakref
 from itertools import groupby, takewhile
 
 from denite.util import (
-    clear_cmdline, echo, error, regex_convert_py_vim,
-    regex_convert_str_vim, clearmatch)
+    clear_cmdline, echo, error, regex_convert_py_vim, clearmatch)
 from .action import DEFAULT_ACTION_KEYMAP
 from .prompt import DenitePrompt
 from denite.parent import SyncParent
@@ -315,26 +314,7 @@ class Default(object):
                            ' conceal contained') % (
                                self._context['selected_icon']))
 
-        for source in [x for x in self._denite.get_current_sources()]:
-            name = re.sub('[^a-zA-Z0-9_]', '_', source.name)
-            source_name = self.get_display_source_name(source.name)
-
-            self._vim.command(
-                'highlight default link ' +
-                'deniteSourceLine_' + name +
-                ' Type'
-            )
-
-            syntax_line = ('syntax match %s /^ %s/ nextgroup=%s keepend' +
-                           ' contains=deniteConcealedMark') % (
-                'deniteSourceLine_' + name,
-                regex_convert_str_vim(source_name) +
-                               (' ' if source_name else ''),
-                source.syntax_name,
-            )
-            self._vim.command(syntax_line)
-            source.highlight()
-            source.define_syntax()
+        self._denite.init_syntax(self._context, self._is_multi)
 
     def init_cursor(self):
         self._win_cursor = 1

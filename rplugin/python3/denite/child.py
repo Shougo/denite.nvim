@@ -1,12 +1,12 @@
 # ============================================================================
-# FILE: denite.py
+# FILE: child.py
 # AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
 # License: MIT license
 # ============================================================================
 
-from denite.util import (get_custom_source, debug,
-                         import_rplugins, expand,
-                         split_input, abspath)
+from denite.util import (
+    get_custom_source, debug, regex_convert_str_vim,
+    import_rplugins, expand, split_input, abspath)
 
 import copy
 import os
@@ -37,10 +37,10 @@ class Child(object):
             self.on_init(args[0])
         elif name == 'on_close':
             self.on_close(args[0])
+        elif name == 'init_syntax':
+            self.init_syntax(args[0], args[1])
         elif name == 'filter_candidates':
             ret = self.filter_candidates(args[0])
-        elif name == 'get_current_sources':
-            ret = self.get_current_sources()
         elif name == 'do_action':
             ret = self.do_action(args[0], args[1], args[2])
         elif name == 'get_action':
@@ -136,6 +136,29 @@ class Child(object):
             if hasattr(source, 'on_close'):
                 source.on_close(source.context)
 
+    def init_syntax(self, context, is_multi):
+        for source in self._current_sources:
+            name = re.sub('[^a-zA-Z0-9_]', '_', source.name)
+            source_name = self._get_display_source_name(
+                context, is_multi, source.name)
+
+            self._vim.command(
+                'highlight default link ' +
+                'deniteSourceLine_' + name +
+                ' Type'
+            )
+
+            syntax_line = ('syntax match %s /^ %s/ nextgroup=%s keepend' +
+                           ' contains=deniteConcealedMark') % (
+                'deniteSourceLine_' + name,
+                regex_convert_str_vim(source_name) +
+                               (' ' if source_name else ''),
+                source.syntax_name,
+            )
+            self._vim.command(syntax_line)
+            source.highlight()
+            source.define_syntax()
+
     def filter_candidates(self, context):
         pattern = ''
         statuses = []
@@ -173,9 +196,6 @@ class Child(object):
         if self.is_async():
             statuses.append('[async]')
         return (pattern, statuses, candidates)
-
-    def get_current_sources(self):
-        return self._current_sources
 
     def do_action(self, context, action_name, targets):
         action = self.get_action(context, action_name, targets)
@@ -480,3 +500,13 @@ class Child(object):
         if kind_name in self._custom['action']:
             actions.update(self._custom['action'][kind_name])
         return actions
+
+    def _get_display_source_name(self, context, is_multi, name):
+        source_names = context['source_names']
+        if not is_multi or source_names == 'hide':
+            source_name = ''
+        else:
+            short_name = (re.sub(r'([a-zA-Z])[a-zA-Z]+', r'\1', name)
+                          if re.search(r'[^a-zA-Z]', name) else name[:2])
+            source_name = short_name if source_names == 'short' else name
+        return source_name
