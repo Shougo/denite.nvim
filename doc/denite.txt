@@ -2310,7 +2310,7 @@ A: No. It is not supported.
 Q: Can I make denite window always use 40% of the current window?
 
 A: >
-	Denite file -winheight=`60*winheight(0)/100`
+	Denite file -winheight=`40*winheight(0)/100`
 
 Q: Alt keymappings does not work.
 >
