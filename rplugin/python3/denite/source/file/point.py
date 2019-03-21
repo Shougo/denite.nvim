@@ -20,7 +20,7 @@ class Source(Base):
         self.kind = 'file'
 
     def on_init(self, context):
-        context['__line'] = self.vim.current.line
+        context['__line'] = self.vim.call('getline', '.')
         context['__cfile'] = expand(self.vim.call('expand', '<cfile>'))
 
     def gather_candidates(self, context):
