@@ -1,6 +1,6 @@
 *denite.txt*	Dark powered asynchronous unite all interfaces for NeoVim/Vim.
 
-Version: 2.0
+Version: 2.1
 Author:  Shougo <Shougo.Matsu at gmail.com>
 License: MIT license
 
@@ -109,6 +109,12 @@ You can check the Python3 installation |:checkhealth|
 command.
 
 For Vim8.0+:
+
+Please install nvim-yarp plugin for Vim8.
+https://github.com/roxma/nvim-yarp
+
+Please install vim-hug-neovim-rpc plugin for Vim8.
+https://github.com/roxma/vim-hug-neovim-rpc
 
 Use |:python3| enabled Vim.
 
@@ -2364,6 +2370,9 @@ COMPATIBILITY						*denite-compatibility*
 2019.03.24
 * "-auto-highlight" and "-auto-preview" options are deprecated.
   Please use "-auto-action" option instead.
+
+2019.03.21
+* nvim-yarp is needed for Vim8.
 
 2019.03.17
 * "file_old", "file_point" and "file_rec" sources are deprecated.

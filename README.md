@@ -66,6 +66,12 @@ you should read `:help provider-python`.
 
 For Vim8:
 
+Please install nvim-yarp plugin for Vim8.
+https://github.com/roxma/nvim-yarp
+
+Please install vim-hug-neovim-rpc plugin for Vim8.
+https://github.com/roxma/vim-hug-neovim-rpc
+
 You must install "pynvim" module with pip
 
     pip3 install --user pynvim
