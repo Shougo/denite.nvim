@@ -4,11 +4,11 @@
 # License: MIT license
 # ============================================================================
 
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 import denite.util
 
 
-class Base(object):
+class Base(ABC):
 
     def __init__(self, vim):
         self.vim = vim
@@ -45,7 +45,7 @@ class Base(object):
         context['error_messages'].append(prefix + str(expr))
 
     @abstractmethod
-    def gather_candidate(self, context):
+    def gather_candidates(self, context):
         pass
 
     def debug(self, expr):
