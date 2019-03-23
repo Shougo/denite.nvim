@@ -8,7 +8,7 @@ import argparse
 import shutil
 from sys import executable, base_exec_prefix
 from os import path, pardir
-from os.path import relpath, isabs, isdir, join, normpath, basename
+from os.path import relpath, isabs, isdir, join, normpath, basename, exists
 
 from denite.base.source import Base
 from denite.process import Process
@@ -125,7 +125,7 @@ class Source(Base):
                 return shutil.which(exe)
 
         for name in (join(base_exec_prefix, v) for v in ['python3', 'python',
-                join('bin', 'python3'), join('bin', 'python')]):
+                     join('bin', 'python3'), join('bin', 'python')]):
             if exists(name):
                 return name
 
