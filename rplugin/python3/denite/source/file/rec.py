@@ -6,9 +6,9 @@
 
 import argparse
 import shutil
-from sys import executable
+from sys import executable, base_exec_prefix
 from os import path, pardir
-from os.path import relpath, isabs, isdir, join, normpath
+from os.path import relpath, isabs, isdir, join, normpath, basename
 
 from denite.base.source import Base
 from denite.process import Process
@@ -115,6 +115,23 @@ class Source(Base):
 
         return candidates
 
+    @staticmethod
+    def get_python_exe():
+        if 'py' in basename(executable):
+            return executable
+
+        for exe in ['python3', 'python']:
+            if shutil.which(exe) is not None:
+                return shutil.which(exe)
+
+        for name in (join(base_exec_prefix, v) for v in ['python3', 'python',
+                join('bin', 'python3'), join('bin', 'python')]):
+            if exists(name):
+                return name
+
+        # return sys.executable anyway. This may not work on windows
+        return executable
+
     def parse_command_for_scantree(self, cmd):
         """Given the user choice for --ignore get the corresponding value"""
 
@@ -133,5 +150,5 @@ class Source(Base):
         scantree_py = normpath(join(current_folder,
                                     pardir, pardir, 'scantree.py'))
 
-        return [executable, scantree_py, '--ignore', ignore,
+        return [Source.get_python_exe(), scantree_py, '--ignore', ignore,
                 '--path', ':directory']
