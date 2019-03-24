@@ -7,9 +7,9 @@
 from importlib.util import find_spec
 from denite.rplugin import Rplugin
 
-# if find_spec('yarp'):
-#     import vim
-if find_spec('pynvim'):
+if find_spec('yarp'):
+    import vim
+elif find_spec('pynvim'):
     import pynvim
     vim = pynvim
 else:
@@ -36,15 +36,15 @@ if hasattr(vim, 'plugin'):
         def take_action(self, args):
             return self._rplugin.take_action(args)
 
-# if find_spec('yarp'):
-#
-#     global_denite = Rplugin(vim)
-#
-#     def _denite_init():
-#         pass
-#
-#     def _denite_start(args):
-#         global_denite.start(args)
-#
-#     def _denite_do_action(args):
-#         return global_denite.do_action(args)
+if find_spec('yarp'):
+
+    global_denite = Rplugin(vim)
+
+    def _denite_init():
+        pass
+
+    def _denite_start(args):
+        global_denite.start(args)
+
+    def _denite_do_action(args):
+        return global_denite.do_action(args)
