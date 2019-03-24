@@ -7,6 +7,8 @@
 from abc import ABC, abstractmethod
 import denite.util
 
+from denite.base.kind import Base as Kind
+
 
 class Base(ABC):
 
@@ -14,7 +16,7 @@ class Base(ABC):
         self.vim = vim
         self.name = 'base'
         self.syntax_name = ''
-        self.kind = 'base'
+        self.kind = Kind(self.vim)
         self.default_action = 'default'
         self.max_candidates = 1000
         self.matchers = ['matcher/fuzzy']

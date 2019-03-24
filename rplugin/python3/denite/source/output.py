@@ -13,7 +13,6 @@ class Source(Base):
     def __init__(self, vim):
         super().__init__(vim)
         self.name = 'output'
-        # why doesn't this seem to be working?
         self.default_action = 'yank'
 
     def define_syntax(self):

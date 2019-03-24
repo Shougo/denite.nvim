@@ -257,14 +257,15 @@ class Denite(object):
     def get_action_names(self, context, targets):
         kinds = set()
         for target in targets:
-            kinds.add(self._get_kind(context, target))
+            k = self._get_kind(context, target)
+            if k:
+                kinds.add(k)
         if len(kinds) != 1:
-            self.error('Multiple kinds are detected')
+            if len(kinds) > 1:
+                self.error('Multiple kinds are detected')
             return []
 
         kind = kinds.pop()
-        if not kind:
-            return []
         actions = kind.get_action_names()
         actions += self._get_custom_actions(kind.name).keys()
         return actions
