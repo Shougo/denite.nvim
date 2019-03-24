@@ -218,7 +218,7 @@ class Default(object):
 
         self._options = self._vim.current.buffer.options
         self._options['buftype'] = 'nofile'
-        self._options['bufhidden'] = 'hide'
+        self._options['bufhidden'] = 'wipe'
         self._options['swapfile'] = False
         self._options['buflisted'] = False
         self._options['modeline'] = False
