@@ -29,6 +29,10 @@ class Context(object):
                     'denite#init#_deprecated_options').items()
                 if x[0] in context and x[1]]:
             context[new_option] = context[old_option]
+        if context.get('auto_highlight'):
+            context['auto_action'] = 'highlight'
+        if context.get('auto_preview'):
+            context['auto_action'] = 'preview'
 
         return context
 

@@ -75,8 +75,7 @@ endfunction
 function! denite#init#_user_options() abort
   return {
         \ 'auto_accel': v:false,
-        \ 'auto_highlight': v:false,
-        \ 'auto_preview': v:false,
+        \ 'auto_action': '',
         \ 'auto_resize': v:false,
         \ 'auto_resume': v:false,
         \ 'buffer_name': 'default',
@@ -132,6 +131,8 @@ function! denite#init#_user_options() abort
 endfunction
 function! denite#init#_deprecated_options() abort
   return {
+        \ 'auto_highlight': '',
+        \ 'auto_preview': '',
         \ 'select': 'cursor_pos',
         \ 'force_quit': '',
         \ 'quit': '',

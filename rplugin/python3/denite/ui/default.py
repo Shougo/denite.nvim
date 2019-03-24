@@ -544,10 +544,8 @@ class Default(object):
         if self._win_cursor != self._vim.call('line', '.'):
             self._vim.call('cursor', [self._win_cursor, 1])
 
-        if self._context['auto_preview']:
-            self.do_action('preview')
-        if self._context['auto_highlight']:
-            self.do_action('highlight')
+        if self._context['auto_action']:
+            self.do_action(self._context['auto_action'])
 
     def change_mode(self, mode):
         self._current_mode = mode

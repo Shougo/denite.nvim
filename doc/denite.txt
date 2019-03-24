@@ -1086,17 +1086,10 @@ OPTIONS							*denite-options*
 		Accelerate the cursor moving automatically.
 		Default: false
 
-						*denite-option-auto-highlight*
--auto-highlight
-		When you select a candidate, it runs the "highlight" action
-		automatically.
-		Default: false
-
-						*denite-option-auto-preview*
--auto-preview
-		When you select a candidate, it runs the "preview" action
-		automatically.
-		Default: false
+						*denite-option-auto-action*
+-auto-action={action}
+		When you select a candidate, it runs the action automatically.
+		Default: ""
 
 						*denite-option-auto-resize*
 -auto-resize
@@ -2367,6 +2360,10 @@ https://github.com/raghur/fruzzy
 
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
+
+2019.03.24
+* "-auto-highlight" and "-auto-preview" options are deprecated.
+  Please use "-auto-action" option instead.
 
 2019.03.17
 * "file_old", "file_point" and "file_rec" sources are deprecated.
