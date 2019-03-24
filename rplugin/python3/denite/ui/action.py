@@ -18,6 +18,10 @@ def _do_action(prompt, params):
     return prompt.denite.do_action(params)
 
 
+def _do_previous_action(prompt, params):
+    return prompt.denite.do_action(prompt.denite._prev_action)
+
+
 def _choose_action(prompt, params):
     return prompt.denite.choose_action()
 
@@ -343,6 +347,7 @@ DEFAULT_ACTION_RULES = [
     ('denite:change_word', _change_word),
     ('denite:choose_action', _choose_action),
     ('denite:do_action', _do_action),
+    ('denite:do_previous_action', _do_previous_action),
     ('denite:enter_mode', _enter_mode),
     ('denite:input_command_line', _input_command_line),
     ('denite:insert_to_head', _insert_to_head),
@@ -458,6 +463,7 @@ DEFAULT_ACTION_KEYMAP = {
         ('<C-L>', '<denite:redraw>', 'noremap'),
         ('<C-R>', '<denite:restart>', 'noremap'),
         ('<Space>', '<denite:toggle_select_down>', 'noremap'),
+        ('.', '<denite:do_previous_action>', 'noremap'),
         ('*', '<denite:toggle_select_all>', 'noremap'),
         ('M', '<denite:print_messages>', 'noremap'),
         ('P', '<denite:change_path>', 'noremap'),

@@ -60,6 +60,7 @@ class Default(object):
         self._guicursor = ''
         self._titlestring = ''
         self._ruler = False
+        self._prev_action = ''
         self._prev_status = {}
         self._prev_curpos = []
         self._is_suspend = False
@@ -693,9 +694,10 @@ class Default(object):
 
     def do_action(self, action_name, command=''):
         candidates = self.get_selected_candidates()
-        if not candidates:
+        if not candidates or not action_name:
             return
 
+        self._prev_action = action_name
         action = self._denite.get_action(
             self._context, action_name, candidates)
         if not action:

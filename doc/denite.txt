@@ -429,6 +429,10 @@ are on the neovim-prompt's builtin actions/mappings.
 		Close current Denite buffer and fire {action} action.
 		You can find the actions list in |denite-kinds|.
 
+				*denite-map-do_previous_action*
+<denite:do_previous_action>
+		Fire the previous action.
+
 				*denite-map-enter_mode*
 <denite:enter_mode:{mode}>
 		Enter to {mode} mode.
@@ -783,6 +787,7 @@ All mode mappings (override by mode mappings).
 --------	-----------------------------
 $		<denite:move_caret_to_tail>
 *		<denite:toggle_select_all>
+.		<denite:do_previous_action>
 0		<denite:move_caret_to_head>
 <C-B>		<denite:scroll_page_backwards>
 <C-D>		<denite:scroll_window_downwards>
