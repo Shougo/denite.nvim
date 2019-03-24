@@ -200,16 +200,17 @@ function! denite#helper#_set_available_sources(source_names) abort
   let s:source_names = a:source_names
 endfunction
 function! s:_get_source_name(path) abort
-  if a:path ==# '__init__.py' || a:path ==# 'base.py'
+  let path_f = fnamemodify(a:path, ':gs?\\?/?')
+  if path_f ==# '__init__.py' || path_f ==# 'base.py'
     return ''
-  elseif a:path[-12:] ==# '/__init__.py'
-    if getfsize(a:path) == 0
+  elseif path_f[-12:] ==# '/__init__.py'
+    if getfsize(path_f) == 0
       " Probably the file exists for making a namespace so ignore
       return ''
     endif
-    return fnamemodify(a:path, ':h:s?.*/rplugin/python3/denite/source/??:r')
+    return fnamemodify(path_f, ':h:s?.*/rplugin/python3/denite/source/??:r')
   endif
-  return fnamemodify(a:path, ':s?.*/rplugin/python3/denite/source/??:r')
+  return fnamemodify(path_f, ':s?.*/rplugin/python3/denite/source/??:r')
 endfunction
 
 function! denite#helper#_get_wininfo() abort
