@@ -5,6 +5,7 @@
 # ============================================================================
 
 import importlib.util
+import inspect
 import re
 import os
 import sys
@@ -216,11 +217,6 @@ def find_rplugins(context, source, loaded_paths):
                     # __init__.py in {root} does not have implementation
                     # so skip
                     continue
-                elif module_path == 'base' and source != 'kind':
-                    # base.py in {root} does not have implementation so skip
-                    # NOTE: kind/base.py DOES have implementation so do
-                    # NOT skip
-                    continue
                 if os.path.basename(module_path) == '__init__':
                     # 'foo/__init__.py' should be loaded as a module 'foo'
                     module_path = os.path.dirname(module_path)
@@ -244,7 +240,8 @@ def import_rplugins(name, context, source, loaded_paths):
         spec = importlib.util.spec_from_file_location(module_name, path)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
-        if not hasattr(module, name):
+        if (not hasattr(module, name) or
+                inspect.isabstract(getattr(module, name))):
             continue
         yield (getattr(module, name), path, module_path)
 
