@@ -1677,6 +1677,15 @@ register	Gather the registers.
 						*denite-source-source*
 source		Gather Denite source names.
 
+						*denite-source-spell*
+spell		Gather spell suggestions.
+
+		Source arguments:
+		1. Word
+
+		If no source arguments passed then current
+		word under cursor is used.
+
 						*denite-source-tag*
 tag		Gather results of |tagfiles()|.
 		Note: If the args 0 is "include", it will gather the results
