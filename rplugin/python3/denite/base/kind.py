@@ -36,7 +36,7 @@ class Base(object):
         ]))
 
     def action_replace(self, context):
-        self.vim.command('normal! gv')
+        self.vim.command('normal! viw')
         self.action_append(context)
 
     def action_append(self, context):
