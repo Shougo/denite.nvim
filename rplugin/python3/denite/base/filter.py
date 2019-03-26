@@ -4,11 +4,11 @@
 # License: MIT license
 # ============================================================================
 
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 import denite.util
 
 
-class Base(object):
+class Base(ABC):
 
     def __init__(self, vim):
         self.vim = vim
