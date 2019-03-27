@@ -71,12 +71,16 @@ class Source(Base):
                 return []
 
             candidates = []
-            with open(tf.name, encoding=self.vars['encoding'], errors='replace') as f:
+            with open(tf.name, encoding=self.vars['encoding'],
+                      errors='replace') as f:
                 for line in f:
                     if re.match('!', line) or not line:
                         continue
                     info = parse_tagline(line.rstrip(), tf.name)
-                    candidate = {'word': info['name'], 'action__path': info['file']}
+                    candidate = {
+                        'word': info['name'],
+                        'action__path': info['file']
+                    }
 
                     info['name'] = (
                         (info['name'][:33] + '..')
