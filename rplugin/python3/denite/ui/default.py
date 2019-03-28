@@ -10,11 +10,10 @@ import weakref
 from itertools import groupby, takewhile
 
 from denite.util import (
-    clear_cmdline, echo, error, regex_convert_py_vim,
-    regex_convert_str_vim, clearmatch)
+    clear_cmdline, echo, error, regex_convert_py_vim, clearmatch)
 from .action import DEFAULT_ACTION_KEYMAP
 from .prompt import DenitePrompt
-from .. import denite
+from denite.parent import SyncParent
 from ..prompt.prompt import STATUS_ACCEPT, STATUS_INTERRUPT
 
 
@@ -29,7 +28,7 @@ class Default(object):
 
     def __init__(self, vim):
         self._vim = vim
-        self._denite = denite.Denite(vim)
+        self._denite = None
         self._cursor = 0
         self._win_cursor = 1
         self._selected_candidates = []
@@ -68,6 +67,9 @@ class Default(object):
         self._sources_history = []
 
     def start(self, sources, context):
+        if not self._denite:
+            self._denite = SyncParent(self._vim)
+
         self._result = []
         context['sources_queue'] = [sources]
         self._sources_history = []
@@ -313,26 +315,7 @@ class Default(object):
                            ' conceal contained') % (
                                self._context['selected_icon']))
 
-        for source in [x for x in self._denite.get_current_sources()]:
-            name = re.sub('[^a-zA-Z0-9_]', '_', source.name)
-            source_name = self.get_display_source_name(source.name)
-
-            self._vim.command(
-                'highlight default link ' +
-                'deniteSourceLine_' + name +
-                ' Type'
-            )
-
-            syntax_line = ('syntax match %s /^ %s/ nextgroup=%s keepend' +
-                           ' contains=deniteConcealedMark') % (
-                'deniteSourceLine_' + name,
-                regex_convert_str_vim(source_name) +
-                               (' ' if source_name else ''),
-                source.syntax_name,
-            )
-            self._vim.command(syntax_line)
-            source.highlight()
-            source.define_syntax()
+        self._denite.init_syntax(self._context, self._is_multi)
 
     def init_cursor(self):
         self._win_cursor = 1
