@@ -9,6 +9,7 @@ import inspect
 import re
 import os
 import sys
+import traceback
 
 from glob import glob
 from os.path import normpath, normcase, join, dirname, exists
@@ -44,6 +45,19 @@ def debug(vim, expr):
 def error(vim, expr):
     string = (expr if isinstance(expr, str) else str(expr))
     vim.call('denite#util#print_error', string)
+
+
+def error_tb(vim, msg):
+    lines = []
+    t, v, tb = sys.exc_info()
+    if t and v and tb:
+        lines += traceback.format_exc().splitlines()
+    lines += ['%s.  Use :messages / see above for error details.' % msg]
+    if hasattr(vim, 'err_write'):
+        vim.err_write('[denite] %s\n' % '\n'.join(lines))
+    else:
+        for line in lines:
+            error(vim, line)
 
 
 def clear_cmdline(vim):
