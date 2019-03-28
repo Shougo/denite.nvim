@@ -22,7 +22,6 @@ class Kind(Openable):
         self.default_action = 'open'
         self.persist_actions += ['preview', 'highlight']
         self._previewed_target = {}
-        self._previewed_buffers = {}
 
     def action_open(self, context):
         self._open(context, 'edit')
@@ -61,15 +60,12 @@ class Kind(Openable):
         self.vim.command('wincmd P')
 
         if not listed:
-            self._previewed_buffers[
-                target['action__path']] = self.vim.call('bufnr', '%')
+            self._add_previewed_buffer(self.vim.call('bufnr', '%'))
         self._jump(context, target)
         self._highlight(context, int(target.get('action__line', 0)))
 
         self.vim.call('win_gotoid', prev_id)
         self._previewed_target = target
-
-        self._cleanup()
 
     def action_highlight(self, context):
         target = context['targets'][0]
@@ -120,34 +116,30 @@ class Kind(Openable):
         cwd = self.vim.call('getcwd')
         for target in context['targets']:
             if 'action__bufnr' in target:
-                self.vim.command('buffer' + str(target['action__bufnr']))
-            else:
-                path = target['action__path']
-                match_path = f'^{path}$'
+                bufnr = target['action__bufnr']
+                self._remove_previewed_buffer(bufnr)
+                self.vim.command('buffer' + str(bufnr))
+                continue
 
-                if re.match('https?://', path):
-                    # URI
-                    self.vim.call('denite#util#open', path)
-                    continue
-                if path.startswith(cwd):
-                    path = os.path.relpath(path, cwd)
+            path = target['action__path']
+            match_path = f'^{path}$'
 
-                bufnr = self.vim.call('bufnr', match_path)
-                if bufnr <= 0 or not self.vim.call('buflisted', bufnr):
-                    self.vim.call(
-                        'denite#util#execute_path', command, path)
-                elif bufnr != self.vim.current.buffer.number:
-                    self.vim.command('buffer' + str(bufnr))
+            if re.match('https?://', path):
+                # URI
+                self.vim.call('denite#util#open', path)
+                continue
+            if path.startswith(cwd):
+                path = os.path.relpath(path, cwd)
 
-                if path in self._previewed_buffers:
-                    self._previewed_buffers.pop(path)
+            bufnr = self.vim.call('bufnr', match_path)
+            if bufnr <= 0 or not self.vim.call('buflisted', bufnr):
+                self.vim.call(
+                    'denite#util#execute_path', command, path)
+            elif bufnr != self.vim.current.buffer.number:
+                self.vim.command('buffer' + str(bufnr))
+
+            self._remove_previewed_buffer(bufnr)
             self._jump(context, target)
-
-    def _cleanup(self):
-        for bufnr in self._previewed_buffers.values():
-            if not self.vim.call('win_findbuf', bufnr) and self.vim.call(
-                    'buflisted', bufnr):
-                self.vim.command('silent bdelete ' + str(bufnr))
 
     def _highlight(self, context, line):
         util.clearmatch(self.vim)
@@ -193,3 +185,14 @@ class Kind(Openable):
             return None
         winids = self.vim.call('win_findbuf', bufnr)
         return None if len(winids) == 0 else winids[0]
+
+    def _add_previewed_buffer(self, bufnr):
+        previewed_buffers = self._vim.vars['denite#_previewed_buffers']
+        previewed_buffers[str(bufnr)] = 1
+        self._vim.vars['denite#_previewed_buffers'] = previewed_buffers
+
+    def _remove_previewed_buffer(self, bufnr):
+        previewed_buffers = self._vim.vars['denite#_previewed_buffers']
+        if str(bufnr) in previewed_buffers:
+            previewed_buffers.remove(str(bufnr))
+        self._vim.vars['denite#_previewed_buffers'] = previewed_buffers

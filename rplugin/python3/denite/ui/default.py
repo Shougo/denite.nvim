@@ -230,6 +230,8 @@ class Default(object):
 
         self._bufvars['denite_statusline'] = {}
 
+        self._vim.vars['denite#_previewed_buffers'] = {}
+
         self._vim.command('silent doautocmd WinEnter')
         self._vim.command('silent doautocmd BufWinEnter')
         self._vim.command('doautocmd FileType denite')
@@ -574,9 +576,16 @@ class Default(object):
         self.update_status()
 
     def cleanup(self):
+        # Clear previewed buffers
         if not self._is_suspend and not self._context['has_preview_window']:
             self._vim.command('pclose!')
+        for bufnr in self._vim.vars['denite#_previewed_buffers'].keys():
+            if not self._vim.call('win_findbuf', bufnr):
+                self._vim.command('silent bdelete ' + str(bufnr))
+        self._vim.vars['denite#_previewed_buffers'] = {}
+
         clearmatch(self._vim)
+
         if not self._context['immediately']:
             # Redraw to clear prompt
             self._vim.command('redraw | echo ""')
