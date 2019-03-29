@@ -117,26 +117,24 @@ class Kind(Openable):
         for target in context['targets']:
             if 'action__bufnr' in target:
                 bufnr = target['action__bufnr']
-                self._remove_previewed_buffer(bufnr)
                 self.vim.command('buffer' + str(bufnr))
-                continue
+            else:
+                path = target['action__path']
+                match_path = f'^{path}$'
 
-            path = target['action__path']
-            match_path = f'^{path}$'
+                if re.match('https?://', path):
+                    # URI
+                    self.vim.call('denite#util#open', path)
+                    continue
+                if path.startswith(cwd):
+                    path = os.path.relpath(path, cwd)
 
-            if re.match('https?://', path):
-                # URI
-                self.vim.call('denite#util#open', path)
-                continue
-            if path.startswith(cwd):
-                path = os.path.relpath(path, cwd)
-
-            bufnr = self.vim.call('bufnr', match_path)
-            if bufnr <= 0 or not self.vim.call('buflisted', bufnr):
-                self.vim.call(
-                    'denite#util#execute_path', command, path)
-            elif bufnr != self.vim.current.buffer.number:
-                self.vim.command('buffer' + str(bufnr))
+                bufnr = self.vim.call('bufnr', match_path)
+                if bufnr <= 0 or not self.vim.call('buflisted', bufnr):
+                    self.vim.call(
+                        'denite#util#execute_path', command, path)
+                elif bufnr != self.vim.current.buffer.number:
+                    self.vim.command('buffer' + str(bufnr))
 
             self._remove_previewed_buffer(bufnr)
             self._jump(context, target)
