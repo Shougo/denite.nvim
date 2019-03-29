@@ -42,9 +42,6 @@ class _Parent(object):
     def get_action_names(self, context, targets):
         return self._put('get_action_names', [context, targets])
 
-    def is_async(self):
-        return self._put('is_async', [])
-
 
 class SyncParent(_Parent):
     def _start_process(self):
