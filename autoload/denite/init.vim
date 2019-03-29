@@ -49,6 +49,7 @@ function! denite#init#_initialize() abort
       endif
       call _denite_init()
     endif
+    call s:initialize_variables()
   catch
     if denite#util#has_yarp()
       if !has('nvim') && !exists('*neovim_rpc#serveraddr')
@@ -68,6 +69,11 @@ function! denite#init#_initialize() abort
     endif
     return 1
   endtry
+endfunction
+function! s:initialize_variables() abort
+  let g:denite#_previewed_buffers = {}
+  let g:denite#_ret = {}
+  let g:denite#_async_ret = {}
 endfunction
 
 function! denite#init#_user_options() abort

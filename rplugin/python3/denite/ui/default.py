@@ -328,8 +328,8 @@ class Default(object):
             self.move_to_last_line()
 
     def update_candidates(self):
-        (pattern, statuses,
-         self._candidates) = self._denite.filter_candidates(self._context)
+        [pattern, statuses,
+         self._candidates] = self._denite.filter_candidates(self._context)
 
         prev_matched_pattern = self._matched_pattern
         self._matched_pattern = pattern
