@@ -195,10 +195,10 @@ class Child(object):
             candidates.reverse()
         if self.is_async():
             statuses.append('[async]')
-        return (pattern, statuses, candidates)
+        return [pattern, statuses, candidates]
 
     def do_action(self, context, action_name, targets):
-        action = self.get_action(context, action_name, targets)
+        action = self._get_action_targets(context, action_name, targets)
         if not action:
             return True
 
@@ -216,16 +216,16 @@ class Child(object):
             action['kind'], action['name'], context)
 
     def get_action(self, context, action_name, targets):
-        actions = set()
-        action = None
-        for target in targets:
-            action = self._get_action(context, action_name, target)
-            if action:
-                actions.add(action['name'])
-        if len(actions) > 1:
-            self.error('Multiple actions are detected: ' + action_name)
-            return {}
-        return action if actions else {}
+        action = self._get_action_targets(context, action_name, targets)
+        if not action:
+            return action
+
+        return {
+            'name': action['name'],
+            'kind': action['kind'],
+            'is_quit': action['is_quit'],
+            'is_redraw': action['is_redraw'],
+        }
 
     def get_action_names(self, context, targets):
         kinds = set()
@@ -325,6 +325,18 @@ class Child(object):
         for candidate in [x for x in candidates if len(x['word']) > max_len]:
             candidate['word'] = candidate['word'][: max_len]
         return candidates
+
+    def _get_action_targets(self, context, action_name, targets):
+        actions = set()
+        action = None
+        for target in targets:
+            action = self._get_action_target(context, action_name, target)
+            if action:
+                actions.add(action['name'])
+        if len(actions) > 1:
+            self.error('Multiple actions are detected: ' + action_name)
+            return {}
+        return action if actions else {}
 
     def _get_source_status(self, context, source, entire, partial):
         return (source.get_status(context) if not partial else
@@ -455,7 +467,7 @@ class Child(object):
 
         return kind
 
-    def _get_action(self, context, action_name, target):
+    def _get_action_target(self, context, action_name, target):
         kind = self._get_kind(context, target)
         if not kind:
             return {}

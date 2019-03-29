@@ -4,6 +4,8 @@
 # License: MIT license
 # ============================================================================
 
+import time
+
 
 class _Parent(object):
     def __init__(self, vim):
@@ -50,4 +52,15 @@ class SyncParent(_Parent):
         self._child = Child(self._vim)
 
     def _put(self, name, args):
-        return self._child.main(name, args, queue_id=None)
+        queue_id = str(int(time.time() * 1000))
+        self._vim.vars['denite#_ret'] = {}
+
+        ret = self._child.main(name, args, queue_id=queue_id)
+        if not ret:
+            return
+
+        _ret = self._vim.vars['denite#_ret']
+        _ret[queue_id] = ret
+        self._vim.vars['denite#_ret'] = _ret
+
+        return self._vim.vars['denite#_ret'][queue_id]
