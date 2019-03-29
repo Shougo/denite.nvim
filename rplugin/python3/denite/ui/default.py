@@ -20,7 +20,7 @@ from ..prompt.prompt import STATUS_ACCEPT, STATUS_INTERRUPT
 class Default(object):
     @property
     def is_async(self):
-        return self._denite.is_async()
+        return self._is_async
 
     @property
     def current_mode(self):
@@ -48,6 +48,7 @@ class Default(object):
         self._winminheight = -1
         self._scroll = 0
         self._is_multi = False
+        self._is_async = False
         self._matched_pattern = ''
         self._displayed_texts = []
         self._statusline_sources = ''
@@ -330,7 +331,7 @@ class Default(object):
             self.move_to_last_line()
 
     def update_candidates(self):
-        [pattern, statuses,
+        [self._is_async, pattern, statuses,
          self._candidates] = self._denite.filter_candidates(self._context)
 
         prev_matched_pattern = self._matched_pattern
@@ -344,7 +345,7 @@ class Default(object):
 
         updated = (self._displayed_texts != prev_displayed_texts or
                    self._matched_pattern != prev_matched_pattern)
-        if updated and self._denite.is_async() and self._context['reversed']:
+        if updated and self._is_async and self._context['reversed']:
             self.init_cursor()
 
         return updated
@@ -501,7 +502,7 @@ class Default(object):
             self.do_immediately()
             return True
         return not (self._context['empty'] or
-                    self._denite.is_async() or self._candidates)
+                    self._is_async or self._candidates)
 
     def do_immediately(self):
         goto = self._winid > 0 and self._vim.call(

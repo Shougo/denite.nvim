@@ -47,8 +47,6 @@ class Child(object):
             ret = self.get_action(args[0], args[1], args[2])
         elif name == 'get_action_names':
             ret = self.get_action_names(args[0], args[1])
-        elif name == 'is_async':
-            ret = self.is_async()
         return ret
 
     def start(self, context):
@@ -195,7 +193,7 @@ class Child(object):
             candidates.reverse()
         if self.is_async():
             statuses.append('[async]')
-        return [pattern, statuses, candidates]
+        return [self.is_async(), pattern, statuses, candidates]
 
     def do_action(self, context, action_name, targets):
         action = self._get_action_targets(context, action_name, targets)
