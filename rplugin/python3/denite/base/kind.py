@@ -23,7 +23,7 @@ class Base(object):
         self.vim.command('redraw')
         for target in context['targets']:
             self.debug(target)
-        self.vim.call('getchar')
+        self.vim.call('denite#util#getchar')
 
     def action_yank(self, context):
         _yank(self.vim, "\n".join([

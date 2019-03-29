@@ -63,6 +63,16 @@ function! denite#util#echo(color, string) abort
   echohl NONE
 endfunction
 
+function! denite#util#getchar(...) abort
+  try
+    return call('getchar', a:000)
+  catch /^Vim:Interrupt/
+    return 3
+  catch
+    return 0
+  endtry
+endfunction
+
 function! denite#util#open(filename) abort
   let filename = fnamemodify(a:filename, ':p')
 

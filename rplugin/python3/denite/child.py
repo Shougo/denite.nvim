@@ -253,7 +253,7 @@ class Child(object):
 
     def error(self, msg):
         self._vim.call('denite#util#print_error', msg)
-        self._vim.call('getchar')
+        self._vim.call('denite#util#getchar')
 
     def _filter_candidates(self, context):
         for source in self._current_sources:

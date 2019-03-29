@@ -233,7 +233,7 @@ def _change_sorters(prompt, params):
 def _print_messages(prompt, params):
     for mes in prompt.denite._context['messages']:
         debug(prompt.nvim, mes)
-    prompt.nvim.call('getchar')
+    prompt.nvim.call('denite#util#getchar')
 
 
 def _change_path(prompt, params):

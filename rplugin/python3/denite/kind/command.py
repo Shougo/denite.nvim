@@ -43,4 +43,4 @@ class Kind(Base):
             return
         self.vim.command('redraw')
         self.debug(output)
-        self.vim.call('getchar')
+        self.vim.call('denite#util#getchar')

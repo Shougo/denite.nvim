@@ -983,7 +983,8 @@ class Default(object):
 
         char = ''
         while char == '':
-            char = self._vim.call('nr2char', self._vim.call('getchar'))
+            char = self._vim.call('nr2char',
+                                  self._vim.call('denite#util#getchar'))
 
         quick_move_redraw(quick_move_table, False)
 
