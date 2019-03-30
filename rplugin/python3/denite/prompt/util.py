@@ -147,7 +147,7 @@ def getchar(nvim, *args):
         Union[int, bytes]: A int or bytes.
     """
     try:
-        ret = nvim.call('getchar', *args)
+        ret = nvim.call('denite#util#getchar', *args)
         if isinstance(ret, int):
             if ret == 0x03:
                 # NOTE
