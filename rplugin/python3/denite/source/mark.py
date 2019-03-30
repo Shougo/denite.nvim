@@ -53,7 +53,7 @@ class Source(Base):
             if self.empty_mark(mark_info):
                 continue
 
-            bufname = self.vim.call('bufname', bufnum)
+            bufname = self.vim.call('bufname', bufnum if bufnum != 0 else "%")
             path = self.vim.call('fnamemodify', bufname, ':p')
             if bufnum == 0:
                 file_or_text = 'text: ' + self.vim.call('getline', lnum)
