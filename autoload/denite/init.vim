@@ -74,6 +74,13 @@ function! s:initialize_variables() abort
   let g:denite#_previewed_buffers = {}
   let g:denite#_ret = {}
   let g:denite#_async_ret = {}
+  let g:denite#_serveraddr =
+        \ denite#util#has_yarp() ?
+        \ neovim_rpc#serveraddr() : v:servername
+  if g:denite#_serveraddr ==# ''
+    " Use NVIM_LISTEN_ADDRESS
+    let g:denite#_serveraddr = $NVIM_LISTEN_ADDRESS
+  endif
 endfunction
 
 function! denite#init#_user_options() abort

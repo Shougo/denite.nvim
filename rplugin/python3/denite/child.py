@@ -9,8 +9,10 @@ from denite.util import (
     import_rplugins, expand, split_input, abspath)
 
 import copy
+import msgpack
 import os
 import re
+import sys
 import time
 from os.path import normpath, normcase
 from collections import ChainMap
@@ -26,6 +28,38 @@ class Child(object):
         self._kinds = {}
         self._runtimepath = ''
         self._current_sources = []
+        self._unpacker = msgpack.Unpacker(
+            encoding='utf-8',
+            unicode_errors='surrogateescape')
+        self._packer = msgpack.Packer(
+            use_bin_type=True,
+            encoding='utf-8',
+            unicode_errors='surrogateescape')
+
+    def main_loop(self, stdout):
+        while True:
+            feed = sys.stdin.buffer.raw.read(102400)
+            if feed is None:
+                continue
+            if feed == b'':
+                # EOF
+                return
+
+            self._unpacker.feed(feed)
+
+            for child_in in self._unpacker:
+                name = child_in['name']
+                args = child_in['args']
+                queue_id = child_in['queue_id']
+
+                self.debug('hello')
+                ret = self.main(name, args, queue_id)
+                if ret:
+                    # self._write(stdout, ret)
+                    _ret = self._vim.vars['denite#_ret']
+                    _ret[queue_id] = ret
+                    self._vim.vars['denite#_ret'] = _ret
+                    self.debug(_ret)
 
     def main(self, name, args, queue_id):
         ret = None

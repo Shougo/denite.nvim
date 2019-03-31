@@ -13,7 +13,7 @@ from denite.util import (
     clear_cmdline, echo, error, regex_convert_py_vim, clearmatch)
 from .action import DEFAULT_ACTION_KEYMAP
 from .prompt import DenitePrompt
-from denite.parent import SyncParent
+from denite.parent import ASyncParent, SyncParent
 from ..prompt.prompt import STATUS_ACCEPT, STATUS_INTERRUPT
 
 
@@ -69,7 +69,8 @@ class Default(object):
 
     def start(self, sources, context):
         if not self._denite:
-            self._denite = SyncParent(self._vim)
+            # self._denite = SyncParent(self._vim)
+            self._denite = ASyncParent(self._vim)
 
         self._result = []
         context['sources_queue'] = [sources]
