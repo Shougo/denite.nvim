@@ -44,35 +44,45 @@ class Source(Base):
 
     def gather_candidates(self, context):
         candidates = []
-        for f in self._tags:
-            with open(f, 'r', encoding=context['encoding'], errors='replace') as ins:
+        for filename in self._tags:
+            with open(filename, 'r',
+                      encoding=context['encoding'],
+                      errors='replace') as ins:
                 for line in ins:
-                    if re.match('!', line) or not line:
-                        continue
-                    info = parse_tagline(line.rstrip(), f)
-                    candidate = {'word': info['name'], 'action__path': info['file']}
-
-                    info['name'] = (
-                        (info['name'][:33] + '..')
-                        if len(info['name']) >= 33
-                        else info['name']
-                    )
-                    info['file'] = Path(info['file']).name
-                    fmt = '{name:<35} @{file:<25}'
-                    if info['line']:
-                        candidate['action__line'] = info['line']
-                        fmt += ':{line} [{type}] {ref}'
-                    else:
-                        candidate['action__pattern'] = info['pattern']
-                        m = re.search(r'\^\S*(.*)\$', info['pattern'])
-                        if m:
-                            info['pattern'] = '<-> ' + m.group(1).lstrip()
-                        fmt += ' [{type}] {pattern}'
-                    candidate['abbr'] = fmt.format(**info)
-
-                    candidates.append(candidate)
+                    candidate = self._get_candidate(filename, line)
+                    if candidate:
+                        candidates.append(candidate)
 
         return sorted(candidates, key=lambda value: value['word'])
+
+    def _get_candidate(self, filename, line):
+        if re.match('!', line) or not line:
+            return
+
+        info = parse_tagline(line.rstrip(), filename)
+        candidate = {
+            'word': info['name'],
+            'action__path': info['file']
+        }
+
+        info['name'] = (
+            (info['name'][:33] + '..')
+            if len(info['name']) >= 33
+            else info['name']
+        )
+        info['file'] = Path(info['file']).name
+        fmt = '{name:<35} @{file:<25}'
+        if info['line']:
+            candidate['action__line'] = info['line']
+            fmt += ':{line} [{type}] {ref}'
+        else:
+            candidate['action__pattern'] = info['pattern']
+            m = re.search(r'\^\S*(.*)\$', info['pattern'])
+            if m:
+                info['pattern'] = '<-> ' + m.group(1).lstrip()
+            fmt += ' [{type}] {pattern}'
+        candidate['abbr'] = fmt.format(**info)
+        return candidate
 
     def _get_tagfiles(self, context):
         if (
