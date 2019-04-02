@@ -90,7 +90,7 @@ class Source(Base):
                 buffer_attr['status'],
                 name.ljust(ljustnm, ' '),
                 (f' [{buffer_attr["filetype"]}]'
-                 if buffer_attr['filetype'] != '' else '').rjust(rjustft+2),
+                 if buffer_attr['filetype'] != '' else '').rjust(rjustft+3),
                 strftime('(' + self.vars['date_format'] + ')',
                          localtime(buffer_attr['timestamp'])
                          ) if self.vars['date_format'] != '' else ''
