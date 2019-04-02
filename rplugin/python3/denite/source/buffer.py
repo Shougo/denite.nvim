@@ -50,14 +50,18 @@ class Source(Base):
 
     def gather_candidates(self, context):
         rjust = len(f'{len(self.vim.buffers)}') + 1
-        candidates = [
-            self._convert(ba, rjust) for ba in [
-                bufattr for bufattr in [
-                    self._get_attributes(context, buf)
-                    for buf in self.vim.buffers
-                ] if not self._is_excluded(context, bufattr)
-            ]
-        ]
+        ljustnm = 0
+        rjustft = 0
+        bufattrs = []
+        candidates = []
+        for buf in self.vim.buffers:
+            ba = self._get_attributes(context, buf)
+            if not self._is_excluded(context, ba):
+                bufattrs.append(ba)
+                ljustnm = max(ljustnm, len(ba['name']))
+                rjustft = max(rjustft, len(ba['filetype']))
+        for ba in bufattrs:
+            candidates.append(self._convert(ba, rjust, ljustnm, rjustft))
         return sorted(candidates, key=(
             lambda x:
             maxsize if context['__caller_bufnr'] == x['bufnr']
@@ -71,7 +75,7 @@ class Source(Base):
             return True
         return False
 
-    def _convert(self, buffer_attr, rjust):
+    def _convert(self, buffer_attr, rjust, ljustnm, rjustft):
         if buffer_attr['name'] == '':
             name = 'No Name'
             path = ''
@@ -84,9 +88,9 @@ class Source(Base):
             'abbr': '{}{} {}{} {}'.format(
                 str(buffer_attr['number']).rjust(rjust, ' '),
                 buffer_attr['status'],
-                name,
+                name.ljust(ljustnm, ' '),
                 (f' [{buffer_attr["filetype"]}]'
-                 if buffer_attr['filetype'] != '' else ''),
+                 if buffer_attr['filetype'] != '' else '').rjust(rjustft+3),
                 strftime('(' + self.vars['date_format'] + ')',
                          localtime(buffer_attr['timestamp'])
                          ) if self.vars['date_format'] != '' else ''
