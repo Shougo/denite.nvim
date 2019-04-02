@@ -50,8 +50,8 @@ class Source(Base):
 
     def gather_candidates(self, context):
         rjust = len(f'{len(self.vim.buffers)}') + 1
-        ljustnm = 0;
-        rjustft = 0;
+        ljustnm = 0
+        rjustft = 0
         bufattrs = []
         candidates = []
         for buf in self.vim.buffers:
@@ -90,7 +90,7 @@ class Source(Base):
                 buffer_attr['status'],
                 name.ljust(ljustnm, ' '),
                 (f' [{buffer_attr["filetype"]}]'
-                 if buffer_attr['filetype'] != '' else '').rjust(rjustft+2, ' '),
+                 if buffer_attr['filetype'] != '' else '').rjust(rjustft+2),
                 strftime('(' + self.vars['date_format'] + ')',
                          localtime(buffer_attr['timestamp'])
                          ) if self.vars['date_format'] != '' else ''
