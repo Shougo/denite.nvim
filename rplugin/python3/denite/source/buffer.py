@@ -53,15 +53,14 @@ class Source(Base):
         ljustnm = 0
         rjustft = 0
         bufattrs = []
-        candidates = []
-        for buf in self.vim.buffers:
-            ba = self._get_attributes(context, buf)
+        for ba in [self._get_attributes(context, x)
+                   for x in self.vim.buffers]:
             if not self._is_excluded(context, ba):
                 bufattrs.append(ba)
                 ljustnm = max(ljustnm, len(ba['name']))
                 rjustft = max(rjustft, len(ba['filetype']))
-        for ba in bufattrs:
-            candidates.append(self._convert(ba, rjust, ljustnm, rjustft))
+        candidates = [self._convert(x, rjust, ljustnm, rjustft)
+                      for x in bufattrs]
         return sorted(candidates, key=(
             lambda x:
             maxsize if context['__caller_bufnr'] == x['bufnr']
