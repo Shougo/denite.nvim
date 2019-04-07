@@ -56,9 +56,15 @@ class Source(Base):
         for ba in [self._get_attributes(context, x)
                    for x in self.vim.buffers]:
             if not self._is_excluded(context, ba):
-                bufattrs.append(ba)
-                ljustnm = max(ljustnm, len(ba['name']))
+                if ba['name'] == '':
+                    ba['fn'] = 'No Name'
+                    ba['path'] = ''
+                else:
+                    ba['fn'] = self.vim.call('fnamemodify', ba['name'], ':~:.')
+                    ba['path'] = self.vim.call('fnamemodify', ba['name'], ':p')
+                ljustnm = max(ljustnm, len(ba['fn']))
                 rjustft = max(rjustft, len(ba['filetype']))
+                bufattrs.append(ba)
         candidates = [self._convert(x, rjust, ljustnm, rjustft)
                       for x in bufattrs]
         return sorted(candidates, key=(
@@ -75,19 +81,13 @@ class Source(Base):
         return False
 
     def _convert(self, buffer_attr, rjust, ljustnm, rjustft):
-        if buffer_attr['name'] == '':
-            name = 'No Name'
-            path = ''
-        else:
-            name = self.vim.call('fnamemodify', buffer_attr['name'], ':~:.')
-            path = self.vim.call('fnamemodify', buffer_attr['name'], ':p')
         return {
             'bufnr': buffer_attr['number'],
-            'word': name,
+            'word': buffer_attr['fn'],
             'abbr': '{}{} {}{} {}'.format(
                 str(buffer_attr['number']).rjust(rjust, ' '),
                 buffer_attr['status'],
-                name.ljust(ljustnm, ' '),
+                buffer_attr['fn'].ljust(ljustnm, ' '),
                 (f' [{buffer_attr["filetype"]}]'
                  if buffer_attr['filetype'] != '' else '').rjust(rjustft+3),
                 strftime('(' + self.vars['date_format'] + ')',
@@ -95,7 +95,7 @@ class Source(Base):
                          ) if self.vars['date_format'] != '' else ''
             ),
             'action__bufnr': buffer_attr['number'],
-            'action__path': path,
+            'action__path': buffer_attr['path'],
             'timestamp': buffer_attr['timestamp']
         }
 
