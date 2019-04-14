@@ -23,6 +23,16 @@ class Context(object):
             context.update(option[buffer_name])
         context.update(user_context)
 
+        if context['command'] == 'DeniteCursorWord':
+            context['input'] = self._vim.call('expand', '<cword>')
+        elif context['command'] == 'DeniteBufferDir':
+            context['path'] = self._vim.call('expand', '%:p:h')
+        elif context['command'] == 'DeniteProjectDir':
+            context['path'] = self._vim.call(
+                'denite#project#path2project_directory',
+                context['path'], context['root_markers']
+            )
+
         # For compatibility
         for [old_option, new_option] in [
                 x for x in self._vim.call(
@@ -39,6 +49,7 @@ class Context(object):
     def _internal_options(self):
         return {
             'bufnr': self._vim.current.buffer.number,
+            'command': '',
             'encoding': self._vim.options['encoding'],
             'error_messages': [],
             'firstline': 0,
