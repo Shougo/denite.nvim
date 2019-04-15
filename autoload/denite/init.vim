@@ -35,6 +35,8 @@ function! denite#init#_initialize() abort
     return 1
   endif
 
+  let g:denite#_previewed_buffers = {}
+
   try
     if denite#util#has_yarp()
       let g:denite#_yarp = yarp#py3('denite')
