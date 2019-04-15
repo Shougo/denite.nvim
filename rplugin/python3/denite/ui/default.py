@@ -579,7 +579,8 @@ class Default(object):
         # Clear previewed buffers
         if not self._is_suspend and not self._context['has_preview_window']:
             self._vim.command('pclose!')
-        for bufnr in self._vim.vars['denite#_previewed_buffers'].keys():
+        for bufnr in self._vim.vars.get(
+                'denite#_previewed_buffers', {}).keys():
             if not self._vim.call('win_findbuf', bufnr):
                 self._vim.command('silent bdelete ' + str(bufnr))
         self._vim.vars['denite#_previewed_buffers'] = {}
