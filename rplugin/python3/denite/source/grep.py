@@ -175,7 +175,9 @@ class Source(Base):
         if arg:
             if isinstance(arg, str):
                 paths = [arg]
-            elif not isinstance(arg, list):
+            elif isinstance(arg, list):
+                paths = arg[:]
+            else:
                 raise AttributeError(
                     '`args[0]` needs to be a `str` or `list`')
         elif context['path']:
@@ -190,7 +192,9 @@ class Source(Base):
                 if arg == '!':
                     arg = util.input(self.vim, context, 'Argument: ')
                 arguments = shlex.split(arg)
-            elif not isinstance(arg, list):
+            elif isinstance(arg, list):
+                arguments = arg[:]
+            else:
                 raise AttributeError(
                     '`args[1]` needs to be a `str` or `list`')
         return arguments
@@ -206,7 +210,9 @@ class Source(Base):
                     patterns = [context['input']]
                 else:
                     patterns = [arg]
-            elif not isinstance(arg, list):
+            elif isinstance(arg, list):
+                patterns = arg[:]
+            else:
                 raise AttributeError(
                     '`args[2]` needs to be a `str` or `list`')
         elif context['input']:
