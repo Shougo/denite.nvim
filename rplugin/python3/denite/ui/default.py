@@ -214,6 +214,7 @@ class Default(object):
             'list': False,
             'number': False,
             'relativenumber': False,
+            'spell': False,
             'winfixheight': True,
             'wrap': False,
         }
