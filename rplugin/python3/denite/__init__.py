@@ -47,4 +47,4 @@ if find_spec('yarp'):
         global_denite.start(args)
 
     def _denite_do_action(args):
-        return global_denite.do_action(args)
+        return global_denite.take_action(args)
