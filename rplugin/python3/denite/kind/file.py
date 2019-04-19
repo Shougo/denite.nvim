@@ -99,7 +99,7 @@ class Kind(Openable):
                 'col': target['action__col'],
                 'text': target['action__text'],
             }
-            if 'action__bufnr 'in target:
+            if 'action__bufnr' in target:
                 qfloc['bufnr'] = target['action__bufnr']
             else:
                 qfloc['filename'] = target['action__path']
