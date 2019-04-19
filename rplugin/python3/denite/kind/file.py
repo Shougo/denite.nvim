@@ -149,6 +149,7 @@ class Kind(Openable):
                                 not x.options['previewwindow'],
                                 self.vim.windows), None)
 
+    # Needed for openable actions
     def _jump(self, context, target):
         if 'action__pattern' in target:
             self.vim.call('search', target['action__pattern'], 'w')
