@@ -80,6 +80,8 @@ class Kind(Base):
             winid = self._winid(target)
             if winid:
                 self.vim.call('win_gotoid', winid)
+                if callable(self._jump):
+                    self._jump(context, target)
             else:
                 fallback(context)
 
