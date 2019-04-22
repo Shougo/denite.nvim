@@ -37,9 +37,5 @@ class Kind(Base):
         if context['firstline'] != context['lastline']:
             command = '{},{}{}'.format(
                 context['firstline'], context['lastline'], command)
-        output = self.vim.call(
+        self.vim.call(
             'denite#util#execute_command', command, is_pause)
-        if not output or output == '\n':
-            return
-        self.vim.command('redraw')
-        self.vim.call('denite#util#getchar')
