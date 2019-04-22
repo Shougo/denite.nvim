@@ -42,5 +42,4 @@ class Kind(Base):
         if not output or output == '\n':
             return
         self.vim.command('redraw')
-        self.debug(output)
         self.vim.call('denite#util#getchar')
