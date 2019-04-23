@@ -4,7 +4,6 @@
 # License: MIT license
 # ============================================================================
 
-import asyncio
 import time
 import os
 import msgpack

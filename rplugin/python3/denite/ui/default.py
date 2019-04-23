@@ -13,7 +13,7 @@ from denite.util import (
     clear_cmdline, echo, error, regex_convert_py_vim, clearmatch)
 from .action import DEFAULT_ACTION_KEYMAP
 from .prompt import DenitePrompt
-from denite.parent import ASyncParent, SyncParent
+from denite.parent import SyncParent
 from ..prompt.prompt import STATUS_ACCEPT, STATUS_INTERRUPT
 
 
