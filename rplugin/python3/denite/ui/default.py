@@ -69,8 +69,8 @@ class Default(object):
 
     def start(self, sources, context):
         if not self._denite:
-            # self._denite = SyncParent(self._vim)
-            self._denite = ASyncParent(self._vim)
+            self._denite = SyncParent(self._vim)
+            # self._denite = ASyncParent(self._vim)
 
         self._result = []
         context['sources_queue'] = [sources]
