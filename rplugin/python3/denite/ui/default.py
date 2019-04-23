@@ -264,6 +264,7 @@ class Default(object):
                         'width': int(self._context['winwidth']),
                         'height': int(self._context['winheight']),
                     })
+                self._vim.command('highlight NormalFloat guibg=None')
             elif split != 'no':
                 command = self._get_direction()
                 command += ' vsplit' if split == 'vertical' else ' split'
