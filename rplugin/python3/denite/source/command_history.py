@@ -69,6 +69,7 @@ class Source(Base):
             'word': ':' + history[1],
             'action__command': history[1],
             'action__is_pause': True,
+            'source__index': int(history[0]),
         }
 
 
@@ -78,6 +79,8 @@ class Kind(Command):
         super().__init__(vim)
 
         self.name = 'command/history'
+        self.redraw_actions = 'delete'
+        self.persist_actions = 'delete'
 
     def action_edit_and_execute(self, context):
         target = context['targets'][0]
@@ -86,3 +89,9 @@ class Kind(Command):
                              target['action__command'],
                              'command')
         self._execute(command)
+
+    def action_delete(self, context):
+        for target in sorted(context['targets'],
+                             key=lambda x: x['source__index'],
+                             reverse=True):
+            self.vim.call('histdel', ':', target['source__index'])
