@@ -704,6 +704,8 @@ class Default(object):
             action_name = prefix_actions[0]
             action = self._denite.get_action(
                 self._context, action_name, candidates)
+            if not action:
+                return
 
         post_action = self._context['post_action']
 
