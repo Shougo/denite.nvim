@@ -82,7 +82,7 @@ class Kind(Command):
         self.redraw_actions = 'delete'
         self.persist_actions = 'delete'
 
-    def action_edit_and_execute(self, context):
+    def action_edit(self, context):
         target = context['targets'][0]
         command = util.input(self.vim, context,
                              "command > ",

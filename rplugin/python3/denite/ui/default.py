@@ -694,18 +694,7 @@ class Default(object):
         action = self._denite.get_action(
             self._context, action_name, candidates)
         if not action:
-            # Search the prefix.
-            prefix_actions = [x for x in
-                              self._denite.get_action_names(
-                                  self._context, candidates)
-                              if x.startswith(action_name)]
-            if not prefix_actions:
-                return
-            action_name = prefix_actions[0]
-            action = self._denite.get_action(
-                self._context, action_name, candidates)
-            if not action:
-                return
+            return
 
         post_action = self._context['post_action']
 
