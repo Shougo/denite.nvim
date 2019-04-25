@@ -695,10 +695,10 @@ class Default(object):
             self._context, action_name, candidates)
         if not action:
             # Search the prefix.
-            prefix_actions = [x for x in
-                              self._denite.get_action_names(
-                                  self._context, candidates)
-                              if x.startswith(action_name)]
+            prefix_actions = [
+                x for x in self._denite.get_action_names(
+                    self._context, candidates)
+                if x.startswith(action_name) and x != action_name]
             if not prefix_actions:
                 return
             action_name = prefix_actions[0]
