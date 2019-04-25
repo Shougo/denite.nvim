@@ -25,6 +25,7 @@ class Source(Base):
         candidates = []
         path = (context['args'][1] if len(context['args']) > 1
                 else context['path'])
+        path = abspath(self.vim, path)
         inp = expand(context['input'])
         filename = (inp if os.path.isabs(inp) else os.path.join(path, inp))
         if context['args'] and context['args'][0] == 'new':
