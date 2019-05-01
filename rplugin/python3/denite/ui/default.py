@@ -378,7 +378,6 @@ class Default(object):
 
     def update_status(self):
         raw_mode = self._current_mode.upper()
-        max_len = len(str(self._candidates_len))
         mode = '-- ' + raw_mode + ' -- '
         if self._context['error_messages']:
             mode = '[ERROR] ' + mode
@@ -408,10 +407,10 @@ class Default(object):
                 "%#deniteStatusLineNumber#%{" + linenr + "}%*")
             if self._context['split'] == 'floating':
                 self._vim.options['titlestring'] = (
-                "%{denite#get_status('mode')}%* " +
-                "%{denite#get_status('sources')} " +
-                " %{denite#get_status('path')}%*" +
-                "%{" + linenr + "}%*")
+                    "%{denite#get_status('mode')}%* " +
+                    "%{denite#get_status('sources')} " +
+                    " %{denite#get_status('path')}%*" +
+                    "%{" + linenr + "}%*")
             else:
                 self._window_options['statusline'] = status
 
