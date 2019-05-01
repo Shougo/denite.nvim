@@ -21,7 +21,7 @@ function! denite#filter#open(parent, input) abort
   call denite#filter#init_buffer()
 
   " Set the current input
-  if getline('$') == ''
+  if getline('$') ==# ''
     call setline('$', a:input)
   else
     call append('$', a:input)

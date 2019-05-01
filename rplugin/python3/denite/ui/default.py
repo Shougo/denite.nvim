@@ -129,6 +129,9 @@ class Default(object):
         if self._context['quick_move'] and self.quick_move():
             return
 
+        if self._context['start_filter']:
+            self.do_map('open_filter_buffer', [])
+
     def init_buffer(self):
         self._prev_status = dict()
         self._displayed_texts = []

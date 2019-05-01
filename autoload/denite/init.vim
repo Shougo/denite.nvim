@@ -125,6 +125,7 @@ function! denite#init#_user_options() abort
         \ 'sorters': '',
         \ 'split': 'horizontal',
         \ 'source_names': '',
+        \ 'start_filter': v:false,
         \ 'statusline': v:true,
         \ 'unique': v:false,
         \ 'vertical_preview': v:false,

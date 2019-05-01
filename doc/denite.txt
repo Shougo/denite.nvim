@@ -755,6 +755,11 @@ OPTIONS							*denite-options*
 
 		Default: ""
 
+						*denite-option-start-filter*
+-start-filter
+		Start filtering on default.
+		Default: false
+
 						*denite-option-statusline*
 -statusline
 		Enable statusline.
