@@ -6,7 +6,6 @@
 
 import copy
 import re
-from itertools import groupby, takewhile
 
 from denite.util import (
     clear_cmdline, echo, error, regex_convert_py_vim, clearmatch)
@@ -26,8 +25,6 @@ class Default(object):
     def __init__(self, vim):
         self._vim = vim
         self._denite = None
-        self._win_cursor = 1
-        self._cursor = 0
         self._selected_candidates = []
         self._candidates = []
         self._candidates_len = 0
@@ -301,9 +298,10 @@ class Default(object):
         self._denite.init_syntax(self._context, self._is_multi)
 
     def init_cursor(self):
-        self._cursor = 0
         if self._context['reversed']:
             self.move_to_last_line()
+        else:
+            self.move_to_first_line()
 
     def update_candidates(self):
         [self._is_async, pattern, statuses,
@@ -338,7 +336,7 @@ class Default(object):
 
         self._displayed_texts = [
             self.get_candidate_display_text(i)
-            for i in range(self._cursor, self._candidates_len)
+            for i in range(0, self._candidates_len)
         ]
 
     def update_buffer(self):
@@ -368,7 +366,8 @@ class Default(object):
         self._vim.current.buffer[:] = self._displayed_texts
         self.resize_buffer()
 
-        self.move_cursor()
+        if self._context['auto_action']:
+            self.do_action(self._context['auto_action'])
 
     def update_status(self):
         inpt = ''
@@ -482,11 +481,10 @@ class Default(object):
         if goto:
             # Jump to denite window
             self.init_buffer()
-            self.update_cursor()
         self.do_action('default')
         candidate = self.get_cursor_candidate()
         echo(self._vim, 'Normal', '[{}/{}] {}'.format(
-            self._cursor, self._candidates_len,
+            self._vim.call('line', '.'), self._candidates_len,
             candidate.get('abbr', candidate['word'])))
         if goto:
             # Move to the previous window
@@ -494,19 +492,11 @@ class Default(object):
 
     def do_command(self, command):
         self.init_cursor()
-        while self._cursor + self._win_cursor < self._candidates_len:
+        cursor = 1
+        while cursor < self._candidates_len:
             self.do_action('default', command)
             self.move_to_next_line()
         self.quit_buffer()
-
-    def move_cursor(self):
-        if self._win_cursor > self._vim.call('line', '$'):
-            self._win_cursor = self._vim.call('line', '$')
-        if self._win_cursor != self._vim.call('line', '.'):
-            self._vim.call('cursor', [self._win_cursor, 1])
-
-        if self._context['auto_action']:
-            self.do_action(self._context['auto_action'])
 
     def change_mode(self, mode):
         self._current_mode = mode
@@ -689,139 +679,39 @@ class Default(object):
         return do_map(self, name, args)
 
     def move_to_pos(self, pos):
-        self._cursor = int(pos / self._winheight) * self._winheight
-        self._win_cursor = (pos % self._winheight) + 1
-        self.update_cursor()
+        self._vim.call('cursor', pos, 0)
 
     def move_to_next_line(self):
-        if self._win_cursor + self._cursor < self._candidates_len:
-            if self._win_cursor < self._winheight:
-                self._win_cursor += 1
-            else:
-                self._cursor += 1
+        cursor = self._vim.call('line', '.')
+        if cursor < self._candidates_len:
+            cursor += 1
         elif self._context['cursor_wrap']:
             self.move_to_first_line()
         else:
             return
-        self.update_cursor()
+        self._vim.call('cursor', cursor, 0)
 
     def move_to_prev_line(self):
-        if self._win_cursor > 1:
-            self._win_cursor -= 1
-        elif self._cursor >= 1:
-            self._cursor -= 1
+        cursor = self._vim.call('line', '.')
+        if cursor >= 1:
+            cursor -= 1
         elif self._context['cursor_wrap']:
             self.move_to_last_line()
         else:
             return
-        self.update_cursor()
+        self._vim.call('cursor', cursor, 0)
 
     def move_to_first_line(self):
-        if self._win_cursor > 1 or self._cursor > 0:
-            self._win_cursor = 1
-            self._cursor = 0
-            self.update_cursor()
+        self._vim.call('cursor', 1, 0)
 
     def move_to_last_line(self):
-        win_max = min(self._candidates_len, self._winheight)
-        cur_max = self._candidates_len - win_max
-        if self._win_cursor < win_max or self._cursor < cur_max:
-            self._win_cursor = win_max
-            self._cursor = cur_max
-            self.update_cursor()
-
-    def move_to_top(self):
-        self._win_cursor = 1
-        self.update_cursor()
-
-    def move_to_middle(self):
-        self._win_cursor = self._winheight // 2
-        self.update_cursor()
-
-    def move_to_bottom(self):
-        self._win_cursor = self._winheight
-        self.update_cursor()
-
-    def jump_to_next_by(self, key):
-        keyfunc = self._keyfunc(key)
-        keys = [keyfunc(candidate) for candidate in self._candidates]
-        if not keys or len(set(keys)) == 1:
-            return
-
-        current_index = self._cursor + self._win_cursor - 1
-        forward_candidates = self._candidates[current_index:]
-        forward_sources = groupby(forward_candidates, keyfunc)
-        forward_times = len(list(next(forward_sources)[1]))
-        if not forward_times:
-            return
-        remaining_candidates = (self._candidates_len - current_index
-                                - forward_times)
-        if next(forward_sources, None) is None:
-            # If the cursor is on the last source
-            self._cursor = 0
-            self._win_cursor = 1
-        elif self._candidates_len < self._winheight:
-            # If there is a space under the candidates
-            self._cursor = 0
-            self._win_cursor += forward_times
-        elif remaining_candidates < self._winheight:
-            self._cursor = self._candidates_len - self._winheight + 1
-            self._win_cursor = self._winheight - remaining_candidates
-        else:
-            self._cursor += forward_times + self._win_cursor - 1
-            self._win_cursor = 1
-
-        self.update_cursor()
-
-    def jump_to_prev_by(self, key):
-        keyfunc = self._keyfunc(key)
-        keys = [keyfunc(candidate) for candidate in self._candidates]
-        if not keys or len(set(keys)) == 1:
-            return
-
-        current_index = self._cursor + self._win_cursor - 1
-        backward_candidates = reversed(self._candidates[:current_index + 1])
-        backward_sources = groupby(backward_candidates, keyfunc)
-        current_source = list(next(backward_sources)[1])
-        try:
-            prev_source = list(next(backward_sources)[1])
-        except StopIteration:  # If the cursor is on the first source
-            last_source = takewhile(
-                lambda candidate:
-                    keyfunc(candidate) == keyfunc(self._candidates[-1]),
-                reversed(self._candidates)
-            )
-            len_last_source = len(list(last_source))
-            if self._candidates_len < self._winheight:
-                self._cursor = 0
-                self._win_cursor = self._candidates_len - len_last_source + 1
-            elif len_last_source < self._winheight:
-                self._cursor = self._candidates_len - self._winheight + 1
-                self._win_cursor = self._winheight - len_last_source
-            else:
-                self._cursor = self._candidates_len - len_last_source
-                self._win_cursor = 1
-        else:
-            back_times = len(current_source) - 1 + len(prev_source)
-            remaining_candidates = (self._candidates_len - current_index
-                                    + back_times)
-            if self._candidates_len < self._winheight:
-                self._cursor = 0
-                self._win_cursor -= back_times
-            elif remaining_candidates < self._winheight:
-                self._cursor = self._candidates_len - self._winheight + 1
-                self._win_cursor = self._winheight - remaining_candidates
-            else:
-                self._cursor -= back_times - self._win_cursor + 1
-                self._win_cursor = 1
-
-        self.update_cursor()
+        self._vim.call('cursor', 1, self._vim.call('line', '$'))
 
     def quick_move(self):
         def get_quick_move_table():
             table = {}
             context = self._context
-            base = self._win_cursor
+            base = self._vim.call('winline')
             for [key, number] in context['quick_move_table'].items():
                 number = int(number)
                 pos = ((base - number) if context['reversed']
@@ -877,18 +767,3 @@ class Default(object):
                     pass
             return ''
         return wrapped
-
-    def enter_mode(self, mode):
-        if mode == self._current_mode:
-            return
-
-        self._mode_stack.append(self._current_mode)
-        self.change_mode(mode)
-
-    def leave_mode(self):
-        if not self._mode_stack:
-            return self.quit()
-
-        self._current_mode = self._mode_stack[-1]
-        self._mode_stack = self._mode_stack[:-1]
-        self.change_mode(self._current_mode)

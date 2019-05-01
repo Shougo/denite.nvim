@@ -121,16 +121,6 @@ def _toggle_select_all(denite, params):
     return denite.update_buffer()
 
 
-def _toggle_select_down(denite, params):
-    _toggle_select(denite, params)
-    return denite.move_to_next_line()
-
-
-def _toggle_select_up(denite, params):
-    _toggle_select(denite, params)
-    return denite.move_to_prev_line()
-
-
 MAPPINGS = {
     'change_path': _change_path,
     'change_sorters': _change_sorters,
@@ -149,6 +139,4 @@ MAPPINGS = {
     'toggle_matchers': _toggle_matchers,
     'toggle_select': _toggle_select,
     'toggle_select_all': _toggle_select_all,
-    'toggle_select_down': _toggle_select_down,
-    'toggle_select_up': _toggle_select_up,
 }

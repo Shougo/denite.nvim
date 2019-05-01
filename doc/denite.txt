@@ -381,14 +381,6 @@ toggle_select
 toggle_select_all
 		Toggle all candidates.
 
-						*denite-map-toggle_select_down*
-toggle_select_down
-		Toggle cursor candidate select and move to next line.
-
-						*denite-map-toggle_select_up*
-toggle_select_up
-		Toggle cursor candidate select and move to previous line.
-
 						*denite-map-toggle_matchers*
 toggle_matchers:{arg}
 		Change |denite-option-matchers| to {arg}.
