@@ -53,3 +53,22 @@ function! denite#do_action(context, action_name, targets) abort
   let args = [a:context, a:action_name, a:targets]
   return denite#util#rpcrequest('_denite_do_action', args, v:false)
 endfunction
+
+function! denite#do_map(action, ...) abort
+  if &l:filetype !=# 'denite'
+    return ''
+  endif
+
+  let args = denite#util#convert2list(get(a:000, 0, []))
+  return printf(":\<C-u>call denite#call_map(%s, %s)\<CR>",
+        \ string(a:action), string(args))
+endfunction
+function! denite#call_map(action, ...) abort
+  if &l:filetype !=# 'denite'
+    return
+  endif
+
+  let args = denite#util#convert2list(get(a:000, 0, []))
+  call denite#util#rpcrequest(
+        \ '_denite_do_map', [a:action, args], v:false)
+endfunction

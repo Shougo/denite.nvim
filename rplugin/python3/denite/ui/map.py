@@ -1,0 +1,128 @@
+from denite.util import debug
+from os.path import dirname
+
+
+def _redraw(denite, params):
+    return denite.redraw()
+
+
+def _quit(denite, params):
+    return denite.quit()
+
+
+def _do_action(denite, params):
+    return denite.do_action(params)
+
+
+def _do_previous_action(denite, params):
+    return denite.do_action(denite._prev_action)
+
+
+def _choose_action(denite, params):
+    return denite.choose_action()
+
+
+def _restart(denite, params):
+    return denite.restart()
+
+
+def _restore_sources(denite, params):
+    return denite.restore_sources(denite._context)
+
+
+def _toggle_select(denite, params):
+    index = denite._cursor + denite._win_cursor - 1
+    _toggle_select_candidate(denite, index)
+    denite.update_displayed_texts()
+    return denite.update_buffer()
+
+
+def _toggle_select_candidate(denite, index):
+    if index in denite._selected_candidates:
+        denite._selected_candidates.remove(index)
+    else:
+        denite._selected_candidates.append(index)
+
+
+def _toggle_select_all(denite, params):
+    for index in range(0, denite._candidates_len):
+        _toggle_select_candidate(denite, index)
+    denite.update_displayed_texts()
+    return denite.update_buffer()
+
+
+def _toggle_select_down(denite, params):
+    _toggle_select(denite, params)
+    return denite.move_to_next_line()
+
+
+def _toggle_select_up(denite, params):
+    _toggle_select(denite, params)
+    return denite.move_to_prev_line()
+
+
+def _toggle_matchers(denite, params):
+    matchers = ''.join(params)
+    context = denite._context
+    if context['matchers'] != matchers:
+        context['matchers'] = matchers
+    else:
+        context['matchers'] = ''
+    return denite.redraw()
+
+
+def _change_sorters(denite, params):
+    sorters = ''.join(params)
+    context = denite._context
+    if context['sorters'] != sorters:
+        context['sorters'] = sorters
+    else:
+        context['sorters'] = ''
+    return denite.redraw()
+
+
+def _print_messages(denite, params):
+    for mes in denite._context['messages']:
+        debug(denite._vim, mes)
+    denite._vim.call('denite#util#getchar')
+
+
+def _change_path(denite, params):
+    path = denite._vim.call('input', 'Path: ',
+                            denite._context['path'], 'dir')
+    denite._context['path'] = path
+    return denite.restart()
+
+
+def _move_up_path(denite, params):
+    denite._context['path'] = dirname(denite._context['path'])
+    return denite.restart()
+
+
+def _quick_move(denite, params):
+    denite.quick_move()
+
+
+def _nop(denite, params):
+    pass
+
+
+MAPPINGS = {
+    'change_path': _change_path,
+    'change_sorters': _change_sorters,
+    'choose_action': _choose_action,
+    'do_action': _do_action,
+    'do_previous_action': _do_previous_action,
+    'nop': _nop,
+    'print_messages': _print_messages,
+    'quick_move': _quick_move,
+    'quit': _quit,
+    'redraw': _redraw,
+    'restart': _restart,
+    'restore_sources': _restore_sources,
+    'toggle_matchers': _toggle_matchers,
+    'toggle_select': _toggle_select,
+    'toggle_select_all': _toggle_select_all,
+    'toggle_select_down': _toggle_select_down,
+    'toggle_select_up': _toggle_select_up,
+}

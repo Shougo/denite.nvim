@@ -36,6 +36,10 @@ if hasattr(vim, 'plugin'):
         def take_action(self, args):
             return self._rplugin.take_action(args)
 
+        @vim.rpc_export('_denite_do_map', sync=True)
+        def do_map(self, args):
+            return self._rplugin.do_map(args)
+
 if find_spec('yarp'):
 
     global_denite = Rplugin(vim)

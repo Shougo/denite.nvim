@@ -232,9 +232,9 @@ function! denite#util#rpcrequest(method, args, is_async) abort
       return -1
     endif
     if a:is_async
-      return g:defx#_yarp.notify(a:method, a:args)
+      return g:denite#_yarp.notify(a:method, a:args)
     else
-      return g:defx#_yarp.request(a:method, a:args)
+      return g:denite#_yarp.request(a:method, a:args)
     endif
   else
     if a:is_async
