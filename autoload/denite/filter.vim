@@ -44,7 +44,7 @@ function! denite#filter#init_buffer() abort
         \ :<C-u>call <SID>update()<CR>:call <SID>quit()<CR>
   inoremap <buffer><silent> <Plug>(denite_filter_update)
         \ <ESC>:call <SID>update()<CR>:call <SID>quit()<CR>
-  nnoremap <buffer><expr><silent> <Plug>(denite_filter_quit)
+  nnoremap <buffer><silent> <Plug>(denite_filter_quit)
         \ :<C-u>call <SID>quit()<CR>
 
   nmap <buffer> <CR> <Plug>(denite_filter_update)
