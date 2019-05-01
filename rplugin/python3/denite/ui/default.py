@@ -55,7 +55,6 @@ class Default(object):
         self._prev_action = ''
         self._prev_status = {}
         self._prev_curpos = []
-        self._is_suspend = False
         self._save_window_options = {}
         self._sources_history = []
 
@@ -95,15 +94,14 @@ class Default(object):
         if self._initialized and context['resume']:
             # Skip the initialization
 
-            if not self._is_suspend:
-                if context['mode']:
-                    self._current_mode = context['mode']
+            if context['mode']:
+                self._current_mode = context['mode']
 
-                update = ('immediately', 'immediately_1',
-                          'cursor_wrap', 'cursor_pos', 'prev_winid',
-                          'quick_move')
-                for key in update:
-                    self._context[key] = context[key]
+            update = ('immediately', 'immediately_1',
+                        'cursor_wrap', 'cursor_pos', 'prev_winid',
+                        'quick_move')
+            for key in update:
+                self._context[key] = context[key]
 
             if self.check_option():
                 return
@@ -138,7 +136,6 @@ class Default(object):
 
             self.init_buffer()
 
-        self._is_suspend = False
         self.update_displayed_texts()
         self.change_mode(self._current_mode)
         self.update_buffer()
@@ -150,12 +147,11 @@ class Default(object):
         self._prev_status = dict()
         self._displayed_texts = []
 
-        if not self._is_suspend:
-            self._prev_bufnr = self._vim.current.buffer.number
-            self._prev_curpos = self._vim.call('getcurpos')
-            self._prev_wininfo = self._get_wininfo()
-            self._prev_winid = int(self._context['prev_winid'])
-            self._winrestcmd = self._vim.call('winrestcmd')
+        self._prev_bufnr = self._vim.current.buffer.number
+        self._prev_curpos = self._vim.call('getcurpos')
+        self._prev_wininfo = self._get_wininfo()
+        self._prev_winid = int(self._context['prev_winid'])
+        self._winrestcmd = self._vim.call('winrestcmd')
 
         self._scroll = int(self._context['scroll'])
         if self._scroll == 0:
@@ -225,8 +221,7 @@ class Default(object):
         split = self._context['split']
         if (split != 'no' and self._winid > 0 and
                 self._vim.call('win_gotoid', self._winid)):
-            if (not self._is_suspend and
-                    split != 'vertical' and split != 'floating'):
+            if split != 'vertical' and split != 'floating':
                 # Move the window to bottom
                 self._vim.command('wincmd J')
             self._winrestcmd = ''
@@ -496,12 +491,10 @@ class Default(object):
             candidate.get('abbr', candidate['word'])))
         if goto:
             # Move to the previous window
-            self.suspend()
             self._vim.command('wincmd p')
 
     def do_command(self, command):
         self.init_cursor()
-        self._context['post_action'] = 'suspend'
         while self._cursor + self._win_cursor < self._candidates_len:
             self.do_action('default', command)
             self.move_to_next_line()
@@ -535,7 +528,7 @@ class Default(object):
 
     def cleanup(self):
         # Clear previewed buffers
-        if not self._is_suspend and not self._context['has_preview_window']:
+        if not self._context['has_preview_window']:
             self._vim.command('pclose!')
         for bufnr in self._vim.vars['denite#_previewed_buffers'].keys():
             if not self._vim.call('win_findbuf', bufnr):
@@ -662,7 +655,7 @@ class Default(object):
         if command != '':
             self._vim.command(command)
 
-        if is_quit and (post_action == 'open' or post_action == 'suspend'):
+        if is_quit and post_action == 'open':
             # Re-open denite buffer
 
             self.init_buffer()
@@ -675,11 +668,6 @@ class Default(object):
         if not is_quit:
             self._selected_candidates = []
             self.redraw(action['is_redraw'])
-
-        if post_action == 'suspend':
-            self.suspend()
-            self._vim.command('wincmd p')
-            return STATUS_ACCEPT
 
         return STATUS_ACCEPT if is_quit else None
 
@@ -971,17 +959,3 @@ class Default(object):
         self._current_mode = self._mode_stack[-1]
         self._mode_stack = self._mode_stack[:-1]
         self.change_mode(self._current_mode)
-
-    def suspend(self):
-        if self._bufnr == self._vim.current.buffer.number:
-            if self._context['auto_resume']:
-                self._vim.command('autocmd denite WinEnter <buffer> ' +
-                                  'Denite -resume -buffer_name=' +
-                                  self._context['buffer_name'])
-            for mapping in ['i', 'a', '<CR>']:
-                self._vim.command(f'nnoremap <silent><buffer> {mapping} ' +
-                                  ':<C-u>Denite -resume -buffer_name=' +
-                                  f"{self._context['buffer_name']}<CR>")
-        self._is_suspend = True
-        self._options['modifiable'] = False
-        return STATUS_ACCEPT

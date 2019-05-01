@@ -640,11 +640,6 @@ are on the neovim-prompt's builtin actions/mappings.
 		Move back to the previous sources.
 		Note: It does not restore the cursor position.
 
-				*denite-map-suspend*
-<denite:suspend>
-		Suspend current Denite buffer.
-		You can resume the Denite buffer by <CR> mapping.
-
 				*denite-map-scroll_window_downwards*
 <denite:scroll_window_downwards>
 		Scroll the window downwards.
@@ -721,11 +716,6 @@ are on the neovim-prompt's builtin actions/mappings.
 		Change |denite-option-matchers| to {arg}.
 		If |denite-option-matchers| is {arg}, it will be disabled.
 
-				*denite-map-wincmd*
-<denite:wincmd:{arg}>
-		Suspend and execute 'wincmd %arg%'
-		Note: 'arg' supports only h,j,k,l,w,W,t,b,p.
-
 				*denite-map-yank_to_register*
 <denite:yank_to_register>
 		Yank a text into a specified register.
@@ -745,7 +735,6 @@ All mode mappings (override by mode mappings).
 {key}		{mapping}
 --------	-----------------------------
 <C-M>		<denite:do_action:default>
-<C-Z>		<denite:suspend>
 <CR>		<denite:do_action:default>
 <Esc>		<denite:leave_mode>
 <Tab>		<denite:choose_action>
@@ -1246,7 +1235,6 @@ OPTIONS							*denite-options*
 
 		"quit": quit the denite buffer.
 		"open": open the denite buffer.
-		"suspend": suspend the denite buffer.
 		Otherwise: nothing.
 
 		Default: "none"
@@ -2372,8 +2360,9 @@ https://github.com/raghur/fruzzy
 COMPATIBILITY						*denite-compatibility*
 
 2019.05.01
-* Remove prompt.nvim
+* Remove prompt.nvim.
 * "-use-default-mappings" option is deprecated.
+* Remove suspend feature.
 
 2019.03.24
 * "-auto-highlight" and "-auto-preview" options are deprecated.
