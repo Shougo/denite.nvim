@@ -74,6 +74,11 @@ def _nop(denite, params):
     pass
 
 
+def _open_filter_buffer(denite, params):
+    denite._vim.call('denite#filter#open',
+                     denite._bufnr, denite._context['input'])
+
+
 def _print_messages(denite, params):
     for mes in denite._context['messages']:
         debug(denite._vim, mes)
@@ -151,6 +156,7 @@ MAPPINGS = {
     'filter': _filter,
     'move_up_path': _move_up_path,
     'nop': _nop,
+    'open_filter_buffer': _open_filter_buffer,
     'print_messages': _print_messages,
     'quick_move': _quick_move,
     'quit': _quit,

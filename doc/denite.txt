@@ -128,10 +128,14 @@ EXAMPLES						*denite-examples*
 	function! s:denite_my_settings() abort
 	  nnoremap <silent><buffer><expr> <CR>
 	  \ denite#do_map('do_action')
+	  nnoremap <silent><buffer><expr> d
+	  \ denite#do_map('do_action', 'delete')
+	  nnoremap <silent><buffer><expr> p
+	  \ denite#do_map('do_action', 'preview')
 	  nnoremap <silent><buffer><expr> q
 	  \ denite#do_map('quit')
 	  nnoremap <silent><buffer><expr> i
-	  \ denite#do_map('filter', input('Filter: '))
+	  \ denite#do_map('open_filter_buffer')
 	  nnoremap <silent><buffer><expr> <Space>
 	  \ denite#do_map('toggle_select').'j'
 	endfunction
@@ -349,6 +353,10 @@ move_up_path
 						*denite-map-nop*
 nop
 		No operation.
+
+						*denite-map-open_filter_buffer*
+open_filter_buffer
+		Open filter buffer to filtering.
 
 						*denite-map-print_messages*
 print_messages
