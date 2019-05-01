@@ -1,3 +1,9 @@
+# ============================================================================
+# FILE: map.py
+# AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
+# License: MIT license
+# ============================================================================
+
 from denite.util import debug
 from os.path import dirname
 
@@ -101,7 +107,7 @@ def _toggle_matchers(denite, params):
 
 
 def _toggle_select(denite, params):
-    index = denite._cursor + denite._win_cursor - 1
+    index = denite._vim.call('line', '.') - 1
     _toggle_select_candidate(denite, index)
     denite.update_displayed_texts()
     return denite.update_buffer()
