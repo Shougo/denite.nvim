@@ -1355,18 +1355,6 @@ OPTIONS							*denite-options*
 		Specify the buffer updatetime when narrowing.
 		Default: 100
 
-					*denite-option-use-default-mappings*
--use-default-mappings
-		Enable default key mappings.
-
-		Note: that fundamental mappings including <Esc> or <Enter> are
-		also provided by the default key mappings. So disabling this
-		option without proper custom mappings would make denite
-		useless. Use <C-c> to quit the denite if you accidentally
-		disable this option.
-
-		Default: true
-
 					*denite-option-vertical-preview*
 -vertical-preview
 		Open the preview window vertically.
@@ -2382,6 +2370,10 @@ https://github.com/raghur/fruzzy
 
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
+
+2019.05.01
+* Remove prompt.nvim
+* "-use-default-mappings" option is deprecated.
 
 2019.03.24
 * "-auto-highlight" and "-auto-preview" options are deprecated.

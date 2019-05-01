@@ -6,15 +6,12 @@
 
 import copy
 import re
-import weakref
 from itertools import groupby, takewhile
 
 from denite.util import (
     clear_cmdline, echo, error, regex_convert_py_vim, clearmatch)
-from .action import DEFAULT_ACTION_KEYMAP
-from .prompt import DenitePrompt
 from denite.parent import SyncParent
-from ..prompt.prompt import STATUS_ACCEPT, STATUS_INTERRUPT
+from ..prompt.prompt import STATUS_ACCEPT
 
 
 class Default(object):
@@ -52,11 +49,6 @@ class Default(object):
         self._matched_pattern = ''
         self._displayed_texts = []
         self._statusline_sources = ''
-        self._prompt = DenitePrompt(
-            self._vim,
-            self._context,
-            weakref.proxy(self)
-        )
         self._guicursor = ''
         self._titlestring = ''
         self._ruler = False
@@ -75,23 +67,21 @@ class Default(object):
         self._result = []
         context['sources_queue'] = [sources]
         self._sources_history = []
-        try:
-            while context['sources_queue']:
-                prev_history = copy.copy(self._sources_history)
-                prev_path = context['path']
 
-                self._start(context['sources_queue'][0], context)
+        while context['sources_queue']:
+            prev_history = copy.copy(self._sources_history)
+            prev_path = context['path']
 
-                if prev_history == self._sources_history:
-                    self._sources_history.append({
-                        'sources': context['sources_queue'][0],
-                        'path': prev_path,
-                    })
+            self._start(context['sources_queue'][0], context)
 
-                context['sources_queue'].pop(0)
-                context['path'] = self._context['path']
-        finally:
-            self.cleanup()
+            if prev_history == self._sources_history:
+                self._sources_history.append({
+                    'sources': context['sources_queue'][0],
+                    'path': prev_path,
+                })
+
+            context['sources_queue'].pop(0)
+            context['path'] = self._context['path']
 
         return self._result
 
@@ -155,16 +145,6 @@ class Default(object):
 
         if self._context['quick_move'] and self.quick_move():
             return
-
-        # Make sure that the caret position is ok
-        self._prompt.caret.locus = self._prompt.caret.tail
-        status = self._prompt.start()
-        if status == STATUS_INTERRUPT:
-            # STATUS_INTERRUPT is returned when user hit <C-c> and the loop has
-            # interrupted.
-            # In this case, denite cancel any operation and close its window.
-            self.quit()
-        return
 
     def init_buffer(self):
         self._prev_status = dict()
@@ -364,9 +344,7 @@ class Default(object):
 
         self._displayed_texts = [
             self.get_candidate_display_text(i)
-            for i in range(self._cursor,
-                           min(self._candidates_len,
-                               self._cursor + self._winheight))
+            for i in range(self._cursor, self._candidates_len)
         ]
 
     def update_buffer(self):
@@ -400,11 +378,7 @@ class Default(object):
 
     def update_status(self):
         raw_mode = self._current_mode.upper()
-        cursor_location = self._cursor + self._win_cursor
         max_len = len(str(self._candidates_len))
-        linenr = ('{:'+str(max_len)+'}/{:'+str(max_len)+'}').format(
-            cursor_location,
-            self._candidates_len)
         mode = '-- ' + raw_mode + ' -- '
         if self._context['error_messages']:
             mode = '[ERROR] ' + mode
@@ -414,11 +388,9 @@ class Default(object):
             'mode': mode,
             'sources': self._statusline_sources,
             'path': path,
-            'linenr': linenr,
             # Extra
             'raw_mode': raw_mode,
             'buffer_name': self._context['buffer_name'],
-            'line_cursor': cursor_location,
             'line_total': self._candidates_len,
         }
         if status != self._prev_status:
@@ -426,14 +398,20 @@ class Default(object):
             self._vim.command('redrawstatus')
             self._prev_status = status
 
+        linenr = "printf('%'.(len(line('$'))+2).'d/%d',line('.'),line('$'))"
+
         if self._context['statusline']:
             status = (
                 "%#deniteMode#%{denite#get_status('mode')}%* " +
                 "%{denite#get_status('sources')} %=" +
-                "%#deniteStatusLinePath# %{denite#get_status('path')} %*" +
-                "%#deniteStatusLineNumber#%{denite#get_status('linenr')}%*")
+                "%#deniteStatusLinePath# %{denite#get_status('path')}%*" +
+                "%#deniteStatusLineNumber#%{" + linenr + "}%*")
             if self._context['split'] == 'floating':
-                self._vim.options['titlestring'] = status
+                self._vim.options['titlestring'] = (
+                "%{denite#get_status('mode')}%* " +
+                "%{denite#get_status('sources')} " +
+                " %{denite#get_status('path')}%*" +
+                "%{" + linenr + "}%*")
             else:
                 self._window_options['statusline'] = status
 
@@ -541,39 +519,14 @@ class Default(object):
 
     def change_mode(self, mode):
         self._current_mode = mode
-        custom = self._context['custom']['map']
-        use_default_mappings = self._context['use_default_mappings']
 
         highlight = 'highlight_mode_' + mode
         if highlight in self._context:
             self._vim.command('highlight! link CursorLine ' +
                               self._context[highlight])
 
-        # Clear current keymap
-        self._prompt.keymap.registry.clear()
-
-        # Apply mode independent mappings
-        if use_default_mappings:
-            self._prompt.keymap.register_from_rules(
-                self._vim,
-                DEFAULT_ACTION_KEYMAP.get('_', [])
-            )
-        self._prompt.keymap.register_from_rules(
-            self._vim,
-            custom.get('_', [])
-        )
-
         # Apply mode depend mappings
         mode = self._current_mode
-        if use_default_mappings:
-            self._prompt.keymap.register_from_rules(
-                self._vim,
-                DEFAULT_ACTION_KEYMAP.get(mode, [])
-            )
-        self._prompt.keymap.register_from_rules(
-            self._vim,
-            custom.get(mode, [])
-        )
 
         # Update mode context
         self._context['mode'] = mode
@@ -678,7 +631,6 @@ class Default(object):
 
     def init_denite(self):
         self._mode_stack = []
-        self._prompt.history.reset()
         self._denite.start(self._context)
         self._denite.on_init(self._context)
         self._initialized = True
