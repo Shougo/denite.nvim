@@ -11,7 +11,7 @@ from itertools import groupby, takewhile
 from denite.util import (
     clear_cmdline, echo, error, regex_convert_py_vim, clearmatch)
 from denite.parent import SyncParent
-from ..prompt.prompt import STATUS_ACCEPT
+from denite.ui.map import do_map
 
 
 class Default(object):
@@ -26,8 +26,8 @@ class Default(object):
     def __init__(self, vim):
         self._vim = vim
         self._denite = None
-        self._cursor = 0
         self._win_cursor = 1
+        self._cursor = 0
         self._selected_candidates = []
         self._candidates = []
         self._candidates_len = 0
@@ -43,7 +43,6 @@ class Default(object):
         self._winheight = 0
         self._winwidth = 0
         self._winminheight = -1
-        self._scroll = 0
         self._is_multi = False
         self._is_async = False
         self._matched_pattern = ''
@@ -153,9 +152,6 @@ class Default(object):
         self._prev_winid = int(self._context['prev_winid'])
         self._winrestcmd = self._vim.call('winrestcmd')
 
-        self._scroll = int(self._context['scroll'])
-        if self._scroll == 0:
-            self._scroll = round(self._winheight / 2)
         if self._context['cursor_shape']:
             self._guicursor = self._vim.options['guicursor']
             self._vim.options['guicursor'] = 'a:None'
@@ -207,6 +203,9 @@ class Default(object):
         self._bufnr = self._vim.current.buffer.number
         self._winid = self._vim.call('win_getid')
 
+        self._bufvars['denite'] = {
+            'buffer_name': self._context['buffer_name'],
+        }
         self._bufvars['denite_statusline'] = {}
 
         self._vim.vars['denite#_previewed_buffers'] = {}
@@ -301,7 +300,6 @@ class Default(object):
         self._denite.init_syntax(self._context, self._is_multi)
 
     def init_cursor(self):
-        self._win_cursor = 1
         self._cursor = 0
         if self._context['reversed']:
             self.move_to_last_line()
@@ -487,7 +485,7 @@ class Default(object):
         self.do_action('default')
         candidate = self.get_cursor_candidate()
         echo(self._vim, 'Normal', '[{}/{}] {}'.format(
-            self._cursor + self._win_cursor, self._candidates_len,
+            self._cursor, self._candidates_len,
             candidate.get('abbr', candidate['word'])))
         if goto:
             # Move to the previous window
@@ -576,9 +574,10 @@ class Default(object):
             self._vim.command(self._winrestcmd)
 
     def get_cursor_candidate(self):
-        if self._cursor + self._win_cursor > self._candidates_len:
+        cursor = self._vim.call('line', '.')
+        if cursor > self._candidates_len:
             return {}
-        return self._candidates[self._cursor + self._win_cursor - 1]
+        return self._candidates[cursor - 1]
 
     def get_selected_candidates(self):
         if not self._selected_candidates:
@@ -600,7 +599,7 @@ class Default(object):
         self._denite.on_close(self._context)
         self.quit_buffer()
         self._result = []
-        return STATUS_ACCEPT
+        return
 
     def restart(self):
         self.quit_buffer()
@@ -619,7 +618,7 @@ class Default(object):
         context['sources_queue'].append(history['sources'])
         context['path'] = history['path']
         self._sources_history.pop()
-        return STATUS_ACCEPT
+        return
 
     def init_denite(self):
         self._mode_stack = []
@@ -669,7 +668,7 @@ class Default(object):
             self._selected_candidates = []
             self.redraw(action['is_redraw'])
 
-        return STATUS_ACCEPT if is_quit else None
+        return
 
     def choose_action(self):
         candidates = self.get_selected_candidates()
@@ -684,6 +683,9 @@ class Default(object):
         if action == '':
             return
         return self.do_action(action)
+
+    def do_map(self, name, args):
+        return do_map(self, name, args)
 
     def move_to_pos(self, pos):
         self._cursor = int(pos / self._winheight) * self._winheight
@@ -738,75 +740,6 @@ class Default(object):
     def move_to_bottom(self):
         self._win_cursor = self._winheight
         self.update_cursor()
-
-    def scroll_window_upwards(self):
-        self.scroll_up(self._scroll)
-
-    def scroll_window_downwards(self):
-        self.scroll_down(self._scroll)
-
-    def scroll_page_backwards(self):
-        self.scroll_up(self._winheight - 1)
-
-    def scroll_page_forwards(self):
-        self.scroll_down(self._winheight - 1)
-
-    def scroll_down(self, scroll):
-        if self._win_cursor + self._cursor < self._candidates_len:
-            if self._win_cursor <= 1:
-                self._win_cursor = 1
-                self._cursor = min(self._cursor + scroll,
-                                   self._candidates_len)
-            elif self._win_cursor < self._winheight:
-                self._win_cursor = min(
-                    self._win_cursor + scroll,
-                    self._candidates_len,
-                    self._winheight)
-            else:
-                self._cursor = min(
-                    self._cursor + scroll,
-                    self._candidates_len - self._win_cursor)
-        else:
-            return
-        self.update_cursor()
-
-    def scroll_up(self, scroll):
-        if self._win_cursor > 1:
-            self._win_cursor = max(self._win_cursor - scroll, 1)
-        elif self._cursor > 0:
-            self._cursor = max(self._cursor - scroll, 0)
-        else:
-            return
-        self.update_cursor()
-
-    def scroll_window_up_one_line(self):
-        if self._cursor < 1:
-            return self.scroll_up(1)
-        self._cursor -= 1
-        self._win_cursor += 1
-        self.update_cursor()
-
-    def scroll_window_down_one_line(self):
-        if self._win_cursor <= 1 and self._cursor > 0:
-            return self.scroll_down(1)
-        self._cursor += 1
-        self._win_cursor -= 1
-        self.update_cursor()
-
-    def scroll_cursor_to_top(self):
-        self._cursor += self._win_cursor - 1
-        self._win_cursor = 1
-        self.update_cursor()
-
-    def scroll_cursor_to_middle(self):
-        self.scroll_cursor_to_top()
-        while self._cursor >= 1 and self._win_cursor < self._winheight // 2:
-            self.scroll_window_up_one_line()
-
-    def scroll_cursor_to_bottom(self):
-        self.scroll_cursor_to_top()
-        while self._cursor >= 1 and self._win_cursor < self._winheight:
-            self.scroll_window_up_one_line()
 
     def jump_to_next_by(self, key):
         keyfunc = self._keyfunc(key)
@@ -928,7 +861,6 @@ class Default(object):
                 quick_move_table[char] > self._winheight):
             return
 
-        self._win_cursor = quick_move_table[char]
         self.update_cursor()
 
         if self._context['quick_move'] == 'immediately':

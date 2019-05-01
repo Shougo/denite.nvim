@@ -123,7 +123,6 @@ function! denite#init#_user_options() abort
         \ 'resume': v:false,
         \ 'reversed': v:false,
         \ 'root_markers': '',
-        \ 'scroll': 0,
         \ 'smartcase': v:false,
         \ 'sorters': '',
         \ 'split': 'horizontal',

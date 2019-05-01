@@ -33,8 +33,8 @@ if hasattr(vim, 'plugin'):
             self._rplugin.start(args)
 
         @vim.rpc_export('_denite_do_action', sync=True)
-        def take_action(self, args):
-            return self._rplugin.take_action(args)
+        def do_action(self, args):
+            return self._rplugin.do_action(args)
 
         @vim.rpc_export('_denite_do_map', sync=True)
         def do_map(self, args):

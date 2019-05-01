@@ -640,50 +640,6 @@ are on the neovim-prompt's builtin actions/mappings.
 		Move back to the previous sources.
 		Note: It does not restore the cursor position.
 
-				*denite-map-scroll_window_downwards*
-<denite:scroll_window_downwards>
-		Scroll the window downwards.
-
-				*denite-map-scroll_window_down_one_line*
-<denite:scroll_window_down_one_line>
-		Scroll the window one line down like |CTRL-E|.
-
-				*denite-map-scroll_window_upwards*
-<denite:scroll_window_upwards>
-		Scroll the window upwards.
-
-				*denite-map-scroll_window_up_one_line*
-<denite:scroll_window_up_one_line>
-		Scroll the window one line up like |CTRL-Y|.
-
-				*denite-map-scroll_page_forwards*
-<denite:scroll_page_forwards>
-		Scroll the page forwards.
-
-				*denite-map-scroll_page_backwards*
-<denite:scroll_page_backwards>
-		Scroll the page backwards.
-
-				*denite-map-scroll_down*
-<denite:scroll_down>
-		Scroll down.
-
-				*denite-map-scroll_up*
-<denite:scroll_up>
-		Scroll up.
-
-				*denite-map-scroll_cursor_to_top*
-<denite:scroll_cursor_to_top>
-		Scroll the cursor to the top of the window like |zt|.
-
-				*denite-map-scroll_cursor_to_middle*
-<denite:scroll_cursor_to_middle>
-		Scroll the cursor to the middle of the window like |zz|.
-
-				*denite-map-scroll_cursor_to_bottom*
-<denite:scroll_cursor_to_bottom>
-		Scroll the cursor to the bottom of the window like |zb|.
-
 				*denite-map-smart_delete_char_before_caret*
 <denite:smart_delete_char_before_caret>
 		If no character being typed, |denite-map-quit|.
@@ -2308,30 +2264,6 @@ Q: Can I make denite window always use 40% of the current window?
 A: >
 	Denite file -winheight=`40*winheight(0)/100`
 
-Q: Alt keymappings does not work.
->
-	call denite#custom#map(
-	\ 'insert',
-	\ '<A-v>',
-	\ '<denite:scroll_window_upwards>',
-	\ 'noremap'
-	\)
-
-A:
->
-	function! s:getchar() abort
-	  redraw | echo 'Press any key: '
-	  let c = getchar()
-	  while c ==# "\<CursorHold>"
-	    redraw | echo 'Press any key: '
-	    let c = getchar()
-	  endwhile
-	  redraw | echomsg printf('Raw: "%s" | Char: "%s"', c, nr2char(c))
-	endfunction
-	command! GetChar call s:getchar()
-<
-Please execute :GetChar and press <A-g>.
-If it is the same of g, your environment does not support <A-g>.
 
 Q: I want to narrow by path in grep source.
 
