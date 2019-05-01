@@ -5,8 +5,8 @@
 "=============================================================================
 
 function! denite#filter#open(parent, input) abort
-  let id = exists('g:denite#_filter_winid') ?
-        \ win_findbuf(g:denite#_filter_winid) : []
+  let id = exists('g:denite#_filter_bufnr') ?
+        \ win_findbuf(g:denite#_filter_bufnr) : []
   if !empty(id)
     call win_gotoid(id[0])
     call cursor(line('$'), 0)
@@ -51,7 +51,7 @@ function! denite#filter#init_buffer() abort
   nmap <buffer> q    <Plug>(denite_filter_quit)
   imap <buffer> <CR> <Plug>(denite_filter_update)
 
-  call timer_start(1000, {-> s:update()}, {'repeat': -1})
+  call timer_start(1500, {-> s:update()}, {'repeat': -1})
 endfunction
 
 function! s:update() abort
