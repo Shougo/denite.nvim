@@ -174,7 +174,7 @@ function! denite#helper#_set_oldfiles(oldfiles) abort
 endfunction
 function! denite#helper#_get_oldfiles() abort
   return filter(copy(v:oldfiles),
-        \ 'filereadable(expand(v:val)) || buflisted(expand(v:val))')
+        \ 'filereadable(v:val) || buflisted(v:val)')
 endfunction
 
 
