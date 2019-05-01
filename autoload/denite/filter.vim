@@ -27,6 +27,11 @@ function! denite#filter#open(parent, input) abort
     call append('$', a:input)
   endif
 
+  call s:stop_timer()
+
+  let g:denite#_filter_timer = timer_start(1500,
+        \ {-> s:update()}, {'repeat': -1})
+
   call cursor(line('$'), 0)
   startinsert!
 endfunction
@@ -50,8 +55,6 @@ function! denite#filter#init_buffer() abort
   nmap <buffer> <CR> <Plug>(denite_filter_update)
   nmap <buffer> q    <Plug>(denite_filter_quit)
   imap <buffer> <CR> <Plug>(denite_filter_update)
-
-  call timer_start(1500, {-> s:update()}, {'repeat': -1})
 endfunction
 
 function! s:update() abort
@@ -76,6 +79,8 @@ function! s:quit() abort
   endif
 
   call s:move_to_parent()
+
+  call s:stop_timer()
 endfunction
 
 function! s:move_to_parent() abort
@@ -85,4 +90,11 @@ function! s:move_to_parent() abort
   endif
 
   call win_gotoid(id[0])
+endfunction
+
+function! s:stop_timer() abort
+  if exists('g:denite#_filter_timer')
+    call timer_stop(g:denite#_filter_timer)
+    unlet g:denite#_filter_timer
+  endif
 endfunction
