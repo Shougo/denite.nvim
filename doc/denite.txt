@@ -1,6 +1,6 @@
 *denite.txt*	Dark powered asynchronous unite all interfaces for NeoVim/Vim.
 
-Version: 2.1
+Version: 3.0
 Author:  Shougo <Shougo.Matsu at gmail.com>
 License: MIT license
 
@@ -123,6 +123,15 @@ You must install "pynvim" module with pip >
 ==============================================================================
 EXAMPLES						*denite-examples*
 >
+	" Define mappings
+	autocmd FileType denite call s:denite_my_settings()
+	function! s:denite_my_settings() abort
+	  nnoremap <silent><buffer><expr> <CR>
+	  \ denite#do_map('do_action', 'open')
+	  nnoremap <silent><buffer><expr> q
+	  \ denite#do_map('quit')
+	endfunction
+
 	" Change file/rec command.
 	call denite#custom#var('file/rec', 'command',
 	\ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
