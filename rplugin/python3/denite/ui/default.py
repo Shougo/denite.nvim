@@ -26,7 +26,6 @@ class Default(object):
         self._candidates_len = 0
         self._result = []
         self._context = {}
-        self._current_mappings = {}
         self._bufnr = -1
         self._winid = -1
         self._winrestcmd = ''
