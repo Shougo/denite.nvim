@@ -56,6 +56,7 @@ class Default(object):
         self._prev_curpos = []
         self._save_window_options = {}
         self._sources_history = []
+        self._previous_text = ''
 
     def start(self, sources, context):
         if not self._denite:
@@ -370,18 +371,18 @@ class Default(object):
         self.move_cursor()
 
     def update_status(self):
-        raw_mode = self._current_mode.upper()
-        mode = '-- ' + raw_mode + ' -- '
+        inpt = ''
+        if self._context['input']:
+            inpt = self._context['input'] + ' '
         if self._context['error_messages']:
-            mode = '[ERROR] ' + mode
+            inpt = '[ERROR] ' + inpt
         path = '[' + self._context['path'] + ']'
 
         status = {
-            'mode': mode,
+            'input': inpt,
             'sources': self._statusline_sources,
             'path': path,
             # Extra
-            'raw_mode': raw_mode,
             'buffer_name': self._context['buffer_name'],
             'line_total': self._candidates_len,
         }
@@ -394,13 +395,13 @@ class Default(object):
 
         if self._context['statusline']:
             status = (
-                "%#deniteMode#%{denite#get_status('mode')}%* " +
+                "%#deniteMode#%{denite#get_status('input')}%* " +
                 "%{denite#get_status('sources')} %=" +
                 "%#deniteStatusLinePath# %{denite#get_status('path')}%*" +
                 "%#deniteStatusLineNumber#%{" + linenr + "}%*")
             if self._context['split'] == 'floating':
                 self._vim.options['titlestring'] = (
-                    "%{denite#get_status('mode')}%* " +
+                    "%{denite#get_status('input')}%* " +
                     "%{denite#get_status('sources')} " +
                     " %{denite#get_status('path')}%*" +
                     "%{" + linenr + "}%*")

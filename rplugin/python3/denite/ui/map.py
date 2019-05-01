@@ -39,6 +39,23 @@ def _do_previous_action(denite, params):
     return denite.do_action(denite._prev_action)
 
 
+def _filter(denite, params):
+    text = params[0] if params else ''
+    if not denite.is_async and denite._previous_text == text:
+        return
+
+    denite._context['input'] = text
+
+    if denite.update_candidates():
+        denite.update_buffer()
+    else:
+        denite.update_status()
+
+    if denite._previous_text != text:
+        denite._previous_text = text
+        denite.init_cursor()
+
+
 def _move_up_path(denite, params):
     denite._context['path'] = dirname(denite._context['path'])
     return denite.restart()
@@ -121,6 +138,7 @@ MAPPINGS = {
     'choose_action': _choose_action,
     'do_action': _do_action,
     'do_previous_action': _do_previous_action,
+    'filter': _filter,
     'move_up_path': _move_up_path,
     'nop': _nop,
     'print_messages': _print_messages,

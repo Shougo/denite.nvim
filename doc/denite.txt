@@ -332,6 +332,11 @@ do_action:{action}
 do_previous_action
 		Fire the previous action.
 
+						*denite-map-filter*
+filter:{string}
+		Filter the candidates by {string}.
+		Note: It is used for filtering UI.
+
 						*denite-map-move_up_path*
 move_up_path
 		Move to the upper path and restart Denite buffer.
@@ -477,26 +482,11 @@ denite#get_status({name})				*denite#get_status()*
 		customize the statusline.
 
 		The available status names:
-		"mode": Current mode
+		"input": Current filtering text
 		"sources": Current sources and candidates number
 		"path": Specified |denite-option-path|
-		"linenr": Equivalent to "line_cursor/line_total"
-		"raw_mode": Current mode, without any processing
 		"buffer_name": Current |denite-option-buffer-name|
-		"line_cursor": Cursor position. Part of "linenr".
 		"line_total": Total candidates. Part of "linenr".
-
-denite#get_status_mode()			 *denite#get_status_mode()*
-		Please use |denite#get_status()| instead.
-
-denite#get_status_sources()			 *denite#get_status_sources()*
-		Please use |denite#get_status()| instead.
-
-denite#get_status_path()			 *denite#get_status_path()*
-		Please use |denite#get_status()| instead.
-
-denite#get_status_linenr()			 *denite#get_status_linenr()*
-		Please use |denite#get_status()| instead.
 
 							*denite#initialize()*
 denite#initialize()
@@ -1769,9 +1759,11 @@ https://github.com/raghur/fruzzy
 COMPATIBILITY						*denite-compatibility*
 
 2019.05.01
+* Version 3.0
 * Remove prompt.nvim.
 * "-use-default-mappings" option is deprecated.
 * Remove suspend feature.
+* Change status names in denite#get_status().
 
 2019.03.24
 * "-auto-highlight" and "-auto-preview" options are deprecated.

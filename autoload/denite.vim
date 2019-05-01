@@ -22,18 +22,6 @@ function! denite#get_status(name) abort
   return !exists('b:denite_statusline') ? '' :
         \ get(b:denite_statusline, a:name, '')
 endfunction
-function! denite#get_status_mode() abort
-  return denite#get_status('mode')
-endfunction
-function! denite#get_status_sources() abort
-  return denite#get_status('sources')
-endfunction
-function! denite#get_status_path() abort
-  return denite#get_status('path')
-endfunction
-function! denite#get_status_linenr() abort
-  return denite#get_status('linenr')
-endfunction
 
 function! s:start(sources, user_context) abort
   if denite#initialize()
