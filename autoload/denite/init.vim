@@ -69,6 +69,8 @@ function! denite#init#_initialize() abort
     endif
     return 1
   endtry
+
+  call timer_start(100, {-> denite#call_async_map('update')})
 endfunction
 function! s:initialize_variables() abort
   let g:denite#_previewed_buffers = {}
@@ -124,8 +126,6 @@ function! denite#init#_user_options() abort
         \ 'split': 'horizontal',
         \ 'source_names': '',
         \ 'statusline': v:true,
-        \ 'updatetime': 100,
-        \ 'skiptime': 500,
         \ 'unique': v:false,
         \ 'vertical_preview': v:false,
         \ 'wincol': &columns / 4,

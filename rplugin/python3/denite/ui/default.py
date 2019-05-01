@@ -153,7 +153,7 @@ class Default(object):
         self._options['buflisted'] = False
         self._options['modeline'] = False
         self._options['filetype'] = 'denite'
-        self._options['modifiable'] = True
+        self._options['modifiable'] = False
 
         if self._context['split'] == 'floating':
             # Disable ruler
@@ -195,6 +195,9 @@ class Default(object):
         self._vim.command('silent doautocmd WinEnter')
         self._vim.command('silent doautocmd BufWinEnter')
         self._vim.command('doautocmd FileType denite')
+        self._vim.command('autocmd denite '
+                          'CursorMoved <buffer> '
+                          'call denite#call_map("auto_action")')
 
         self.init_syntax()
 
@@ -347,7 +350,9 @@ class Default(object):
                 self._context['input'].replace(' ', '')
             ))
 
+        self._options['modifiable'] = True
         self._vim.current.buffer[:] = self._displayed_texts
+        self._options['modifiable'] = False
         self.resize_buffer()
 
         if self._context['auto_action']:
@@ -491,8 +496,6 @@ class Default(object):
                 self._vim.command('silent bdelete ' + str(bufnr))
         self._vim.vars['denite#_previewed_buffers'] = {}
 
-        clearmatch(self._vim)
-
         self._vim.command('highlight! link CursorLine CursorLine')
         if self._context['cursor_shape']:
             self._vim.command('set guicursor&')
@@ -527,6 +530,8 @@ class Default(object):
 
         if self._get_wininfo() and self._get_wininfo() == self._prev_wininfo:
             self._vim.command(self._winrestcmd)
+
+        clearmatch(self._vim)
 
     def get_cursor_candidate(self):
         cursor = self._vim.call('line', '.')

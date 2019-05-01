@@ -14,6 +14,12 @@ def do_map(denite, name, params):
     return MAPPINGS[name](denite, params)
 
 
+def _auto_action(denite, params):
+    if not denite._context['auto_action']:
+        return
+    return denite.do_action(denite._context['auto_action'])
+
+
 def _change_path(denite, params):
     path = denite._vim.call('input', 'Path: ',
                             denite._context['path'], 'dir')
@@ -46,8 +52,6 @@ def _do_previous_action(denite, params):
 
 def _filter(denite, params):
     text = params[0] if params else ''
-    if not denite.is_async and denite._previous_text == text:
-        return
 
     denite._context['input'] = text
 
@@ -127,7 +131,18 @@ def _toggle_select_all(denite, params):
     return denite.update_buffer()
 
 
+def _update(denite, params):
+    if not denite.is_async:
+        return
+
+    if denite.update_candidates():
+        denite.update_buffer()
+    else:
+        denite.update_status()
+
+
 MAPPINGS = {
+    'auto_action': _auto_action,
     'change_path': _change_path,
     'change_sorters': _change_sorters,
     'choose_action': _choose_action,
@@ -145,4 +160,5 @@ MAPPINGS = {
     'toggle_matchers': _toggle_matchers,
     'toggle_select': _toggle_select,
     'toggle_select_all': _toggle_select_all,
+    'update': _update,
 }

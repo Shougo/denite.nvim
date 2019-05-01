@@ -132,6 +132,8 @@ EXAMPLES						*denite-examples*
 	  \ denite#do_map('quit')
 	  nnoremap <silent><buffer><expr> i
 	  \ denite#do_map('filter', input('Filter: '))
+	  nnoremap <silent><buffer><expr> <Space>
+	  \ denite#do_map('toggle_select').'j'
 	endfunction
 
 	" Change file/rec command.
@@ -750,21 +752,10 @@ OPTIONS							*denite-options*
 		Enable statusline.
 		Default: true
 
-						*denite-option-skiptime*
--skiptime={time}
-		Specify the filtering skiptime when narrowing in huge
-		candidates(over 20000).
-		Default: 500
-
 						*denite-option-unique*
 -unique
 		Unique the candidates by word attribute.
 		Default: false
-
-						*denite-option-updatetime*
--updatetime={time}
-		Specify the buffer updatetime when narrowing.
-		Default: 100
 
 					*denite-option-vertical-preview*
 -vertical-preview
