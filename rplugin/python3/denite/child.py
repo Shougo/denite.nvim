@@ -108,7 +108,6 @@ class Child(object):
             ctx['is_redraw'] = context['is_redraw']
             ctx['messages'] = context['messages']
             ctx['error_messages'] = context['error_messages']
-            ctx['mode'] = context['mode']
             ctx['input'] = context['input']
             ctx['prev_input'] = context['input']
             ctx['event'] = 'gather'
@@ -296,8 +295,7 @@ class Child(object):
                 ctx['input'] = expand(ctx['input'])
             if context['smartcase']:
                 ctx['ignorecase'] = re.search(r'[A-Z]', ctx['input']) is None
-            ctx['mode'] = context['mode']
-            ctx['async_timeout'] = 0.03 if ctx['mode'] != 'insert' else 0.02
+            ctx['async_timeout'] = 0.03
             if ctx['prev_input'] != ctx['input']:
                 ctx['prev_time'] = time.time()
                 if ctx['is_interactive']:

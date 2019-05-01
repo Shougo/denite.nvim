@@ -18,10 +18,6 @@ class Default(object):
     def is_async(self):
         return self._is_async
 
-    @property
-    def current_mode(self):
-        return self._current_mode
-
     def __init__(self, vim):
         self._vim = vim
         self._denite = None
@@ -30,8 +26,6 @@ class Default(object):
         self._candidates_len = 0
         self._result = []
         self._context = {}
-        self._current_mode = ''
-        self._mode_stack = []
         self._current_mappings = {}
         self._bufnr = -1
         self._winid = -1
@@ -91,9 +85,6 @@ class Default(object):
         if self._initialized and context['resume']:
             # Skip the initialization
 
-            if context['mode']:
-                self._current_mode = context['mode']
-
             update = ('immediately', 'immediately_1',
                       'cursor_wrap', 'cursor_pos', 'prev_winid',
                       'quick_move')
@@ -107,15 +98,10 @@ class Default(object):
             if context['refresh']:
                 self.redraw()
         else:
-            if not context['mode']:
-                # Default mode
-                context['mode'] = 'insert'
-
             self._context.clear()
             self._context.update(context)
             self._context['sources'] = sources
             self._context['is_redraw'] = False
-            self._current_mode = context['mode']
             self._is_multi = len(sources) > 1
 
             if not sources:
@@ -134,7 +120,6 @@ class Default(object):
             self.init_buffer()
 
         self.update_displayed_texts()
-        self.change_mode(self._current_mode)
         self.update_buffer()
 
         if self._context['quick_move'] and self.quick_move():
@@ -276,7 +261,7 @@ class Default(object):
 
     def init_syntax(self):
         self._vim.command('syntax case ignore')
-        self._vim.command('highlight default link deniteMode ModeMsg')
+        self._vim.command('highlight default link deniteInput ModeMsg')
         self._vim.command('highlight link deniteMatchedRange ' +
                           self._context['highlight_matched_range'])
         self._vim.command('highlight link deniteMatchedChar ' +
@@ -394,7 +379,7 @@ class Default(object):
 
         if self._context['statusline']:
             status = (
-                "%#deniteMode#%{denite#get_status('input')}%* " +
+                "%#deniteInput#%{denite#get_status('input')}%* " +
                 "%{denite#get_status('sources')} %=" +
                 "%#deniteStatusLinePath# %{denite#get_status('path')}%*" +
                 "%#deniteStatusLineNumber#%{" + linenr + "}%*")
@@ -498,23 +483,6 @@ class Default(object):
             self.move_to_next_line()
         self.quit_buffer()
 
-    def change_mode(self, mode):
-        self._current_mode = mode
-
-        highlight = 'highlight_mode_' + mode
-        if highlight in self._context:
-            self._vim.command('highlight! link CursorLine ' +
-                              self._context[highlight])
-
-        # Apply mode depend mappings
-        mode = self._current_mode
-
-        # Update mode context
-        self._context['mode'] = mode
-
-        # Update mode indicator
-        self.update_status()
-
     def cleanup(self):
         # Clear previewed buffers
         if not self._context['has_preview_window']:
@@ -598,7 +566,6 @@ class Default(object):
         self.gather_candidates()
         self.init_buffer()
         self.update_candidates()
-        self.change_mode(self._current_mode)
         self.update_buffer()
 
     def restore_sources(self, context):
@@ -612,7 +579,6 @@ class Default(object):
         return
 
     def init_denite(self):
-        self._mode_stack = []
         self._denite.start(self._context)
         self._denite.on_init(self._context)
         self._initialized = True
@@ -649,7 +615,6 @@ class Default(object):
             # Re-open denite buffer
 
             self.init_buffer()
-            self.change_mode(self._current_mode)
 
             self.redraw(False)
             # Disable quit flag

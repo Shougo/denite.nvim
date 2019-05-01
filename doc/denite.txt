@@ -603,13 +603,6 @@ OPTIONS							*denite-options*
 		Matched range highlight.
 		Default: "Underlined"
 
-					*denite-option-highlight-mode-{mode}*
--highlight-mode-{mode}
-		Change |hl-CursorLine| in {mode}.
-		Default:
-		"CursorLine" in "insert" mode
-		"WildMenu" in "normal" mode
-
 					*denite-option-highlight-preview-line*
 -highlight-preview-line
 		Previewed line highlight.
@@ -653,11 +646,6 @@ OPTIONS							*denite-options*
 		Specify the max candidate width.
 		Note: Denite skip the match after the width.
 		Default: 200
-
-							*denite-option-mode*
--mode={mode}
-		Specify the default mode.
-		Default: "insert"
 
 							*denite-option-path*
 -path={input-text}
@@ -1645,9 +1633,7 @@ A: Yes.
 Q: I want to change the cursor line color in Denite buffer.
 
 A: denite uses 'cursorline' feature.
-So you can change the color by |hl-CursorLine| highlight or
-|denite-option-highlight-mode-{mode}|. >
-	Denite file/rec -highlight-mode-insert=Search
+So you can change the color by |hl-CursorLine| highlight. >
 
 Q: I want to use unite source in denite.
 
