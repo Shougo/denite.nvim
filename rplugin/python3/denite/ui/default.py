@@ -493,9 +493,6 @@ class Default(object):
 
         clearmatch(self._vim)
 
-        if not self._context['immediately']:
-            # Redraw to clear prompt
-            self._vim.command('redraw | echo ""')
         self._vim.command('highlight! link CursorLine CursorLine')
         if self._context['cursor_shape']:
             self._vim.command('set guicursor&')

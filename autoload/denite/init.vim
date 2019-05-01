@@ -113,7 +113,6 @@ function! denite#init#_user_options() abort
         \ 'path': getcwd(),
         \ 'previewheight': &previewheight,
         \ 'prompt': '#',
-        \ 'prompt_highlight': 'Statement',
         \ 'post_action': 'none',
         \ 'quick_move': '',
         \ 'refresh': v:false,
