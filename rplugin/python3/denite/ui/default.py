@@ -93,9 +93,13 @@ class Default(object):
             if self.check_do_option():
                 return
 
+            prev_linenr = self._vim.call('line', '.')
+
             self.init_buffer()
             if context['refresh']:
                 self.redraw()
+
+            self._vim.call('cursor', [prev_linenr, 0])
         else:
             self._context.clear()
             self._context.update(context)
@@ -351,10 +355,14 @@ class Default(object):
                 self._context['input'].replace(' ', '')
             ))
 
+        prev_linenr = self._vim.call('line', '.')
+
         self._options['modifiable'] = True
         self._vim.current.buffer[:] = self._displayed_texts
         self._options['modifiable'] = False
         self.resize_buffer()
+
+        self._vim.call('cursor', [prev_linenr, 0])
 
         if self._context['auto_action']:
             self.do_action(self._context['auto_action'])
@@ -383,11 +391,6 @@ class Default(object):
         linenr = "printf('%'.(len(line('$'))+2).'d/%d',line('.'),line('$'))"
 
         if self._context['statusline']:
-            status = (
-                "%#deniteInput#%{denite#get_status('input')}%* " +
-                "%{denite#get_status('sources')} %=" +
-                "%#deniteStatusLinePath# %{denite#get_status('path')}%*" +
-                "%#deniteStatusLineNumber#%{" + linenr + "}%*")
             if self._context['split'] == 'floating':
                 self._vim.options['titlestring'] = (
                     "%{denite#get_status('input')}%* " +
@@ -395,7 +398,11 @@ class Default(object):
                     " %{denite#get_status('path')}%*" +
                     "%{" + linenr + "}%*")
             else:
-                self._window_options['statusline'] = status
+                self._window_options['statusline'] = (
+                    "%#deniteInput#%{denite#get_status('input')}%* " +
+                    "%{denite#get_status('sources')} %=" +
+                    "%#deniteStatusLinePath# %{denite#get_status('path')}%*" +
+                    "%#deniteStatusLineNumber#%{" + linenr + "}%*")
 
     def update_cursor(self):
         self.update_displayed_texts()

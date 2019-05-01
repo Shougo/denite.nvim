@@ -47,6 +47,14 @@ function! denite#filter#init_buffer() abort
   nnoremap <buffer><expr><silent> <Plug>(denite_filter_quit)
         \ :<C-u>call <SID>quit()<CR>
 
+  augroup denite-filter
+    autocmd!
+    autocmd TextChangedI <buffer> call s:update()
+  augroup END
+  if exists('##TextChangedP')
+    autocmd denite-filter TextChangedP <buffer> call s:update()
+  endif
+
   nmap <buffer> <CR> <Plug>(denite_filter_update)
   nmap <buffer> q    <Plug>(denite_filter_quit)
   imap <buffer> <CR> <Plug>(denite_filter_update)
