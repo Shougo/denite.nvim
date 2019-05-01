@@ -327,6 +327,7 @@ choose_action
 do_action:{action}
 		Close current Denite buffer and fire {action} action.
 		You can find the actions list in |denite-kinds|.
+		If {action} is empty, "default" will be used.
 
 						*denite-map-do_previous_action*
 do_previous_action
