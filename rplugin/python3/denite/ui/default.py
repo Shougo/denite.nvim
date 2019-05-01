@@ -90,7 +90,7 @@ class Default(object):
             for key in update:
                 self._context[key] = context[key]
 
-            if self.check_option():
+            if self.check_do_option():
                 return
 
             self.init_buffer()
@@ -111,12 +111,13 @@ class Default(object):
             self.init_denite()
             self.gather_candidates()
             self.update_candidates()
-            self.init_cursor()
 
-            if self.check_option():
+            if self.check_do_option():
                 return
 
             self.init_buffer()
+            self.init_cursor()
+            self.check_move_option()
 
         self.update_displayed_texts()
         self.update_buffer()
@@ -441,9 +442,19 @@ class Default(object):
         elif is_vertical and self._vim.current.window.width != winwidth:
             self._vim.command('vertical resize ' + str(winwidth))
 
-    def check_option(self):
+    def check_do_option(self):
+        if self._context['do'] != '':
+            self.do_command(self._context['do'])
+            return True
+        elif (self._candidates and self._context['immediately'] or
+                len(self._candidates) == 1 and self._context['immediately_1']):
+            self.do_immediately()
+            return True
+        return not (self._context['empty'] or
+                    self._is_async or self._candidates)
+
+    def check_move_option(self):
         if self._context['cursor_pos'].isnumeric():
-            self.init_cursor()
             self.move_to_pos(int(self._context['cursor_pos']))
         elif re.match(r'\+\d+', self._context['cursor_pos']):
             for _ in range(int(self._context['cursor_pos'][1:])):
@@ -453,16 +464,6 @@ class Default(object):
                 self.move_to_prev_line()
         elif self._context['cursor_pos'] == '$':
             self.move_to_last_line()
-        elif self._context['do'] != '':
-            self.do_command(self._context['do'])
-            return True
-
-        if (self._candidates and self._context['immediately'] or
-                len(self._candidates) == 1 and self._context['immediately_1']):
-            self.do_immediately()
-            return True
-        return not (self._context['empty'] or
-                    self._is_async or self._candidates)
 
     def do_immediately(self):
         goto = self._winid > 0 and self._vim.call(
