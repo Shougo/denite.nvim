@@ -222,7 +222,7 @@ endfunction
 function! denite#util#has_yarp() abort
   return !has('nvim')
 endfunction
-function! denite#util#rpcrequest(method, args) abort
+function! denite#util#rpcrequest(method, args, is_async) abort
   if !denite#init#_check_channel()
     return -1
   endif
@@ -231,8 +231,16 @@ function! denite#util#rpcrequest(method, args) abort
     if g:denite#_yarp.job_is_dead
       return -1
     endif
-    return g:denite#_yarp.request(a:method, a:args)
+    if a:is_async
+      return g:defx#_yarp.notify(a:method, a:args)
+    else
+      return g:defx#_yarp.request(a:method, a:args)
+    endif
   else
-    return rpcrequest(g:denite#_channel_id, a:method, a:args)
+    if a:is_async
+      return rpcnotify(g:denite#_channel_id, a:method, a:args)
+    else
+      return rpcrequest(g:denite#_channel_id, a:method, a:args)
+    endif
   endif
 endfunction

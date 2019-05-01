@@ -46,10 +46,10 @@ function! s:start(sources, user_context) abort
   call setpos('.', pos)
 
   let args = [a:sources, a:user_context]
-  return denite#util#rpcrequest('_denite_start', args)
+  return denite#util#rpcrequest('_denite_start', args, v:false)
 endfunction
 
 function! denite#do_action(context, action_name, targets) abort
   let args = [a:context, a:action_name, a:targets]
-  return denite#util#rpcrequest('_denite_do_action', args)
+  return denite#util#rpcrequest('_denite_do_action', args, v:false)
 endfunction
