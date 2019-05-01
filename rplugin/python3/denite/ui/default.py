@@ -38,7 +38,6 @@ class Default(object):
         self._matched_pattern = ''
         self._displayed_texts = []
         self._statusline_sources = ''
-        self._guicursor = ''
         self._titlestring = ''
         self._ruler = False
         self._prev_action = ''
@@ -142,9 +141,6 @@ class Default(object):
         self._prev_winid = int(self._context['prev_winid'])
         self._winrestcmd = self._vim.call('winrestcmd')
 
-        if self._context['cursor_shape']:
-            self._guicursor = self._vim.options['guicursor']
-            self._vim.options['guicursor'] = 'a:None'
         self._titlestring = self._vim.options['titlestring']
         self._ruler = self._vim.options['ruler']
 
@@ -508,9 +504,6 @@ class Default(object):
         self._vim.vars['denite#_previewed_buffers'] = {}
 
         self._vim.command('highlight! link CursorLine CursorLine')
-        if self._context['cursor_shape']:
-            self._vim.command('set guicursor&')
-            self._vim.options['guicursor'] = self._guicursor
         if self._context['split'] == 'floating':
             self._vim.options['titlestring'] = self._titlestring
             self._vim.options['ruler'] = self._ruler

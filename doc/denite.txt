@@ -561,10 +561,6 @@ OPTIONS							*denite-options*
 		Default: ""
 
 						*denite-option-cursor-shape*
--cursor-shape
-		Enable 'guicursor' support.
-		Default: v:true if has("gui_running")
-
 						*denite-option-cursor-wrap*
 -cursor-wrap
 		If you move when the cursor reaches the top or bottom edge,
