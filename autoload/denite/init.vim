@@ -69,6 +69,9 @@ function! denite#init#_initialize() abort
     endif
     return 1
   endtry
+
+  let g:denite#_update_timer = timer_start(500,
+        \ {-> denite#call_map('update')}, {'repeat': -1})
 endfunction
 function! s:initialize_variables() abort
   let g:denite#_previewed_buffers = {}

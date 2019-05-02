@@ -203,9 +203,6 @@ class Default(object):
         self._vim.command('autocmd denite '
                           'CursorMoved <buffer> '
                           'call denite#call_map("auto_action")')
-        self._vim.command('autocmd denite '
-                          'CursorHold <buffer> '
-                          'call denite#call_map("update")')
 
         self.init_syntax()
 
