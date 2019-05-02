@@ -76,7 +76,8 @@ def _nop(denite, params):
 
 def _open_filter_buffer(denite, params):
     denite._vim.call('denite#filter#open',
-                     denite._bufnr, denite._context['input'])
+                     denite._bufnr, denite._context['input'],
+                     denite._entire_len, denite.is_async)
 
 
 def _print_messages(denite, params):

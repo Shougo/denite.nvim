@@ -193,7 +193,10 @@ class Child(object):
         pattern = ''
         statuses = []
         candidates = []
-        for status, partial, patterns in self._filter_candidates(context):
+        total_entire_len = 0
+        for status, partial, patterns, entire_len in self._filter_candidates(
+                context):
+            total_entire_len += entire_len
             candidates += partial
             statuses.append(status)
 
@@ -225,7 +228,8 @@ class Child(object):
             candidates.reverse()
         if self.is_async():
             statuses.append('[async]')
-        return [self.is_async(), pattern, statuses, candidates]
+        return [self.is_async(), pattern, statuses, total_entire_len,
+                candidates]
 
     def do_action(self, context, action_name, targets):
         action = self._get_action_targets(context, action_name, targets)
@@ -307,7 +311,7 @@ class Child(object):
                 entire += self._gather_source_candidates(ctx, source)
             if not entire:
                 yield self._get_source_status(
-                    ctx, source, entire, []), [], []
+                    ctx, source, entire, []), [], [], 0
                 continue
 
             partial = []
@@ -338,7 +342,7 @@ class Child(object):
                 for x in source.matchers if self._filters[x]))
 
             yield self._get_source_status(
-                ctx, source, entire, partial), partial, patterns
+                ctx, source, entire, partial), partial, patterns, len(entire)
 
     def _gather_source_candidates(self, context, source):
         max_len = int(context['max_candidate_width']) * 2

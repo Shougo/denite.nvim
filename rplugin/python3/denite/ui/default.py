@@ -24,6 +24,7 @@ class Default(object):
         self._selected_candidates = []
         self._candidates = []
         self._candidates_len = 0
+        self._entire_len = 0
         self._result = []
         self._context = {}
         self._bufnr = -1
@@ -298,7 +299,7 @@ class Default(object):
             self.move_to_first_line()
 
     def update_candidates(self):
-        [self._is_async, pattern, statuses,
+        [self._is_async, pattern, statuses, self._entire_len,
          self._candidates] = self._denite.filter_candidates(self._context)
 
         prev_matched_pattern = self._matched_pattern
@@ -334,13 +335,8 @@ class Default(object):
         ]
 
     def update_buffer(self):
-        current = self._vim.call('win_getid')
-
         if self._bufnr != self._vim.current.buffer.number:
-            buf = self._vim.call('win_findbuf', self._bufnr)
-            if not buf:
-                return
-            self._vim.call('win_gotoid', buf[0])
+            return
 
         self.update_status()
 
@@ -373,8 +369,6 @@ class Default(object):
 
         if self._context['auto_action']:
             self.do_action(self._context['auto_action'])
-
-        self._vim.call('win_gotoid', current)
 
     def update_status(self):
         inpt = ''
@@ -728,7 +722,7 @@ class Default(object):
                 quick_move_table[char] > self._winheight):
             return
 
-        for _ in range(int(quick_move_table[char]) - 1):
+        for _ in range(int(quick_move_table[char])):
             self.move_to_next_line()
 
         if self._context['quick_move'] == 'immediately':

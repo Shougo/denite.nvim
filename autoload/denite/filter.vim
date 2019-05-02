@@ -4,7 +4,7 @@
 " License: MIT license
 "=============================================================================
 
-function! denite#filter#open(parent, input) abort
+function! denite#filter#open(parent, input, entire_len, is_async) abort
   let id = exists('g:denite#_filter_bufnr') ?
         \ win_findbuf(g:denite#_filter_bufnr) : []
   if !empty(id)
@@ -17,6 +17,7 @@ function! denite#filter#open(parent, input) abort
   endif
 
   let g:denite#_filter_parent = a:parent
+  let g:denite#_filter_entire_len = a:entire_len
 
   call denite#filter#init_buffer()
 
@@ -29,8 +30,15 @@ function! denite#filter#open(parent, input) abort
 
   call s:stop_timer()
 
-  " let g:denite#_filter_timer = timer_start(1500,
-  "      \ {-> s:update()}, {'repeat': -1})
+  if !a:is_async && g:denite#_filter_entire_len < 5000
+    let g:denite#_filter_timer = timer_start(1500,
+          \ {-> s:update()}, {'repeat': -1})
+
+    augroup denite-filter
+      autocmd!
+      autocmd InsertLeave * call s:update()
+    augroup END
+  endif
 
   call cursor(line('$'), 0)
   startinsert!
@@ -45,19 +53,12 @@ function! denite#filter#init_buffer() abort
 
   setfiletype denite-filter
 
-  augroup denite-filter
-    autocmd!
-    autocmd InsertLeave * call s:update()
-  augroup END
-
   nnoremap <buffer><silent> <Plug>(denite_filter_update)
-        \ :<C-u>call <SID>update()<CR>:call <SID>quit()<CR>
+        \ :<C-u>call <SID>async_update()<CR>
   inoremap <buffer><silent> <Plug>(denite_filter_update)
-        \ <ESC>:call <SID>update()<CR>:call <SID>quit()<CR>
+        \ <ESC>:call <SID>async_update()<CR>
   nnoremap <buffer><silent> <Plug>(denite_filter_quit)
         \ :<C-u>call <SID>quit()<CR>
-
-  inoremap <buffer><silent><Space> <Space><C-o>:call <SID>update()<CR>
 
   nmap <buffer> <CR> <Plug>(denite_filter_update)
   nmap <buffer> q    <Plug>(denite_filter_quit)
@@ -76,6 +77,18 @@ function! s:update() abort
   call denite#call_map('filter', input)
 
   call win_gotoid(g:denite#_filter_winid)
+endfunction
+
+function! s:async_update() abort
+  if &filetype !=# 'denite-filter'
+    return
+  endif
+
+  let input = getline('.')
+
+  call s:quit()
+
+  call denite#call_async_map('filter', input)
 endfunction
 
 function! s:quit() abort
