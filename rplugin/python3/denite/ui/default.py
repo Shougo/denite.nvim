@@ -24,6 +24,7 @@ class Default(object):
         self._selected_candidates = []
         self._candidates = []
         self._candidates_len = 0
+        self._cursor = 0
         self._entire_len = 0
         self._result = []
         self._context = {}
@@ -97,6 +98,7 @@ class Default(object):
             self.init_buffer()
             if context['refresh']:
                 self.redraw()
+            self.move_to_pos(self._cursor)
         else:
             self._context.clear()
             self._context.update(context)
@@ -484,6 +486,7 @@ class Default(object):
         self.quit_buffer()
 
     def cleanup(self):
+        self._cursor = self._vim.call('line', '.')
         # Clear previewed buffers
         if not self._context['has_preview_window']:
             self._vim.command('pclose!')
