@@ -86,21 +86,17 @@ class Default(object):
             # Skip the initialization
 
             update = ('immediately', 'immediately_1',
-                      'cursor_wrap', 'cursor_pos', 'prev_winid',
-                      'quick_move')
+                      'cursor_pos', 'prev_winid',
+                      'start_filter', 'quick_move')
             for key in update:
                 self._context[key] = context[key]
 
             if self.check_do_option():
                 return
 
-            prev_linenr = self._vim.call('line', '.')
-
             self.init_buffer()
             if context['refresh']:
                 self.redraw()
-
-            self._vim.call('cursor', [prev_linenr, 0])
         else:
             self._context.clear()
             self._context.update(context)
@@ -290,12 +286,6 @@ class Default(object):
                                self._context['selected_icon']))
 
         self._denite.init_syntax(self._context, self._is_multi)
-
-    def init_cursor(self):
-        if self._context['reversed']:
-            self.move_to_last_line()
-        else:
-            self.move_to_first_line()
 
     def update_candidates(self):
         [self._is_async, pattern, statuses, self._entire_len,
@@ -647,6 +637,12 @@ class Default(object):
     def do_map(self, name, args):
         return do_map(self, name, args)
 
+    def init_cursor(self):
+        if self._context['reversed']:
+            self.move_to_last_line()
+        else:
+            self.move_to_first_line()
+
     def move_to_pos(self, pos):
         self._vim.call('cursor', pos, 0)
 
@@ -654,27 +650,23 @@ class Default(object):
         cursor = self._vim.call('line', '.')
         if cursor < self._candidates_len:
             cursor += 1
-        elif self._context['cursor_wrap']:
-            self.move_to_first_line()
         else:
             return
-        self._vim.call('cursor', cursor, 0)
+        self.move_to_pos(cursor)
 
     def move_to_prev_line(self):
         cursor = self._vim.call('line', '.')
         if cursor >= 1:
             cursor -= 1
-        elif self._context['cursor_wrap']:
-            self.move_to_last_line()
         else:
             return
-        self._vim.call('cursor', cursor, 0)
+        self.move_to_pos(cursor)
 
     def move_to_first_line(self):
-        self._vim.call('cursor', 1, 0)
+        self.move_to_pos(1)
 
     def move_to_last_line(self):
-        self._vim.call('cursor', self._vim.call('line', '$'), 0)
+        self.move_to_pos(self._vim.call('line', '$'))
 
     def quick_move(self):
         def get_quick_move_table():

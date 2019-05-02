@@ -560,13 +560,6 @@ OPTIONS							*denite-options*
 		Note: "$" is the last candidate.
 		Default: ""
 
-						*denite-option-cursor-shape*
-						*denite-option-cursor-wrap*
--cursor-wrap
-		If you move when the cursor reaches the top or bottom edge,
-		the cursor moves to the opposite side.
-		Default: false
-
 						*denite-option-direction*
 -direction={direction}
 		Specify the Denite window direction as {direction}.
