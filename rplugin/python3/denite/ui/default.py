@@ -120,10 +120,10 @@ class Default(object):
 
             self.init_buffer()
             self.init_cursor()
-            self.check_move_option()
 
         self.update_displayed_texts()
         self.update_buffer()
+        self.check_move_option()
 
         if self._context['quick_move'] and self.quick_move():
             return
@@ -464,7 +464,7 @@ class Default(object):
 
     def check_move_option(self):
         if self._context['cursor_pos'].isnumeric():
-            self.move_to_pos(int(self._context['cursor_pos']))
+            self.move_to_pos(int(self._context['cursor_pos']) + 1)
         elif re.match(r'\+\d+', self._context['cursor_pos']):
             for _ in range(int(self._context['cursor_pos'][1:])):
                 self.move_to_next_line()
