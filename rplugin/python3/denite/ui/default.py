@@ -406,10 +406,6 @@ class Default(object):
                     "%#deniteStatusLinePath# %{denite#get_status('path')}%*" +
                     "%#deniteStatusLineNumber#%{" + linenr + "}%*")
 
-    def update_cursor(self):
-        self.update_displayed_texts()
-        self.update_buffer()
-
     def get_display_source_name(self, name):
         source_names = self._context['source_names']
         if not self._is_multi or source_names == 'hide':
@@ -725,7 +721,8 @@ class Default(object):
                 quick_move_table[char] > self._winheight):
             return
 
-        self.update_cursor()
+        for _ in range(int(quick_move_table[char]) - 1):
+            self.move_to_next_line()
 
         if self._context['quick_move'] == 'immediately':
             self.do_action('default')
