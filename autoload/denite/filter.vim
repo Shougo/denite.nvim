@@ -29,8 +29,8 @@ function! denite#filter#open(parent, input) abort
 
   call s:stop_timer()
 
-  let g:denite#_filter_timer = timer_start(1500,
-        \ {-> s:update()}, {'repeat': -1})
+  " let g:denite#_filter_timer = timer_start(1500,
+  "      \ {-> s:update()}, {'repeat': -1})
 
   call cursor(line('$'), 0)
   startinsert!
@@ -45,6 +45,11 @@ function! denite#filter#init_buffer() abort
 
   setfiletype denite-filter
 
+  augroup denite-filter
+    autocmd!
+    autocmd InsertLeave * call s:update()
+  augroup END
+
   nnoremap <buffer><silent> <Plug>(denite_filter_update)
         \ :<C-u>call <SID>update()<CR>:call <SID>quit()<CR>
   inoremap <buffer><silent> <Plug>(denite_filter_update)
@@ -52,13 +57,15 @@ function! denite#filter#init_buffer() abort
   nnoremap <buffer><silent> <Plug>(denite_filter_quit)
         \ :<C-u>call <SID>quit()<CR>
 
+  inoremap <buffer><silent><Space> <Space><C-o>:call <SID>update()<CR>
+
   nmap <buffer> <CR> <Plug>(denite_filter_update)
   nmap <buffer> q    <Plug>(denite_filter_quit)
   imap <buffer> <CR> <Plug>(denite_filter_update)
 endfunction
 
 function! s:update() abort
-  if &filetype !=# 'denite-filter' || mode() !=# 'i'
+  if &filetype !=# 'denite-filter'
     return
   endif
 
