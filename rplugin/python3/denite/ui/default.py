@@ -81,7 +81,8 @@ class Default(object):
             # Ignore command line window.
             return
 
-        if self._initialized and context['resume']:
+        resume = self._initialized and context['resume']
+        if resume:
             # Skip the initialization
 
             update = ('immediately', 'immediately_1',
@@ -120,10 +121,11 @@ class Default(object):
                 return
 
             self.init_buffer()
-            self.init_cursor()
 
         self.update_displayed_texts()
         self.update_buffer()
+        if not resume:
+            self.init_cursor()
         self.check_move_option()
 
         if self._context['quick_move'] and self.quick_move():
@@ -672,13 +674,13 @@ class Default(object):
         self._vim.call('cursor', 1, 0)
 
     def move_to_last_line(self):
-        self._vim.call('cursor', 1, self._vim.call('line', '$'))
+        self._vim.call('cursor', self._vim.call('line', '$'), 0)
 
     def quick_move(self):
         def get_quick_move_table():
             table = {}
             context = self._context
-            base = self._vim.call('winline')
+            base = self._vim.call('line', '.')
             for [key, number] in context['quick_move_table'].items():
                 number = int(number)
                 pos = ((base - number) if context['reversed']
@@ -715,12 +717,10 @@ class Default(object):
 
         quick_move_redraw(quick_move_table, False)
 
-        if (char not in quick_move_table or
-                quick_move_table[char] > self._winheight):
+        if char not in quick_move_table:
             return
 
-        for _ in range(int(quick_move_table[char])):
-            self.move_to_next_line()
+        self.move_to_pos(int(quick_move_table[char]))
 
         if self._context['quick_move'] == 'immediately':
             self.do_action('default')
