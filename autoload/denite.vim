@@ -58,7 +58,7 @@ function! denite#call_map(name, ...) abort
 
   let args = denite#util#convert2list(get(a:000, 0, []))
   call denite#util#rpcrequest(
-        \ '_denite_do_map', [a:name, args], v:false)
+        \ '_denite_do_map', [bufnr('%'), a:name, args], v:false)
 endfunction
 function! denite#call_async_map(name, ...) abort
   if &l:filetype !=# 'denite'
@@ -67,5 +67,5 @@ function! denite#call_async_map(name, ...) abort
 
   let args = denite#util#convert2list(get(a:000, 0, []))
   call denite#util#rpcrequest(
-        \ '_denite_do_async_map', [a:name, args], v:true)
+        \ '_denite_do_async_map', [bufnr('%'), a:name, args], v:true)
 endfunction

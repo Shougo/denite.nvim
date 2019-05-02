@@ -334,8 +334,13 @@ class Default(object):
         ]
 
     def update_buffer(self):
+        current = self._vim.call('win_getid')
+
         if self._bufnr != self._vim.current.buffer.number:
-            return
+            buf = self._vim.call('win_findbuf', self._bufnr)
+            if not buf:
+                return
+            self._vim.call('win_gotoid', buf[0])
 
         self.update_status()
 
@@ -368,6 +373,8 @@ class Default(object):
 
         if self._context['auto_action']:
             self.do_action(self._context['auto_action'])
+
+        self._vim.call('win_gotoid', current)
 
     def update_status(self):
         inpt = ''

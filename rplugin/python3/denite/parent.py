@@ -40,7 +40,7 @@ class _Parent(object):
         self._put('init_syntax', [context, is_multi])
 
     def filter_candidates(self, context):
-        return self._get('filter_candidates', [context])
+        return self._get('filter_candidates', [context], True)
 
     def do_action(self, context, action_name, targets):
         return self._get('do_action', [context, action_name, targets])
@@ -60,7 +60,7 @@ class SyncParent(_Parent):
     def _put(self, name, args):
         return self._child.main(name, args, queue_id=None)
 
-    def _get(self, name, args):
+    def _get(self, name, args, is_async=False):
         return self._put(name, args)
 
 
@@ -137,32 +137,17 @@ class ASyncParent(_Parent):
                 self._hnd = None
         return queue_id
 
-    # def _get(self, queue_id, is_async=False):
-    #     if not self._hnd:
-    #         return []
-    #
-    #     outs = []
-    #     while not self._queue_out.empty():
-    #         outs.append(self._queue_out.get_nowait())
-    #     try:
-    #         return [x for x in outs if x['queue_id'] == queue_id]
-    #     except TypeError:
-    #         error_tb(self._vim,
-    #                  '"stdout" seems contaminated by sources. '
-    #                  '"stdout" is used for RPC; Please pipe or discard')
-    #         return []
-
-    def _get(self, name, args):
-        return None
-
+    def _get(self, queue_id, is_async=False):
         if not self._hnd:
-            return
+            return []
 
-        self._vim.vars['denite#_ret'] = {}
-
-        queue_id = self._put(name, args)
-
-        while queue_id not in self._vim.vars['denite#_ret']:
-            time.sleep(0.1)
-
-        return self._vim.vars['denite#_ret'][queue_id]
+        outs = []
+        while not self._queue_out.empty():
+            outs.append(self._queue_out.get_nowait())
+        try:
+            return [x for x in outs if x['queue_id'] == queue_id]
+        except TypeError:
+            error_tb(self._vim,
+                     '"stdout" seems contaminated by sources. '
+                     '"stdout" is used for RPC; Please pipe or discard')
+            return []

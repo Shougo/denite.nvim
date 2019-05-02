@@ -44,10 +44,11 @@ class Rplugin:
                               'Please execute :messages command.')
 
     def do_map(self, args):
-        bufvars = self._vim.current.buffer.vars
+        bufnr = args[0]
+        bufvars = self._vim.buffers[bufnr].vars
         try:
             ui = self.get_ui(bufvars['denite']['buffer_name'])
-            return ui.do_map(args[0], args[1])
+            return ui.do_map(args[1], args[2])
         except Exception:
             import traceback
             import denite.util
