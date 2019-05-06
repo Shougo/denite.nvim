@@ -4,6 +4,7 @@
 # License: MIT license
 # ============================================================================
 
+import asyncio
 import time
 import os
 import msgpack
@@ -40,7 +41,7 @@ class _Parent(object):
         self._put('init_syntax', [context, is_multi])
 
     def filter_candidates(self, context):
-        return self._get('filter_candidates', [context], True)
+        return self._get('filter_candidates', [context])
 
     def do_action(self, context, action_name, targets):
         return self._get('do_action', [context, action_name, targets])
@@ -99,23 +100,23 @@ class ASyncParent(_Parent):
         self._stdin = stdin
         return self._unpacker
 
-    def filter_candidates(self, context):
-        if self._queue_id:
-            # Use previous id
-            queue_id = self._queue_id
-        else:
-            queue_id = self._put('filter_candidates', [context])
-            if not queue_id:
-                return (False, [])
-
-        get = self._get(queue_id, True)
-        if not get:
-            # Skip the next merge_results
-            self._queue_id = queue_id
-            return [True, '', [], []]
-        self._queue_id = ''
-        results = get[0]
-        return results if results else [False, '', [], []]
+    # def filter_candidates(self, context):
+    #     if self._queue_id:
+    #         # Use previous id
+    #         queue_id = self._queue_id
+    #     else:
+    #         queue_id = self._put('filter_candidates', [context])
+    #         if not queue_id:
+    #             return (False, [])
+    #
+    #     get = self._get(queue_id, True)
+    #     if not get:
+    #         # Skip the next merge_results
+    #         self._queue_id = queue_id
+    #         return [True, '', [], [], 0]
+    #     self._queue_id = ''
+    #     results = get[0]
+    #     return results if results else [False, '', [], [], 0]
 
     def _put(self, name, args):
         if not self._hnd:
@@ -139,15 +140,19 @@ class ASyncParent(_Parent):
 
     def _get(self, queue_id, is_async=False):
         if not self._hnd:
-            return []
+            return None
 
-        outs = []
-        while not self._queue_out.empty():
-            outs.append(self._queue_out.get_nowait())
-        try:
-            return [x for x in outs if x['queue_id'] == queue_id]
-        except TypeError:
-            error_tb(self._vim,
-                     '"stdout" seems contaminated by sources. '
-                     '"stdout" is used for RPC; Please pipe or discard')
-            return []
+        c = asyncio.sleep(5)
+        self._vim.run_coroutine(c)
+        return self._vim.vars['denite#_ret']
+
+        # outs = []
+        # while not self._queue_out.empty():
+        #     outs.append(self._queue_out.get_nowait())
+        # try:
+        #     return [x for x in outs if x['queue_id'] == queue_id]
+        # except TypeError:
+        #     error_tb(self._vim,
+        #              '"stdout" seems contaminated by sources. '
+        #              '"stdout" is used for RPC; Please pipe or discard')
+        #     return []

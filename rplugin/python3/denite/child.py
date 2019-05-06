@@ -52,14 +52,12 @@ class Child(object):
                 args = child_in['args']
                 queue_id = child_in['queue_id']
 
-                self.debug('hello')
                 ret = self.main(name, args, queue_id)
                 if ret:
-                    # self._write(stdout, ret)
-                    _ret = self._vim.vars['denite#_ret']
-                    _ret[queue_id] = ret
-                    self._vim.vars['denite#_ret'] = _ret
-                    self.debug(_ret)
+                    # _ret = self._vim.vars['denite#_ret']
+                    # _ret[queue_id] = ret
+                    print(ret)
+                    self._vim.vars['denite#_ret'] = ret
 
     def main(self, name, args, queue_id):
         ret = None

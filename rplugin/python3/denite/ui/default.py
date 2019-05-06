@@ -51,8 +51,10 @@ class Default(object):
 
     def start(self, sources, context):
         if not self._denite:
+            # if hasattr(self._vim, 'run_coroutine'):
+            #     self._denite = ASyncParent(self._vim)
+            # else:
             self._denite = SyncParent(self._vim)
-            # self._denite = ASyncParent(self._vim)
 
         self._result = []
         context['sources_queue'] = [sources]
