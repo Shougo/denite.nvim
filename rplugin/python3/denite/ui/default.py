@@ -354,6 +354,8 @@ class Default(object):
         prev_linenr = self._vim.call('line', '.')
 
         self._options['modifiable'] = True
+        self._vim.vars['denite#_candidates'] = [
+            x['word'] for x in self._candidates]
         self._vim.current.buffer[:] = self._displayed_texts
         self._options['modifiable'] = False
         self.resize_buffer()
