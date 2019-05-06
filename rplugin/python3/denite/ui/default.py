@@ -383,7 +383,6 @@ class Default(object):
         }
         if status != self._prev_status:
             self._bufvars['denite_statusline'] = status
-            self._vim.command('redrawstatus')
             self._prev_status = status
 
         linenr = "printf('%'.(len(line('$'))+2).'d/%d',line('.'),line('$'))"
