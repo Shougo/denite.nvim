@@ -75,6 +75,7 @@ function! denite#init#_initialize() abort
 endfunction
 function! s:initialize_variables() abort
   let g:denite#_previewed_buffers = {}
+  let g:denite#_candidates = []
   let g:denite#_ret = {}
   let g:denite#_async_ret = {}
   let g:denite#_serveraddr =

@@ -303,7 +303,10 @@ def parse_tagline(line, tagpath):
 
 
 def clearmatch(vim):
-    if vim.call('exists', 'w:denite_match_id'):
-        vim.call('matchdelete',
-                 vim.current.window.vars['denite_match_id'])
-        vim.command('unlet w:denite_match_id')
+    if not vim.call('exists', 'w:denite_match_id'):
+        return
+
+    # For async RPC error
+    vim.command('silent! call matchdelete({})'.format(
+        vim.current.window.vars['denite_match_id']))
+    vim.command('silent! unlet w:denite_match_id')
