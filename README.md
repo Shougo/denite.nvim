@@ -47,6 +47,9 @@ in Python3.
 * Unite is officially obsolete, minor bugs (or even major bugs) are
 not fixed anymore
 
+Note: Denite.nvim does not define any of default mappings.  You need to define
+them.
+
 
 ## Requirements
 

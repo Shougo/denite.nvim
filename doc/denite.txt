@@ -1729,6 +1729,12 @@ Q: I want to use better matcher.
 A: You can use fruzzy matcher instead.
 https://github.com/raghur/fruzzy
 
+Q: Not able to get to insert mode to filter. Esc does not work to hide denite
+buffer. Enter does move cursor one line down. No nice input line. What to do?
+
+A: Denite.nvim does not define any of default mappings.  You need to define
+them.  |denite-examples|
+
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
 
