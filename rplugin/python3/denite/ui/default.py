@@ -60,6 +60,11 @@ class Default(object):
         context['sources_queue'] = [sources]
         self._sources_history = []
 
+        self._start_sources_queue(context)
+
+        return self._result
+
+    def _start_sources_queue(self, context):
         while context['sources_queue']:
             prev_history = copy.copy(self._sources_history)
             prev_path = context['path']
@@ -74,8 +79,6 @@ class Default(object):
 
             context['sources_queue'].pop(0)
             context['path'] = self._context['path']
-
-        return self._result
 
     def _start(self, sources, context):
         self._vim.command('silent! autocmd! denite')
@@ -102,8 +105,9 @@ class Default(object):
                 self.redraw()
             self.move_to_pos(self._cursor)
         else:
-            self._context.clear()
-            self._context.update(context)
+            if self._context != context:
+                self._context.clear()
+                self._context.update(context)
             self._context['sources'] = sources
             self._context['is_redraw'] = False
             self._is_multi = len(sources) > 1
@@ -623,6 +627,9 @@ class Default(object):
         if not is_quit:
             self._selected_candidates = []
             self.redraw(action['is_redraw'])
+
+        if self._context['sources_queue']:
+            self._start_sources_queue(self._context)
 
         return
 
