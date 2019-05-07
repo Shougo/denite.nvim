@@ -125,8 +125,8 @@ function! denite#util#open(filename) abort
 endfunction
 
 function! denite#util#cd(path) abort
-  if exists('*nvim_set_current_dir')
-    call nvim_set_current_dir(a:path)
+  if exists('*chdir')
+    call chdir(a:path)
   else
     silent execute 'lcd' fnameescape(a:path)
   endif
