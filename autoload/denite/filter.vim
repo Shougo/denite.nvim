@@ -31,7 +31,7 @@ function! denite#filter#open(parent, input, entire_len, is_async) abort
   call s:stop_timer()
 
   if !a:is_async && g:denite#_filter_entire_len < 5000
-    let g:denite#_filter_timer = timer_start(1500,
+    let g:denite#_filter_timer = timer_start(500,
           \ {-> s:update()}, {'repeat': -1})
 
     augroup denite-filter
@@ -74,7 +74,7 @@ function! s:update() abort
 
   call s:move_to_parent()
 
-  call denite#call_map('filter', input)
+  silent! call denite#call_map('filter', input)
 
   call win_gotoid(g:denite#_filter_winid)
 endfunction
