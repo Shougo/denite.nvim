@@ -61,4 +61,4 @@ if find_spec('yarp'):
         return global_denite.do_map(args)
 
     def _denite_do_async_map(args):
-        return global_denite.do_async_map(args)
+        return global_denite.do_map(args)
