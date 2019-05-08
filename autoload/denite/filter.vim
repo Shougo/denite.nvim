@@ -30,15 +30,15 @@ function! denite#filter#open(parent, input, entire_len, is_async) abort
 
   call s:stop_timer()
 
-  if !a:is_async && g:denite#_filter_entire_len < 5000
+  if !a:is_async && g:denite#_filter_entire_len < 20000
     let g:denite#_filter_timer = timer_start(500,
           \ {-> s:update()}, {'repeat': -1})
-
-    augroup denite-filter
-      autocmd!
-      autocmd InsertLeave * call s:update()
-    augroup END
   endif
+
+  augroup denite-filter
+    autocmd!
+    autocmd InsertLeave * call s:update()
+  augroup END
 
   call cursor(line('$'), 0)
   startinsert!
