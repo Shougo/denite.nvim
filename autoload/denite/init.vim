@@ -92,6 +92,7 @@ function! denite#init#_user_options() abort
         \ 'highlight_mode_normal': 'WildMenu',
         \ 'highlight_mode_insert': 'CursorLine',
         \ 'highlight_preview_line': 'Search',
+        \ 'highlight_window_background': 'NormalFloat',
         \ 'ignorecase': v:true,
         \ 'immediately': v:false,
         \ 'immediately_1': v:false,
