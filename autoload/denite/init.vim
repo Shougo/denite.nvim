@@ -137,13 +137,7 @@ function! denite#init#_user_options() abort
         \}
 endfunction
 function! denite#init#_deprecated_options() abort
-  return {
-        \ 'auto_highlight': '',
-        \ 'auto_preview': '',
-        \ 'select': 'cursor_pos',
-        \ 'force_quit': '',
-        \ 'quit': '',
-        \}
+  return {}
 endfunction
 
 function! denite#init#_python_version_check() abort
