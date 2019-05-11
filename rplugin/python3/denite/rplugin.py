@@ -34,6 +34,7 @@ class Rplugin:
     def do_action(self, args):
         try:
             ui = self.get_ui(args[0]['buffer_name'])
+            ui._cursor = self._vim.call('line', '.')
             return ui._denite.do_action(args[0], args[1], args[2])
         except Exception:
             import traceback
@@ -48,6 +49,7 @@ class Rplugin:
         bufvars = self._vim.buffers[bufnr].vars
         try:
             ui = self.get_ui(bufvars['denite']['buffer_name'])
+            ui._cursor = self._vim.call('line', '.')
             return ui.do_map(args[1], args[2])
         except Exception:
             import traceback

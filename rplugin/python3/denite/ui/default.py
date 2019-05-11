@@ -97,6 +97,7 @@ class Default(object):
             for key in update:
                 self._context[key] = context[key]
 
+            self.check_move_option()
             if self.check_do_option():
                 return
 
@@ -121,6 +122,8 @@ class Default(object):
             self.gather_candidates()
             self.update_candidates()
 
+            self.init_cursor()
+            self.check_move_option()
             if self.check_do_option():
                 return
 
@@ -128,9 +131,7 @@ class Default(object):
 
         self.update_displayed_texts()
         self.update_buffer()
-        if not resume:
-            self.init_cursor()
-        self.check_move_option()
+        self.move_to_pos(self._cursor)
 
         if self._context['quick_move'] and self.quick_move():
             return
@@ -481,7 +482,7 @@ class Default(object):
         if not candidate:
             return
         echo(self._vim, 'Normal', '[{}/{}] {}'.format(
-            self._vim.call('line', '.'), self._candidates_len,
+            self._cursor, self._candidates_len,
             candidate.get('abbr', candidate['word'])))
         if goto:
             # Move to the previous window
@@ -541,10 +542,9 @@ class Default(object):
         clearmatch(self._vim)
 
     def get_cursor_candidate(self):
-        cursor = self._vim.call('line', '.')
-        if cursor > self._candidates_len:
+        if self._cursor > self._candidates_len:
             return {}
-        return self._candidates[cursor - 1]
+        return self._candidates[self._cursor - 1]
 
     def get_selected_candidates(self):
         if not self._selected_candidates:
@@ -663,28 +663,21 @@ class Default(object):
 
     def move_to_pos(self, pos):
         self._vim.call('cursor', pos, 0)
+        self._cursor = pos
 
     def move_to_next_line(self):
-        cursor = self._vim.call('line', '.')
-        if cursor < self._candidates_len:
-            cursor += 1
-        else:
-            return
-        self.move_to_pos(cursor)
+        if self._cursor < self._candidates_len:
+            self._cursor += 1
 
     def move_to_prev_line(self):
-        cursor = self._vim.call('line', '.')
-        if cursor >= 1:
-            cursor -= 1
-        else:
-            return
-        self.move_to_pos(cursor)
+        if self._cursor >= 1:
+            self._cursor -= 1
 
     def move_to_first_line(self):
-        self.move_to_pos(1)
+        self._cursor = 1
 
     def move_to_last_line(self):
-        self.move_to_pos(self._vim.call('line', '$'))
+        self._cursor = self._candidates_len
 
     def quick_move(self):
         def get_quick_move_table():
