@@ -461,7 +461,7 @@ class Default(object):
 
     def check_move_option(self):
         if self._context['cursor_pos'].isnumeric():
-            self.move_to_pos(int(self._context['cursor_pos']) + 1)
+            self._cursor = int(self._context['cursor_pos']) + 1
         elif re.match(r'\+\d+', self._context['cursor_pos']):
             for _ in range(int(self._context['cursor_pos'][1:])):
                 self.move_to_next_line()
