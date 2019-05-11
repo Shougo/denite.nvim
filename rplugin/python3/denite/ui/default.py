@@ -10,6 +10,7 @@ import re
 from denite.util import (
     echo, error, regex_convert_py_vim, clearmatch)
 from denite.parent import SyncParent
+from denite.ui.map import do_map
 
 
 class Default(object):
@@ -201,7 +202,7 @@ class Default(object):
             return
 
         if self._context['start_filter']:
-            self.do_map('open_filter_buffer', [])
+            do_map(self, 'open_filter_buffer', [])
 
     def _init_buffer(self):
         self._prev_status = dict()
