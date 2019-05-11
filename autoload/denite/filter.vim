@@ -64,7 +64,7 @@ function! denite#filter#init_buffer() abort
 endfunction
 
 function! s:new_filter_buffer(context) abort
-  if a:context['split'] == 'floating' && exists('*nvim_open_win')
+  if a:context['split'] ==# 'floating' && exists('*nvim_open_win')
     call nvim_open_win(bufnr('%'), v:true, {
           \ 'relative': 'editor',
           \ 'row': a:context['winrow'] + a:context['winheight'] + 1,
