@@ -121,6 +121,7 @@ class Default(object):
         return
 
     def _restart(self):
+        self._context['input'] = ''
         self._quit_buffer()
         self._init_denite()
         self._gather_candidates()
