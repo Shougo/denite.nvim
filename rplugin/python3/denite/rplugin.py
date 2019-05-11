@@ -6,6 +6,7 @@
 
 from denite.ui.default import Default
 from denite.context import Context
+from denite.ui.map import do_map
 
 
 class Rplugin:
@@ -50,7 +51,7 @@ class Rplugin:
         try:
             ui = self.get_ui(bufvars['denite']['buffer_name'])
             ui._cursor = self._vim.call('line', '.')
-            return ui.do_map(args[1], args[2])
+            return do_map(ui, args[1], args[2])
         except Exception:
             import traceback
             import denite.util

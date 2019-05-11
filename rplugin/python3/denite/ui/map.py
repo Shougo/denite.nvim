@@ -4,7 +4,7 @@
 # License: MIT license
 # ============================================================================
 
-from denite.util import debug
+from denite.util import debug, clear_cmdline
 from os.path import dirname
 
 
@@ -24,7 +24,7 @@ def _change_path(denite, params):
     path = denite._vim.call('input', 'Path: ',
                             denite._context['path'], 'dir')
     denite._context['path'] = path
-    return denite.restart()
+    return denite._restart()
 
 
 def _change_sorters(denite, params):
@@ -38,7 +38,18 @@ def _change_sorters(denite, params):
 
 
 def _choose_action(denite, params):
-    return denite.choose_action()
+    candidates = denite._get_selected_candidates()
+    if not candidates:
+        return
+
+    denite._vim.vars['denite#_actions'] = denite._denite.get_action_names(
+        denite._context, candidates)
+    clear_cmdline(denite._vim)
+    action = denite._vim.call('input', 'Action: ', '',
+                              'customlist,denite#helper#complete_actions')
+    if action == '':
+        return
+    return denite.do_action(action)
 
 
 def _do_action(denite, params):
@@ -55,19 +66,20 @@ def _filter(denite, params):
 
     denite._context['input'] = text
 
-    if denite.update_candidates():
-        denite.update_buffer()
+    if denite._update_candidates():
+        denite._update_buffer()
     else:
-        denite.update_status()
+        denite._update_status()
 
     if denite._previous_text != text:
         denite._previous_text = text
-        denite.init_cursor()
+        denite._init_cursor()
+        denite._move_to_pos(denite._cursor)
 
 
 def _move_up_path(denite, params):
     denite._context['path'] = dirname(denite._context['path'])
-    return denite.restart()
+    return denite._restart()
 
 
 def _nop(denite, params):
@@ -87,7 +99,54 @@ def _print_messages(denite, params):
 
 
 def _quick_move(denite, params):
-    denite.quick_move()
+    def get_quick_move_table():
+        table = {}
+        context = denite._context
+        base = denite._vim.call('line', '.')
+        for [key, number] in context['quick_move_table'].items():
+            number = int(number)
+            pos = ((base - number) if context['reversed']
+                   else (number + base))
+            if pos > 0:
+                table[key] = pos
+        return table
+
+    def quick_move_redraw(table, is_define):
+        bufnr = denite._vim.current.buffer.number
+        for [key, number] in table.items():
+            signid = 2000 + number
+            name = 'denite_quick_move_' + str(number)
+            if is_define:
+                denite._vim.command(
+                    f'sign define {name} text={key} texthl=Special')
+                denite._vim.command(
+                    f'sign place {signid} name={name} '
+                    f'line={number} buffer={bufnr}')
+            else:
+                denite._vim.command(
+                    f'silent! sign unplace {signid} buffer={bufnr}')
+                denite._vim.command('silent! sign undefine ' + name)
+
+    quick_move_table = get_quick_move_table()
+    denite._vim.command('echo "Input quick match key: "')
+    quick_move_redraw(quick_move_table, True)
+    denite._vim.command('redraw')
+
+    char = ''
+    while char == '':
+        char = denite._vim.call('nr2char',
+                                denite._vim.call('denite#util#getchar'))
+
+    quick_move_redraw(quick_move_table, False)
+
+    if char not in quick_move_table:
+        return
+
+    denite._move_to_pos(int(quick_move_table[char]))
+
+    if denite._context['quick_move'] == 'immediately':
+        denite.do_action('default')
+        return True
 
 
 def _quit(denite, params):
@@ -99,11 +158,17 @@ def _redraw(denite, params):
 
 
 def _restart(denite, params):
-    return denite.restart()
+    return denite._restart()
 
 
 def _restore_sources(denite, params):
-    return denite.restore_sources(denite._context)
+    if not denite._sources_history:
+        return
+
+    history = denite._sources_history[-1]
+    denite._context['sources_queue'].append(history['sources'])
+    denite._context['path'] = history['path']
+    denite._sources_history.pop()
 
 
 def _toggle_matchers(denite, params):
@@ -120,7 +185,7 @@ def _toggle_select(denite, params):
     index = denite._vim.call('line', '.') - 1
     _toggle_select_candidate(denite, index)
     denite.update_displayed_texts()
-    return denite.update_buffer()
+    return denite._update_buffer()
 
 
 def _toggle_select_candidate(denite, index):
@@ -134,17 +199,17 @@ def _toggle_select_all(denite, params):
     for index in range(0, denite._candidates_len):
         _toggle_select_candidate(denite, index)
     denite.update_displayed_texts()
-    return denite.update_buffer()
+    return denite._update_buffer()
 
 
 def _update(denite, params):
     if not denite.is_async:
         return
 
-    if denite.update_candidates():
-        denite.update_buffer()
+    if denite._update_candidates():
+        denite._update_buffer()
     else:
-        denite.update_status()
+        denite._update_status()
 
 
 MAPPINGS = {
