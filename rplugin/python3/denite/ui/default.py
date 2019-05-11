@@ -477,6 +477,8 @@ class Default(object):
             self.init_buffer()
         self.do_action('default')
         candidate = self.get_cursor_candidate()
+        if not candidate:
+            return
         echo(self._vim, 'Normal', '[{}/{}] {}'.format(
             self._vim.call('line', '.'), self._candidates_len,
             candidate.get('abbr', candidate['word'])))
@@ -629,7 +631,8 @@ class Default(object):
             self._selected_candidates = []
             self.redraw(action['is_redraw'])
 
-        if self._context['sources_queue']:
+        if (not self._context['immediately'] and
+                self._context['sources_queue']):
             self._start_sources_queue(self._context)
 
         return
