@@ -145,9 +145,7 @@ class Kind(Openable):
             'matchaddpos', context['highlight_preview_line'], [line])
 
     def _get_preview_window(self):
-        return next(filterfalse(lambda x:
-                                not x.options['previewwindow'],
-                                self.vim.windows), None)
+        return self._vim.call('denite#helper#_get_preview_window')
 
     # Needed for openable actions
     def _jump(self, context, target):
