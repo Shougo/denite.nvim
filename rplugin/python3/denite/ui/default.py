@@ -148,7 +148,6 @@ class Default(object):
         self._prev_winid = int(self._context['prev_winid'])
         self._winrestcmd = self._vim.call('winrestcmd')
 
-        self._titlestring = self._vim.options['titlestring']
         self._ruler = self._vim.options['ruler']
 
         self._switch_buffer()
@@ -226,6 +225,8 @@ class Default(object):
                 self._vim.command('tabnew')
             elif (split == 'floating' and
                   self._vim.call('exists', '*nvim_open_win')):
+                if self._vim.current.buffer.options['filetype'] != 'denite':
+                    self._titlestring = self._vim.options['titlestring']
                 # Use floating window
                 self._vim.call(
                     'nvim_open_win',
