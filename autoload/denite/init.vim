@@ -114,6 +114,7 @@ function! denite#init#_user_options() abort
         \ 'input': '',
         \ 'matchers': '',
         \ 'max_candidate_width': 200,
+        \ 'max_dynamic_update_candidates': 20000,
         \ 'path': getcwd(),
         \ 'previewheight': &previewheight,
         \ 'prompt': '#',

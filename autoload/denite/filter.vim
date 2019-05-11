@@ -28,7 +28,8 @@ function! denite#filter#open(context, parent, entire_len, is_async) abort
 
   call s:stop_timer()
 
-  if !a:is_async && g:denite#_filter_entire_len < 20000
+  if !a:is_async && g:denite#_filter_entire_len <
+        \ a:context['max_dynamic_update_candidates']
     let g:denite#_filter_timer = timer_start(500,
           \ {-> s:update()}, {'repeat': -1})
   endif

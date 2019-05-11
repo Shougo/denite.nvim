@@ -653,6 +653,13 @@ OPTIONS							*denite-options*
 		Note: Denite skip the match after the width.
 		Default: 200
 
+				*denite-option-max-dynamic-update-candidates*
+-max-dynamic-update-candidates={length}
+		If the candidates are more than it, denite will ignore the
+		dynamic filtering.
+
+		Default: 20000
+
 							*denite-option-path*
 -path={input-text}
 		Specify an initial narrowing path.
