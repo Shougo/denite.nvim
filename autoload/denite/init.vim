@@ -71,7 +71,8 @@ function! denite#init#_initialize() abort
   endtry
 
   let g:denite#_update_timer = timer_start(100,
-        \ {-> denite#call_async_map('update')}, {'repeat': -1})
+        \ {-> execute("call denite#call_async_map('update')", 'silent!')},
+        \ {'repeat': -1})
 endfunction
 function! s:initialize_variables() abort
   let g:denite#_previewed_buffers = {}
