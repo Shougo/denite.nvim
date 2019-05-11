@@ -64,7 +64,7 @@ class Default(object):
 
         return self._result
 
-    def do_action(self, action_name, command=''):
+    def do_action(self, action_name, command='', is_manual=False):
         candidates = self._get_selected_candidates()
         if not candidates or not action_name:
             return
@@ -99,8 +99,7 @@ class Default(object):
             self._selected_candidates = []
             self.redraw(action['is_redraw'])
 
-        if (not self._context['immediately'] and
-                self._context['sources_queue']):
+        if is_manual and self._context['sources_queue']:
             self._start_sources_queue(self._context)
 
         return
