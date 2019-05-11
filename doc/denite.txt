@@ -785,7 +785,7 @@ OPTIONS							*denite-options*
 		Set the row position of the Denite window if
 		|denite-option-split| is "floating".
 
-		Default: &lines / 3
+		Default: &lines / 2 - 10
 
 						*denite-option-winwidth*
 -winwidth={window-width}

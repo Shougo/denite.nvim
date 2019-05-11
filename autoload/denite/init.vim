@@ -131,7 +131,7 @@ function! denite#init#_user_options() abort
         \ 'vertical_preview': v:false,
         \ 'wincol': &columns / 4,
         \ 'winheight': 20,
-        \ 'winrow': &lines / 3,
+        \ 'winrow': &lines / 2 - 10,
         \ 'winwidth': 90,
         \ 'winminheight': -1,
         \}
