@@ -493,7 +493,8 @@ class Default(object):
         self.quit_buffer()
 
     def cleanup(self):
-        self._cursor = self._vim.call('line', '.')
+        if self._vim.current.buffer.number == self._bufnr:
+            self._cursor = self._vim.call('line', '.')
         # Clear previewed buffers
         if not self._context['has_preview_window']:
             self._vim.command('pclose!')
