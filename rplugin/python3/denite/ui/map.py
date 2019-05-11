@@ -54,7 +54,7 @@ def _choose_action(denite, params):
 
 def _do_action(denite, params):
     name = params[0] if params else 'default'
-    return denite.do_action(name)
+    return denite.do_action(name, is_manual=True)
 
 
 def _do_previous_action(denite, params):

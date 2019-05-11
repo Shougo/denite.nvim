@@ -100,6 +100,7 @@ class Default(object):
             self.redraw(action['is_redraw'])
 
         if is_manual and self._context['sources_queue']:
+            self._context['input'] = ''
             self._start_sources_queue(self._context)
 
         return
