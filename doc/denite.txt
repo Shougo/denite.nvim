@@ -592,6 +592,13 @@ OPTIONS							*denite-options*
 		Note: It is useful for file sources.
 		Default: false
 
+					*denite-option-filter-split-direction*
+-filter-split-direction={direction}
+		Specify the Denite filter window direction as {direction}.
+		Note: If |denite-option-split| is "floating", it is ignored.
+
+		Default: "botright"
+
 					*denite-option-highlight-matched-char*
 -highlight-matched-char
 		Matched characters highlight.

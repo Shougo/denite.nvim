@@ -102,6 +102,7 @@ function! denite#init#_user_options() abort
         \ 'do': '',
         \ 'empty': v:true,
         \ 'expand': v:false,
+        \ 'filter_split_direction': 'botright',
         \ 'highlight_cursor': 'Cursor',
         \ 'highlight_matched_range': 'Underlined',
         \ 'highlight_matched_char': 'Search',

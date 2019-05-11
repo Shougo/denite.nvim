@@ -4,16 +4,14 @@
 " License: MIT license
 "=============================================================================
 
-function! denite#filter#open(parent, input, entire_len, is_async) abort
+function! denite#filter#open(context, parent, entire_len, is_async) abort
   let id = exists('g:denite#_filter_bufnr') ?
         \ win_findbuf(g:denite#_filter_bufnr) : []
   if !empty(id)
     call win_gotoid(id[0])
     call cursor(line('$'), 0)
   else
-    split denite-filter
-    let g:denite#_filter_winid = win_getid()
-    let g:denite#_filter_bufnr = bufnr('%')
+    call s:new_filter_buffer(a:context)
   endif
 
   let g:denite#_filter_parent = a:parent
@@ -23,9 +21,9 @@ function! denite#filter#open(parent, input, entire_len, is_async) abort
 
   " Set the current input
   if getline('$') ==# ''
-    call setline('$', a:input)
+    call setline('$', a:context['input'])
   else
-    call append('$', a:input)
+    call append('$', a:context['input'])
   endif
 
   call s:stop_timer()
@@ -63,6 +61,23 @@ function! denite#filter#init_buffer() abort
   nmap <buffer> <CR> <Plug>(denite_filter_update)
   nmap <buffer> q    <Plug>(denite_filter_quit)
   imap <buffer> <CR> <Plug>(denite_filter_update)
+endfunction
+
+function! s:new_filter_buffer(context) abort
+  if a:context['split'] == 'floating' && exists('*nvim_open_win')
+    call nvim_open_win(bufnr('%'), v:true, {
+          \ 'relative': 'editor',
+          \ 'row': a:context['winrow'] + a:context['winheight'] + 1,
+          \ 'col': a:context['wincol'] - 1,
+          \ 'width': a:context['winwidth'],
+          \ 'height': 1,
+          \})
+    edit denite-filter
+  else
+    execute a:context['filter_split_direction'] 'split' 'denite-filter'
+  endif
+  let g:denite#_filter_winid = win_getid()
+  let g:denite#_filter_bufnr = bufnr('%')
 endfunction
 
 function! s:update() abort
