@@ -264,9 +264,8 @@ class Default(object):
                         'width': int(self._context['winwidth']),
                         'height': int(self._context['winheight']),
                     })
-                self._vim.command(
-                    'set winhighlight=Normal:'
-                    + self._context['highlight_window_background']
+                self._vim.current.window.options['winhighlight'] = (
+                  'Normal:' + self._context['highlight_window_background']
                 )
             elif split != 'no':
                 command = self._get_direction()
