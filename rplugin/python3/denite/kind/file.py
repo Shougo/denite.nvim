@@ -6,7 +6,6 @@
 
 import re
 import os
-from itertools import filterfalse
 
 from denite.kind.openable import Kind as Openable
 from denite import util
