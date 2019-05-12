@@ -184,7 +184,7 @@ def _toggle_matchers(denite, params):
 def _toggle_select(denite, params):
     index = denite._vim.call('line', '.') - 1
     _toggle_select_candidate(denite, index)
-    denite.update_displayed_texts()
+    denite._update_displayed_texts()
     return denite._update_buffer()
 
 
@@ -198,7 +198,7 @@ def _toggle_select_candidate(denite, index):
 def _toggle_select_all(denite, params):
     for index in range(0, denite._candidates_len):
         _toggle_select_candidate(denite, index)
-    denite.update_displayed_texts()
+    denite._update_displayed_texts()
     return denite._update_buffer()
 
 
