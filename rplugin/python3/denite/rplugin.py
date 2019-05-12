@@ -36,8 +36,7 @@ class Rplugin:
         try:
             ui = self.get_ui(args[0]['buffer_name'])
             ui._cursor = self._vim.call('line', '.')
-            return ui._denite.do_action(args[0], args[1], args[2],
-                                        is_manual=True)
+            return ui._denite.do_action(args[0], args[1], args[2])
         except Exception:
             import traceback
             import denite.util
