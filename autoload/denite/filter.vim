@@ -43,9 +43,21 @@ function! denite#filter#open(context, parent, entire_len, is_async) abort
 endfunction
 
 function! denite#filter#init_buffer() abort
-  setlocal hidden
   setlocal bufhidden=hide
   setlocal buftype=nofile
+  setlocal colorcolumn=
+  setlocal foldcolumn=0
+  setlocal hidden
+  setlocal nobuflisted
+  setlocal nofoldenable
+  setlocal nolist
+  setlocal nomodeline
+  setlocal nonumber
+  setlocal norelativenumber
+  setlocal nospell
+  setlocal noswapfile
+  setlocal nowrap
+  setlocal winfixheight
 
   resize 1
 
