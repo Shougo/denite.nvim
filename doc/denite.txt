@@ -1192,6 +1192,11 @@ OPTIONS							*denite-options*
 		Previewed line highlight.
 		Default: "Search"
 
+	                            *denite-option-highlight-window-background*
+-highlight-window-background
+		Change backgroud color group in floating window.
+		Default: "NormalFloat"
+
 						*denite-option-ignorecase*
 -ignorecase
 		If it is true, denite ignores the case.
