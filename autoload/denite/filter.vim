@@ -70,7 +70,7 @@ function! s:new_filter_buffer(context) abort
           \ 'relative': 'editor',
           \ 'row': a:context['winrow'] + a:context['winheight'] + 1,
           \ 'col': a:context['wincol'] - 1,
-          \ 'width': a:context['winwidth'],
+          \ 'width': str2nr(a:context['winwidth']),
           \ 'height': 1,
           \})
     edit denite-filter
