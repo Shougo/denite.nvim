@@ -79,6 +79,7 @@ function! s:initialize_variables() abort
   let g:denite#_candidates = []
   let g:denite#_ret = {}
   let g:denite#_async_ret = {}
+  let g:denite#_filter_bufnr = -1
   let g:denite#_serveraddr =
         \ denite#util#has_yarp() ?
         \ neovim_rpc#serveraddr() : v:servername

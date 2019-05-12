@@ -5,8 +5,7 @@
 "=============================================================================
 
 function! denite#filter#open(context, parent, entire_len, is_async) abort
-  let id = exists('g:denite#_filter_bufnr') ?
-        \ win_findbuf(g:denite#_filter_bufnr) : []
+  let id = win_findbuf(g:denite#_filter_bufnr)
   if !empty(id)
     call win_gotoid(id[0])
     call cursor(line('$'), 0)

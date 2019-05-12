@@ -578,6 +578,12 @@ class Default(object):
             self._vim.options['titlestring'] = self._titlestring
             self._vim.options['ruler'] = self._ruler
 
+    def _close_current_window(self):
+        if self._vim.call('winnr', '$') == 1:
+            self._vim.command('buffer #')
+        else:
+            self._vim.command('close!')
+
     def _quit_buffer(self):
         self._cleanup()
         if self._vim.call('bufwinnr', self._bufnr) < 0:
@@ -595,9 +601,16 @@ class Default(object):
                 self._vim.command('tabclose!')
 
             if self._context['split'] != 'tab':
-                self._vim.command('close!')
+                self._close_current_window()
 
             self._vim.call('win_gotoid', self._prev_winid)
+
+        winids = self._vim.call('win_findbuf',
+                                self._vim.vars['denite#_filter_bufnr'])
+        if winids:
+            # Quit filter buffer
+            self._vim.call('win_gotoid', winids[0])
+            self._close_current_window()
 
         # Restore the position
         self._vim.call('setpos', '.', self._prev_curpos)
