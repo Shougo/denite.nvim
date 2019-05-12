@@ -79,8 +79,8 @@ function! s:new_filter_buffer(context) abort
   if a:context['split'] ==# 'floating' && exists('*nvim_open_win')
     call nvim_open_win(bufnr('%'), v:true, {
           \ 'relative': 'editor',
-          \ 'row': a:context['winrow'] + a:context['winheight'] + 1,
-          \ 'col': a:context['wincol'] - 1,
+          \ 'row': a:context['winrow'] + a:context['winheight'],
+          \ 'col': str2nr(a:context['wincol']),
           \ 'width': str2nr(a:context['winwidth']),
           \ 'height': 1,
           \})
