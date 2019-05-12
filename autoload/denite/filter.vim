@@ -80,8 +80,8 @@ function! s:new_filter_buffer(context) abort
     call nvim_open_win(bufnr('%'), v:true, {
           \ 'relative': 'editor',
           \ 'row': a:context['winrow'] + a:context['winheight'],
-          \ 'col': str2nr(a:context['wincol']),
-          \ 'width': str2nr(a:context['winwidth']),
+          \ 'col': a:context['wincol'] + a:context['max_source_name'] + 1,
+          \ 'width': a:context['winwidth'] - a:context['max_source_name'] - 1,
           \ 'height': 1,
           \})
     edit denite-filter

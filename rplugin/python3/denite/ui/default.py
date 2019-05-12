@@ -394,6 +394,11 @@ class Default(object):
             elif self._candidates_len != self._winheight:
                 self._winheight = self._candidates_len
 
+        max_source_name = max([len(self._get_display_source_name(x['source_name']))
+                               for x in self._candidates])
+        self._context['max_source_name'] = max_source_name
+        self._context['max_source_name_format'] = (
+            '{:<' + str(self._context['max_source_name']) + '}')
         self._displayed_texts = [
             self._get_candidate_display_text(i)
             for i in range(0, self._candidates_len)
@@ -488,8 +493,8 @@ class Default(object):
         candidate = self._candidates[index]
         terms = []
         if self._is_multi and source_names != 'hide':
-            terms.append(self._get_display_source_name(
-                candidate['source_name']))
+            terms.append(self._context['max_source_name_format'].format(
+                self._get_display_source_name(candidate['source_name'])))
         encoding = self._context['encoding']
         abbr = candidate.get('abbr', candidate['word']).encode(
             encoding, errors='replace').decode(encoding, errors='replace')
