@@ -215,3 +215,7 @@ function! denite#helper#_get_wininfo() abort
         \ 'tabnr': wininfo['tabnr'],
         \}
 endfunction
+function! denite#helper#_get_preview_window() abort
+  return len(filter(range(1, winnr('$')),
+        \ "getwinvar(v:val, '&previewwindow') == 1"))
+endfunction
