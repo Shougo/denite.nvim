@@ -481,6 +481,16 @@ denite#do_map({map-name}[, {args}])			*denite#do_map()*
 		mappings list in |denite-mappings|.
 		{args} behavior depends on {map-name}.
 		Note: It is only used to define mappings.
+		Note: It can be used in denite-filter buffer. >
+
+		autocmd FileType denite-filter
+		\ call s:denite_filter_my_settings()
+		function! s:denite_filter_my_settings() abort
+		  inoremap <silent><buffer><expr> <C-c>
+		  \ denite#do_map('quit')
+		  nnoremap <silent><buffer><expr> <C-c>
+		  \ denite#do_map('quit')
+		endfunction
 
 denite#get_status({name})				*denite#get_status()*
 		Returns the {name} part of the status string.  It is useful to

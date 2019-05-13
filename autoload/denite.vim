@@ -43,29 +43,35 @@ function! denite#do_action(context, action_name, targets) abort
 endfunction
 
 function! denite#do_map(name, ...) abort
-  if &l:filetype !=# 'denite'
-    return ''
-  endif
-
   let args = denite#util#convert2list(get(a:000, 0, []))
-  return printf(":\<C-u>call denite#call_map(%s, %s)\<CR>",
+  let esc = (mode() ==# 'i' ? "\<ESC>" : "")
+  return printf(esc . ":\<C-u>call denite#call_map(%s, %s)\<CR>",
         \ string(a:name), string(args))
 endfunction
-function! denite#call_map(name, ...) abort
-  if &l:filetype !=# 'denite'
+function! denite#_call_map(name, is_async, ...) abort
+  let is_filter = &l:filetype ==# 'denite-filter'
+
+  if &l:filetype !=# 'denite' && !is_filter
     return
   endif
 
   let args = denite#util#convert2list(get(a:000, 0, []))
+
+  if is_filter
+    call denite#filter#_move_to_parent()
+  endif
+
   call denite#util#rpcrequest(
-        \ '_denite_do_map', [bufnr('%'), a:name, args], v:false)
+        \ (a:is_async ? '_denite_do_async_map' : '_denite_do_map'),
+        \ [bufnr('%'), a:name, args], v:false)
+
+  if is_filter
+    call win_gotoid(g:denite#_filter_winid)
+  endif
+endfunction
+function! denite#call_map(name, ...) abort
+  call denite#_call_map(a:name, v:false, get(a:000, 0, []))
 endfunction
 function! denite#call_async_map(name, ...) abort
-  if &l:filetype !=# 'denite'
-    return
-  endif
-
-  let args = denite#util#convert2list(get(a:000, 0, []))
-  call denite#util#rpcrequest(
-        \ '_denite_do_async_map', [bufnr('%'), a:name, args], v:true)
+  call denite#_call_map(a:name, v:true, get(a:000, 0, []))
 endfunction

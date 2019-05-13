@@ -105,7 +105,7 @@ function! s:update() abort
 
   let input = getline('.')
 
-  call s:move_to_parent()
+  call denite#filter#_move_to_parent()
 
   silent! call denite#call_map('filter', input)
 
@@ -131,12 +131,12 @@ function! s:quit() abort
     close!
   endif
 
-  call s:move_to_parent()
+  call denite#filter#_move_to_parent()
 
   call s:stop_timer()
 endfunction
 
-function! s:move_to_parent() abort
+function! denite#filter#_move_to_parent() abort
   let id = win_findbuf(g:denite#_filter_parent)
   if empty(id)
     return
