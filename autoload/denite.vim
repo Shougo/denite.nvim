@@ -63,7 +63,7 @@ function! denite#_call_map(name, is_async, ...) abort
 
   call denite#util#rpcrequest(
         \ (a:is_async ? '_denite_do_async_map' : '_denite_do_map'),
-        \ [bufnr('%'), a:name, args], v:false)
+        \ [bufnr('%'), a:name, args], a:is_async)
 
   if is_filter
     call win_gotoid(g:denite#_filter_winid)
