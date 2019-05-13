@@ -44,7 +44,7 @@ endfunction
 
 function! denite#do_map(name, ...) abort
   let args = denite#util#convert2list(get(a:000, 0, []))
-  let esc = (mode() ==# 'i' ? "\<ESC>" : "")
+  let esc = (mode() ==# 'i' ? "\<ESC>" : '')
   return printf(esc . ":\<C-u>call denite#call_map(%s, %s)\<CR>",
         \ string(a:name), string(args))
 endfunction
