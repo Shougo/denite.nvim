@@ -78,14 +78,11 @@ endfunction
 
 function! s:new_filter_buffer(context) abort
   if a:context['split'] ==# 'floating' && exists('*nvim_open_win')
-    let gap = a:context['max_source_name_len'] ? 1 : 0
     call nvim_open_win(bufnr('%'), v:true, {
           \ 'relative': 'editor',
           \ 'row': a:context['winrow'] + a:context['winheight'],
-          \ 'col': (a:context['wincol'] +
-          \         a:context['max_source_name_len'] + gap),
-          \ 'width': (a:context['winwidth'] -
-          \           a:context['max_source_name_len'] - gap),
+          \ 'col': str2nr(a:context['wincol']),
+          \ 'width': str2nr(a:context['winwidth']),
           \ 'height': 1,
           \})
     edit denite-filter
