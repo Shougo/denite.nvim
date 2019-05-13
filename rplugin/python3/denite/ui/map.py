@@ -87,7 +87,7 @@ def _nop(denite, params):
 
 
 def _open_filter_buffer(denite, params):
-    denite._vim.call('denite#filter#open',
+    denite._vim.call('denite#filter#_open',
                      denite._context, denite._bufnr,
                      denite._entire_len, denite.is_async)
 

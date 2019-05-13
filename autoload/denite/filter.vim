@@ -4,7 +4,7 @@
 " License: MIT license
 "=============================================================================
 
-function! denite#filter#open(context, parent, entire_len, is_async) abort
+function! denite#filter#_open(context, parent, entire_len, is_async) abort
   let id = win_findbuf(g:denite#_filter_bufnr)
   if !empty(id)
     call win_gotoid(id[0])
@@ -16,7 +16,7 @@ function! denite#filter#open(context, parent, entire_len, is_async) abort
   let g:denite#_filter_parent = a:parent
   let g:denite#_filter_entire_len = a:entire_len
 
-  call denite#filter#init_buffer()
+  call s:init_buffer()
 
   " Set the current input
   if getline('$') ==# ''
@@ -43,7 +43,7 @@ function! denite#filter#open(context, parent, entire_len, is_async) abort
   startinsert!
 endfunction
 
-function! denite#filter#init_buffer() abort
+function! s:init_buffer() abort
   setlocal bufhidden=hide
   setlocal buftype=nofile
   setlocal colorcolumn=
