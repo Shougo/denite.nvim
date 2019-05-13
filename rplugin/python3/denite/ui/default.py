@@ -353,6 +353,7 @@ class Default(object):
                           'deniteStatusLineNumber LineNR')
         self._vim.command('highlight default link ' +
                           'deniteSelectedLine Statement')
+        self._vim.command('highlight NormalFloat guibg=None')
 
         self._vim.command(('syntax match deniteSelectedLine /^[%s].*/' +
                            ' contains=deniteConcealedMark') % (
