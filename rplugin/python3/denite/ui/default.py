@@ -394,12 +394,14 @@ class Default(object):
             elif self._candidates_len != self._winheight:
                 self._winheight = self._candidates_len
 
-        max_source_name = max([
-            len(self._get_display_source_name(x['source_name']))
-            for x in self._candidates])
-        self._context['max_source_name'] = max_source_name
+        max_source_name_len = 0
+        if self._candidates:
+            max_source_name_len = max([
+                len(self._get_display_source_name(x['source_name']))
+                for x in self._candidates])
+        self._context['max_source_name_len'] = max_source_name_len
         self._context['max_source_name_format'] = (
-            '{:<' + str(self._context['max_source_name']) + '}')
+            '{:<' + str(self._context['max_source_name_len']) + '}')
         self._displayed_texts = [
             self._get_candidate_display_text(i)
             for i in range(0, self._candidates_len)
