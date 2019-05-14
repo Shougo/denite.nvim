@@ -51,15 +51,15 @@ endfunction
 function! denite#_call_map(name, is_async, ...) abort
   let is_filter = &l:filetype ==# 'denite-filter'
 
-  if &l:filetype !=# 'denite' && !is_filter
+  if is_filter
+    call denite#filter#_move_to_parent()
+  endif
+
+  if &l:filetype !=# 'denite'
     return
   endif
 
   let args = denite#util#convert2list(get(a:000, 0, []))
-
-  if is_filter
-    call denite#filter#_move_to_parent()
-  endif
 
   call denite#util#rpcrequest(
         \ (a:is_async ? '_denite_do_async_map' : '_denite_do_map'),
