@@ -105,7 +105,7 @@ function! s:update() abort
 
   silent! call denite#call_map('filter', input)
 
-  call win_gotoid(g:denite#_filter_winid)
+  noautocmd call win_gotoid(g:denite#_filter_winid)
 endfunction
 
 function! s:async_update() abort
@@ -138,7 +138,7 @@ function! denite#filter#_move_to_parent() abort
     return
   endif
 
-  call win_gotoid(id[0])
+  noautocmd call win_gotoid(id[0])
 endfunction
 
 function! s:stop_timer() abort
