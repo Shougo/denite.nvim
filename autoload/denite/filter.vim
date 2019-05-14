@@ -36,7 +36,6 @@ function! denite#filter#_open(context, parent, entire_len, is_async) abort
   augroup denite-filter
     autocmd!
     autocmd InsertLeave <buffer> call s:update()
-    autocmd WinLeave <buffer> call s:quit()
   augroup END
 
   call cursor(line('$'), 0)
@@ -139,7 +138,7 @@ function! denite#filter#_move_to_parent() abort
     return
   endif
 
-  noautocmd call win_gotoid(id[0])
+  call win_gotoid(id[0])
 endfunction
 
 function! s:stop_timer() abort
