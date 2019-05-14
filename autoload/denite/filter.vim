@@ -138,6 +138,7 @@ function! denite#filter#_move_to_parent() abort
     return
   endif
 
+  " Note: noautocmd for statusline flicker
   noautocmd call win_gotoid(id[0])
 endfunction
 
