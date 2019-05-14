@@ -89,8 +89,6 @@ class Source(Base):
 
     def _parse(self, context):
         jump_list = []
-        for b in self.vim.buffers:
-            self.debug(b.name)
 
         for row_data in self.vim.call('execute', 'jumps').split('\n'):
             elements = row_data.split(maxsplit=3)
