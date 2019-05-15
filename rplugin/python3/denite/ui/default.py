@@ -4,7 +4,6 @@
 # License: MIT license
 # ============================================================================
 
-import copy
 import re
 
 from denite.util import (
