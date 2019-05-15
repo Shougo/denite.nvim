@@ -237,7 +237,7 @@ class Default(object):
         self._window_options = self._vim.current.window.options
         window_options = {
             'colorcolumn': '',
-            'concealcursor': 'n',
+            'concealcursor': 'inv',
             'conceallevel': 3,
             'cursorcolumn': False,
             'foldcolumn': 0,
