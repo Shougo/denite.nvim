@@ -49,7 +49,7 @@ def _choose_action(denite, params):
                               'customlist,denite#helper#complete_actions')
     if action == '':
         return
-    return denite.do_action(action)
+    return denite.do_action(action, is_manual=True)
 
 
 def _do_action(denite, params):
@@ -58,7 +58,7 @@ def _do_action(denite, params):
 
 
 def _do_previous_action(denite, params):
-    return denite.do_action(denite._prev_action)
+    return denite.do_action(denite._prev_action, is_manual=True)
 
 
 def _filter(denite, params):
@@ -145,7 +145,7 @@ def _quick_move(denite, params):
     denite._move_to_pos(int(quick_move_table[char]))
 
     if denite._context['quick_move'] == 'immediately':
-        denite.do_action('default')
+        denite.do_action('default', is_manual=True)
         return True
 
 
@@ -162,13 +162,19 @@ def _restart(denite, params):
 
 
 def _restore_sources(denite, params):
-    if not denite._sources_history:
+    if len(denite._sources_history) < 2:
         return
 
-    history = denite._sources_history[-1]
+    history = denite._sources_history[-2]
     denite._context['sources_queue'].append(history['sources'])
     denite._context['path'] = history['path']
+
+    # Remove current/previous histories
     denite._sources_history.pop()
+    denite._sources_history.pop()
+
+    denite._context['input'] = ''
+    denite._start_sources_queue(denite._context)
 
 
 def _toggle_matchers(denite, params):
