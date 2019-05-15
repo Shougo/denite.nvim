@@ -1759,6 +1759,20 @@ buffer. Enter does move cursor one line down. No nice input line. What to do?
 A: Denite.nvim does not define any of default mappings.  You need to define
 them.  |denite-examples|
 
+Q: I want to move the cursor in denite filter window.
+
+A: Really?  It is not recommended. >
+
+	autocmd FileType denite-filter call s:denite_filter_my_settings()
+	function! s:denite_filter_my_settings() abort
+	  inoremap <silent><buffer> <C-j>
+	  \ <Esc><C-w>p:call cursor(line('.')+1,0)<CR><C-w>pA
+	  inoremap <silent><buffer> <C-k>
+	  \ <Esc><C-w>p:call cursor(line('.')-1,0)<CR><C-w>pA
+	endfunction
+
+Note: This is very slow in Vim8 environment.
+
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
 
