@@ -131,20 +131,18 @@ class Default(object):
         self._update_buffer()
 
     def _start_sources_queue(self, context):
-        while context['sources_queue']:
-            prev_history = copy.copy(self._sources_history)
-            prev_path = context['path']
+        if not context['sources_queue']:
+            return
 
-            self._start(context['sources_queue'][0], context)
+        self._sources_history.append({
+            'sources': context['sources_queue'][0],
+            'path': context['path'],
+        })
 
-            if prev_history == self._sources_history:
-                self._sources_history.append({
-                    'sources': context['sources_queue'][0],
-                    'path': prev_path,
-                })
+        self._start(context['sources_queue'][0], context)
 
-            context['sources_queue'].pop(0)
-            context['path'] = self._context['path']
+        context['sources_queue'].pop(0)
+        context['path'] = self._context['path']
 
     def _start(self, sources, context):
         self._vim.command('silent! autocmd! denite')
