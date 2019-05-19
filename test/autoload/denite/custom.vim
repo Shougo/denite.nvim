@@ -62,6 +62,6 @@ endfunction
 function! s:suite.custom_option() abort
   let custom = denite#custom#_get().option
 
-  call denite#custom#option('default', 'prompt', '>')
-  call s:assert.equals(custom.default.prompt, '>')
+  call denite#custom#option('default', 'direction', 'leftabove')
+  call s:assert.equals(custom.default.direction, 'leftabove')
 endfunction

@@ -245,9 +245,6 @@ EXAMPLES						*denite-examples*
 	call denite#custom#alias('source', 'file/rec/py', 'file/rec')
 	call denite#custom#var('file/rec/py', 'command',['scantree.py'])
 
-	" Change default prompt
-	call denite#custom#option('default', 'prompt', '>')
-
 	" Change ignore_globs
 	call denite#custom#filter('matcher/ignore_globs', 'ignore_globs',
 	      \ [ '.git/', '.ropeproject/', '__pycache__/',
@@ -439,7 +436,6 @@ denite#custom#option({buffer-name}, {dict})
 		substituted to "_", and "-" prefix is removed. >
 
 	call denite#custom#option('default', {
-	      \ 'prompt': '>',
 	      \ 'short_source_names': v:true
 	      \ })
 
@@ -535,11 +531,6 @@ OPTIONS							*denite-options*
 		Disable {option-name} flag.
 		Note: If you use both {option-name} and -no-{option-name} in
 		the same denite buffer, it is undefined.
-
-						*denite-option-auto-accel*
--auto-accel
-		Accelerate the cursor moving automatically.
-		Default: false
 
 						*denite-option-auto-action*
 -auto-action={action}

@@ -91,7 +91,6 @@ endfunction
 
 function! denite#init#_user_options() abort
   return {
-        \ 'auto_accel': v:false,
         \ 'auto_action': '',
         \ 'auto_resize': v:false,
         \ 'auto_resume': v:false,
@@ -104,7 +103,6 @@ function! denite#init#_user_options() abort
         \ 'empty': v:true,
         \ 'expand': v:false,
         \ 'filter_split_direction': 'botright',
-        \ 'highlight_cursor': 'Cursor',
         \ 'highlight_matched_range': 'Underlined',
         \ 'highlight_matched_char': 'Search',
         \ 'highlight_preview_line': 'Search',
@@ -118,7 +116,6 @@ function! denite#init#_user_options() abort
         \ 'max_dynamic_update_candidates': 20000,
         \ 'path': getcwd(),
         \ 'previewheight': &previewheight,
-        \ 'prompt': '#',
         \ 'post_action': 'none',
         \ 'quick_move': '',
         \ 'refresh': v:false,
