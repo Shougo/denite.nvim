@@ -596,6 +596,15 @@ class Default(object):
             # Denite buffer is already closed
             return
 
+        winids = self._vim.call('win_findbuf',
+                                self._vim.vars['denite#_filter_bufnr'])
+        if winids:
+            # Quit filter buffer
+            self._vim.call('win_gotoid', winids[0])
+            self._close_current_window()
+            # Move to denite window
+            self._vim.call('win_gotoid', self._winid)
+
         # Restore the window
         if self._context['split'] == 'no':
             self._window_options['cursorline'] = False
@@ -610,13 +619,6 @@ class Default(object):
                 self._close_current_window()
 
             self._vim.call('win_gotoid', self._prev_winid)
-
-        winids = self._vim.call('win_findbuf',
-                                self._vim.vars['denite#_filter_bufnr'])
-        if winids:
-            # Quit filter buffer
-            self._vim.call('win_gotoid', winids[0])
-            self._close_current_window()
 
         # Restore the position
         self._vim.call('setpos', '.', self._prev_curpos)
