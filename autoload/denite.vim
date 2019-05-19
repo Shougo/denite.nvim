@@ -52,7 +52,7 @@ function! denite#_call_map(name, is_async, ...) abort
   let is_filter = &l:filetype ==# 'denite-filter'
 
   if is_filter
-    call denite#filter#_move_to_parent()
+    call denite#filter#_move_to_parent(a:is_async)
   endif
 
   if &l:filetype !=# 'denite'

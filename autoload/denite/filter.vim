@@ -101,7 +101,7 @@ function! s:update() abort
 
   let input = getline('.')
 
-  call denite#filter#_move_to_parent()
+  call denite#filter#_move_to_parent(v:true)
 
   silent! call denite#call_map('filter', input)
 
@@ -127,19 +127,23 @@ function! s:quit() abort
     close!
   endif
 
-  call denite#filter#_move_to_parent()
+  call denite#filter#_move_to_parent(v:false)
 
   call s:stop_timer()
 endfunction
 
-function! denite#filter#_move_to_parent() abort
+function! denite#filter#_move_to_parent(is_async) abort
   let id = win_findbuf(g:denite#_filter_parent)
   if empty(id)
     return
   endif
 
-  " Note: noautocmd for statusline flicker
-  noautocmd call win_gotoid(id[0])
+  if a:is_async
+    " Note: noautocmd for statusline flicker
+    noautocmd call win_gotoid(id[0])
+  else
+    call win_gotoid(id[0])
+  endif
 endfunction
 
 function! s:stop_timer() abort
