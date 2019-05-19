@@ -415,6 +415,12 @@ denite#custom#alias({type}, {alias-name}, {base-name})
 		Define {alias-name} alias based on {base-name}.
 		{type} must be "source" or "filter".
 
+denite#call_map({map-name}[, {args}])			*denite#call_map()*
+		Fire {map-name} mapping with {args}.  You can find the
+		mappings list in |denite-mappings|.
+		{args} behavior depends on {map-name}.
+		Note: It can be used in denite-filter buffer.
+
 						*denite#custom#filter()*
 denite#custom#filter({filter-name}, {variable-name}, {value})
 		Set {filter-name} filter specialized variable {variable-name}
@@ -1773,6 +1779,21 @@ A: Really?  It is not recommended. >
 
 Note: This is very slow in Vim8 environment.
 
+Q: I want to use multiple action in denite buffer.
+
+A: You can use |denite#call_map()| for it.
+>
+	autocmd FileType denite
+	\ call s:denite_my_settings()
+	function! s:denite_my_settings() abort
+	  nnoremap <silent><buffer> <C-b>
+	  \ :<C-u>call <SID>denite_quickfix()<CR>
+	endfunction
+	function! s:denite_quickfix()
+	  call denite#call_map('toggle_select_all')
+	  call denite#call_map('do_action', 'quickfix')
+	endfunction
+<
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
 
