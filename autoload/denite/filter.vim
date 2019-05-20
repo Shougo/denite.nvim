@@ -69,8 +69,6 @@ function! s:init_buffer() abort
 
   resize 1
 
-  setfiletype denite-filter
-
   nnoremap <buffer><silent> <Plug>(denite_filter_update)
         \ :<C-u>call <SID>async_update()<CR>
   inoremap <buffer><silent> <Plug>(denite_filter_update)
@@ -81,6 +79,8 @@ function! s:init_buffer() abort
   nmap <buffer> <CR> <Plug>(denite_filter_update)
   nmap <buffer> q    <Plug>(denite_filter_quit)
   imap <buffer> <CR> <Plug>(denite_filter_update)
+
+  setfiletype denite-filter
 endfunction
 
 function! s:new_filter_buffer(context) abort
