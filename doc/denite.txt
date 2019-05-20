@@ -644,10 +644,10 @@ OPTIONS							*denite-options*
 
 						*denite-option-immediately-1*
 -immediately-1
-		If the number of candidates is exactly one, it runs the default action
+		If the number of candidates is exactly one, it runs the
+		default action immediately.
 		immediately.
 		Default: false
-
 							*denite-option-input*
 -input={input-text}
 		Specify an initial narrowing text.
