@@ -85,7 +85,6 @@ function! s:new_filter_buffer(context) abort
           \ 'height': 1,
           \})
     edit denite-filter
-    highlight NormalFloat guibg=None
     let &l:winhighlight = 'Normal:' . a:context['highlight_filter_background']
   else
     execute a:context['filter_split_direction'] 'split' 'denite-filter'

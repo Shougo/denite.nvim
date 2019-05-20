@@ -349,7 +349,6 @@ class Default(object):
                           'deniteStatusLineNumber LineNR')
         self._vim.command('highlight default link ' +
                           'deniteSelectedLine Statement')
-        self._vim.command('highlight NormalFloat guibg=None')
 
         if self._floating:
             self._vim.current.window.options['winhighlight'] = (
