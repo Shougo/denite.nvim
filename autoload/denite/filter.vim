@@ -27,7 +27,7 @@ function! denite#filter#_open(context, parent, entire_len, is_async) abort
 
   if a:context['prompt'] !=# ''
     execute printf('sign define denite_filter_prompt text=%s texthl=%s',
-          \ a:context['prompt'], a:context['highlight_prompt'])
+          \ a:context['prompt'][:1], a:context['highlight_prompt'])
     execute 'silent! sign unplace 2000 buffer=' . bufnr('%')
     execute printf('sign place 2000 name=denite_filter_prompt'.
          \ ' line=%d buffer=%d', line('$'), bufnr('%'))
