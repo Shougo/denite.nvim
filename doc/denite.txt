@@ -606,6 +606,11 @@ OPTIONS							*denite-options*
 
 		Default: "botright"
 
+	                            *denite-option-highlight-filter-background*
+-highlight-filter-background
+		Change backgroud color group in floating filter window.
+		Default: "NormalFloat"
+
 					*denite-option-highlight-matched-char*
 -highlight-matched-char
 		Matched characters highlight.

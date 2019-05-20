@@ -103,6 +103,7 @@ function! denite#init#_user_options() abort
         \ 'empty': v:true,
         \ 'expand': v:false,
         \ 'filter_split_direction': 'botright',
+        \ 'highlight_filter_background': 'NormalFloat',
         \ 'highlight_matched_range': 'Underlined',
         \ 'highlight_matched_char': 'Search',
         \ 'highlight_preview_line': 'Search',

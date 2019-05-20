@@ -47,6 +47,7 @@ class Default(object):
         self._save_window_options = {}
         self._sources_history = []
         self._previous_text = ''
+        self._floating = False
 
     def start(self, sources, context):
         if not self._denite:
@@ -229,7 +230,7 @@ class Default(object):
         self._options['filetype'] = 'denite'
         self._options['modifiable'] = False
 
-        if self._context['split'] == 'floating':
+        if self._floating:
             # Disable ruler
             self._vim.options['ruler'] = False
 
@@ -279,7 +280,7 @@ class Default(object):
         split = self._context['split']
         if (split != 'no' and self._winid > 0 and
                 self._vim.call('win_gotoid', self._winid)):
-            if split != 'vertical' and split != 'floating':
+            if split != 'vertical' and self._floating:
                 # Move the window to bottom
                 self._vim.command('wincmd J')
             self._winrestcmd = ''
@@ -292,6 +293,7 @@ class Default(object):
                 if self._vim.current.buffer.options['filetype'] != 'denite':
                     self._titlestring = self._vim.options['titlestring']
                 # Use floating window
+                self._floating = True
                 self._vim.call(
                     'nvim_open_win',
                     self._vim.call('bufnr', '%'), True, {
@@ -301,9 +303,6 @@ class Default(object):
                         'width': int(self._context['winwidth']),
                         'height': int(self._context['winheight']),
                     })
-                self._vim.current.window.options['winhighlight'] = (
-                  'Normal:' + self._context['highlight_window_background']
-                )
             elif split != 'no':
                 command = self._get_direction()
                 command += ' vsplit' if split == 'vertical' else ' split'
@@ -352,6 +351,10 @@ class Default(object):
                           'deniteSelectedLine Statement')
         self._vim.command('highlight NormalFloat guibg=None')
 
+        if self._floating:
+            self._vim.current.window.options['winhighlight'] = (
+                'Normal:' + self._context['highlight_window_background']
+            )
         self._vim.command(('syntax match deniteSelectedLine /^[%s].*/' +
                            ' contains=deniteConcealedMark') % (
                                self._context['selected_icon']))
@@ -466,7 +469,7 @@ class Default(object):
         linenr = "printf('%'.(len(line('$'))+2).'d/%d',line('.'),line('$'))"
 
         if self._context['statusline']:
-            if self._context['split'] == 'floating':
+            if self._floating:
                 self._vim.options['titlestring'] = (
                     "%{denite#get_status('input')}%* " +
                     "%{denite#get_status('sources')} " +
@@ -580,7 +583,7 @@ class Default(object):
         self._vim.vars['denite#_previewed_buffers'] = {}
 
         self._vim.command('highlight! link CursorLine CursorLine')
-        if self._context['split'] == 'floating':
+        if self._floating:
             self._vim.options['titlestring'] = self._titlestring
             self._vim.options['ruler'] = self._ruler
 
