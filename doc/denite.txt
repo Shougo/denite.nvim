@@ -626,6 +626,11 @@ OPTIONS							*denite-options*
 		Previewed line highlight.
 		Default: "Search"
 
+					*denite-option-highlight-prompt*
+-highlight-prompt
+		Prompt highlight in filter window.
+		Default: "Special"
+
 	                            *denite-option-highlight-window-background*
 -highlight-window-background
 		Change backgroud color group in floating window.
@@ -686,6 +691,13 @@ OPTIONS							*denite-options*
 		Otherwise: nothing.
 
 		Default: "none"
+
+						*denite-option-prompt*
+-prompt={prompt-text}
+		Specify the prompt in filter window.
+		Note: It must one or two characters.
+
+		Default: ""
 
 						*denite-option-quick-move*
 -quick-move={action}
