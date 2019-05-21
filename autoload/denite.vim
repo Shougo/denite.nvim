@@ -44,11 +44,11 @@ endfunction
 
 function! denite#do_map(name, ...) abort
   let args = denite#util#convert2list(get(a:000, 0, []))
-  let esc = (mode() ==# 'i' ? "\<ESC>" : '')
-  return printf(esc . ":\<C-u>call denite#call_map(%s, %s)\<CR>",
-        \ string(a:name), string(args))
+  let esc = (mode() ==# 'i' ? "\<C-o>" : '')
+  return printf(esc . ":\<C-u>call denite#_call_map(%s, %s, %s)\<CR>",
+        \ string(a:name), 'v:false', string(args))
 endfunction
-function! denite#_call_map(name, is_async, ...) abort
+function! denite#_call_map(name, is_async, args) abort
   let is_filter = &l:filetype ==# 'denite-filter'
 
   if is_filter
@@ -59,7 +59,7 @@ function! denite#_call_map(name, is_async, ...) abort
     return
   endif
 
-  let args = denite#util#convert2list(get(a:000, 0, []))
+  let args = denite#util#convert2list(a:args)
 
   call denite#util#rpcrequest(
         \ (a:is_async ? '_denite_do_async_map' : '_denite_do_map'),
@@ -67,6 +67,10 @@ function! denite#_call_map(name, is_async, ...) abort
 
   if is_filter
     call win_gotoid(g:denite#_filter_winid)
+
+    if &l:filetype !=# 'denite-filter'
+      stopinsert
+    endif
   endif
 endfunction
 function! denite#call_map(name, ...) abort
