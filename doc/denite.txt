@@ -1802,6 +1802,12 @@ A: You can use |denite#call_map()| for it.
 	  call denite#call_map('do_action', 'quickfix')
 	endfunction
 <
+Q: I want to use external statusline plugin like lightline/vim-airline etc.
+
+A: You should disable the internal statusline. >
+
+	call denite#custom#option('_', 'statusline', v:false)
+
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
 
