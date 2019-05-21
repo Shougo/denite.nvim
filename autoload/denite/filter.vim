@@ -92,7 +92,7 @@ function! s:new_filter_buffer(context) abort
           \ 'width': str2nr(a:context['winwidth']),
           \ 'height': 1,
           \})
-    edit denite-filter
+    silent edit denite-filter
     let &l:winhighlight = 'Normal:' . a:context['highlight_filter_background']
   else
     execute a:context['filter_split_direction'] 'split' 'denite-filter'
