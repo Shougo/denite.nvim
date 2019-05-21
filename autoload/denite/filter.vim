@@ -95,7 +95,7 @@ function! s:new_filter_buffer(context) abort
     silent edit denite-filter
     let &l:winhighlight = 'Normal:' . a:context['highlight_filter_background']
   else
-    execute a:context['filter_split_direction'] 'split' 'denite-filter'
+    silent execute a:context['filter_split_direction'] 'split' 'denite-filter'
   endif
   let g:denite#_filter_winid = win_getid()
   let g:denite#_filter_bufnr = bufnr('%')
