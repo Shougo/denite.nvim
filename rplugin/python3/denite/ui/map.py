@@ -64,6 +64,10 @@ def _do_previous_action(denite, params):
 def _filter(denite, params):
     text = params[0] if params else ''
 
+    if denite._previous_text == text and not denite.is_async:
+        # Skipped if same text
+        return
+
     denite._context['input'] = text
 
     if denite._update_candidates():
