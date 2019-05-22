@@ -92,6 +92,8 @@ class Default(object):
             self._init_buffer()
 
             self.redraw(False)
+            self._move_to_pos(self._cursor)
+
             # Disable quit flag
             is_quit = False
 
