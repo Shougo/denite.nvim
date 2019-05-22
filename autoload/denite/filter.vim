@@ -35,10 +35,11 @@ function! denite#filter#_open(context, parent, entire_len, is_async) abort
 
   call s:stop_timer()
 
-  if !a:is_async && g:denite#_filter_entire_len <
-        \ a:context['max_dynamic_update_candidates']
-    let g:denite#_filter_timer = timer_start(500,
-          \ {-> s:update()}, {'repeat': -1})
+  if g:denite#_filter_entire_len <
+        \ a:context['max_dynamic_update_candidates'] &&
+        \ a:context['filter_updatetime'] > 0
+    let g:denite#_filter_timer = timer_start(
+          \ a:context['filter_updatetime'], {-> s:update()}, {'repeat': -1})
   endif
 
   augroup denite-filter
