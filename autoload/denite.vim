@@ -66,9 +66,13 @@ function! denite#_call_map(name, is_async, args) abort
         \ [bufnr('%'), a:name, args], a:is_async)
 
   if is_filter
+    let denite_statusline = get(b:, 'denite_statusline', {})
+
     call win_gotoid(g:denite#_filter_winid)
 
-    if &l:filetype !=# 'denite-filter'
+    if &l:filetype ==# 'denite-filter'
+      let b:denite_statusline = denite_statusline
+    else
       stopinsert
     endif
   endif

@@ -497,6 +497,7 @@ denite#do_map({map-name}[, {args}])			*denite#do_map()*
 denite#get_status({name})				*denite#get_status()*
 		Returns the {name} part of the status string.  It is useful to
 		customize the statusline.
+		Note: It also works in the Denite filter window.
 
 		The available status names:
 		"input": Current filtering text
