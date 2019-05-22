@@ -4,7 +4,7 @@
 # License: MIT license
 # ============================================================================
 
-from denite.util import debug, clear_cmdline
+from denite.util import debug, clear_cmdline, input
 from os.path import dirname
 
 
@@ -45,8 +45,9 @@ def _choose_action(denite, params):
     denite._vim.vars['denite#_actions'] = denite._denite.get_action_names(
         denite._context, candidates)
     clear_cmdline(denite._vim)
-    action = denite._vim.call('input', 'Action: ', '',
-                              'customlist,denite#helper#complete_actions')
+    action = input(denite._vim, denite._context,
+                   'Action: ', '',
+                   'customlist,denite#helper#complete_actions')
     if action == '':
         return
     return denite.do_action(action, is_manual=True)
