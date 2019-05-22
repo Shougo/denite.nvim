@@ -607,7 +607,7 @@ OPTIONS							*denite-options*
 
 		Default: "botright"
 
-					*denite-option-filter-split-direction*
+					*denite-option-filter-updatetime*
 -filter-updatetime={time}
 		Specify the update time in the Denite filter window.
 		If it is less than equal 0, the feature will be disabled.
