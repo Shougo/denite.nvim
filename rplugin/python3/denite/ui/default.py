@@ -434,6 +434,7 @@ class Default(object):
             ))
 
         prev_linenr = self._vim.call('line', '.')
+        prev_candidate = self._get_cursor_candidate()
 
         self._options['modifiable'] = True
         self._vim.vars['denite#_candidates'] = [
@@ -444,7 +445,8 @@ class Default(object):
 
         self._vim.call('cursor', [prev_linenr, 0])
 
-        if self._context['auto_action']:
+        if (self._context['auto_action'] and
+                prev_candidate != self._get_cursor_candidate()):
             self.do_action(self._context['auto_action'])
 
     def _update_status(self):
