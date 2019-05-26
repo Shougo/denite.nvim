@@ -25,6 +25,7 @@ class Base(ABC):
         self.context = {}
         self.vars = {}
         self.is_public_context = False
+        self.is_volatile = False
 
     def highlight(self):
         pass

@@ -1441,6 +1441,11 @@ is_public_context
 		(Bool)			(Optional)
 		If it is True, the source context can be accessed by action.
 
+				*denite-source-attribute-is_volatile*
+is_volatile
+		(Bool)			(Optional)
+		If it is True, the source candidates is not be cached.
+
 					*denite-source-attribute-kind*
 kind		(String) or (Kind)		(Optional)
 		The candidates kind name or source specific Kind object.
