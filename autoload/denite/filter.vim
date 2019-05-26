@@ -124,7 +124,13 @@ function! s:update_buffer() abort
 
   silent! call denite#call_map('update_buffer')
 
+  let denite_statusline = get(b:, 'denite_statusline', {})
+
   noautocmd call win_gotoid(g:denite#_filter_winid)
+
+  if &l:filetype ==# 'denite-filter'
+    let b:denite_statusline = denite_statusline
+  endif
 endfunction
 
 function! s:update() abort
