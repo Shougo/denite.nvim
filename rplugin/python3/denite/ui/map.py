@@ -74,10 +74,17 @@ def _filter(denite, params):
     _update_candidates(denite, params)
     _update_buffer(denite, params)
 
-    if denite._previous_text != text:
-        denite._previous_text = text
-        denite._init_cursor()
-        denite._move_to_pos(denite._cursor)
+
+def _filter_async(denite, params):
+    text = params[0] if params else ''
+
+    if denite._previous_text == text and not denite.is_async:
+        # Skipped if same text
+        return
+
+    denite._context['input'] = text
+
+    _update_candidates(denite, params)
 
 
 def _move_up_path(denite, params):
@@ -238,6 +245,7 @@ MAPPINGS = {
     'do_action': _do_action,
     'do_previous_action': _do_previous_action,
     'filter': _filter,
+    'filter_async': _filter_async,
     'move_up_path': _move_up_path,
     'nop': _nop,
     'open_filter_buffer': _open_filter_buffer,

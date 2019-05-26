@@ -39,7 +39,11 @@ function! denite#filter#_open(context, parent, entire_len, is_async) abort
         \ a:context['max_dynamic_update_candidates'] &&
         \ a:context['filter_updatetime'] > 0
     let g:denite#_filter_timer = timer_start(
-          \ a:context['filter_updatetime'], {-> s:update()}, {'repeat': -1})
+          \ a:context['filter_updatetime'],
+          \ {-> s:filter_async()}, {'repeat': -1})
+    let g:denite#_update_timer = timer_start(
+          \ a:context['filter_updatetime'],
+          \ {-> s:update_buffer()}, {'repeat': -1})
   endif
 
   augroup denite-filter
@@ -102,6 +106,27 @@ function! s:new_filter_buffer(context) abort
   let g:denite#_filter_bufnr = bufnr('%')
 endfunction
 
+function! s:filter_async() abort
+  if &filetype !=# 'denite-filter'
+    return
+  endif
+
+  call denite#util#rpcrequest('_denite_do_async_map',
+        \ [g:denite#_filter_parent, 'filter_async', [getline('.')]], v:true)
+endfunction
+
+function! s:update_buffer() abort
+  if &filetype !=# 'denite-filter'
+    return
+  endif
+
+  call denite#filter#_move_to_parent(v:true)
+
+  silent! call denite#call_map('update_buffer')
+
+  noautocmd call win_gotoid(g:denite#_filter_winid)
+endfunction
+
 function! s:update() abort
   if &filetype !=# 'denite-filter'
     return
@@ -158,5 +183,9 @@ function! s:stop_timer() abort
   if exists('g:denite#_filter_timer')
     call timer_stop(g:denite#_filter_timer)
     unlet g:denite#_filter_timer
+  endif
+  if exists('g:denite#_update_timer')
+    call timer_stop(g:denite#_update_timer)
+    unlet g:denite#_update_timer
   endif
 endfunction
