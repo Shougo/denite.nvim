@@ -282,7 +282,7 @@ class Default(object):
         split = self._context['split']
         if (split != 'no' and self._winid > 0 and
                 self._vim.call('win_gotoid', self._winid)):
-            if split != 'vertical' and self._floating:
+            if split != 'vertical' and not self._floating:
                 # Move the window to bottom
                 self._vim.command('wincmd J')
             self._winrestcmd = ''

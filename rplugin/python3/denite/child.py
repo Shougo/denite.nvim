@@ -243,9 +243,13 @@ class Child(object):
             } if source.is_public_context else {}
 
         context['targets'] = targets
-        return action['func'](context) if action['func'] else self._vim.call(
-            'denite#custom#_call_action',
-            action['kind'], action['name'], context)
+        new_context = (action['func'](context)
+                       if action['func']
+                       else self._vim.call(
+                           'denite#custom#_call_action',
+                           action['kind'], action['name'], context))
+        if new_context:
+            context.update(new_context)
 
     def get_action(self, context, action_name, targets):
         action = self._get_action_targets(context, action_name, targets)

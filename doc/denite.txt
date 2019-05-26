@@ -398,6 +398,12 @@ toggle_matchers:{arg}
 ------------------------------------------------------------------------------
 FUNCTIONS						*denite-functions*
 
+denite#call_map({map-name}[, {args}])			*denite#call_map()*
+		Fire {map-name} mapping with {args}.  You can find the
+		mappings list in |denite-mappings|.
+		{args} behavior depends on {map-name}.
+		Note: It can be used in denite-filter buffer.
+
 						*denite#custom#action()*
 denite#custom#action({kind}, {name}, {func}[, {options}])
 		Define {name} action for {kind}.
@@ -411,12 +417,6 @@ denite#custom#action({kind}, {name}, {func}[, {options}])
 denite#custom#alias({type}, {alias-name}, {base-name})
 		Define {alias-name} alias based on {base-name}.
 		{type} must be "source" or "filter".
-
-denite#call_map({map-name}[, {args}])			*denite#call_map()*
-		Fire {map-name} mapping with {args}.  You can find the
-		mappings list in |denite-mappings|.
-		{args} behavior depends on {map-name}.
-		Note: It can be used in denite-filter buffer.
 
 						*denite#custom#filter()*
 denite#custom#filter({filter-name}, {variable-name}, {value})
@@ -1816,6 +1816,21 @@ A: You should disable the internal statusline. >
 
 	call denite#custom#option('_', 'statusline', v:false)
 
+Q: I want to change current sources in the custom action.
+
+A: You need to return new context in action function.
+>
+	function! s:candidate_file_rec(context)
+	  let path = a:context['targets'][0]['action__path']
+	  let narrow_dir = denite#util#path2directory(path)
+	  let sources_queue = a:context['sources_queue'] + [[
+	        \ {'name': 'file/rec', 'args': [narrow_dir]},
+	        \ ]]
+	  return {'sources_queue': sources_queue}
+	endfunction
+	call denite#custom#action('buffer,directory,file,openable',
+	        \ 'candidate_file_rec', function('s:candidate_file_rec'))
+<
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
 
