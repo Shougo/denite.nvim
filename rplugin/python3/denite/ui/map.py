@@ -71,10 +71,8 @@ def _filter(denite, params):
 
     denite._context['input'] = text
 
-    if denite._update_candidates():
-        denite._update_buffer()
-    else:
-        denite._update_status()
+    _update_candidates(denite, params)
+    _update_buffer(denite, params)
 
     if denite._previous_text != text:
         denite._previous_text = text
@@ -217,10 +215,19 @@ def _update(denite, params):
     if not denite.is_async:
         return
 
-    if denite._update_candidates():
+    _update_candidates(denite, params)
+    _update_buffer(denite, params)
+
+
+def _update_buffer(denite, params):
+    if denite._updated:
         denite._update_buffer()
     else:
         denite._update_status()
+
+
+def _update_candidates(denite, params):
+    denite._update_candidates()
 
 
 MAPPINGS = {
@@ -244,4 +251,6 @@ MAPPINGS = {
     'toggle_select': _toggle_select,
     'toggle_select_all': _toggle_select_all,
     'update': _update,
+    'update_buffer': _update_buffer,
+    'update_candidates': _update_candidates,
 }

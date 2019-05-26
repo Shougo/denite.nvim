@@ -48,6 +48,7 @@ class Default(object):
         self._sources_history = []
         self._previous_text = ''
         self._floating = False
+        self._updated = False
 
     def start(self, sources, context):
         if not self._denite:
@@ -380,10 +381,10 @@ class Default(object):
 
         updated = (self._displayed_texts != prev_displayed_texts or
                    self._matched_pattern != prev_matched_pattern)
-        if updated and self._is_async and self._context['reversed']:
-            self._init_cursor()
+        if updated:
+            self._updated = True
 
-        return updated
+        return self._updated
 
     def _update_displayed_texts(self):
         if self._context['auto_resize']:
@@ -445,9 +446,15 @@ class Default(object):
 
         self._vim.call('cursor', [prev_linenr, 0])
 
+        if self._updated and self._is_async and self._context['reversed']:
+            self._init_cursor()
+            self._move_to_pos(self._cursor)
+
         if (self._context['auto_action'] and
                 prev_candidate != self._get_cursor_candidate()):
             self.do_action(self._context['auto_action'])
+
+        self._updated = False
 
     def _update_status(self):
         inpt = ''
