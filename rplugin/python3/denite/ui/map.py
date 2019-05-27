@@ -184,6 +184,7 @@ def _restore_sources(denite, params):
     denite._sources_history.pop()
 
     denite._context['input'] = ''
+    denite._quit_buffer()
     denite._start_sources_queue(denite._context)
 
 
