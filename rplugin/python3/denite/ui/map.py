@@ -212,7 +212,7 @@ def _toggle_select_candidate(denite, index):
 
 
 def _toggle_select_all(denite, params):
-    for index in range(0, denite._candidates_len):
+    for index in range(0, len(denite._candidates)):
         _toggle_select_candidate(denite, index)
     denite._update_displayed_texts()
     return denite._update_buffer()

@@ -22,7 +22,6 @@ class Default(object):
         self._denite = None
         self._selected_candidates = []
         self._candidates = []
-        self._candidates_len = 0
         self._cursor = 0
         self._entire_len = 0
         self._result = []
@@ -372,7 +371,6 @@ class Default(object):
 
         prev_matched_pattern = self._matched_pattern
         self._matched_pattern = pattern
-        self._candidates_len = len(self._candidates)
 
         self._statusline_sources = ' '.join(statuses)
 
@@ -387,15 +385,15 @@ class Default(object):
         return self._updated
 
     def _update_displayed_texts(self):
+        candidates_len = len(self._candidates)
         if self._context['auto_resize']:
             winminheight = int(self._context['winminheight'])
-            if (winminheight is not -1 and
-                    self._candidates_len < winminheight):
+            if (winminheight is not -1 and candidates_len < winminheight):
                 self._winheight = winminheight
-            elif self._candidates_len > int(self._context['winheight']):
+            elif candidates_len > int(self._context['winheight']):
                 self._winheight = int(self._context['winheight'])
-            elif self._candidates_len != self._winheight:
-                self._winheight = self._candidates_len
+            elif candidates_len != self._winheight:
+                self._winheight = candidates_len
 
         max_source_name_len = 0
         if self._candidates:
@@ -407,7 +405,7 @@ class Default(object):
             '{:<' + str(self._context['max_source_name_len']) + '}')
         self._displayed_texts = [
             self._get_candidate_display_text(i)
-            for i in range(0, self._candidates_len)
+            for i in range(0, candidates_len)
         ]
 
     def _update_buffer(self):
@@ -473,7 +471,7 @@ class Default(object):
             'path': path,
             # Extra
             'buffer_name': self._context['buffer_name'],
-            'line_total': self._candidates_len,
+            'line_total': len(self._candidates),
         }
         if status == self._prev_status:
             return
@@ -572,7 +570,7 @@ class Default(object):
         if not candidate:
             return
         echo(self._vim, 'Normal', '[{}/{}] {}'.format(
-            self._cursor, self._candidates_len,
+            self._cursor, len(self._candidates),
             candidate.get('abbr', candidate['word'])))
         if goto:
             # Move to the previous window
@@ -581,7 +579,7 @@ class Default(object):
     def _do_command(self, command):
         self._init_cursor()
         cursor = 1
-        while cursor < self._candidates_len:
+        while cursor < len(self._candidates):
             self.do_action('default', command)
             self._move_to_next_line()
         self._quit_buffer()
@@ -647,7 +645,7 @@ class Default(object):
         clearmatch(self._vim)
 
     def _get_cursor_candidate(self):
-        if self._cursor > self._candidates_len:
+        if self._cursor > len(self._candidates):
             return {}
         return self._candidates[self._cursor - 1]
 
@@ -680,7 +678,7 @@ class Default(object):
         self._cursor = pos
 
     def _move_to_next_line(self):
-        if self._cursor < self._candidates_len:
+        if self._cursor < len(self._candidates):
             self._cursor += 1
 
     def _move_to_prev_line(self):
@@ -691,4 +689,4 @@ class Default(object):
         self._cursor = 1
 
     def _move_to_last_line(self):
-        self._cursor = self._candidates_len
+        self._cursor = len(self._candidates)
