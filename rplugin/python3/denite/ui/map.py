@@ -219,14 +219,6 @@ def _toggle_select_all(denite, params):
     return denite._update_buffer()
 
 
-def _update(denite, params):
-    if not denite.is_async:
-        return
-
-    _update_candidates(denite, params)
-    _update_buffer(denite, params)
-
-
 def _update_buffer(denite, params):
     if denite._updated:
         denite._update_buffer()
@@ -259,7 +251,6 @@ MAPPINGS = {
     'toggle_matchers': _toggle_matchers,
     'toggle_select': _toggle_select,
     'toggle_select_all': _toggle_select_all,
-    'update': _update,
     'update_buffer': _update_buffer,
     'update_candidates': _update_candidates,
 }

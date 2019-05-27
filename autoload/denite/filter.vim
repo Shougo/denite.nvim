@@ -38,10 +38,10 @@ function! denite#filter#_open(context, parent, entire_len, is_async) abort
   if g:denite#_filter_entire_len <
         \ a:context['max_dynamic_update_candidates'] &&
         \ a:context['filter_updatetime'] > 0
-    let g:denite#_filter_timer = timer_start(
+    let g:denite#_filter_candidates_timer = timer_start(
           \ a:context['filter_updatetime'],
           \ {-> s:filter_async()}, {'repeat': -1})
-    let g:denite#_update_timer = timer_start(
+    let g:denite#_filter_buffer_timer = timer_start(
           \ a:context['filter_updatetime'],
           \ {-> s:update_buffer()}, {'repeat': -1})
   endif
@@ -122,7 +122,7 @@ function! s:update_buffer() abort
 
   call denite#filter#_move_to_parent(v:true)
 
-  silent! call denite#call_map('update_buffer')
+  call denite#call_map('update_buffer')
 
   let denite_statusline = get(b:, 'denite_statusline', {})
 
@@ -142,7 +142,7 @@ function! s:update() abort
 
   call denite#filter#_move_to_parent(v:true)
 
-  silent! call denite#call_map('filter', input)
+  call denite#call_map('filter', input)
 
   noautocmd call win_gotoid(g:denite#_filter_winid)
 endfunction
@@ -186,12 +186,12 @@ function! denite#filter#_move_to_parent(is_async) abort
 endfunction
 
 function! s:stop_timer() abort
-  if exists('g:denite#_filter_timer')
-    call timer_stop(g:denite#_filter_timer)
-    unlet g:denite#_filter_timer
+  if exists('g:denite#_filter_candidates_timer')
+    call timer_stop(g:denite#_filter_candidates_timer)
+    unlet g:denite#_filter_candidates_timer
   endif
-  if exists('g:denite#_update_timer')
-    call timer_stop(g:denite#_update_timer)
-    unlet g:denite#_update_timer
+  if exists('g:denite#_filter_buffer_timer')
+    call timer_stop(g:denite#_filter_buffer_timer)
+    unlet g:denite#_filter_buffer_timer
   endif
 endfunction
