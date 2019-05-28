@@ -96,7 +96,6 @@ function! denite#init#_user_options() abort
         \ 'auto_resize': v:false,
         \ 'auto_resume': v:false,
         \ 'buffer_name': 'default',
-        \ 'cached_filter': v:false,
         \ 'cursor_pos': '',
         \ 'cursorline': v:true,
         \ 'default_action': 'default',

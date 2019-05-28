@@ -117,8 +117,6 @@ class Child(object):
 
             ctx['all_candidates'] = candidates
             ctx['candidates'] = candidates
-            ctx['prev_all_candidates_len'] = len(ctx['all_candidates'])
-            ctx['prev_filtered_candidates'] = []
 
             context['messages'] = ctx['messages']
 
@@ -310,25 +308,16 @@ class Child(object):
                     ctx['all_candidates'] = self._gather_source_candidates(
                         ctx, source)
             ctx['prev_input'] = ctx['input']
-            entire = ctx['all_candidates']
             if ctx['is_async']:
                 ctx['event'] = 'async'
-                entire += self._gather_source_candidates(ctx, source)
-            if not entire:
+                ctx['all_candidates'] += self._gather_source_candidates(
+                    ctx, source)
+            if not ctx['all_candidates']:
                 yield self._get_source_status(
-                    ctx, source, entire, []), [], [], 0
+                    ctx, source, ctx['all_candidates'], []), [], [], 0
                 continue
 
-            if (context['cached_filter'] and not source.is_volatile and
-                    ctx['prev_filtered_candidates'] and
-                    len(entire) == ctx['prev_all_candidates_len'] and
-                    context['input'].find(prev_input) == 0 and
-                    re.sub(r'\w*$', '', context['input']) ==
-                    re.sub(r'\w*$', '', prev_input)):
-                candidates = self._filter_cached_candidates(ctx, source)
-            else:
-                candidates = self._filter_source_candidates(
-                    ctx, source, entire)
+            candidates = self._filter_source_candidates(ctx, source)
 
             partial = candidates[: source.max_candidates]
 
@@ -340,16 +329,18 @@ class Child(object):
                 self._filters[x].convert_pattern(ctx['input'])
                 for x in source.matchers if self._filters[x]))
 
-            ctx['prev_all_candidates_len'] = len(entire)
+            status = self._get_source_status(ctx, source,
+                                             ctx['all_candidates'], partial)
+            # Free memory
+            ctx['candidates'] = []
 
-            yield self._get_source_status(
-                ctx, source, entire, partial), partial, patterns, len(entire)
+            yield status, partial, patterns, len(ctx['all_candidates'])
 
-    def _filter_source_candidates(self, ctx, source, entire):
+    def _filter_source_candidates(self, ctx, source):
         partial = []
+        entire = ctx['all_candidates']
         ctx['candidates'] = entire
 
-        skipped = False
         for i in range(0, len(entire), 1000):
             ctx['candidates'] = entire[i:i+1000]
             matchers = [self._filters[x] for x in
@@ -359,7 +350,6 @@ class Child(object):
             self._match_candidates(ctx, matchers)
             partial += ctx['candidates']
             if len(partial) >= source.max_candidates:
-                skipped = True
                 break
 
         ctx['candidates'] = partial
@@ -368,20 +358,6 @@ class Child(object):
                   if x in self._filters]:
             ctx['candidates'] = f.filter(ctx)
 
-        if skipped:
-            ctx['prev_filtered_candidates'] = []
-        else:
-            ctx['prev_filtered_candidates'] = copy.copy(ctx['candidates'])
-
-        return ctx['candidates']
-
-    def _filter_cached_candidates(self, ctx, source):
-        ctx['candidates'] = copy.copy(ctx['prev_filtered_candidates'])
-        for f in [self._filters[x]
-                  for x in source.matchers + source.sorters
-                  if x in self._filters]:
-            ctx['candidates'] = f.filter(ctx)
-        ctx['prev_filtered_candidates'] = copy.copy(ctx['candidates'])
         return ctx['candidates']
 
     def _gather_source_candidates(self, context, source):

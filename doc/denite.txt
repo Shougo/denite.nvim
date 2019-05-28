@@ -558,13 +558,6 @@ OPTIONS							*denite-options*
 		Specify the default action as {action}.
 		Default: "default"
 
-						*denite-option-cached-filter*
--cached-filter
-		Use cached results when filtering.
-		It improves the filter performance.
-		But some matchers like fruzzy do not support it.
-		Default: false
-
 						*denite-option-cursor-pos*
 -cursor-pos={number}
 		Select {number} candidate.
