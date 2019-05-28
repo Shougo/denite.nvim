@@ -71,7 +71,7 @@ def _filter(denite, params):
 
     denite._context['input'] = text
 
-    _update_candidates(denite, params)
+    denite._update_candidates()
     _update_buffer(denite, params)
 
 
@@ -84,7 +84,7 @@ def _filter_async(denite, params):
 
     denite._context['input'] = text
 
-    _update_candidates(denite, params)
+    denite._update_candidates()
 
 
 def _move_up_path(denite, params):
@@ -227,6 +227,8 @@ def _update_buffer(denite, params):
 
 
 def _update_candidates(denite, params):
+    if not denite._is_async:
+        return
     denite._update_candidates()
 
 
