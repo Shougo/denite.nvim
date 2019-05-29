@@ -122,7 +122,7 @@ function! s:update_buffer() abort
 
   call denite#filter#_move_to_parent(v:true)
 
-  call denite#call_map('update_buffer')
+  silent! call denite#call_map('update_buffer')
 
   let denite_statusline = get(b:, 'denite_statusline', {})
 
@@ -142,7 +142,7 @@ function! s:update() abort
 
   call denite#filter#_move_to_parent(v:true)
 
-  call denite#call_map('filter', input)
+  silent! call denite#call_map('filter', input)
 
   noautocmd call win_gotoid(g:denite#_filter_winid)
 endfunction
