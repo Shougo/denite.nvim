@@ -221,7 +221,10 @@ def _toggle_select_all(denite, params):
 
 def _update_buffer(denite, params):
     if denite._updated:
-        denite._update_buffer()
+        try:
+            denite._update_buffer()
+        except Exception:
+            pass
     else:
         denite._update_status()
 
