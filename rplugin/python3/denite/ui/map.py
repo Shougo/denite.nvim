@@ -127,15 +127,27 @@ def _quick_move(denite, params):
             signid = 2000 + number
             name = 'denite_quick_move_' + str(number)
             if is_define:
-                denite._vim.command(
-                    f'sign define {name} text={key} texthl=Special')
-                denite._vim.command(
-                    f'sign place {signid} name={name} '
-                    f'line={number} buffer={bufnr}')
+                if denite._vim.call('exists', '*sign_define'):
+                    denite._vim.call('sign_define',
+                                     name, {'text': key, 'texthl': 'Special'})
+                    denite._vim.call('sign_place',
+                                     signid, '', name, bufnr,
+                                     {'lnum': number})
+                else:
+                    denite._vim.command(
+                        f'sign define {name} text={key} texthl=Special')
+                    denite._vim.command(
+                        f'sign place {signid} name={name} '
+                        f'line={number} buffer={bufnr}')
             else:
-                denite._vim.command(
-                    f'silent! sign unplace {signid} buffer={bufnr}')
-                denite._vim.command('silent! sign undefine ' + name)
+                if denite._vim.call('exists', '*sign_define'):
+                    denite._vim.call('sign_unplace', '',
+                                     {'id': signid, 'buffer': bufnr})
+                    denite._vim.call('sign_undefine', name)
+                else:
+                    denite._vim.command(
+                        f'silent! sign unplace {signid} buffer={bufnr}')
+                    denite._vim.command('silent! sign undefine ' + name)
 
     quick_move_table = get_quick_move_table()
     denite._vim.command('echo "Input quick match key: "')

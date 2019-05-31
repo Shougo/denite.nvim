@@ -26,11 +26,7 @@ function! denite#filter#_open(context, parent, entire_len, is_async) abort
   endif
 
   if a:context['prompt'] !=# '' && strwidth(a:context['prompt']) <= 2
-    execute printf('sign define denite_filter_prompt text=%s texthl=%s',
-          \ a:context['prompt'], a:context['highlight_prompt'])
-    execute 'silent! sign unplace 2000 buffer=' . bufnr('%')
-    execute printf('sign place 2000 name=denite_filter_prompt'.
-         \ ' line=%d buffer=%d', line('$'), bufnr('%'))
+    call s:init_prompt(a:context)
   endif
 
   call s:stop_timer()
@@ -104,6 +100,26 @@ function! s:new_filter_buffer(context) abort
   endif
   let g:denite#_filter_winid = win_getid()
   let g:denite#_filter_bufnr = bufnr('%')
+endfunction
+
+function! s:init_prompt(context) abort
+  let name = 'denite_filter_prompt'
+  let id = 2000
+  if exists('*sign_define')
+    call sign_define(name, {
+          \ 'text': a:context['prompt'],
+          \ 'texthl': a:context['highlight_prompt']
+          \ })
+    call sign_unplace('', {'id': id, 'buffer': bufnr('%')})
+    call sign_place(id, '', name, bufnr('%'), {'lnum': line('$')})
+  else
+    execute printf('sign define %s text=%s texthl=%s',
+          \ name, a:context['prompt'], a:context['highlight_prompt'])
+    execute printf('silent! sign unplace %d buffer=%s',
+          \ id, bufnr('%'))
+    execute printf('sign place %d name=%s line=%d buffer=%d',
+          \ id, name, line('$'), bufnr('%'))
+  endif
 endfunction
 
 function! s:filter_async() abort
