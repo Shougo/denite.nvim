@@ -115,3 +115,4 @@ endfunction
 
 ## Screenshots
 
+![denite new UI](https://user-images.githubusercontent.com/1239245/58742567-a155ea80-8460-11e9-9925-09082def2c80.gif)
