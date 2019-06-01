@@ -89,6 +89,9 @@ class Source(Base):
         outs, errs = context['__proc'].communicate(timeout=timeout)
         if errs:
             self.error_message(context, errs)
+        if not context['__proc']:
+            return []
+
         context['is_async'] = not context['__proc'].eof()
         if context['__proc'].eof():
             context['__proc'] = None

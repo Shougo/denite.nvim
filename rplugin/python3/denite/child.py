@@ -9,8 +9,10 @@ from denite.util import (
     import_rplugins, expand, split_input, abspath)
 
 import copy
+import msgpack
 import os
 import re
+import sys
 import time
 from os.path import normpath, normcase
 from collections import ChainMap
@@ -26,6 +28,36 @@ class Child(object):
         self._kinds = {}
         self._runtimepath = ''
         self._current_sources = []
+        self._unpacker = msgpack.Unpacker(
+            encoding='utf-8',
+            unicode_errors='surrogateescape')
+        self._packer = msgpack.Packer(
+            use_bin_type=True,
+            encoding='utf-8',
+            unicode_errors='surrogateescape')
+
+    def main_loop(self, stdout):
+        while True:
+            feed = sys.stdin.buffer.raw.read(102400)
+            if feed is None:
+                continue
+            if feed == b'':
+                # EOF
+                return
+
+            self._unpacker.feed(feed)
+
+            for child_in in self._unpacker:
+                name = child_in['name']
+                args = child_in['args']
+                queue_id = child_in['queue_id']
+
+                ret = self.main(name, args, queue_id)
+                if ret:
+                    # _ret = self._vim.vars['denite#_ret']
+                    # _ret[queue_id] = ret
+                    print(ret)
+                    self._vim.vars['denite#_ret'] = ret
 
     def main(self, name, args, queue_id):
         ret = None
@@ -47,8 +79,6 @@ class Child(object):
             ret = self.get_action(args[0], args[1], args[2])
         elif name == 'get_action_names':
             ret = self.get_action_names(args[0], args[1])
-        elif name == 'is_async':
-            ret = self.is_async()
         return ret
 
     def start(self, context):
@@ -76,7 +106,6 @@ class Child(object):
             ctx['is_redraw'] = context['is_redraw']
             ctx['messages'] = context['messages']
             ctx['error_messages'] = context['error_messages']
-            ctx['mode'] = context['mode']
             ctx['input'] = context['input']
             ctx['prev_input'] = context['input']
             ctx['event'] = 'gather'
@@ -103,7 +132,6 @@ class Child(object):
             source.context = copy.copy(context)
             source.context['args'] = args
             source.context['is_async'] = False
-            source.context['is_skipped'] = False
             source.context['is_interactive'] = False
             source.context['all_candidates'] = []
             source.context['candidates'] = []
@@ -163,7 +191,10 @@ class Child(object):
         pattern = ''
         statuses = []
         candidates = []
-        for status, partial, patterns in self._filter_candidates(context):
+        total_entire_len = 0
+        for status, partial, patterns, entire_len in self._filter_candidates(
+                context):
+            total_entire_len += entire_len
             candidates += partial
             statuses.append(status)
 
@@ -195,10 +226,11 @@ class Child(object):
             candidates.reverse()
         if self.is_async():
             statuses.append('[async]')
-        return (pattern, statuses, candidates)
+        return [self.is_async(), pattern, statuses, total_entire_len,
+                candidates]
 
     def do_action(self, context, action_name, targets):
-        action = self.get_action(context, action_name, targets)
+        action = self._get_action_targets(context, action_name, targets)
         if not action:
             return True
 
@@ -211,21 +243,25 @@ class Child(object):
             } if source.is_public_context else {}
 
         context['targets'] = targets
-        return action['func'](context) if action['func'] else self._vim.call(
-            'denite#custom#_call_action',
-            action['kind'], action['name'], context)
+        new_context = (action['func'](context)
+                       if action['func']
+                       else self._vim.call(
+                           'denite#custom#_call_action',
+                           action['kind'], action['name'], context))
+        if new_context:
+            context.update(new_context)
 
     def get_action(self, context, action_name, targets):
-        actions = set()
-        action = None
-        for target in targets:
-            action = self._get_action(context, action_name, target)
-            if action:
-                actions.add(action['name'])
-        if len(actions) > 1:
-            self.error('Multiple actions are detected: ' + action_name)
-            return {}
-        return action if actions else {}
+        action = self._get_action_targets(context, action_name, targets)
+        if not action:
+            return action
+
+        return {
+            'name': action['name'],
+            'kind': action['kind'],
+            'is_quit': action['is_quit'],
+            'is_redraw': action['is_redraw'],
+        }
 
     def get_action_names(self, context, targets):
         kinds = set()
@@ -245,8 +281,7 @@ class Child(object):
 
     def is_async(self):
         return len([x for x in self._current_sources
-                    if x.context['is_async'] or x.context['is_skipped']
-                    ]) > 0
+                    if x.context['is_async']]) > 0
 
     def debug(self, expr):
         debug(self._vim, expr)
@@ -264,60 +299,66 @@ class Child(object):
                 ctx['input'] = expand(ctx['input'])
             if context['smartcase']:
                 ctx['ignorecase'] = re.search(r'[A-Z]', ctx['input']) is None
-            ctx['mode'] = context['mode']
-            ctx['async_timeout'] = 0.03 if ctx['mode'] != 'insert' else 0.02
-            if ctx['prev_input'] != ctx['input']:
+            ctx['async_timeout'] = 0.03
+            prev_input = ctx['prev_input']
+            if prev_input != ctx['input']:
                 ctx['prev_time'] = time.time()
                 if ctx['is_interactive']:
                     ctx['event'] = 'interactive'
                     ctx['all_candidates'] = self._gather_source_candidates(
                         ctx, source)
             ctx['prev_input'] = ctx['input']
-            entire = ctx['all_candidates']
             if ctx['is_async']:
                 ctx['event'] = 'async'
-                entire += self._gather_source_candidates(ctx, source)
-            if len(entire) > 20000 and (time.time() - ctx['prev_time'] <
-                                        int(context['skiptime']) / 1000.0):
-                ctx['is_skipped'] = True
+                ctx['all_candidates'] += self._gather_source_candidates(
+                    ctx, source)
+            if not ctx['all_candidates']:
                 yield self._get_source_status(
-                    ctx, source, entire, []), [], []
-                continue
-            if not entire:
-                yield self._get_source_status(
-                    ctx, source, entire, []), [], []
+                    ctx, source, ctx['all_candidates'], []), [], [], 0
                 continue
 
-            ctx['is_skipped'] = False
-            partial = []
-            ctx['candidates'] = entire
-            for i in range(0, len(entire), 1000):
-                ctx['candidates'] = entire[i:i+1000]
-                matchers = [self._filters[x] for x in
-                            (ctx['matchers'].split(',') if ctx['matchers']
-                             else source.matchers)
-                            if x in self._filters]
-                self._match_candidates(ctx, matchers)
-                partial += ctx['candidates']
-                if len(partial) >= source.max_candidates:
-                    break
-            ctx['candidates'] = partial
-            for f in [self._filters[x]
-                      for x in source.sorters + source.converters
-                      if x in self._filters]:
-                ctx['candidates'] = f.filter(ctx)
-            partial = ctx['candidates'][: source.max_candidates]
+            candidates = self._filter_source_candidates(ctx, source)
+
+            partial = candidates[: source.max_candidates]
+
             for c in partial:
                 c['source_name'] = source.name
                 c['source_index'] = source.index
-            ctx['candidates'] = []
 
             patterns = filterfalse(lambda x: x == '', (
                 self._filters[x].convert_pattern(ctx['input'])
                 for x in source.matchers if self._filters[x]))
 
-            yield self._get_source_status(
-                ctx, source, entire, partial), partial, patterns
+            status = self._get_source_status(ctx, source,
+                                             ctx['all_candidates'], partial)
+            # Free memory
+            ctx['candidates'] = []
+
+            yield status, partial, patterns, len(ctx['all_candidates'])
+
+    def _filter_source_candidates(self, ctx, source):
+        partial = []
+        entire = ctx['all_candidates']
+        ctx['candidates'] = entire
+
+        for i in range(0, len(entire), 1000):
+            ctx['candidates'] = entire[i:i+1000]
+            matchers = [self._filters[x] for x in
+                        (ctx['matchers'].split(',') if ctx['matchers']
+                            else source.matchers)
+                        if x in self._filters]
+            self._match_candidates(ctx, matchers)
+            partial += ctx['candidates']
+            if len(partial) >= source.max_candidates:
+                break
+
+        ctx['candidates'] = partial
+        for f in [self._filters[x]
+                  for x in source.sorters + source.converters
+                  if x in self._filters]:
+            ctx['candidates'] = f.filter(ctx)
+
+        return ctx['candidates']
 
     def _gather_source_candidates(self, context, source):
         max_len = int(context['max_candidate_width']) * 2
@@ -325,6 +366,18 @@ class Child(object):
         for candidate in [x for x in candidates if len(x['word']) > max_len]:
             candidate['word'] = candidate['word'][: max_len]
         return candidates
+
+    def _get_action_targets(self, context, action_name, targets):
+        actions = set()
+        action = None
+        for target in targets:
+            action = self._get_action_target(context, action_name, target)
+            if action:
+                actions.add(action['name'])
+        if len(actions) > 1:
+            self.error('Multiple actions are detected: ' + action_name)
+            return {}
+        return action if actions else {}
 
     def _get_source_status(self, context, source, entire, partial):
         return (source.get_status(context) if not partial else
@@ -455,7 +508,7 @@ class Child(object):
 
         return kind
 
-    def _get_action(self, context, action_name, target):
+    def _get_action_target(self, context, action_name, target):
         kind = self._get_kind(context, target)
         if not kind:
             return {}

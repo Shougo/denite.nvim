@@ -33,8 +33,16 @@ if hasattr(vim, 'plugin'):
             self._rplugin.start(args)
 
         @vim.rpc_export('_denite_do_action', sync=True)
-        def take_action(self, args):
-            return self._rplugin.take_action(args)
+        def do_action(self, args):
+            return self._rplugin.do_action(args)
+
+        @vim.rpc_export('_denite_do_map', sync=True)
+        def do_map(self, args):
+            return self._rplugin.do_map(args)
+
+        @vim.rpc_export('_denite_do_async_map', sync=False)
+        def do_async_map(self, args):
+            return self._rplugin.do_map(args)
 
 if find_spec('yarp'):
 
@@ -48,3 +56,9 @@ if find_spec('yarp'):
 
     def _denite_do_action(args):
         return global_denite.take_action(args)
+
+    def _denite_do_map(args):
+        return global_denite.do_map(args)
+
+    def _denite_do_async_map(args):
+        return global_denite.do_map(args)

@@ -125,8 +125,8 @@ function! denite#util#open(filename) abort
 endfunction
 
 function! denite#util#cd(path) abort
-  if exists('*nvim_set_current_dir')
-    call nvim_set_current_dir(a:path)
+  if exists('*chdir')
+    call chdir(a:path)
   else
     silent execute 'lcd' fnameescape(a:path)
   endif
@@ -222,7 +222,7 @@ endfunction
 function! denite#util#has_yarp() abort
   return !has('nvim')
 endfunction
-function! denite#util#rpcrequest(method, args) abort
+function! denite#util#rpcrequest(method, args, is_async) abort
   if !denite#init#_check_channel()
     return -1
   endif
@@ -231,8 +231,16 @@ function! denite#util#rpcrequest(method, args) abort
     if g:denite#_yarp.job_is_dead
       return -1
     endif
-    return g:denite#_yarp.request(a:method, a:args)
+    if a:is_async
+      return g:denite#_yarp.notify(a:method, a:args)
+    else
+      return g:denite#_yarp.request(a:method, a:args)
+    endif
   else
-    return rpcrequest(g:denite#_channel_id, a:method, a:args)
+    if a:is_async
+      return rpcnotify(g:denite#_channel_id, a:method, a:args)
+    else
+      return rpcrequest(g:denite#_channel_id, a:method, a:args)
+    endif
   endif
 endfunction

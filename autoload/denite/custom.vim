@@ -118,11 +118,14 @@ endfunction
 function! denite#custom#_call_action(kind, name, context) abort
   let custom = denite#custom#_get().action
 
+  let new_context = {}
   for key in denite#util#split(a:kind)
     if has_key(custom, key) && has_key(custom[key], a:name)
-      call call(custom[key][a:name][0], [a:context])
+      let new_context = call(custom[key][a:name][0], [a:context])
     endif
   endfor
+
+  return new_context
 endfunction
 
 function! s:set_custom(dest, name_or_dict, value) abort

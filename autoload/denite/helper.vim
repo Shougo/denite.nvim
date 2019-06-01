@@ -217,5 +217,5 @@ function! denite#helper#_get_wininfo() abort
 endfunction
 function! denite#helper#_get_preview_window() abort
   return len(filter(range(1, winnr('$')),
-        \ "getwinvar(v:val, '&previewwindow') == 1"))
+        \ "getwinvar(v:val, '&previewwindow') ==# 1"))
 endfunction

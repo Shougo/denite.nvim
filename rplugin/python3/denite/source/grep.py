@@ -64,6 +64,7 @@ class Source(Base):
             'min_interactive_pattern': 3,
         }
         self.matchers = ['matcher/ignore_globs', 'matcher/regexp']
+        self.is_volatile = True
 
     def on_init(self, context):
         context['__proc'] = None

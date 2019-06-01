@@ -6,6 +6,7 @@
 
 from denite.ui.default import Default
 from denite.context import Context
+from denite.ui.map import do_map
 
 
 class Rplugin:
@@ -31,10 +32,26 @@ class Rplugin:
             denite.util.error(self._vim,
                               'Please execute :messages command.')
 
-    def take_action(self, args):
+    def do_action(self, args):
         try:
             ui = self.get_ui(args[0]['buffer_name'])
+            ui._cursor = self._vim.call('line', '.')
             return ui._denite.do_action(args[0], args[1], args[2])
+        except Exception:
+            import traceback
+            import denite.util
+            for line in traceback.format_exc().splitlines():
+                denite.util.error(self._vim, line)
+            denite.util.error(self._vim,
+                              'Please execute :messages command.')
+
+    def do_map(self, args):
+        bufnr = args[0]
+        bufvars = self._vim.buffers[bufnr].vars
+        try:
+            ui = self.get_ui(bufvars['denite']['buffer_name'])
+            ui._cursor = self._vim.call('line', '.')
+            return do_map(ui, args[1], args[2])
         except Exception:
             import traceback
             import denite.util
