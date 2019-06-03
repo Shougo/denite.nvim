@@ -12,7 +12,7 @@ lint:
 	vint plugin
 	vint autoload
 	flake8 --version
-	flake8 rplugin/python3/denite
+	flake8 rplugin autoload/denite/_main.py
 	mypy --version
 	mypy --ignore-missing-imports --follow-imports=skip rplugin/python3/denite
 
