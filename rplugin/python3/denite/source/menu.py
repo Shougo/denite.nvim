@@ -89,9 +89,12 @@ class Source(Base):
                         ])
         else:
             # Display all the registered menus
+            max_menu = max([self.vim.call('strwidth', x)
+                            for x in menus.keys()])
+            word_format = '{0:<' + str(max_menu) +'} - {1}'
             lines.extend([
                 {
-                    'word': '{} - {}'.format(
+                    'word': word_format.format(
                         menu, candidate.get('description')),
                     'kind': 'source',
                     'action__source': ['menu', menu],
