@@ -116,3 +116,4 @@ endfunction
 ## Screenshots
 
 ![denite new UI](https://user-images.githubusercontent.com/1239245/58742567-a155ea80-8460-11e9-9925-09082def2c80.gif)
+![denite new UI2](https://user-images.githubusercontent.com/41671631/58790351-cf832800-8622-11e9-912d-813408876b86.gif)
