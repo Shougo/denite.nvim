@@ -1655,6 +1655,16 @@ name		(String)			(Required)
 		The name of a source.
 
 ==============================================================================
+DEOPLETE SOURCES					*defx-deoplete-sources*
+
+denite
+		Source custom variables:
+		enable_buffer_pattern
+				If it is True, denite source use the buffer
+				pattern instead of original candidates word.
+				(default: v:true)
+
+==============================================================================
 EXTERNAL SOURCES				*denite-external-sources*
 
 vim-denite-ghq: "ghq" source
