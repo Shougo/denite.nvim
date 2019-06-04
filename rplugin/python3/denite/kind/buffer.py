@@ -38,7 +38,9 @@ class Kind(Openable):
             return
 
         prev_id = self.vim.call('win_getid')
-        self.vim.command('pedit!')
+        path = (target['action__path']
+                if target['action__path'] else '[dummy]')
+        self.vim.command(f'pedit! {path}')
         self.vim.command('wincmd P')
         self.action_open(context)
         self.vim.call('win_gotoid', prev_id)
