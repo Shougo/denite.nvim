@@ -91,7 +91,7 @@ class Source(Base):
             # Display all the registered menus
             max_menu = max([self.vim.call('strwidth', x)
                             for x in menus.keys()])
-            word_format = '{0:<' + str(max_menu) +'} - {1}'
+            word_format = '{0:<' + str(max_menu) + '} - {1}'
             lines.extend([
                 {
                     'word': word_format.format(

@@ -10,12 +10,19 @@ import re
 import os
 import sys
 import traceback
+import typing
 
 from glob import glob
 from os.path import normpath, normcase, join, dirname, exists
 
+from importlib import find_loader
+if find_loader('pynvim'):
+    from pynvim import Nvim
+else:
+    from neovim import Nvim
 
-def set_default(vim, var, val):
+
+def set_default(vim: Nvim, var, val):
     return vim.call('denite#util#set_default', var, val)
 
 
@@ -30,11 +37,11 @@ def globruntime(runtimepath, path):
     return ret
 
 
-def echo(vim, color, string):
+def echo(vim: Nvim, color, string):
     vim.call('denite#util#echo', color, string)
 
 
-def debug(vim, expr):
+def debug(vim: Nvim, expr):
     if hasattr(vim, 'out_write'):
         string = (expr if isinstance(expr, str) else str(expr))
         return vim.out_write('[denite] ' + string + '\n')
@@ -42,13 +49,13 @@ def debug(vim, expr):
         print(expr)
 
 
-def error(vim, expr):
+def error(vim: Nvim, expr):
     string = (expr if isinstance(expr, str) else str(expr))
     vim.call('denite#util#print_error', string)
 
 
-def error_tb(vim, msg):
-    lines = []
+def error_tb(vim: Nvim, msg):
+    lines: typing.List[str] = []
     t, v, tb = sys.exc_info()
     if t and v and tb:
         lines += traceback.format_exc().splitlines()
@@ -60,7 +67,7 @@ def error_tb(vim, msg):
             error(vim, line)
 
 
-def clear_cmdline(vim):
+def clear_cmdline(vim: Nvim):
     vim.command('redraw | echo')
 
 
@@ -109,7 +116,7 @@ def path2dir(path):
     return path if os.path.isdir(path) else os.path.dirname(path)
 
 
-def path2project(vim, path, root_markers):
+def path2project(vim: Nvim, path, root_markers):
     return vim.call('denite#project#path2project_directory',
                     path, root_markers)
 
@@ -139,11 +146,11 @@ def expand(path):
     return os.path.expandvars(os.path.expanduser(path))
 
 
-def abspath(vim, path):
+def abspath(vim: Nvim, path):
     return normpath(join(vim.call('getcwd'), expand(path)))
 
 
-def relpath(vim, path):
+def relpath(vim: Nvim, path):
     return normpath(vim.call('fnamemodify', expand(path), ':~:.'))
 
 
@@ -170,7 +177,7 @@ def parse_command(array, **kwargs):
 
 
 # XXX: It override the builtin 'input()' function.
-def input(vim, context, prompt='', text='', completion=''):
+def input(vim: Nvim, context, prompt='', text='', completion=''):
     try:
         if completion != '':
             return vim.call('input', prompt, text, completion)
@@ -302,7 +309,7 @@ def parse_tagline(line, tagpath):
     return info
 
 
-def clearmatch(vim):
+def clearmatch(vim: Nvim):
     if not vim.call('exists', 'w:denite_match_id'):
         return
 
