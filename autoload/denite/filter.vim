@@ -76,6 +76,8 @@ function! s:init_buffer() abort
         \ <ESC>:call <SID>async_update()<CR>
   nnoremap <buffer><silent> <Plug>(denite_filter_quit)
         \ :<C-u>call <SID>quit()<CR>
+  inoremap <buffer><silent> <Plug>(denite_filter_quit)
+        \ <ESC>:<C-u>call <SID>quit()<CR>
 
   nmap <buffer> <CR> <Plug>(denite_filter_update)
   nmap <buffer> q    <Plug>(denite_filter_quit)

@@ -395,6 +395,26 @@ toggle_matchers:{arg}
 		Change |denite-option-matchers| to {arg}.
 		If |denite-option-matchers| is {arg}, it will be disabled.
 
+FILTER KEY MAPPINGS 				*denite-filter-key-mappings*
+Below mappings are only available in denite filter buffer.
+
+				*denite-map-i_<Plug>(denite_filter_update)*
+i_<Plug>(denite_filter_update)
+		Update the current input and quit filter buffer.
+
+
+				*denite-map-i_<Plug>(denite_filter_quit)*
+i_<Plug>(denite_filter_quit)
+		Quit filter buffer.
+
+				*denite-map-<Plug>(denite_filter_update)*
+<Plug>(denite_filter_update)
+		Update the current input and quit filter buffer.
+
+				*denite-map-<Plug>(denite_filter_quit)*
+<Plug>(denite_filter_quit)
+		Quit filter buffer.
+
 ------------------------------------------------------------------------------
 FUNCTIONS						*denite-functions*
 
@@ -1846,6 +1866,15 @@ A: You need to return new context in action function.
 	call denite#custom#action('buffer,directory,file,openable',
 	        \ 'candidate_file_rec', function('s:candidate_file_rec'))
 <
+Q: I want to quit filter window in denite filter window.
+
+A: >
+
+	autocmd FileType denite-filter call s:denite_filter_my_settings()
+	function! s:denite_filter_my_settings() abort
+	  imap <silent><buffer> <C-c> <Plug>(denite_filter_quit)
+	endfunction
+
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
 
