@@ -271,7 +271,8 @@ def parse_tagline(line, tagpath):
     elem = line.split("\t")
     file_path = elem[1]
     if not exists(file_path):
-        file_path = normpath(join(dirname(tagpath), elem[1]))
+        file_path = join(dirname(tagpath), elem[1])
+    file_path = normpath(file_path)
     info = {
         'name': elem[0],
         'file': file_path,
