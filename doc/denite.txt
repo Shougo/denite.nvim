@@ -1675,7 +1675,7 @@ name		(String)			(Required)
 		The name of a source.
 
 ==============================================================================
-DEOPLETE SOURCES					*defx-deoplete-sources*
+DEOPLETE SOURCES				*denite-deoplete-sources*
 
 denite
 		Source custom variables:
