@@ -386,7 +386,7 @@ class Default(object):
 
     def _update_displayed_texts(self):
         candidates_len = len(self._candidates)
-        if self._context['auto_resize']:
+        if not self._is_async and self._context['auto_resize']:
             winminheight = int(self._context['winminheight'])
             if (winminheight is not -1 and candidates_len < winminheight):
                 self._winheight = winminheight
