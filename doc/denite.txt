@@ -140,6 +140,11 @@ EXAMPLES						*denite-examples*
 	  \ denite#do_map('toggle_select').'j'
 	endfunction
 
+	autocmd FileType denite-filter call s:denite_filter_my_settings()
+	function! s:denite_filter_my_settings() abort
+	  imap <silent><buffer> <C-o> <Plug>(denite_filter_quit)
+	endfunction
+
 	" Change file/rec command.
 	call denite#custom#var('file/rec', 'command',
 	\ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
@@ -1816,9 +1821,10 @@ buffer. Enter does move cursor one line down. No nice input line. What to do?
 A: Denite.nvim does not define any of default mappings.  You need to define
 them.  |denite-examples|
 
-Q: I want to move the cursor in denite filter window.
+Q: I want to move the cursor in a Denite filter window, while in insert mode.
 
-A: Really?  It is not recommended. >
+A: Really? It is not the Vim way to move the cursor while in insert mode. You
+must force this behaviour. >
 
 	autocmd FileType denite-filter call s:denite_filter_my_settings()
 	function! s:denite_filter_my_settings() abort
@@ -1828,7 +1834,8 @@ A: Really?  It is not recommended. >
 	  \ <Esc><C-w>p:call cursor(line('.')-1,0)<CR><C-w>pA
 	endfunction
 
-Note: This is very slow in Vim8 environment.
+Note: This is very slow in Vim8 environment. See the |denite-examples| for an
+example mapping from insert mode to filter mode.
 
 Q: I want to use multiple action in denite buffer.
 
