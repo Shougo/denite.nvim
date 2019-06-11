@@ -530,6 +530,10 @@ class Default(object):
         is_vertical = split == 'vertical'
 
         if not is_vertical and self._vim.current.window.height != winheight:
+            if self._floating:
+                self._vim.call('nvim_win_set_config', self._winid,
+                               {'height': winheight})
+
             self._vim.command('resize ' + str(winheight))
             if self._context['reversed']:
                 self._vim.command('normal! zb')

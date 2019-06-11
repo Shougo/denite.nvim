@@ -35,8 +35,6 @@ function! denite#init#_initialize() abort
     return 1
   endif
 
-  let g:denite#_previewed_buffers = {}
-
   try
     if denite#util#has_yarp()
       let g:denite#_yarp = yarp#py3('denite')
@@ -76,6 +74,7 @@ function! denite#init#_initialize() abort
         \ {-> denite#call_map('update_buffer')}, {'repeat': -1})
 endfunction
 function! s:initialize_variables() abort
+  let g:denite#_filter_winid = -1
   let g:denite#_previewed_buffers = {}
   let g:denite#_candidates = []
   let g:denite#_ret = {}

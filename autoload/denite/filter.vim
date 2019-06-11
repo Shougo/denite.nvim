@@ -187,6 +187,8 @@ function! s:quit() abort
   call denite#filter#_move_to_parent(v:false)
 
   call s:stop_timer()
+
+  let g:denite#_filter_winid = -1
 endfunction
 
 function! denite#filter#_move_to_parent(is_async) abort
