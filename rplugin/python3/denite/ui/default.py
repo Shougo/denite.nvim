@@ -533,6 +533,14 @@ class Default(object):
             if self._floating:
                 self._vim.call('nvim_win_set_config', self._winid,
                                {'height': winheight})
+                if self._vim.vars['denite#_filter_winid'] > 0:
+                    self._vim.call(
+                        'nvim_win_set_config',
+                        self._vim.vars['denite#_filter_winid'], {
+                            'relative': 'editor',
+                            'row': self._context['winrow'] + winheight,
+                            'col': int(self._context['wincol']),
+                         })
 
             self._vim.command('resize ' + str(winheight))
             if self._context['reversed']:
