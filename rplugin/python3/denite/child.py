@@ -143,6 +143,7 @@ class Child(object):
             self._set_source_attribute(source, 'sorters')
             self._set_source_attribute(source, 'converters')
             self._set_source_attribute(source, 'max_candidates')
+            self._set_source_attribute(source, 'default_action')
             source.vars.update(
                 get_custom_source(self._custom, source.name,
                                   'vars', source.vars))
