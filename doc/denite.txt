@@ -449,6 +449,19 @@ denite#custom#filter({filter-name}, {variable-name}, {value})
 		to {value}.  You may specify multiple filters with the
 		separator "," in {filter-name}.
 
+						*denite#custom#kind()*
+denite#custom#kind({kind-name}, {option-name}, {value})
+		Set {kind-name} kind specialized {option-name} to {value}.
+		You may specify multiple kinds with the separator "," in
+		{kind-name}.
+		A {kind-name} of "_" sets the default for all kinds.
+
+		The options below are available:
+
+		default_action			(String)
+		Specify the kind default action.
+		|denite-kind-attribute-default-action|
+
 						*denite#custom#option()*
 denite#custom#option({buffer-name}, {option-name}, {value})
 denite#custom#option({buffer-name}, {dict})
@@ -463,7 +476,7 @@ denite#custom#option({buffer-name}, {dict})
 	call denite#custom#option('default', {
 	      \ 'short_source_names': v:true
 	      \ })
-
+<
 						*denite#custom#source()*
 denite#custom#source({source-name}, {option-name}, {value})
 		Set {source-name} source specialized {option-name} to {value}.
@@ -473,24 +486,29 @@ denite#custom#source({source-name}, {option-name}, {value})
 
 		The options below are available:
 
-		matchers			(List)
-		Specify a list of matcher names.  The filters overwrite source
-		default matchers.
-		Default:  ['matcher/fuzzy']
-
-		sorters				(List)
-		Specify a list of sorter names.  The filters overwrite source
-		default sorters.
-		Default:  ['sorter/rank']
-
-		converters			(List)
-		Specify a list of converter names.  The filters overwrite
-		source default converters.
-		Default:  []
-
 		args				(List)
 		Specify the source default arguments.
 		Default:  []
+
+		converters			(List)
+		Specify a list of converter names.
+		|denite-source-attribute-converters|
+
+		default_action			(String)
+		Specify the source default action.
+		|denite-source-attribute-default-action|
+
+		matchers			(List)
+		Specify a list of matcher names.
+		|denite-source-attribute-matchers|
+
+		max_candidates			(Number)
+		Specify the maximum candidates.
+		|denite-source-attribute-max_candidates|
+
+		sorters				(List)
+		Specify a list of sorter names.
+		|denite-source-attribute-sorters|
 
 							*denite#custom#var()*
 denite#custom#var({source-name}, {var-name}, {value})

@@ -25,6 +25,15 @@ function! s:suite.custom_source() abort
   call s:assert.equals(custom['file_mru'].default_action, 'echo')
 endfunction
 
+function! s:suite.custom_kind() abort
+  let custom = denite#custom#_get().kind
+  call s:assert.equals(denite#custom#kind(
+        \ 'file', 'foo', 'echo'), 1)
+  call s:assert.equals(denite#custom#kind(
+        \ 'file', 'default_action', 'echo'), 0)
+  call s:assert.equals(custom['file'].default_action, 'echo')
+endfunction
+
 function! s:suite.custom_filter() abort
   let custom = denite#custom#_get().filter
 

@@ -23,11 +23,13 @@ function! denite#custom#_init() abort
   let s:custom.option = {}
   let s:custom.filter = {}
   let s:custom.action = {}
+  let s:custom.kind = {}
+  let s:custom.kind._ = {}
 endfunction
 
 function! denite#custom#source(source_name, option_name, value) abort
-  if index(['matchers', 'sorters', 'converters',
-        \   'vars', 'args', 'max_candidates', 'default_action'],
+  if index(['args', 'converters', 'default_action',
+        \ 'matchers', 'max_candidates', 'sorters', 'vars'],
         \ a:option_name) < 0
     call denite#util#print_error('Invalid option_name: ' . a:option_name)
     return 1
@@ -36,6 +38,22 @@ function! denite#custom#source(source_name, option_name, value) abort
   let custom = denite#custom#_get().source
 
   for key in denite#util#split(a:source_name)
+    if !has_key(custom, key)
+      let custom[key] = {}
+    endif
+    let custom[key][a:option_name] = a:value
+  endfor
+endfunction
+
+function! denite#custom#kind(kind_name, option_name, value) abort
+  if index(['default_action'], a:option_name) < 0
+    call denite#util#print_error('Invalid option_name: ' . a:option_name)
+    return 1
+  endif
+
+  let custom = denite#custom#_get().kind
+
+  for key in denite#util#split(a:kind_name)
     if !has_key(custom, key)
       let custom[key] = {}
     endif
