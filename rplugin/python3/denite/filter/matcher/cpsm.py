@@ -48,7 +48,8 @@ class Filter(Base):
 
         ispath = (os.path.exists(context['candidates'][0]['word']))
         cpsm_result = self._get_cpsm_result(
-            ispath, context['candidates'], context['input'], context['bufname'])
+            ispath, context['candidates'], context['input'],
+            context['bufname'])
         d = {x['word']: x for x in context['candidates']}
         return [d[x] for x in cpsm_result]
 
