@@ -425,7 +425,7 @@ FUNCTIONS						*denite-functions*
 
 denite#call_map({map-name}[, {args}])			*denite#call_map()*
 		Fire {map-name} mapping with {args}.  You can find the
-		mappings list in |denite-mappings|.
+		mappings list in |denite-key-mappings|.
 		{args} behavior depends on {map-name}.
 		Note: It can be used in denite-filter buffer.
 
@@ -505,7 +505,7 @@ denite#do_action({context}, {action-name}, {targets})
 
 denite#do_map({map-name}[, {args}])			*denite#do_map()*
 		Fire {map-name} mapping with {args}.  You can find the
-		mappings list in |denite-mappings|.
+		mappings list in |denite-key-mappings|.
 		{args} behavior depends on {map-name}.
 		Note: It is only used to define mappings.
 		Note: It can be used in denite-filter buffer. >
