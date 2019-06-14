@@ -48,13 +48,16 @@ class Filter(Base):
 
         ispath = (os.path.exists(context['candidates'][0]['word']))
         cpsm_result = self._get_cpsm_result(
-            ispath, context['candidates'], context['input'])
-        return [x for x in context['candidates'] if x['word'] in cpsm_result]
+            ispath, context['candidates'], context['input'],
+            context['bufname'])
+        d = {x['word']: x for x in context['candidates']}
+        return [d[x] for x in cpsm_result]
 
     def convert_pattern(self, input_str):
         return convert2fuzzy_pattern(input_str)
 
-    def _get_cpsm_result(self, ispath, candidates, pattern):
+    def _get_cpsm_result(self, ispath, candidates, pattern, bufname):
         import cpsm_py
         return cpsm_py.ctrlp_match((d['word'] for d in candidates),
-                                   pattern, limit=1000, ispath=ispath)[0]
+                                   pattern, limit=1000, ispath=ispath,
+                                   crfile=bufname if ispath else '')[0]

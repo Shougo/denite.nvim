@@ -3,6 +3,7 @@
 # AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
 # License: MIT license
 # ============================================================================
+from pathlib import PurePath
 
 
 class Context(object):
@@ -32,6 +33,13 @@ class Context(object):
                 'denite#project#path2project_directory',
                 context['path'], context['root_markers']
             )
+
+        # Add buffer name to context
+        bufname = PurePath(self._vim.current.buffer.name)
+        try:
+            context['bufname'] = str(bufname.relative_to(context['path']))
+        except ValueError:
+            context['bufname'] = bufname.name
 
         # For compatibility
         for [old_option, new_option] in [
