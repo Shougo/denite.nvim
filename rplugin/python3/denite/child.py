@@ -84,21 +84,25 @@ class Child(object):
     def start(self, context):
         self._custom = context['custom']
 
-        if self._vim.options['runtimepath'] != self._runtimepath:
-            # Recache
-            self._load_sources(context)
-            self._load_filters(context)
-            self._load_kinds(context)
-            self._runtimepath = self._vim.options['runtimepath']
+        if self._vim.options['runtimepath'] == self._runtimepath:
+            return
 
-        for alias, base in [[x, y] for [x, y] in
-                            self._custom['alias_source'].items()
-                            if x not in self._sources]:
-            if base not in self._sources:
-                self.error('Invalid base: ' + base)
-                continue
-            self._sources[alias] = copy.copy(self._sources[base])
-            self._sources[alias].name = alias
+        # Recache
+        self._load_sources(context)
+        self._load_filters(context)
+        self._load_kinds(context)
+        self._runtimepath = self._vim.options['runtimepath']
+
+        # Check invalid alias
+        aliases = []
+        aliases += [[x, y] for [x, y] in
+                    self._custom['alias_source'].items()
+                    if x not in self._sources]
+        aliases += [[x, y] for [x, y] in
+                    self._custom['alias_filter'].items()
+                    if x not in self._filters]
+        for base, alias in aliases:
+            self.error(f'Invalid base: {base} for {alias}')
 
     def gather_candidates(self, context):
         for source in self._current_sources:
