@@ -218,6 +218,9 @@ class Default(object):
         self._ruler = self._vim.options['ruler']
 
         self._switch_buffer()
+        self._bufnr = self._vim.current.buffer.number
+        self._winid = self._vim.call('win_getid')
+
         self._resize_buffer()
 
         self._winheight = self._vim.current.window.height
@@ -259,9 +262,6 @@ class Default(object):
             self._window_options[k] = v
 
         self._bufvars = self._vim.current.buffer.vars
-        self._bufnr = self._vim.current.buffer.number
-        self._winid = self._vim.call('win_getid')
-
         self._bufvars['denite'] = {
             'buffer_name': self._context['buffer_name'],
         }
