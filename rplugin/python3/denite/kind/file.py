@@ -129,11 +129,12 @@ class Kind(Openable):
                     path = os.path.relpath(path, cwd)
 
                 bufnr = self.vim.call('bufnr', match_path)
-                if bufnr <= 0 or not self.vim.call('buflisted', bufnr):
+                if (command == 'edit' and bufnr > 0 and
+                        self.vim.call('buflisted', bufnr)):
+                    self.vim.command('buffer' + str(bufnr))
+                else:
                     self.vim.call(
                         'denite#util#execute_path', command, path)
-                elif bufnr != self.vim.current.buffer.number:
-                    self.vim.command('buffer' + str(bufnr))
 
             self._remove_previewed_buffer(bufnr)
             self._jump(context, target)
