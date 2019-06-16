@@ -5,7 +5,7 @@
 # ============================================================================
 
 from denite.util import (
-    get_custom_source, debug, regex_convert_str_vim,
+    get_custom, debug, regex_convert_str_vim,
     import_rplugins, expand, split_input, abspath)
 
 import copy
@@ -149,11 +149,11 @@ class Child(object):
             self._set_source_attribute(source, 'max_candidates')
             self._set_source_attribute(source, 'default_action')
             source.vars.update(
-                get_custom_source(self._custom, source.name,
-                                  'vars', source.vars))
+                get_custom(self._custom, 'source',
+                           source.name, 'vars', source.vars))
             if not source.context['args']:
-                source.context['args'] = get_custom_source(
-                    self._custom, source.name, 'args', [])
+                source.context['args'] = get_custom(
+                    self._custom, 'source', source.name, 'args', [])
 
             if hasattr(source, 'on_init'):
                 source.on_init(source.context)
@@ -410,8 +410,8 @@ class Child(object):
 
     def _set_source_attribute(self, source, attr):
         source_attr = getattr(source, attr)
-        setattr(source, attr, get_custom_source(
-            self._custom, source.name, attr, source_attr))
+        setattr(source, attr, get_custom(
+            self._custom, 'source', source.name, attr, source_attr))
 
     def _load_sources(self, context):
         # Load sources from runtimepath

@@ -90,14 +90,14 @@ def escape_fuzzy(string):
     return p
 
 
-def get_custom_source(custom, source_name, key, default):
-    source = custom['source']
-    if source_name not in source:
-        return get_custom_source(custom, '_', key, default)
-    elif key in source[source_name]:
-        return source[source_name][key]
-    elif key in source['_']:
-        return source['_'][key]
+def get_custom(custom, kind, name, key, default):
+    custom_val = custom[kind]
+    if name not in custom_val:
+        return get_custom(custom, kind, '_', key, default)
+    elif key in custom_val[name]:
+        return custom_val[name][key]
+    elif key in custom_val['_']:
+        return custom_val['_'][key]
     else:
         return default
 
