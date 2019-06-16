@@ -171,6 +171,9 @@ EXAMPLES						*denite-examples*
 	call denite#custom#source(
 	\ 'file/rec', 'sorters', ['sorter/sublime'])
 
+	" Change default action.
+	call denite#custom#kind('file', 'default_action', 'split')
+
 	" Add custom menus
 	let s:menus = {}
 

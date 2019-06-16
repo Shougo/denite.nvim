@@ -143,11 +143,11 @@ class Child(object):
             source.index = index
 
             # Set the source attributes.
-            self._set_source_attribute(source, 'matchers')
-            self._set_source_attribute(source, 'sorters')
-            self._set_source_attribute(source, 'converters')
-            self._set_source_attribute(source, 'max_candidates')
-            self._set_source_attribute(source, 'default_action')
+            self._set_custom_attribute('source', source, 'matchers')
+            self._set_custom_attribute('source', source, 'sorters')
+            self._set_custom_attribute('source', source, 'converters')
+            self._set_custom_attribute('source', source, 'max_candidates')
+            self._set_custom_attribute('source', source, 'default_action')
             source.vars.update(
                 get_custom(self._custom, 'source',
                            source.name, 'vars', source.vars))
@@ -408,10 +408,9 @@ class Child(object):
             ctx['candidates'] = matcher.filter(ctx)
         return ctx['candidates']
 
-    def _set_source_attribute(self, source, attr):
-        source_attr = getattr(source, attr)
-        setattr(source, attr, get_custom(
-            self._custom, 'source', source.name, attr, source_attr))
+    def _set_custom_attribute(self, kind, obj, attr):
+        setattr(obj, attr, get_custom(
+            self._custom, kind, obj.name, attr, getattr(obj, attr)))
 
     def _load_sources(self, context):
         # Load sources from runtimepath
@@ -494,7 +493,11 @@ class Child(object):
             if not hasattr(kind, 'name') or not kind.name:
                 # Prefer foo/bar instead of foo.bar in name
                 setattr(kind, 'name', module_path.replace('.', '/'))
+
+            # Set the kind attributes.
             kind.path = path
+            self._set_custom_attribute('kind', kind, 'default_action')
+
             self._kinds[kind.name] = kind
 
     def _get_kind(self, context, target):
