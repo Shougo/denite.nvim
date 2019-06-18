@@ -85,6 +85,29 @@ class Kind(Base):
             else:
                 fallback(context)
 
+    def _jump(self, context, target):
+        if 'action__pattern' in target:
+            self.vim.call('search', target['action__pattern'], 'w')
+
+        line = int(target.get('action__line', 0))
+        col = int(target.get('action__col', 0))
+
+        try:
+            if line > 0:
+                self.vim.call('cursor', [line, 0])
+                if 'action__col' not in target:
+                    pos = self.vim.current.line.lower().find(
+                        context['input'].lower())
+                    if pos >= 0:
+                        self.vim.call('cursor', [0, pos + 1])
+            if col > 0:
+                self.vim.call('cursor', [0, col])
+        except Exception:
+            pass
+
+        # Open folds
+        self.vim.command('normal! zv')
+
     def _is_current_buffer_empty(self):
         buffer = self.vim.current.buffer
         return buffer.name == '' and len(buffer) == 1 and buffer[0] == ''
