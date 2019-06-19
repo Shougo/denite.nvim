@@ -477,7 +477,7 @@ denite#custom#option({buffer-name}, {dict})
 		substituted to "_", and "-" prefix is removed. >
 
 	call denite#custom#option('default', {
-	      \ 'short_source_names': v:true
+	      \ 'source_names': 'short',
 	      \ })
 <
 						*denite#custom#source()*
@@ -780,6 +780,7 @@ OPTIONS							*denite-options*
         		\   '1' : 20, '2' : 21, '3' : 22, '4' : 23, '5' : 24,
         		\   '6' : 25, '7' : 26, '8' : 27, '9' : 28, '0' : 29,
         		\ }
+<
 						*denite-option-refresh*
 -refresh
 		Refresh the candidates when |denite-option-resume| is true.
