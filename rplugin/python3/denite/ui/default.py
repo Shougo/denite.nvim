@@ -522,11 +522,12 @@ class Default(object):
 
     def _resize_buffer(self):
         split = self._context['split']
-        if split == 'no' or split == 'tab':
+        if (split == 'no' or split == 'tab' or
+                self._vim.call('winnr', '$') == 1):
             return
 
-        winheight = self._winheight
-        winwidth = self._winwidth
+        winheight = max(self._winheight, 1)
+        winwidth = max(self._winwidth, 1)
         is_vertical = split == 'vertical'
 
         if not is_vertical and self._vim.current.window.height != winheight:
