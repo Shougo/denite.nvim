@@ -137,7 +137,7 @@ function! denite#init#_user_options() abort
         \ 'wincol': &columns / 4,
         \ 'winheight': 20,
         \ 'winrow': &lines / 2 - 10,
-        \ 'winwidth': 90,
+        \ 'winwidth': &columns / 2,
         \ 'winminheight': -1,
         \}
 endfunction

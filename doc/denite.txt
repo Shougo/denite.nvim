@@ -885,7 +885,7 @@ OPTIONS							*denite-options*
 		Set the width of the Denite window if |denite-option-split|
 		is "vertical".
 
-		Default: 90
+		Default: &columns / 2
 
 						*denite-option-winminheight*
 -winminheight={window-height}
