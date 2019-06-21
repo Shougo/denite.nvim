@@ -148,30 +148,6 @@ class Kind(Openable):
         return self._vim.call('denite#helper#_get_preview_window')
 
     # Needed for openable actions
-    def _jump(self, context, target):
-        if 'action__pattern' in target:
-            self.vim.call('search', target['action__pattern'], 'w')
-
-        line = int(target.get('action__line', 0))
-        col = int(target.get('action__col', 0))
-
-        try:
-            if line > 0:
-                self.vim.call('cursor', [line, 0])
-                if 'action__col' not in target:
-                    pos = self.vim.current.line.lower().find(
-                        context['input'].lower())
-                    if pos >= 0:
-                        self.vim.call('cursor', [0, pos + 1])
-            if col > 0:
-                self.vim.call('cursor', [0, col])
-        except Exception:
-            pass
-
-        # Open folds
-        self.vim.command('normal! zv')
-
-    # Needed for openable actions
     def _winid(self, target):
         if 'action__bufnr' in target:
             bufnr = target['action__bufnr']
