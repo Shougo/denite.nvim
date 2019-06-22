@@ -15,8 +15,7 @@ import typing
 from glob import glob
 from os.path import normpath, normcase, join, dirname, exists
 
-from importlib import find_loader
-if find_loader('pynvim'):
+if importlib.util.find_spec('pynvim'):
     from pynvim import Nvim
 else:
     from neovim import Nvim
