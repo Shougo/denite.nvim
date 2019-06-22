@@ -423,6 +423,20 @@ i_<Plug>(denite_filter_quit)
 <Plug>(denite_filter_quit)
 		Quit filter buffer.
 
+					*denite-filter-default-key-mappings*
+Following keymappings are default keymappings.
+
+Normal mode default mappings.
+{lhs}			{rhs}
+--------		-----------------------------
+<CR>			<Plug>(denite_filter_update)
+q			<Plug>(denite_filter_quit)
+
+Insert mode default mappings.
+{lhs}			{rhs}
+--------		-----------------------------
+<CR>			i_<Plug>(denite_filter_update)
+
 ------------------------------------------------------------------------------
 FUNCTIONS						*denite-functions*
 
