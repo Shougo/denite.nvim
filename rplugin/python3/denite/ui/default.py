@@ -658,7 +658,7 @@ class Default(object):
         clearmatch(self._vim)
 
     def _get_cursor_candidate(self):
-        if self._cursor > len(self._candidates):
+        if not self._candidate or self._cursor > len(self._candidates):
             return {}
         return self._candidates[self._cursor - 1]
 
