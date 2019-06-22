@@ -424,7 +424,8 @@ class Child(object):
             source = Source(self._vim)
             self._sources[source.name] = source
             source.path = path
-            syntax_name = 'deniteSource_' + source.name.replace('/', '_')
+            syntax_name = 'deniteSource_' + re.sub(
+                '[^a-zA-Z0-9_]', '_', source.name)
             if not source.syntax_name:
                 source.syntax_name = syntax_name
 
