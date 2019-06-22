@@ -1112,6 +1112,9 @@ line		Gather current buffer lines as candidates.
 		"empty":     Include empty lines
 		"noempty":   Do not include empty lines
 		Note: By default, empty lines are included.
+						*denite-source-mark*
+mark		Gather |:mark|.
+
 						*denite-source-menu*
 menu		Gather custom menus.
 
