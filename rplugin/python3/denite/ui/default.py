@@ -388,10 +388,12 @@ class Default(object):
         candidates_len = len(self._candidates)
         if not self._is_async and self._context['auto_resize']:
             winminheight = int(self._context['winminheight'])
+            max_height = min(int(self._context['winheight']),
+                             self._get_max_height())
             if (winminheight is not -1 and candidates_len < winminheight):
                 self._winheight = winminheight
-            elif candidates_len > int(self._context['winheight']):
-                self._winheight = int(self._context['winheight'])
+            elif candidates_len > max_height:
+                self._winheight = max_height
             elif candidates_len != self._winheight:
                 self._winheight = candidates_len
 
@@ -520,6 +522,12 @@ class Default(object):
                 if index in self._selected_candidates
                 else ' ') + ' '.join(terms).replace('\n', '')
 
+    def _get_max_height(self):
+        return int(self._vim.options['lines']) if not self._floating else (
+            int(self._vim.options['lines']) -
+            int(self._context['winrow']) -
+            int(self._vim.options['cmdheight']))
+
     def _resize_buffer(self):
         split = self._context['split']
         if (split == 'no' or split == 'tab' or
@@ -534,9 +542,7 @@ class Default(object):
             if self._floating:
                 self._vim.call(
                     'nvim_win_set_config', self._winid,
-                    {'height': min(winheight,
-                                   self._vim.options['lines'] -
-                                   int(self._context['winrow']))})
+                    {'height': winheight})
                 filter_winid = self._vim.vars['denite#_filter_winid']
                 if self._vim.call('win_id2win', filter_winid) > 0:
                     self._vim.call(
