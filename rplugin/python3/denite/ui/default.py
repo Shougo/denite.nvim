@@ -526,8 +526,8 @@ class Default(object):
                 self._vim.call('winnr', '$') == 1):
             return
 
-        winheight = max(self._winheight, 1)
-        winwidth = max(self._winwidth, 1)
+        winheight = min(max(self._winheight, 1), self._vim.options['lines'])
+        winwidth = min(max(self._winwidth, 1), self._vim.options['columns'])
         is_vertical = split == 'vertical'
 
         if not is_vertical and self._vim.current.window.height != winheight:
