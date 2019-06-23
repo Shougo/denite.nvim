@@ -526,14 +526,17 @@ class Default(object):
                 self._vim.call('winnr', '$') == 1):
             return
 
-        winheight = min(max(self._winheight, 1), self._vim.options['lines'])
-        winwidth = min(max(self._winwidth, 1), self._vim.options['columns'])
+        winheight = max(self._winheight, 1)
+        winwidth = max(self._winwidth, 1)
         is_vertical = split == 'vertical'
 
         if not is_vertical and self._vim.current.window.height != winheight:
             if self._floating:
-                self._vim.call('nvim_win_set_config', self._winid,
-                               {'height': winheight})
+                self._vim.call(
+                    'nvim_win_set_config', self._winid,
+                    {'height': min(winheight,
+                                   self._vim.options['lines'] -
+                                   int(self._context['winrow']))})
                 filter_winid = self._vim.vars['denite#_filter_winid']
                 if self._vim.call('win_id2win', filter_winid) > 0:
                     self._vim.call(
