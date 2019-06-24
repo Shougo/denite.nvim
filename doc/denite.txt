@@ -1810,6 +1810,9 @@ Q: I want to use grep source as interactive mode.  The interactive mode gives
 you a prompt, and searches once the input is complete like helm-swoop.el.
 
 A: You must set the 3rd argument to "!" in grep source(|denite-source-grep|).
+>
+	:Denite -start-filter grep:::!
+<
 If you want to use the interactive mode by default: >
 
 	call denite#custom#source('grep', 'args', ['', '', '!'])
