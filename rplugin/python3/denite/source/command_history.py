@@ -45,6 +45,7 @@ class Source(Base):
 
     def _get_histories(self):
         histories = self.vim.lua.history_source.get()
+        histories.reverse()
         histories = self._remove_duplicate_entry(histories)
         if self.vars['ignore_command_regexp']:
             histories = list(filter(
