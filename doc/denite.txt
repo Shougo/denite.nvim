@@ -840,6 +840,10 @@ OPTIONS							*denite-options*
 		"tab": Create the new tab for denite buffer
 		"floating": Use neovim floating window feature
 
+		Note: To use "floating", you need to use neovim
+		0.4.0+(|nvim_open_win()|).
+		neovim 0.3(includes 0.3.7) does not work.
+
 		Default: "horizontal"
 
 					*denite-option-source-names*
@@ -1953,6 +1957,11 @@ A: >
 	  nnoremap <silent><buffer><expr> U
 	  \ denite#do_map('do_action', 'dein_update')
 	endfunction
+
+Q: "-split=floating" does not work in neovim 0.3.7.
+
+A: To use "floating", you need to use neovim 0.4.0+(|nvim_open_win()|).
+neovim 0.3(includes 0.3.7) does not work.
 
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
