@@ -21,18 +21,20 @@ class Source(Base):
         self.vars = {
             'ignore_command_regexp': []
         }
-        self.vim.exec_lua(
-            """
-            local function getHistory()
-                local histories = {}
-                local number = vim.api.nvim_call_function('histnr', {':'})
-                for i=1, number do
-                    histories[i] = {tostring(i), vim.api.nvim_call_function('histget', {':', i})}
+        if self.vim.call('has', 'nvim'):
+            self.vim.exec_lua(
+                """
+                local function getHistory()
+                    local histories = {}
+                    local number = vim.api.nvim_call_function('histnr', {':'})
+                    for i=1, number do
+                        histories[i] = {tostring(i),
+                        vim.api.nvim_call_function('histget', {':', i})}
+                    end
+                    return histories
                 end
-                return histories
-            end
-            history_source = {get=getHistory}
-            """)
+                history_source = {get=getHistory}
+                """)
 
     def gather_candidates(self, context):
         histories = self._get_histories()
@@ -44,8 +46,14 @@ class Source(Base):
                 if len(r) > 1 and r[1]]
 
     def _get_histories(self):
-        histories = self.vim.lua.history_source.get()
-        histories.reverse()
+        if self.vim.call('has', 'nvim'):
+            histories = self.vim.lua.history_source.get()
+            histories.reverse()
+        else:
+            histories = [
+                [str(x), self.vim.call('histget', ':', x)]
+                for x in reversed(range(1, self.vim.call('histnr', ':')+1))
+            ]
         histories = self._remove_duplicate_entry(histories)
         if self.vars['ignore_command_regexp']:
             histories = list(filter(
