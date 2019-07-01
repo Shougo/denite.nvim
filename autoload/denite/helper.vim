@@ -226,6 +226,6 @@ function! denite#helper#_start_update_candidates_timer() abort
         \ {-> denite#call_async_map('update_candidates')}, {'repeat': -1})
 endfunction
 function! denite#helper#_start_update_buffer_timer() abort
-  return timer_start(300,
+  return timer_start(50,
         \ {-> denite#call_map('update_buffer')}, {'repeat': -1})
 endfunction
