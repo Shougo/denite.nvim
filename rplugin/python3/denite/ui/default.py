@@ -272,9 +272,11 @@ class Default(object):
         self._vim.command('silent doautocmd WinEnter')
         self._vim.command('silent doautocmd BufWinEnter')
         self._vim.command('doautocmd FileType denite')
-        self._vim.command('autocmd denite '
-                          'CursorMoved <buffer> '
-                          'call denite#call_map("auto_action")')
+
+        if self._context['auto_action']:
+            self._vim.command('autocmd denite '
+                            'CursorMoved <buffer> '
+                            'call denite#call_map("auto_action")')
 
         self._init_syntax()
 
