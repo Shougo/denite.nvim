@@ -286,31 +286,32 @@ class Default(object):
                 # Move the window to bottom
                 self._vim.command('wincmd J')
             self._winrestcmd = ''
-        else:
-            command = 'edit'
-            if split == 'tab':
-                self._vim.command('tabnew')
-            elif (split == 'floating' and
-                  self._vim.call('exists', '*nvim_open_win')):
-                if self._vim.current.buffer.options['filetype'] != 'denite':
-                    self._titlestring = self._vim.options['titlestring']
-                # Use floating window
-                self._floating = True
-                self._vim.call(
-                    'nvim_open_win',
-                    self._vim.call('bufnr', '%'), True, {
-                        'relative': 'editor',
-                        'row': int(self._context['winrow']),
-                        'col': int(self._context['wincol']),
-                        'width': int(self._context['winwidth']),
-                        'height': int(self._context['winheight']),
-                    })
-            elif split != 'no':
-                command = self._get_direction()
-                command += ' vsplit' if split == 'vertical' else ' split'
+            return
+
+        command = 'edit'
+        if split == 'tab':
+            self._vim.command('tabnew')
+        elif (split == 'floating' and
+                self._vim.call('exists', '*nvim_open_win')):
+            if self._vim.current.buffer.options['filetype'] != 'denite':
+                self._titlestring = self._vim.options['titlestring']
+            # Use floating window
+            self._floating = True
             self._vim.call(
-                'denite#util#execute_path',
-                f'silent keepalt {command}', '[denite]')
+                'nvim_open_win',
+                self._vim.call('bufnr', '%'), True, {
+                    'relative': 'editor',
+                    'row': int(self._context['winrow']),
+                    'col': int(self._context['wincol']),
+                    'width': int(self._context['winwidth']),
+                    'height': int(self._context['winheight']),
+                })
+        elif split != 'no':
+            command = self._get_direction()
+            command += ' vsplit' if split == 'vertical' else ' split'
+        self._vim.call(
+            'denite#util#execute_path',
+            f'silent keepalt {command}', '[denite]')
 
     def _get_direction(self):
         direction = self._context['direction']
