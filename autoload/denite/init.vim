@@ -67,11 +67,6 @@ function! denite#init#_initialize() abort
     endif
     return 1
   endtry
-
-  let g:denite#_update_candidates_timer = timer_start(300,
-        \ {-> denite#call_async_map('update_candidates')}, {'repeat': -1})
-  let g:denite#_update_buffer_timer = timer_start(300,
-        \ {-> denite#call_map('update_buffer')}, {'repeat': -1})
 endfunction
 function! s:initialize_variables() abort
   let g:denite#_filter_winid = -1

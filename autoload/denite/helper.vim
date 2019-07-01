@@ -219,3 +219,13 @@ function! denite#helper#_get_preview_window() abort
   return len(filter(range(1, winnr('$')),
         \ "getwinvar(v:val, '&previewwindow') ==# 1"))
 endfunction
+
+
+function! denite#helper#_start_update_candidates_timer() abort
+  return timer_start(300,
+        \ {-> denite#call_async_map('update_candidates')}, {'repeat': -1})
+endfunction
+function! denite#helper#_start_update_buffer_timer() abort
+  return timer_start(300,
+        \ {-> denite#call_map('update_buffer')}, {'repeat': -1})
+endfunction

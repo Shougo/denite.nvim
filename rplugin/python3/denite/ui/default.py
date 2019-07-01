@@ -48,6 +48,7 @@ class Default(object):
         self._previous_text = ''
         self._floating = False
         self._updated = False
+        self._timers = {}
 
     def start(self, sources, context):
         if not self._denite:
@@ -372,18 +373,26 @@ class Default(object):
         [self._is_async, pattern, statuses, self._entire_len,
          self._candidates] = self._denite.filter_candidates(self._context)
 
-        prev_matched_pattern = self._matched_pattern
-        self._matched_pattern = pattern
-
-        self._statusline_sources = ' '.join(statuses)
-
         prev_displayed_texts = self._displayed_texts
         self._update_displayed_texts()
 
+        prev_matched_pattern = self._matched_pattern
+        self._matched_pattern = pattern
+
+        prev_statusline_sources = self._statusline_sources
+        self._statusline_sources = ' '.join(statuses)
+
+        if self._is_async:
+            self._start_timer('update_candidates')
+        else:
+            self._stop_timer('update_candidates')
+
         updated = (self._displayed_texts != prev_displayed_texts or
-                   self._matched_pattern != prev_matched_pattern)
+                   self._matched_pattern != prev_matched_pattern or
+                   self._statusline_sources != prev_statusline_sources)
         if updated:
             self._updated = True
+            self._start_timer('update_buffer')
 
         return self._updated
 
@@ -461,6 +470,7 @@ class Default(object):
             self.do_action(self._context['auto_action'])
 
         self._updated = False
+        self._stop_timer('update_buffer')
 
     def _update_status(self):
         inpt = ''
@@ -610,6 +620,9 @@ class Default(object):
         self._quit_buffer()
 
     def _cleanup(self):
+        self._stop_timer('update_candidates')
+        self._stop_timer('update_buffer')
+
         if self._vim.current.buffer.number == self._bufnr:
             self._cursor = self._vim.call('line', '.')
         # Clear previewed buffers
@@ -715,3 +728,21 @@ class Default(object):
 
     def _move_to_last_line(self):
         self._cursor = len(self._candidates)
+
+    def _start_timer(self, key):
+        if key in self._timers:
+            return
+
+        if key == 'update_candidates':
+            self._timers[key] = self._vim.call(
+                'denite#helper#_start_update_candidates_timer')
+        elif key == 'update_buffer':
+            self._timers[key] = self._vim.call(
+                'denite#helper#_start_update_buffer_timer')
+
+    def _stop_timer(self, key):
+        if key not in self._timers:
+            return
+
+        self._vim.call('timer_stop', self._timers[key])
+        self._timers.pop(key)
