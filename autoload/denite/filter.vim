@@ -46,6 +46,8 @@ function! denite#filter#_open(context, parent, entire_len, is_async) abort
 
   call cursor(line('$'), 0)
   startinsert!
+
+  let g:denite#_filter_prev_input = getline('.')
 endfunction
 
 function! s:init_buffer() abort
@@ -122,12 +124,17 @@ function! s:init_prompt(context) abort
 endfunction
 
 function! s:filter_async() abort
+  let input = getline('.')
+
   if &filetype !=# 'denite-filter'
+        \ || input ==# g:denite#_filter_prev_input
     return
   endif
 
+  let g:denite#_filter_prev_input = input
+
   call denite#util#rpcrequest('_denite_do_async_map',
-        \ [g:denite#_filter_parent, 'filter_async', [getline('.')]], v:true)
+        \ [g:denite#_filter_parent, 'filter_async', [input]], v:true)
 endfunction
 
 function! s:update() abort
