@@ -276,8 +276,8 @@ class Default(object):
 
         if self._context['auto_action']:
             self._vim.command('autocmd denite '
-                            'CursorMoved <buffer> '
-                            'call denite#call_map("auto_action")')
+                              'CursorMoved <buffer> '
+                              'call denite#call_map("auto_action")')
 
         self._init_syntax()
 
