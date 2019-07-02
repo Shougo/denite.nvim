@@ -14,6 +14,7 @@ function! denite#filter#_open(context, parent, entire_len, is_async) abort
   endif
 
   let g:denite#_filter_parent = a:parent
+  let g:denite#_filter_context = a:context
   let g:denite#_filter_entire_len = a:entire_len
 
   call s:init_buffer()
@@ -29,18 +30,10 @@ function! denite#filter#_open(context, parent, entire_len, is_async) abort
     call s:init_prompt(a:context)
   endif
 
-  call s:stop_timer()
-
-  if g:denite#_filter_entire_len <
-        \ a:context['max_dynamic_update_candidates'] &&
-        \ a:context['filter_updatetime'] > 0
-    let g:denite#_filter_candidates_timer = timer_start(
-          \ a:context['filter_updatetime'],
-          \ {-> s:filter_async()}, {'repeat': -1})
-  endif
-
   augroup denite-filter
     autocmd!
+    autocmd InsertEnter <buffer> call s:start_timer()
+    autocmd InsertLeave <buffer> call s:stop_timer()
     autocmd InsertLeave <buffer> call s:update()
   augroup END
 
@@ -191,9 +184,25 @@ function! denite#filter#_move_to_parent(is_async) abort
   endif
 endfunction
 
-function! s:stop_timer() abort
+function! s:start_timer() abort
   if exists('g:denite#_filter_candidates_timer')
-    call timer_stop(g:denite#_filter_candidates_timer)
-    unlet g:denite#_filter_candidates_timer
+    return
   endif
+
+  let context = g:denite#_filter_context
+  if g:denite#_filter_entire_len <
+        \ context['max_dynamic_update_candidates'] &&
+        \ context['filter_updatetime'] > 0
+    let g:denite#_filter_candidates_timer = timer_start(
+          \ context['filter_updatetime'],
+          \ {-> s:filter_async()}, {'repeat': -1})
+  endif
+endfunction
+function! s:stop_timer() abort
+  if !exists('g:denite#_filter_candidates_timer')
+    return
+  endif
+
+  call timer_stop(g:denite#_filter_candidates_timer)
+  unlet g:denite#_filter_candidates_timer
 endfunction
