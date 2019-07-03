@@ -314,7 +314,8 @@ class Default(object):
             command += ' vsplit' if split == 'vertical' else ' split'
         self._vim.call(
             'denite#util#execute_path',
-            f'silent keepalt {command}', '[denite]')
+            f'silent keepalt {command}',
+            '[denite]-' + self._context['buffer_name'])
 
     def _get_direction(self):
         direction = self._context['direction']
