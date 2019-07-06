@@ -31,7 +31,7 @@ class Filter(Base):
         # Convert globs
         patterns = []
         for glob in self.vars['ignore_globs']:
-            if not isabs(glob) and not ':' in glob:
+            if not isabs(glob) and ':' not in glob:
                 glob = '*' + sep + glob
             if glob[:2] == '.' + sep:
                 glob = context['path'] + glob[1:]
