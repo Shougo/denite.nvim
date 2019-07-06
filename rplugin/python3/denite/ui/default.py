@@ -312,10 +312,16 @@ class Default(object):
         elif split != 'no':
             command = self._get_direction()
             command += ' vsplit' if split == 'vertical' else ' split'
-        self._vim.call(
-            'denite#util#execute_path',
-            f'silent keepalt {command}',
-            '[denite]-' + self._context['buffer_name'])
+        bufname = '[denite]-' + self._context['buffer_name']
+        if self._vim.call('exists', '*bufadd'):
+            bufnr = self._vim.call('bufadd', bufname)
+            if command != 'edit':
+                self._vim.command(f'{command}')
+            self._vim.command(f'{bufnr} buffer')
+        else:
+            self._vim.call(
+                'denite#util#execute_path',
+                f'silent keepalt {command}', bufname)
 
     def _get_direction(self):
         direction = self._context['direction']
