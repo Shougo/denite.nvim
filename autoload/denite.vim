@@ -69,6 +69,7 @@ function! denite#_call_map(name, is_async, args) abort
     let denite_statusline = get(b:, 'denite_statusline', {})
 
     noautocmd call win_gotoid(g:denite#_filter_winid)
+    resize 1
 
     if &l:filetype ==# 'denite-filter'
       let b:denite_statusline = denite_statusline
