@@ -5,6 +5,8 @@
 "=============================================================================
 
 function! denite#filter#_open(context, parent, entire_len, is_async) abort
+  let denite_statusline = get(b:, 'denite_statusline', {})
+
   let id = win_findbuf(g:denite#_filter_bufnr)
   if !empty(id)
     call win_gotoid(id[0])
@@ -18,6 +20,8 @@ function! denite#filter#_open(context, parent, entire_len, is_async) abort
   let g:denite#_filter_entire_len = a:entire_len
 
   call s:init_buffer()
+
+  let b:denite_statusline = denite_statusline
 
   " Set the current input
   if getline('$') ==# ''

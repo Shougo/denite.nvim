@@ -73,6 +73,7 @@ function! denite#_call_map(name, is_async, args) abort
     if &l:filetype ==# 'denite-filter'
       resize 1
       let b:denite_statusline = denite_statusline
+      echomsg string(b:denite_statusline)
     else
       stopinsert
     endif
