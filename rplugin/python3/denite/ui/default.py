@@ -317,7 +317,7 @@ class Default(object):
             bufnr = self._vim.call('bufadd', bufname)
             if command != 'edit':
                 self._vim.command(f'{command}')
-            self._vim.command(f'{bufnr} buffer')
+            self._vim.command(f'silent keepalt {bufnr} buffer')
         else:
             self._vim.call(
                 'denite#util#execute_path',
