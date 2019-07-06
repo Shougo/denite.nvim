@@ -14,6 +14,7 @@ function! denite#filter#_open(context, parent, entire_len, is_async) abort
   endif
 
   let g:denite#_filter_parent = a:parent
+  let g:denite#_filter_context = a:context
   let g:denite#_filter_entire_len = a:entire_len
 
   call s:init_buffer()
@@ -29,26 +30,17 @@ function! denite#filter#_open(context, parent, entire_len, is_async) abort
     call s:init_prompt(a:context)
   endif
 
-  call s:stop_timer()
-
-  if g:denite#_filter_entire_len <
-        \ a:context['max_dynamic_update_candidates'] &&
-        \ a:context['filter_updatetime'] > 0
-    let g:denite#_filter_candidates_timer = timer_start(
-          \ a:context['filter_updatetime'],
-          \ {-> s:filter_async()}, {'repeat': -1})
-    let g:denite#_filter_buffer_timer = timer_start(
-          \ a:context['filter_updatetime'],
-          \ {-> s:update_buffer()}, {'repeat': -1})
-  endif
-
   augroup denite-filter
     autocmd!
+    autocmd InsertEnter <buffer> call s:start_timer()
+    autocmd InsertLeave <buffer> call s:stop_timer()
     autocmd InsertLeave <buffer> call s:update()
   augroup END
 
   call cursor(line('$'), 0)
   startinsert!
+
+  let g:denite#_filter_prev_input = getline('.')
 endfunction
 
 function! s:init_buffer() abort
@@ -125,30 +117,17 @@ function! s:init_prompt(context) abort
 endfunction
 
 function! s:filter_async() abort
+  let input = getline('.')
+
   if &filetype !=# 'denite-filter'
+        \ || input ==# g:denite#_filter_prev_input
     return
   endif
+
+  let g:denite#_filter_prev_input = input
 
   call denite#util#rpcrequest('_denite_do_async_map',
-        \ [g:denite#_filter_parent, 'filter_async', [getline('.')]], v:true)
-endfunction
-
-function! s:update_buffer() abort
-  if &filetype !=# 'denite-filter'
-    return
-  endif
-
-  call denite#filter#_move_to_parent(v:true)
-
-  call denite#call_map('update_buffer')
-
-  let denite_statusline = get(b:, 'denite_statusline', {})
-
-  noautocmd call win_gotoid(g:denite#_filter_winid)
-
-  if &l:filetype ==# 'denite-filter'
-    let b:denite_statusline = denite_statusline
-  endif
+        \ [g:denite#_filter_parent, 'filter_async', [input]], v:true)
 endfunction
 
 function! s:update() abort
@@ -205,13 +184,25 @@ function! denite#filter#_move_to_parent(is_async) abort
   endif
 endfunction
 
-function! s:stop_timer() abort
+function! s:start_timer() abort
   if exists('g:denite#_filter_candidates_timer')
-    call timer_stop(g:denite#_filter_candidates_timer)
-    unlet g:denite#_filter_candidates_timer
+    return
   endif
-  if exists('g:denite#_filter_buffer_timer')
-    call timer_stop(g:denite#_filter_buffer_timer)
-    unlet g:denite#_filter_buffer_timer
+
+  let context = g:denite#_filter_context
+  if g:denite#_filter_entire_len <
+        \ context['max_dynamic_update_candidates'] &&
+        \ context['filter_updatetime'] > 0
+    let g:denite#_filter_candidates_timer = timer_start(
+          \ context['filter_updatetime'],
+          \ {-> s:filter_async()}, {'repeat': -1})
   endif
+endfunction
+function! s:stop_timer() abort
+  if !exists('g:denite#_filter_candidates_timer')
+    return
+  endif
+
+  call timer_stop(g:denite#_filter_candidates_timer)
+  unlet g:denite#_filter_candidates_timer
 endfunction

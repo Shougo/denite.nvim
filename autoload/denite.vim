@@ -52,7 +52,7 @@ function! denite#_call_map(name, is_async, args) abort
   let is_filter = &l:filetype ==# 'denite-filter'
 
   if is_filter
-    call denite#filter#_move_to_parent(a:is_async)
+    call denite#filter#_move_to_parent(v:true)
   endif
 
   if &l:filetype !=# 'denite'
@@ -68,7 +68,7 @@ function! denite#_call_map(name, is_async, args) abort
   if is_filter
     let denite_statusline = get(b:, 'denite_statusline', {})
 
-    call win_gotoid(g:denite#_filter_winid)
+    noautocmd call win_gotoid(g:denite#_filter_winid)
 
     if &l:filetype ==# 'denite-filter'
       let b:denite_statusline = denite_statusline
