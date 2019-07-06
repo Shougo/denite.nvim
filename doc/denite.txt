@@ -406,6 +406,10 @@ toggle_matchers:{arg}
 FILTER KEY MAPPINGS 				*denite-filter-key-mappings*
 Below mappings are only available in denite filter buffer.
 
+				*denite-map-i_<Plug>(denite_filter_backspace)*
+i_<Plug>(denite_filter_backspace)
+		Delete the back word.
+
 				*denite-map-i_<Plug>(denite_filter_update)*
 i_<Plug>(denite_filter_update)
 		Update the current input and quit filter buffer.
@@ -435,6 +439,8 @@ q			<Plug>(denite_filter_quit)
 Insert mode default mappings.
 {lhs}			{rhs}
 --------		-----------------------------
+<BS>			i_<Plug>(denite_filter_backspace)
+<C-h>			i_<Plug>(denite_filter_backspace)
 <CR>			i_<Plug>(denite_filter_update)
 
 ------------------------------------------------------------------------------

@@ -70,10 +70,15 @@ function! s:init_buffer() abort
         \ :<C-u>call <SID>quit()<CR>
   inoremap <buffer><silent> <Plug>(denite_filter_quit)
         \ <ESC>:<C-u>call <SID>quit()<CR>
+  inoremap <buffer><silent><expr> <Plug>(denite_filter_backspace)
+        \ col('.') == 1 ? '' : "\<BS>"
 
   nmap <buffer> <CR> <Plug>(denite_filter_update)
   nmap <buffer> q    <Plug>(denite_filter_quit)
+
   imap <buffer> <CR> <Plug>(denite_filter_update)
+  imap <buffer> <BS> <Plug>(denite_filter_backspace)
+  imap <buffer> <C-h> <Plug>(denite_filter_backspace)
 
   setfiletype denite-filter
 endfunction
