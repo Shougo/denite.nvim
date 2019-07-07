@@ -52,7 +52,6 @@ function! s:init_buffer() abort
   setlocal buftype=nofile
   setlocal colorcolumn=
   setlocal foldcolumn=0
-  setlocal hidden
   setlocal nobuflisted
   setlocal nofoldenable
   setlocal nolist
