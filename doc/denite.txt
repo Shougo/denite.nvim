@@ -678,7 +678,7 @@ OPTIONS							*denite-options*
 		Specify the update time in the Denite filter window.
 		If it is less than equal 0, the feature will be disabled.
 
-		Default: 300
+		Default: 100
 
 	                            *denite-option-highlight-filter-background*
 -highlight-filter-background
