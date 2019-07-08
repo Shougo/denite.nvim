@@ -49,6 +49,9 @@ function! denite#init#_initialize() abort
     endif
     call s:initialize_variables()
   catch
+    call denite#util#print_error(v:exception)
+    call denite#util#print_error(v:throwpoint)
+
     if denite#util#has_yarp()
       if !has('nvim') && !exists('*neovim_rpc#serveraddr')
         call denite#util#print_error(
