@@ -63,12 +63,13 @@ class Source(Base):
             args += [self.vars['file_opt'], tf.name]
             args += [context['__path']]
             self.print_message(context, args)
-            tf.close()
 
             try:
                 check_output(args).decode(self.vars['encoding'], 'replace')
             except CalledProcessError:
                 return []
+
+            ignore_types = self.vars['ignore_types']
 
             candidates = []
             with open(tf.name, encoding=self.vars['encoding'],
@@ -77,6 +78,8 @@ class Source(Base):
                     if re.match('!', line) or not line:
                         continue
                     info = parse_tagline(line.rstrip(), tf.name)
+                    if info['type'] in ignore_types:
+                        continue
                     candidate = {
                         'word': info['name'],
                         'action__path': info['file']
