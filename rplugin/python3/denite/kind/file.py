@@ -57,6 +57,7 @@ class Kind(Openable):
 
         self.vim.call('denite#helper#preview_file', context, path)
         self.vim.command('wincmd P')
+        self.vim.current.window.options['foldenable'] = False
 
         if not listed:
             self._add_previewed_buffer(self.vim.call('bufnr', '%'))
