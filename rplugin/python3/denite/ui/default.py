@@ -465,9 +465,8 @@ class Default(object):
 
         self._vim.call('cursor', [prev_linenr, 0])
 
-        if self._updated and (
-                (self._is_async and self._context['reversed']) or
-                self._previous_text != self._context['input']):
+        if self._updated and (self._context['reversed'] or
+                              self._previous_text != self._context['input']):
             self._previous_text = self._context['input']
             self._init_cursor()
             self._move_to_pos(self._cursor)
