@@ -63,6 +63,9 @@ class Source(Base):
             args += [self.vars['file_opt'], tf.name]
             args += [context['__path']]
             self.print_message(context, args)
+            # Close this file before giving to ctags
+            # Otherwise this will error on Windows
+            tf.close()
 
             try:
                 check_output(args).decode(self.vars['encoding'], 'replace')
