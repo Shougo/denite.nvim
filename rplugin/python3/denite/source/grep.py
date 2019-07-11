@@ -5,11 +5,10 @@
 # ============================================================================
 
 import shlex
-
-from denite import util, process
 from os.path import relpath
 
-from .base import Base
+from denite import util, process
+from denite.base.source import Base
 
 
 GREP_HEADER_SYNTAX = (
@@ -36,7 +35,7 @@ GREP_PATTERNS_HIGHLIGHT = 'highlight default link deniteGrepPatterns Function'
 def _candidate(result, path):
     return {
         'word': result[3],
-        'abbr': '{0}:{1}{2} {3}'.format(
+        'abbr': '{}:{}{} {}'.format(
             path,
             result[1],
             (':' + result[2] if result[2] != '0' else ''),
@@ -65,6 +64,7 @@ class Source(Base):
             'min_interactive_pattern': 3,
         }
         self.matchers = ['matcher/ignore_globs', 'matcher/regexp']
+        self.is_volatile = True
 
     def on_init(self, context):
         context['__proc'] = None
@@ -78,46 +78,13 @@ class Source(Base):
         args = dict(enumerate(context['args']))
 
         # paths
-        arg = args.get(0, [])
-        if arg:
-            if isinstance(arg, str):
-                arg = [arg]
-            elif not isinstance(arg, list):
-                raise AttributeError('`args[0]` needs to be a `str` or `list`')
-        elif context['path']:
-            arg = [context['path']]
-        context['__paths'] = [util.abspath(self.vim, x) for x in arg]
+        context['__paths'] = self._init_paths(context, args)
 
         # arguments
-        arg = args.get(1, [])
-        if arg:
-            if isinstance(arg, str):
-                if arg == '!':
-                    arg = util.input(self.vim, context, 'Argument: ')
-                arg = shlex.split(arg)
-            elif not isinstance(arg, list):
-                raise AttributeError('`args[1]` needs to be a `str` or `list`')
-        context['__arguments'] = arg
+        context['__arguments'] = self._init_arguments(context, args)
 
         # patterns
-        arg = args.get(2, [])
-        if arg:
-            if isinstance(arg, str):
-                if arg == '!':
-                    # Interactive mode
-                    context['is_interactive'] = True
-                    arg = [context['input']] if context['input'] else []
-                else:
-                    arg = [arg]
-            elif not isinstance(arg, list):
-                raise AttributeError('`args[2]` needs to be a `str` or `list`')
-        elif context['input']:
-            arg = [context['input']]
-        else:
-            pattern = util.input(self.vim, context, 'Pattern: ')
-            if pattern:
-                arg = [pattern]
-        context['__patterns'] = arg
+        context['__patterns'] = self._init_patterns(context, args)
 
     def on_close(self, context):
         if context['__proc']:
@@ -136,11 +103,13 @@ class Source(Base):
         self.vim.command(
             'syntax region ' + self.syntax_name + ' start=// end=/$/ '
             'contains=deniteSource_grepHeader,deniteMatchedRange contained')
-        self.vim.command(
-            'syntax match deniteGrepPatterns ' +
-            r'/%s/ ' % r'\|'.join(util.regex_convert_str_vim(pattern)
-                                  for pattern in self.context['__patterns']) +
-            'contained containedin=' + self.syntax_name)
+        if self.context['__patterns']:
+            self.vim.command(
+                'syntax match deniteGrepPatterns ' +
+                r'/%s/ ' % r'\|'.join(
+                    util.regex_convert_str_vim(pattern)
+                    for pattern in self.context['__patterns']) +
+                'contained containedin=' + self.syntax_name)
 
     def gather_candidates(self, context):
         if context['event'] == 'interactive':
@@ -200,3 +169,55 @@ class Source(Base):
             path = relpath(result[0], start=context['path'])
             candidates.append(_candidate(result, path))
         return candidates
+
+    def _init_paths(self, context, args):
+        paths = []
+        arg = args.get(0, [])
+        if arg:
+            if isinstance(arg, str):
+                paths = [arg]
+            elif isinstance(arg, list):
+                paths = arg[:]
+            else:
+                raise AttributeError(
+                    '`args[0]` needs to be a `str` or `list`')
+        elif context['path']:
+            paths = [context['path']]
+        return [util.abspath(self.vim, x) for x in paths]
+
+    def _init_arguments(self, context, args):
+        arguments = []
+        arg = args.get(1, [])
+        if arg:
+            if isinstance(arg, str):
+                if arg == '!':
+                    arg = util.input(self.vim, context, 'Argument: ')
+                arguments = shlex.split(arg)
+            elif isinstance(arg, list):
+                arguments = arg[:]
+            else:
+                raise AttributeError(
+                    '`args[1]` needs to be a `str` or `list`')
+        return arguments
+
+    def _init_patterns(self, context, args):
+        patterns = []
+        arg = args.get(2, [])
+        if arg:
+            if isinstance(arg, str):
+                if arg == '!':
+                    # Interactive mode
+                    context['is_interactive'] = True
+                    patterns = [context['input']]
+                else:
+                    patterns = [arg]
+            elif isinstance(arg, list):
+                patterns = arg[:]
+            else:
+                raise AttributeError(
+                    '`args[2]` needs to be a `str` or `list`')
+        elif context['input']:
+            patterns = [context['input']]
+        else:
+            patterns = [util.input(self.vim, context, 'Pattern: ')]
+        return [x for x in patterns if x]

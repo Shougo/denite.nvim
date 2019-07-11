@@ -4,7 +4,7 @@
 # License: MIT license
 # ============================================================================
 
-from .base import Base
+from denite.base.kind import Base
 from denite import util
 
 
@@ -37,10 +37,5 @@ class Kind(Base):
         if context['firstline'] != context['lastline']:
             command = '{},{}{}'.format(
                 context['firstline'], context['lastline'], command)
-        output = self.vim.call(
+        self.vim.call(
             'denite#util#execute_command', command, is_pause)
-        if not output or output == '\n':
-            return
-        self.vim.command('redraw')
-        self.debug(output)
-        self.vim.call('getchar')

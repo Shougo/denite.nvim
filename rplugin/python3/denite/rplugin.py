@@ -1,100 +1,66 @@
-# https://github.com/lambdalisue/vim-rplugin/pytyhon3/rplugin.py
-import vim
+# ============================================================================
+# FILE: rplugin.py
+# AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
+# License: MIT license
+# ============================================================================
+
+from denite.ui.default import Default
+from denite.context import Context
+from denite.ui.map import do_map
 
 
-# NOTE:
-# vim.options['encoding'] returns bytes so use vim.eval('&encoding')
-ENCODING = vim.eval('&encoding')
-
-
-def reform_bytes(value):
-    if isinstance(value, bytes):
-        return value.decode(ENCODING, 'surrogateescape')
-    elif isinstance(value, (dict, vim.Dictionary, vim.Options)):
-        return {
-            reform_bytes(k): reform_bytes(v) for k, v in value.items()
-        }
-    elif isinstance(value, (list, tuple, vim.List)):
-        return list(map(reform_bytes, value))
-    elif value is None:
-        return 0
-    else:
-        return value
-
-
-class Proxy:
-    def __init__(self, component):
-        self._component = component
-        self.__class__ = build_proxy(self, component)
-
-    def __getattr__(self, name):
-        value = getattr(self._component, name)
-        return decorate(value)
-
-
-class ContainerProxy(Proxy):
-    def __getitem__(self, key):
-        return reform_bytes(self._component[key])
-
-    def __setitem__(self, key, value):
-        if isinstance(value, str):
-            value = value.encode(ENCODING, 'surrogateescape')
-        self._component[key] = value
-
-
-class FuncNamespace:
-    __slots__ = ['vim']
+class Rplugin:
 
     def __init__(self, vim):
-        self.vim = vim
+        self._vim = vim
+        self._uis = {}
+        self._context = Context(self._vim)
 
-    def __getattr__(self, name):
-        fn = self.vim.Function(name)
-        return lambda *args: reform_bytes(fn(*args))
+    def init_channel(self, args):
+        self._vim.vars['denite#_channel_id'] = self._vim.channel_id
 
+    def start(self, args):
+        try:
+            context = self._context.get(args[1])
+            ui = self.get_ui(context['buffer_name'])
+            return ui.start(args[0], context)
+        except Exception:
+            import traceback
+            import denite.util
+            for line in traceback.format_exc().splitlines():
+                denite.util.error(self._vim, line)
+            denite.util.error(self._vim,
+                              'Please execute :messages command.')
 
-class Neovim(Proxy):
-    def __init__(self, vim):
-        self.funcs = FuncNamespace(vim)
-        super().__init__(vim)
+    def do_action(self, args):
+        try:
+            ui = self.get_ui(args[0]['buffer_name'])
+            ui._cursor = self._vim.call('line', '.')
+            return ui._denite.do_action(args[0], args[1], args[2])
+        except Exception:
+            import traceback
+            import denite.util
+            for line in traceback.format_exc().splitlines():
+                denite.util.error(self._vim, line)
+            denite.util.error(self._vim,
+                              'Please execute :messages command.')
 
-    def call(self, name, *args):
-        return reform_bytes(self.Function(name)(*args))
+    def do_map(self, args):
+        bufnr = args[0]
+        bufvars = self._vim.buffers[bufnr].vars
+        try:
+            ui = self.get_ui(bufvars['denite']['buffer_name'])
+            ui._cursor = self._vim.call('line', '.')
+            return do_map(ui, args[1], args[2])
+        except Exception:
+            import traceback
+            import denite.util
+            for line in traceback.format_exc().splitlines():
+                denite.util.error(self._vim, line)
+            denite.util.error(self._vim,
+                              'Please execute :messages command.')
 
-
-def build_proxy(child, parent):
-    proxy = type(
-        "%s:%s" % (
-            type(parent).__name__,
-            child.__class__.__name__,
-        ),
-        (child.__class__,), {}
-    )
-    child_class = child.__class__
-    parent_class = parent.__class__
-
-    def bind(attr):
-        if hasattr(child_class, attr) or not hasattr(parent_class, attr):
-            return
-
-        ori = getattr(parent_class, attr)
-
-        def mod(self, *args, **kwargs):
-            return ori(self._component, *args, **kwargs)
-
-        setattr(proxy, attr, mod)
-
-    for attr in parent_class.__dict__.keys():
-        bind(attr)
-
-    return proxy
-
-
-def decorate(component):
-    if component in (vim.buffers, vim.windows, vim.tabpages, vim.current):
-        return Proxy(component)
-    elif isinstance(component, (vim.Buffer, vim.Window, vim.TabPage)):
-        return Proxy(component)
-    elif isinstance(component, (vim.List, vim.Dictionary, vim.Options)):
-        return ContainerProxy(component)
-    return component
+    def get_ui(self, buffer_name):
+        if buffer_name not in self._uis:
+            self._uis[buffer_name] = Default(self._vim)
+        return self._uis[buffer_name]

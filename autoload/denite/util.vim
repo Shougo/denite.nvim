@@ -34,19 +34,13 @@ function! denite#util#execute_path(command, path) abort
     call mkdir(dir, 'p')
   endif
 
-  let save_wildignore = &wildignore
   try
-    execute a:command '`=s:expand(a:path)`'
-    if &l:filetype ==# ''
-      filetype detect
-    endif
+    execute a:command fnameescape(s:expand(a:path))
   catch /^Vim\%((\a\+)\)\=:E325/
     " Ignore swap file error
   catch
     call denite#util#print_error(v:throwpoint)
     call denite#util#print_error(v:exception)
-  finally
-    let &wildignore = save_wildignore
   endtry
 endfunction
 function! denite#util#execute_command(command, is_capture) abort
@@ -67,6 +61,16 @@ function! denite#util#echo(color, string) abort
   execute 'echohl' a:color
   echon a:string
   echohl NONE
+endfunction
+
+function! denite#util#getchar(...) abort
+  try
+    return call('getchar', a:000)
+  catch /^Vim:Interrupt/
+    return 3
+  catch
+    return 0
+  endtry
 endfunction
 
 function! denite#util#open(filename) abort
@@ -120,6 +124,14 @@ function! denite#util#open(filename) abort
   endif
 endfunction
 
+function! denite#util#cd(path) abort
+  if exists('*chdir')
+    call chdir(a:path)
+  else
+    silent execute 'lcd' fnameescape(a:path)
+  endif
+endfunction
+
 function! denite#util#split(string) abort
   return split(a:string, '\s*,\s*')
 endfunction
@@ -134,8 +146,6 @@ endfunction
 function! s:expand(path) abort
   return denite#util#substitute_path_separator(
         \ (a:path =~# '^\~') ? fnamemodify(a:path, ':p') :
-        \ (a:path =~# '^\$\h\w*') ? substitute(a:path,
-        \             '^\$\h\w*', '\=eval(submatch(0))', '') :
         \ a:path)
 endfunction
 
@@ -207,4 +217,30 @@ function! denite#util#input_yesno(message) abort
   redraw
 
   return yesno =~? 'y\%[es]'
+endfunction
+
+function! denite#util#has_yarp() abort
+  return !has('nvim')
+endfunction
+function! denite#util#rpcrequest(method, args, is_async) abort
+  if !denite#init#_check_channel()
+    return -1
+  endif
+
+  if denite#util#has_yarp()
+    if g:denite#_yarp.job_is_dead
+      return -1
+    endif
+    if a:is_async
+      return g:denite#_yarp.notify(a:method, a:args)
+    else
+      return g:denite#_yarp.request(a:method, a:args)
+    endif
+  else
+    if a:is_async
+      return rpcnotify(g:denite#_channel_id, a:method, a:args)
+    else
+      return rpcrequest(g:denite#_channel_id, a:method, a:args)
+    endif
+  endif
 endfunction

@@ -4,9 +4,10 @@
 # License: MIT license
 # ============================================================================
 
-from .base import Base
-from denite.util import relpath
 import re
+
+from denite.base.source import Base
+from denite.util import relpath
 
 JUMP_HIGHLIGHT_SYNTAX = [
     {'name': 'File',     'link': 'Constant',   're': r'file: .*'},
@@ -28,14 +29,15 @@ class Source(Base):
                 'syntax match {0}_{1} /{2}/ contained containedin={0}'.format(
                     self.syntax_name, syn['name'], syn['re']))
             self.vim.command(
-                'highlight default link {0}_{1} {2}'.format(
+                'highlight default link {}_{} {}'.format(
                     self.syntax_name, syn['name'], syn['link']))
 
     def on_init(self, context):
         if self.vim.call('exists', '*getjumplist'):
-            context['__jumps'] = self._get_jumplist(context)
+            jumps = self._get_jumplist(context)
         else:
-            context['__jumps'] = self._parse(context)
+            jumps = self._parse(context)
+        context['__jumps'] = jumps[::-1]
 
     def _get_jumplist(self, context):
         [jump_info, pointer] = self.vim.call('getjumplist')
@@ -87,8 +89,6 @@ class Source(Base):
 
     def _parse(self, context):
         jump_list = []
-        for b in self.vim.buffers:
-            self.debug(b.name)
 
         for row_data in self.vim.call('execute', 'jumps').split('\n'):
             elements = row_data.split(maxsplit=3)
@@ -138,7 +138,7 @@ class Source(Base):
                     path = self.vim.current.buffer.name
                     prefix = 'text: ' if file_text != '-invalid-' else ''
 
-                m = re.search('(^>*\s+\w+\s+\w+\s+\w+)', row_data)
+                m = re.search(r'(^>*\s+\w+\s+\w+\s+\w+)', row_data)
                 word = m.group(0) + ' ' + prefix + file_text
 
             else:

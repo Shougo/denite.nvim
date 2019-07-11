@@ -5,9 +5,10 @@
 # ============================================================================
 
 from os.path import isabs, sep
-from ..base import Base
 from fnmatch import translate
 from re import search
+
+from denite.base.filter import Base
 
 
 class Filter(Base):
@@ -30,7 +31,7 @@ class Filter(Base):
         # Convert globs
         patterns = []
         for glob in self.vars['ignore_globs']:
-            if not isabs(glob):
+            if not isabs(glob) and ':' not in glob:
                 glob = '*' + sep + glob
             if glob[:2] == '.' + sep:
                 glob = context['path'] + glob[1:]
@@ -40,4 +41,5 @@ class Filter(Base):
         pattern = '|'.join(patterns)
         max_width = int(context['max_candidate_width'])
         return [x for x in context['candidates']
-                if not search(pattern, x['action__path'][:max_width])]
+                if 'action__path' not in x or
+                not search(pattern, x['action__path'][:max_width])]

@@ -9,14 +9,29 @@ endfunction
 
 function! s:suite.custom_source() abort
   let custom = denite#custom#_get().source
-  call denite#custom#source(
-        \ 'file_mru', 'matchers', ['matcher/fuzzy', 'matcher/project_files'])
-  call denite#custom#source(
-        \ 'file/rec', 'matchers', ['matcher/cpsm'])
+  call s:assert.equals(denite#custom#source(
+        \ 'file_mru', 'foo', 'echo'), 1)
+  call s:assert.equals(denite#custom#source(
+        \ 'file_mru', 'matchers',
+        \ ['matcher/fuzzy', 'matcher/project_files']), 0)
+  call s:assert.equals(denite#custom#source(
+        \ 'file/rec', 'matchers', ['matcher/cpsm']), 0)
+  call s:assert.equals(denite#custom#source(
+        \ 'file_mru', 'default_action', 'echo'), 0)
   call s:assert.equals(custom.file_mru.matchers,
         \ ['matcher/fuzzy', 'matcher/project_files'])
   call s:assert.equals(custom['file/rec'].matchers,
         \ ['matcher/cpsm'])
+  call s:assert.equals(custom['file_mru'].default_action, 'echo')
+endfunction
+
+function! s:suite.custom_kind() abort
+  let custom = denite#custom#_get().kind
+  call s:assert.equals(denite#custom#kind(
+        \ 'file', 'foo', 'echo'), 1)
+  call s:assert.equals(denite#custom#kind(
+        \ 'file', 'default_action', 'echo'), 0)
+  call s:assert.equals(custom['file'].default_action, 'echo')
 endfunction
 
 function! s:suite.custom_filter() abort
@@ -62,6 +77,6 @@ endfunction
 function! s:suite.custom_option() abort
   let custom = denite#custom#_get().option
 
-  call denite#custom#option('default', 'prompt', '>')
-  call s:assert.equals(custom.default.prompt, '>')
+  call denite#custom#option('default', 'direction', 'leftabove')
+  call s:assert.equals(custom.default.direction, 'leftabove')
 endfunction

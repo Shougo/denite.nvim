@@ -4,7 +4,7 @@
 # License: MIT license
 # ============================================================================
 
-from .base import Base
+from denite.base.source import Base
 
 CHANGE_HIGHLIGHT_SYNTAX = [
     {'name': 'Text', 'link': 'Function', 're': r'\v(\d+\s+\d+\s+\d+\s+)\zs.*'},
@@ -20,7 +20,7 @@ class Source(Base):
         self.kind = 'file'
 
     def on_init(self, context):
-        context['__parse'] = self._parse(context)
+        context['__parse'] = self._parse(context)[::-1]
 
     def highlight(self):
         for syn in CHANGE_HIGHLIGHT_SYNTAX:
@@ -28,7 +28,7 @@ class Source(Base):
                 'syntax match {0}_{1} /{2}/ contained containedin={0}'.format(
                     self.syntax_name, syn['name'], syn['re']))
             self.vim.command(
-                'highlight default link {0}_{1} {2}'.format(
+                'highlight default link {}_{} {}'.format(
                     self.syntax_name, syn['name'], syn['link']))
 
     def _parse(self, context):

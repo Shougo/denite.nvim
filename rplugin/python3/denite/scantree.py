@@ -5,8 +5,8 @@
 # ============================================================================
 
 import sys
-from os import walk, curdir
-from os.path import basename, join
+from os import curdir, scandir
+from os.path import basename
 import argparse
 import fnmatch
 import time
@@ -14,43 +14,25 @@ import time
 DEFAULT_SKIP_LIST = ['.git', '.hg']
 
 
-try:
-    # 'scandir' was introduced at Python 3.5.
-    # See https://pypi.python.org/pypi/scandir
-    from os import scandir
+def scantree(path_name, skip_list=None):
+    """This function returns the files present in path_name, including the
+    files present in subfolders.
 
-    def scantree(path_name, skip_list=None):
-        """This function returns the files present in path_name, including the
-        files present in subfolders.
+    Implementation uses scandir, if available, as it is faster than
+    os.walk"""
 
-        Implementation uses scandir, if available, as it is faster than
-        os.walk"""
+    if skip_list is None:
+        skip_list = DEFAULT_SKIP_LIST
 
-        if skip_list is None:
-            skip_list = DEFAULT_SKIP_LIST
-
-        try:
-            for entry in (e for e in scandir(path_name)
-                          if not is_ignored(e.path, skip_list)):
-                if entry.is_dir(follow_symlinks=False):
-                    yield from scantree(entry.path, skip_list)
-                else:
-                    yield entry.path
-        except PermissionError:
-            yield 'PermissionError reading {}'.format(path_name)
-
-except ImportError:
-    def scantree(path_name, skip_list=None):
-        """This function returns the files present in path_name, including the
-        files present in subfolders using os.walk"""
-
-        if skip_list is None:
-            skip_list = DEFAULT_SKIP_LIST
-
-        for root, _, files in walk(path_name):
-            if not is_ignored(root, skip_list):
-                for name in (f for f in files if not is_ignored(f, skip_list)):
-                    yield join(root, name)
+    try:
+        for entry in (e for e in scandir(path_name)
+                      if not is_ignored(e.path, skip_list)):
+            if entry.is_dir(follow_symlinks=False):
+                yield from scantree(entry.path, skip_list)
+            else:
+                yield entry.path
+    except PermissionError:
+        yield f'PermissionError reading {path_name}'
 
 
 def output_lines(lines):

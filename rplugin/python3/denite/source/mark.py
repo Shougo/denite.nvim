@@ -5,8 +5,9 @@
 # License: MIT license
 # ============================================================================
 
-from .base import Base
-from ..kind.file import Kind as File
+from denite.base.source import Base
+from denite.kind.file import Kind as File
+
 
 MARK_HIGHLIGHT_SYNTAX = [
     # \s\+\w
@@ -30,7 +31,7 @@ class Source(Base):
                 'syntax match {0}_{1} /{2}/ contained containedin={0}'.format(
                     self.syntax_name, syn['name'], syn['re']))
             self.vim.command(
-                'highlight default link {0}_{1} {2}'.format(
+                'highlight default link {}_{} {}'.format(
                     self.syntax_name, syn['name'], syn['link']))
 
     def _get_marks(self, context):
@@ -52,7 +53,8 @@ class Source(Base):
             if self.empty_mark(mark_info):
                 continue
 
-            bufname = self.vim.call('bufname', bufnum)
+            bufname = self.vim.call('bufname',
+                                    bufnum if bufnum != 0 else '%')
             path = self.vim.call('fnamemodify', bufname, ':p')
             if bufnum == 0:
                 file_or_text = 'text: ' + self.vim.call('getline', lnum)

@@ -4,16 +4,24 @@
 # License: MIT license
 # ============================================================================
 
+import importlib.util
+import inspect
 import re
 import os
 import sys
+import traceback
+import typing
 
 from glob import glob
 from os.path import normpath, normcase, join, dirname, exists
-from importlib.machinery import SourceFileLoader
+
+if importlib.util.find_spec('pynvim'):
+    from pynvim import Nvim
+else:
+    from neovim import Nvim
 
 
-def set_default(vim, var, val):
+def set_default(vim: Nvim, var, val):
     return vim.call('denite#util#set_default', var, val)
 
 
@@ -28,11 +36,11 @@ def globruntime(runtimepath, path):
     return ret
 
 
-def echo(vim, color, string):
+def echo(vim: Nvim, color, string):
     vim.call('denite#util#echo', color, string)
 
 
-def debug(vim, expr):
+def debug(vim: Nvim, expr):
     if hasattr(vim, 'out_write'):
         string = (expr if isinstance(expr, str) else str(expr))
         return vim.out_write('[denite] ' + string + '\n')
@@ -40,12 +48,25 @@ def debug(vim, expr):
         print(expr)
 
 
-def error(vim, expr):
+def error(vim: Nvim, expr):
     string = (expr if isinstance(expr, str) else str(expr))
     vim.call('denite#util#print_error', string)
 
 
-def clear_cmdline(vim):
+def error_tb(vim: Nvim, msg):
+    lines: typing.List[str] = []
+    t, v, tb = sys.exc_info()
+    if t and v and tb:
+        lines += traceback.format_exc().splitlines()
+    lines += ['%s.  Use :messages / see above for error details.' % msg]
+    if hasattr(vim, 'err_write'):
+        vim.err_write('[denite] %s\n' % '\n'.join(lines))
+    else:
+        for line in lines:
+            error(vim, line)
+
+
+def clear_cmdline(vim: Nvim):
     vim.command('redraw | echo')
 
 
@@ -61,30 +82,27 @@ def regex_convert_py_vim(expr):
     return r'\v' + re.sub(r'(?!\\)([/~])', r'\\\1', expr)
 
 
-def escape_fuzzy(string, camelcase):
+def escape_fuzzy(string):
     # Escape string for python regexp.
     p = re.sub(r'([a-zA-Z0-9_-])(?!$)', r'\1[^\1]*', string)
-    if camelcase and re.search(r'[A-Z](?!$)', string):
-        p = re.sub(r'([a-z])(?!$)',
-                   (lambda pat: '['+pat.group(1)+pat.group(1).upper()+']'), p)
     p = re.sub(r'/(?!$)', r'/[^/]*', p)
     return p
 
 
-def get_custom_source(custom, source_name, key, default):
-    source = custom['source']
-    if source_name not in source:
-        return get_custom_source(custom, '_', key, default)
-    elif key in source[source_name]:
-        return source[source_name][key]
-    elif key in source['_']:
-        return source['_'][key]
+def get_custom(custom, kind, name, key, default):
+    custom_val = custom[kind]
+    if name not in custom_val:
+        return get_custom(custom, kind, '_', key, default)
+    elif key in custom_val[name]:
+        return custom_val[name][key]
+    elif key in custom_val['_']:
+        return custom_val['_'][key]
     else:
         return default
 
 
-def load_external_module(file, module):
-    current = os.path.dirname(os.path.abspath(file))
+def load_external_module(base, module):
+    current = os.path.dirname(os.path.abspath(base))
     module_dir = join(os.path.dirname(current), module)
     sys.path.insert(0, module_dir)
 
@@ -97,7 +115,7 @@ def path2dir(path):
     return path if os.path.isdir(path) else os.path.dirname(path)
 
 
-def path2project(vim, path, root_markers):
+def path2project(vim: Nvim, path, root_markers):
     return vim.call('denite#project#path2project_directory',
                     path, root_markers)
 
@@ -127,16 +145,21 @@ def expand(path):
     return os.path.expandvars(os.path.expanduser(path))
 
 
-def abspath(vim, path):
+def abspath(vim: Nvim, path):
     return normpath(join(vim.call('getcwd'), expand(path)))
 
 
-def relpath(vim, path):
+def relpath(vim: Nvim, path):
     return normpath(vim.call('fnamemodify', expand(path), ':~:.'))
 
 
 def convert2fuzzy_pattern(text):
-    return '|'.join([escape_fuzzy(x, True) for x in split_input(text)])
+    def esc(string):
+        # Escape string for convert2fuzzy_pattern.
+        p = re.sub(r'([a-zA-Z0-9_-])(?!$)', r'\1[^\1]{-}', string)
+        p = re.sub(r'/(?!$)', r'/[^/]*', p)
+        return p
+    return '|'.join([esc(x) for x in split_input(text)])
 
 
 def convert2regex_pattern(text):
@@ -153,7 +176,7 @@ def parse_command(array, **kwargs):
 
 
 # XXX: It override the builtin 'input()' function.
-def input(vim, context, prompt='', text='', completion=''):
+def input(vim: Nvim, context, prompt='', text='', completion=''):
     try:
         if completion != '':
             return vim.call('input', prompt, text, completion)
@@ -214,11 +237,6 @@ def find_rplugins(context, source, loaded_paths):
                     # __init__.py in {root} does not have implementation
                     # so skip
                     continue
-                elif module_path == 'base' and source != 'kind':
-                    # base.py in {root} does not have implementation so skip
-                    # NOTE: kind/base.py DOES have implementation so do
-                    # NOT skip
-                    continue
                 if os.path.basename(module_path) == '__init__':
                     # 'foo/__init__.py' should be loaded as a module 'foo'
                     module_path = os.path.dirname(module_path)
@@ -238,17 +256,22 @@ def import_rplugins(name, context, source, loaded_paths):
     which may exist only for making a module namespace.
     """
     for path, module_path in find_rplugins(context, source, loaded_paths):
-        loader = SourceFileLoader('denite.%s.%s' % (source, module_path), path)
-        # XXX: load_module is deprecated since Python 3.4
-        module = loader.load_module()
-        if not hasattr(module, name):
+        module_name = 'denite.%s.%s' % (source, module_path)
+        spec = importlib.util.spec_from_file_location(module_name, path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        if (not hasattr(module, name) or
+                inspect.isabstract(getattr(module, name))):
             continue
         yield (getattr(module, name), path, module_path)
 
 
 def parse_tagline(line, tagpath):
     elem = line.split("\t")
-    file_path = elem[1] if exists(elem[1]) else normpath(join(dirname(tagpath), elem[1]))
+    file_path = elem[1]
+    if not exists(file_path):
+        file_path = join(dirname(tagpath), elem[1])
+    file_path = normpath(file_path)
     info = {
         'name': elem[0],
         'file': file_path,
@@ -261,12 +284,18 @@ def parse_tagline(line, tagpath):
     rest = '\t'.join(elem[2:])
     m = re.search(r'.*;"', rest)
     if not m:
+        # Old format
         if len(elem) >= 3:
-            info['line'] = elem[2]
+            if re.match(r'\d+$', elem[2]):
+                info['line'] = elem[2]
+            else:
+                info['pattern'] = re.sub(
+                    r'([~.*\[\]\\])', r'\\\1',
+                    re.sub(r'^/|/;"$', '', elem[2]))
         return info
 
     pattern = m.group(0)
-    if re.match('\d+;"$', pattern):
+    if re.match(r'\d+;"$', pattern):
         info['line'] = re.sub(r';"$', '', pattern)
     else:
         info['pattern'] = re.sub(r'([~.*\[\]\\])', r'\\\1',
@@ -280,8 +309,11 @@ def parse_tagline(line, tagpath):
     return info
 
 
-def clearmatch(vim):
-    if vim.call('exists', 'w:denite_match_id'):
-        vim.call('matchdelete',
-                 vim.current.window.vars['denite_match_id'])
-        vim.command('unlet w:denite_match_id')
+def clearmatch(vim: Nvim):
+    if not vim.call('exists', 'w:denite_match_id'):
+        return
+
+    # For async RPC error
+    vim.command('silent! call matchdelete({})'.format(
+        vim.current.window.vars['denite_match_id']))
+    vim.command('silent! unlet w:denite_match_id')

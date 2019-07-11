@@ -4,7 +4,8 @@
 # DESCRIPTION: Simple filter to reverse the order of candidates
 # License: MIT license
 # ============================================================================
-from ..base import Base
+
+from denite.base.filter import Base
 
 
 class Filter(Base):

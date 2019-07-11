@@ -4,7 +4,7 @@
 # License: MIT license
 # ============================================================================
 
-from .base import Base
+from denite.base.kind import Base
 
 
 class Kind(Base):

@@ -7,8 +7,8 @@ import denite.util as util
 
 
 def test_convert2fuzzy_pattern():
-    assert util.convert2fuzzy_pattern('abc') == 'a[^a]*b[^b]*c'
-    assert util.convert2fuzzy_pattern('a/c') == 'a[^a]*/[^/]*c'
+    assert util.convert2fuzzy_pattern('abc') == 'a[^a]{-}b[^b]{-}c'
+    assert util.convert2fuzzy_pattern('a/c') == 'a[^a]{-}/[^/]*c'
 
 
 def test_convert2regex_pattern():
@@ -48,6 +48,13 @@ def test_parse_tag_line():
         }
 
     assert util.parse_tagline(
+        'name	file	/*foo*', '') == {
+            'name': 'name', 'file': 'file',
+            'pattern': r'\*foo\*', 'line': '',
+            'type': '', 'ref': '',
+        }
+
+    assert util.parse_tagline(
         'name	file	1;"	f', '') == {
             'name': 'name', 'file': 'file',
             'pattern': '', 'line': '1',
@@ -67,94 +74,6 @@ def test_parse_tag_line():
             'pattern': '	pattern', 'line': '',
             'type': '', 'ref': '',
         }
-
-
-@patch('denite.util.os.walk')
-def test_find_rplugins_source(walk):
-    walk.side_effect = _walk_side_effect
-
-    context = { 'runtimepath': '/a,/b' }
-    source = 'source'
-    prefix = os.path.normpath('rplugin/python3/denite/%s' % source)
-    loaded_paths = [os.path.normpath(x % prefix) for x in (
-        '/a/%s/loaded.py', '/a/%s/bar/loaded.py', '/a/%s/bar/hoge/loaded.py',
-        '/b/%s/loaded.py', '/b/%s/bar/loaded.py', '/b/%s/bar/hoge/loaded.py',
-    )]
-
-    it = util.find_rplugins(context, source, loaded_paths)
-    walk.assert_not_called()
-
-    assert next(it) == ('/a/%s/foo.py' % prefix, 'foo')
-    assert next(it) == ('/a/%s/bar/__init__.py' % prefix, 'bar')
-    assert next(it) == ('/a/%s/bar/foo.py' % prefix, 'bar.foo')
-    assert next(it) == ('/a/%s/bar/base.py' % prefix, 'bar.base')
-    assert next(it) == ('/a/%s/bar/hoge/__init__.py' % prefix, 'bar.hoge')
-    assert next(it) == ('/a/%s/bar/hoge/foo.py' % prefix, 'bar.hoge.foo')
-    assert next(it) == ('/a/%s/bar/hoge/base.py' % prefix, 'bar.hoge.base')
-    walk.assert_called_once_with(
-        os.path.normpath('/a/%s' % prefix),
-    )
-    walk.reset_mock()
-
-    assert next(it) == ('/b/%s/foo.py' % prefix, 'foo')
-    assert next(it) == ('/b/%s/bar/__init__.py' % prefix, 'bar')
-    assert next(it) == ('/b/%s/bar/foo.py' % prefix, 'bar.foo')
-    assert next(it) == ('/b/%s/bar/base.py' % prefix, 'bar.base')
-    assert next(it) == ('/b/%s/bar/hoge/__init__.py' % prefix, 'bar.hoge')
-    assert next(it) == ('/b/%s/bar/hoge/foo.py' % prefix, 'bar.hoge.foo')
-    assert next(it) == ('/b/%s/bar/hoge/base.py' % prefix, 'bar.hoge.base')
-    walk.assert_called_once_with(
-        os.path.normpath('/b/%s' % prefix),
-    )
-    walk.reset_mock()
-
-    with pytest.raises(StopIteration):
-        next(it)
-    walk.assert_not_called()
-
-
-@patch('denite.util.os.walk')
-def test_find_rplugins_filter(walk):
-    walk.side_effect = _walk_side_effect
-
-    context = { 'runtimepath': '/a,/b' }
-    source = 'filter'
-    prefix = os.path.normpath('rplugin/python3/denite/%s' % source)
-    loaded_paths = [os.path.normpath(x % prefix) for x in (
-        '/a/%s/loaded.py', '/a/%s/bar/loaded.py', '/a/%s/bar/hoge/loaded.py',
-        '/b/%s/loaded.py', '/b/%s/bar/loaded.py', '/b/%s/bar/hoge/loaded.py',
-    )]
-
-    it = util.find_rplugins(context, source, loaded_paths)
-    walk.assert_not_called()
-
-    assert next(it) == ('/a/%s/foo.py' % prefix, 'foo')
-    assert next(it) == ('/a/%s/bar/__init__.py' % prefix, 'bar')
-    assert next(it) == ('/a/%s/bar/foo.py' % prefix, 'bar.foo')
-    assert next(it) == ('/a/%s/bar/base.py' % prefix, 'bar.base')
-    assert next(it) == ('/a/%s/bar/hoge/__init__.py' % prefix, 'bar.hoge')
-    assert next(it) == ('/a/%s/bar/hoge/foo.py' % prefix, 'bar.hoge.foo')
-    assert next(it) == ('/a/%s/bar/hoge/base.py' % prefix, 'bar.hoge.base')
-    walk.assert_called_once_with(
-        os.path.normpath('/a/%s' % prefix),
-    )
-    walk.reset_mock()
-
-    assert next(it) == ('/b/%s/foo.py' % prefix, 'foo')
-    assert next(it) == ('/b/%s/bar/__init__.py' % prefix, 'bar')
-    assert next(it) == ('/b/%s/bar/foo.py' % prefix, 'bar.foo')
-    assert next(it) == ('/b/%s/bar/base.py' % prefix, 'bar.base')
-    assert next(it) == ('/b/%s/bar/hoge/__init__.py' % prefix, 'bar.hoge')
-    assert next(it) == ('/b/%s/bar/hoge/foo.py' % prefix, 'bar.hoge.foo')
-    assert next(it) == ('/b/%s/bar/hoge/base.py' % prefix, 'bar.hoge.base')
-    walk.assert_called_once_with(
-        os.path.normpath('/b/%s' % prefix),
-    )
-    walk.reset_mock()
-
-    with pytest.raises(StopIteration):
-        next(it)
-    walk.assert_not_called()
 
 
 @patch('denite.util.os.walk')

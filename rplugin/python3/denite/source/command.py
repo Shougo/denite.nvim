@@ -7,9 +7,8 @@
 
 import re
 
-from .base import Base
+from denite.base.source import Base
 from denite.util import globruntime
-from re import sub
 
 
 class Source(Base):
@@ -43,7 +42,7 @@ class Source(Base):
                 'word': x,
             } for x in self.vim.call('getcompletion', '', 'command')]
 
-        prefix = sub('\w*$', '', context['input'])
+        prefix = re.sub(r'\w*$', '', context['input'])
 
         candidates = [{
             'action__command': prefix + x,
@@ -65,7 +64,7 @@ class Source(Base):
                 for line in [x for x in doc.readlines()
                              if self._re_command.match(x)]:
                     tokens = self._re_tokens.match(line).groups()
-                    command = "execute input(':{0} ')".format(tokens[0])
+                    command = f"execute input(':{tokens[0]} ')"
                     self.commands.append({
                         'action__command': command,
                         'word': '{0:<20} -- {1}'.format(

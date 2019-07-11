@@ -7,8 +7,8 @@
 import re
 
 from denite import util
-from .base import Base
-from ..kind.command import Kind as Command
+from denite.base.source import Base
+from denite.kind.command import Kind as Command
 
 
 class Source(Base):
@@ -21,6 +21,20 @@ class Source(Base):
         self.vars = {
             'ignore_command_regexp': []
         }
+        if self.vim.call('has', 'nvim'):
+            self.vim.exec_lua(
+                """
+                local function getHistory()
+                    local histories = {}
+                    local number = vim.api.nvim_call_function('histnr', {':'})
+                    for i=1, number do
+                        histories[i] = {tostring(i),
+                        vim.api.nvim_call_function('histget', {':', i})}
+                    end
+                    return histories
+                end
+                history_source = {get=getHistory}
+                """)
 
     def gather_candidates(self, context):
         histories = self._get_histories()
@@ -32,10 +46,14 @@ class Source(Base):
                 if len(r) > 1 and r[1]]
 
     def _get_histories(self):
-        histories = [
-            [str(x), self.vim.call('histget', ':', x)]
-            for x in reversed(range(1, self.vim.call('histnr', ':')))
-        ]
+        if self.vim.call('has', 'nvim'):
+            histories = self.vim.lua.history_source.get()
+            histories.reverse()
+        else:
+            histories = [
+                [str(x), self.vim.call('histget', ':', x)]
+                for x in reversed(range(1, self.vim.call('histnr', ':')+1))
+            ]
         histories = self._remove_duplicate_entry(histories)
         if self.vars['ignore_command_regexp']:
             histories = list(filter(
@@ -69,6 +87,7 @@ class Source(Base):
             'word': ':' + history[1],
             'action__command': history[1],
             'action__is_pause': True,
+            'source__index': int(history[0]),
         }
 
 
@@ -78,11 +97,19 @@ class Kind(Command):
         super().__init__(vim)
 
         self.name = 'command/history'
+        self.redraw_actions = 'delete'
+        self.persist_actions = 'delete'
 
-    def action_edit_and_execute(self, context):
+    def action_edit(self, context):
         target = context['targets'][0]
         command = util.input(self.vim, context,
                              "command > ",
                              target['action__command'],
                              'command')
         self._execute(command)
+
+    def action_delete(self, context):
+        for target in sorted(context['targets'],
+                             key=lambda x: x['source__index'],
+                             reverse=True):
+            self.vim.call('histdel', ':', target['source__index'])
