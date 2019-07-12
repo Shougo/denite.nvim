@@ -38,7 +38,6 @@ class Source(Base):
                 self._init_commands()
             return self.commands + [{
                 'action__command': x,
-                'action__is_pause': True,
                 'word': x,
             } for x in self.vim.call('getcompletion', '', 'command')]
 
@@ -46,14 +45,12 @@ class Source(Base):
 
         candidates = [{
             'action__command': prefix + x,
-            'action__is_pause': True,
             'word': prefix + x,
         } for x in self.vim.call(
             'getcompletion', context['input'], 'cmdline')]
         if not candidates:
             candidates = [{
                 'action__command': context['input'],
-                'action__is_pause': True,
                 'word': context['input'],
             }]
         return candidates
