@@ -14,14 +14,13 @@ class Rplugin:
     def __init__(self, vim):
         self._vim = vim
         self._uis = {}
-        self._context = Context(self._vim)
 
     def init_channel(self, args):
         self._vim.vars['denite#_channel_id'] = self._vim.channel_id
 
     def start(self, args):
         try:
-            context = self._context.get(args[1])
+            context = Context(self._vim).get(args[1])
             ui = self.get_ui(context['buffer_name'])
             return ui.start(args[0], context)
         except Exception:
