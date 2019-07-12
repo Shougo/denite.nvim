@@ -59,7 +59,6 @@ class Default(object):
 
         self._result = []
         context['sources_queue'] = [sources]
-        self._sources_history = []
 
         self._start_sources_queue(context)
 
