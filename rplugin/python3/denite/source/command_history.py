@@ -87,6 +87,7 @@ class Source(Base):
             'word': ':' + history[1],
             'action__command': history[1],
             'source__index': int(history[0]),
+            'action__histadd': True,
         }
 
 

@@ -46,12 +46,14 @@ class Source(Base):
         candidates = [{
             'action__command': prefix + x,
             'word': prefix + x,
+            'action__histadd': True,
         } for x in self.vim.call(
             'getcompletion', context['input'], 'cmdline')]
         if not candidates:
             candidates = [{
                 'action__command': context['input'],
                 'word': context['input'],
+                'action__histadd': True,
             }]
         return candidates
 
