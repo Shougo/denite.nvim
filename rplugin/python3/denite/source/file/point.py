@@ -43,7 +43,8 @@ class Source(Base):
         if os.path.exists(cfile):
             return [{'word': cfile,
                      'action__path': abspath(self.vim, cfile)}]
-        if _checkhost(cfile):
+        if _checkhost(cfile) or match(
+                r'https?://(127\.0\.0\.1|localhost)[:/]', cfile):
             return [{'word': cfile, 'action__path': cfile}]
         return []
 
