@@ -320,9 +320,17 @@ class Default(object):
         bufname = '[denite]-' + self._context['buffer_name']
         if self._vim.call('exists', '*bufadd'):
             bufnr = self._vim.call('bufadd', bufname)
-            if command != 'edit':
-                self._vim.command(f'{command}')
-            self._vim.command(f'silent keepalt {bufnr} buffer')
+            vertical = 'vertical' if split == 'vertical' else ''
+            command = ('buffer' if split in ['no', 'tab', 'floating']
+                       else 'sbuffer')
+            self._vim.command(
+                'silent keepalt %s %s %s %s' % (
+                    self._get_direction(),
+                    vertical,
+                    command,
+                    bufnr,
+                )
+            )
         else:
             self._vim.call(
                 'denite#util#execute_path',
