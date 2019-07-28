@@ -623,6 +623,8 @@ OPTIONS							*denite-options*
 -default-action={action}
 		Specify the default action as {action}.
 		Default: "default"
+		Note: It overwrites all default actions includes kind/source
+		default actions.
 
 						*denite-option-cursor-pos*
 -cursor-pos={number}
