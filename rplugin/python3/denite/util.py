@@ -20,6 +20,9 @@ if importlib.util.find_spec('pynvim'):
 else:
     from neovim import Nvim
 
+UserContext = typing.Dict[str, typing.Any]
+Candidates = typing.Dict[str, typing.Any]
+
 
 def set_default(vim: Nvim, var: str, val: typing.Any) -> typing.Any:
     return vim.call('denite#util#set_default', var, val)
@@ -30,7 +33,7 @@ def convert2list(expr: typing.Any) -> typing.List[typing.Any]:
 
 
 def globruntime(runtimepath: str, path: str) -> typing.List[str]:
-    ret = []
+    ret: typing.List[str] = []
     for rtp in re.split(',', runtimepath):
         ret += glob(rtp + '/' + path)
     return ret
@@ -118,8 +121,8 @@ def path2dir(path: str) -> str:
 
 def path2project(vim: Nvim, path: str,
                  root_markers: typing.List[str]) -> str:
-    return vim.call('denite#project#path2project_directory',
-                    path, root_markers)
+    return str(vim.call('denite#project#path2project_directory',
+                        path, root_markers))
 
 
 def parse_jump_line(path_head: str, line: str) -> typing.List[str]:
@@ -131,7 +134,7 @@ def parse_jump_line(path_head: str, line: str) -> typing.List[str]:
         # Use column pattern
         m = re.search(r'^((?:[a-zA-Z]:)?[^:]*):(\d+):(\d+):(.*)$', line)
 
-    [path, linenr, col, text] = m.groups()
+    [path, linenr, col, text] = m.groups()  # type: ignore
 
     if not linenr:
         linenr = '1'
@@ -168,17 +171,19 @@ def convert2regex_pattern(text: str) -> str:
     return '|'.join(split_input(text))
 
 
-def parse_command(array: typing.List[str], **kwargs):
+def parse_command(array: typing.List[str],
+                  **kwargs: typing.Any) -> typing.List[str]:
     def parse_arg(arg: str) -> str:
         if arg.startswith(':') and arg[1:] in kwargs:
-            return kwargs[arg[1:]]
+            return str(kwargs[arg[1:]])
         return arg
 
     return [parse_arg(i) for i in array]
 
 
 # XXX: It override the builtin 'input()' function.
-def input(vim: Nvim, context, prompt='', text='', completion=''):
+def input(vim: Nvim, context: UserContext,
+          prompt: str = '', text: str = '', completion: str = '') -> str:
     try:
         if completion != '':
             return vim.call('input', prompt, text, completion)
@@ -196,7 +201,9 @@ def input(vim: Nvim, context, prompt='', text='', completion=''):
     return ''
 
 
-def find_rplugins(context, source, loaded_paths):
+def find_rplugins(context: UserContext, source: str,
+                  loaded_paths: typing.List[str]) -> typing.Generator[
+                      typing.Tuple[str, str], None, None]:
     """Find available modules from runtimepath and yield
 
     It searches modules from rplugin/python3/denite/{source} recursvely
@@ -247,7 +254,9 @@ def find_rplugins(context, source, loaded_paths):
                 yield (path, module_path)
 
 
-def import_rplugins(name, context, source, loaded_paths):
+def import_rplugins(name: str, context: UserContext, source: str,
+                    loaded_paths: typing.List[str]) -> typing.Generator[
+                        typing.Tuple[str, str, str], None, None]:
     """Import available module and yield specified attr
 
     It uses 'find_rplugins' to find available modules and yield
@@ -261,14 +270,14 @@ def import_rplugins(name, context, source, loaded_paths):
         module_name = 'denite.%s.%s' % (source, module_path)
         spec = importlib.util.spec_from_file_location(module_name, path)
         module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
+        spec.loader.exec_module(module)  # type: ignore
         if (not hasattr(module, name) or
                 inspect.isabstract(getattr(module, name))):
             continue
         yield (getattr(module, name), path, module_path)
 
 
-def parse_tagline(line, tagpath):
+def parse_tagline(line: str, tagpath: str) -> typing.Dict[str, typing.Any]:
     elem = line.split("\t")
     file_path = elem[1]
     if not exists(file_path):
@@ -311,7 +320,7 @@ def parse_tagline(line, tagpath):
     return info
 
 
-def clearmatch(vim: Nvim):
+def clearmatch(vim: Nvim) -> None:
     if not vim.call('exists', 'w:denite_match_id'):
         return
 

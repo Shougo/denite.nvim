@@ -5,11 +5,12 @@
 # ============================================================================
 
 from denite.base.source import Base
+from denite.util import Nvim, UserContext, Candidates
 
 
 class Source(Base):
 
-    def __init__(self, vim):
+    def __init__(self, vim: Nvim) -> None:
         super().__init__(vim)
 
         self.vim = vim
@@ -18,10 +19,10 @@ class Source(Base):
 
         self._arg = ''
 
-    def on_init(self, context):
+    def on_init(self, context: UserContext) -> None:
         args = dict(enumerate(context['args']))
         context['__arg'] = args.get(0, self.vim.call('expand', '<cword>'))
 
-    def gather_candidates(self, context):
+    def gather_candidates(self, context: UserContext) -> Candidates:
         return [{'word': x} for x in
                 self.vim.call('spellsuggest', context['__arg'])]
