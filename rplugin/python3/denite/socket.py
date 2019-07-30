@@ -5,6 +5,7 @@
 # ============================================================================
 
 import socket
+import typing
 from threading import Thread
 from queue import Queue
 from time import time, sleep
@@ -12,7 +13,8 @@ from time import time, sleep
 
 class Socket(object):
 
-    def __init__(self, host, port, commands, context, timeout):
+    def __init__(self, host: str, port: int, commands: typing.List[str],
+                 context, timeout: int) -> None:
         self._enc = context.get('encoding', 'utf-8')
         self._eof = False
         self._outs = []

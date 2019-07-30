@@ -16,7 +16,7 @@ class Context(object):
 
     def __init__(self, vim: Nvim) -> None:
         self._vim = vim
-        self._context = {}
+        self._context: UserContext = {}
 
     def get(self, user_context: UserContext) -> UserContext:
         buffer_name = user_context.get('buffer_name', 'default')
