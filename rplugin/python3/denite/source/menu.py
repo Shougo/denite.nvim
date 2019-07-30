@@ -5,8 +5,6 @@
 # License: MIT license
 # ============================================================================
 
-import typing
-
 from denite.base.source import Base
 from denite.util import Nvim, UserContext, Candidates
 

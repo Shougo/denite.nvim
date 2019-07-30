@@ -155,7 +155,7 @@ def abspath(vim: Nvim, path: str) -> str:
 
 
 def relpath(vim: Nvim, path: str) -> str:
-    return normpath(vim.call('fnamemodify', expand(path), ':~:.'))
+    return str(normpath(vim.call('fnamemodify', expand(path), ':~:.')))
 
 
 def convert2fuzzy_pattern(text: str) -> str:
@@ -186,9 +186,9 @@ def input(vim: Nvim, context: UserContext,
           prompt: str = '', text: str = '', completion: str = '') -> str:
     try:
         if completion != '':
-            return vim.call('input', prompt, text, completion)
+            return str(vim.call('input', prompt, text, completion))
         else:
-            return vim.call('input', prompt, text)
+            return str(vim.call('input', prompt, text))
     except vim.error as e:
         # NOTE:
         # neovim raise nvim.error instead of KeyboardInterrupt when Ctrl-C

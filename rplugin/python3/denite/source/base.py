@@ -6,8 +6,9 @@
 
 # For backward compatibility
 from denite.base.source import Base as _Base
+from denite.util import Nvim
 
 
 class Base(_Base):
-    def __init__(self, vim):
+    def __init__(self, vim: Nvim) -> None:
         super().__init__(vim)
