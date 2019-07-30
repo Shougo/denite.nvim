@@ -9,21 +9,22 @@ import os
 
 from denite.base.source import Base
 from denite.util import parse_jump_line, expand, abspath
+from denite.util import Nvim, UserContext, Candidates
 
 
 class Source(Base):
 
-    def __init__(self, vim):
+    def __init__(self, vim: Nvim) -> None:
         super().__init__(vim)
 
         self.name = 'file/point'
         self.kind = 'file'
 
-    def on_init(self, context):
+    def on_init(self, context: UserContext) -> None:
         context['__line'] = self.vim.call('getline', '.')
         context['__cfile'] = expand(self.vim.call('expand', '<cfile>'))
 
-    def gather_candidates(self, context):
+    def gather_candidates(self, context: UserContext) -> Candidates:
         result = parse_jump_line(
             self.vim.call('getcwd'), context['__line'])
         if result and os.path.isfile(result[0]):
@@ -49,7 +50,7 @@ class Source(Base):
         return []
 
 
-def _checkhost(path):
+def _checkhost(path: str) -> bool:
     if not match(r'https?://', path):
         return ''
     try:

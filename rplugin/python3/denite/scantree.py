@@ -13,9 +13,15 @@ import time
 import typing
 
 DEFAULT_SKIP_LIST = ['.git', '.hg']
+SkipList = typing.Optional[typing.List[str]]
 
 
+<<<<<<< HEAD
 def scantree(path_name: str, skip_list: bool = None, types: str = 'f'):
+=======
+def scantree(path_name: str,
+             skip_list: SkipList = None) -> typing.Generator[str, None, None]:
+>>>>>>> WIP
     """This function returns the files present in path_name, including the
     files present in subfolders.
 

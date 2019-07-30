@@ -151,7 +151,7 @@ def get_score(pattern: str, candidate: Candidates) -> int:
             candidate_char == candidate_lower,
             candidate_lower != candidate_upper
         ])
-        prev_separator = category(candidate_char)[0] != 'L'  # type: ignore
+        prev_separator = category(candidate_char)[0] != 'L'
         # Modified from the original.
         # See http://www.fileformat.info/info/unicode/category/index.htm
 

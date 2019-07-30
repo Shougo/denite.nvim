@@ -10,20 +10,21 @@
 # ============================================================================
 
 import string
+import typing
 
 from denite.base.filter import Base
-from denite.util import split_input
+from denite.util import split_input, Nvim, UserContext, Candidates
 
 
 class Filter(Base):
 
-    def __init__(self, vim):
+    def __init__(self, vim: Nvim) -> None:
         super().__init__(vim)
 
         self.name = 'sorter/rank'
         self.description = 'rank matcher'
 
-    def filter(self, context):
+    def filter(self, context: UserContext) -> Candidates:
         if len(context['input']) < 1:
             return context['candidates']
         for c in context['candidates']:
@@ -39,7 +40,7 @@ class Filter(Base):
 BOUNDARY_CHARS = string.punctuation + string.whitespace
 
 
-def get_score(string, query_chars):
+def get_score(string: str, query_chars: typing.List[str]) -> float:
     # Highest possible score is the string length
     best_score = len(string)
     head, tail = query_chars[0], query_chars[1:]
@@ -59,7 +60,8 @@ def get_score(string, query_chars):
     return best_score
 
 
-def find_end_of_match(to_match, chars, first_index):
+def find_end_of_match(to_match: str, chars: typing.List[str],
+                      first_index: int) -> typing.Tuple[float, int]:
     score, last_index, last_type = 1.0, first_index, None
 
     for char in chars:

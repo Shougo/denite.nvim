@@ -6,22 +6,23 @@
 
 from denite.base.kind import Base
 from denite import util
+from denite.util import Nvim, UserContext
 
 
 class Kind(Base):
 
-    def __init__(self, vim):
+    def __init__(self, vim: Nvim) -> None:
         super().__init__(vim)
 
         self.name = 'command'
         self.default_action = 'execute'
 
-    def action_execute(self, context):
+    def action_execute(self, context: UserContext) -> None:
         target = context['targets'][0]
         self._execute(context, target['action__command'],
                       target.get('action__histadd', False))
 
-    def action_edit(self, context):
+    def action_edit(self, context: UserContext) -> None:
         target = context['targets'][0]
         command = util.input(self.vim, context,
                              "command > ",
@@ -30,7 +31,8 @@ class Kind(Base):
         self._execute(context, command,
                       target.get('action__histadd', False))
 
-    def _execute(self, context, command, histadd):
+    def _execute(self, context: UserContext,
+                 command: str, histadd: bool) -> None:
         if not command:
             return
         if context['firstline'] != context['lastline']:

@@ -6,17 +6,19 @@
 
 import argparse
 import shutil
+import typing
+
 from sys import executable, base_exec_prefix
 from pathlib import Path
 
 from denite.base.source import Base
 from denite.process import Process
-from denite.util import parse_command, abspath
+from denite.util import parse_command, abspath, Nvim, UserContext, Candidates
 
 
 class Source(Base):
 
-    def __init__(self, vim):
+    def __init__(self, vim: Nvim) -> None:
         super().__init__(vim)
 
         self.name = 'file/rec'
@@ -27,7 +29,7 @@ class Source(Base):
         }
         self._cache = {}
 
-    def on_init(self, context):
+    def on_init(self, context: UserContext) -> None:
         """scantree.py command has special meaning, using the internal
         scantree.py Implementation"""
 
@@ -50,12 +52,12 @@ class Source(Base):
             context['args']) > 0 else context['path']
         context['__directory'] = abspath(self.vim, directory)
 
-    def on_close(self, context):
+    def on_close(self, context: UserContext) -> None:
         if context['__proc']:
             context['__proc'].kill()
             context['__proc'] = None
 
-    def gather_candidates(self, context):
+    def gather_candidates(self, context: UserContext) -> Candidates:
         if not self.vars['command']:
             return []
 
@@ -85,7 +87,8 @@ class Source(Base):
         context['__current_candidates'] = []
         return self._async_gather_candidates(context, 0.5)
 
-    def _async_gather_candidates(self, context, timeout):
+    def _async_gather_candidates(self, context: UserContext,
+                                 timeout: float) -> Candidates:
         outs, errs = context['__proc'].communicate(timeout=timeout)
         if errs:
             self.error_message(context, errs)
@@ -118,7 +121,7 @@ class Source(Base):
         return candidates
 
     @staticmethod
-    def get_python_exe():
+    def get_python_exe() -> str:
         if 'py' in str(Path(executable).name):
             return executable
 
@@ -137,7 +140,7 @@ class Source(Base):
         # return sys.executable anyway. This may not work on windows
         return executable
 
-    def parse_command_for_scantree(self, cmd):
+    def parse_command_for_scantree(self, cmd: str) -> typing.List[str]:
         """Given the user choice for --ignore get the corresponding value"""
 
         parser = argparse.ArgumentParser(description="parse scantree options")

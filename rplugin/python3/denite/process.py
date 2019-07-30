@@ -9,10 +9,14 @@ from threading import Thread
 from queue import Queue
 from time import time, sleep
 import os
+import typing
+
+from denite.util import UserContext
 
 
 class Process(object):
-    def __init__(self, commands, context, cwd):
+    def __init__(self, commands: typing.List[str],
+                 context: UserContext, cwd: str) -> None:
         startupinfo = None
         if os.name == 'nt':
             startupinfo = subprocess.STARTUPINFO()
@@ -25,14 +29,14 @@ class Process(object):
                                       cwd=cwd)
         self._eof = False
         self._context = context
-        self._queue_out = Queue()
+        self._queue_out = Queue()  # type: ignore
         self._thread = Thread(target=self.enqueue_output)
         self._thread.start()
 
-    def eof(self):
+    def eof(self) -> bool:
         return self._eof
 
-    def kill(self):
+    def kill(self) -> None:
         if not self._proc:
             return
 
@@ -46,7 +50,7 @@ class Process(object):
         self._thread.join(1.0)
         self._thread = None
 
-    def enqueue_output(self):
+    def enqueue_output(self) -> None:
         for line in self._proc.stdout:
             if not self._queue_out:
                 return
@@ -54,7 +58,8 @@ class Process(object):
                 line.decode(self._context['encoding'],
                             errors='replace').strip('\r\n'))
 
-    def communicate(self, timeout):
+    def communicate(self, timeout: float) -> typing.Tuple[
+            typing.List[str], typing.List[str]]:
         if not self._proc:
             return ([], [])
 

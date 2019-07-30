@@ -18,7 +18,7 @@ class Filter(Base):
         self.description = 'simple substring matcher'
 
     def filter(self, context: UserContext) -> Candidates:
-        candidates = context['candidates']
+        candidates: Candidates = context['candidates']
         ignorecase = context['ignorecase']
         if context['input'] == '':
             return candidates
