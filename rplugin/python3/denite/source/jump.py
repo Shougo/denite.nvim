@@ -7,7 +7,7 @@
 import re
 
 from denite.base.source import Base
-from denite.util import relpath
+from denite.util import relpath, Nvim, UserContext, Candidates
 
 JUMP_HIGHLIGHT_SYNTAX = [
     {'name': 'File',     'link': 'Constant',   're': r'file: .*'},
@@ -17,13 +17,13 @@ JUMP_HIGHLIGHT_SYNTAX = [
 
 class Source(Base):
 
-    def __init__(self, vim):
+    def __init__(self, vim: Nvim) -> None:
         super().__init__(vim)
 
         self.name = 'jump'
         self.kind = 'file'
 
-    def highlight(self):
+    def highlight(self) -> None:
         for syn in JUMP_HIGHLIGHT_SYNTAX:
             self.vim.command(
                 'syntax match {0}_{1} /{2}/ contained containedin={0}'.format(
@@ -32,16 +32,16 @@ class Source(Base):
                 'highlight default link {}_{} {}'.format(
                     self.syntax_name, syn['name'], syn['link']))
 
-    def on_init(self, context):
+    def on_init(self, context: UserContext) -> None:
         if self.vim.call('exists', '*getjumplist'):
             jumps = self._get_jumplist(context)
         else:
             jumps = self._parse(context)
         context['__jumps'] = jumps[::-1]
 
-    def _get_jumplist(self, context):
+    def _get_jumplist(self, context: UserContext) -> Candidates:
         [jump_info, pointer] = self.vim.call('getjumplist')
-        jump_list = []
+        jump_list: Candidates = []
         index = pointer + 1
         inc = -1
         for jump in jump_info:
@@ -87,8 +87,8 @@ class Source(Base):
 
         return jump_list
 
-    def _parse(self, context):
-        jump_list = []
+    def _parse(self, context: UserContext) -> Candidates:
+        jump_list: Candidates = []
 
         for row_data in self.vim.call('execute', 'jumps').split('\n'):
             elements = row_data.split(maxsplit=3)
@@ -152,5 +152,5 @@ class Source(Base):
             })
         return jump_list
 
-    def gather_candidates(self, context):
+    def gather_candidates(self, context: UserContext) -> Candidates:
         return context['__jumps']

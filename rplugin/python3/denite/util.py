@@ -23,7 +23,8 @@ else:
     from neovim.api import Buffer  # noqa
 
 UserContext = typing.Dict[str, typing.Any]
-Candidates = typing.List[typing.Dict[str, typing.Any]]
+Candidate = typing.Dict[str, typing.Any]
+Candidates = typing.List[Candidate]
 
 
 def set_default(vim: Nvim, var: str, val: typing.Any) -> typing.Any:

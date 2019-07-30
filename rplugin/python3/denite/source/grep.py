@@ -5,10 +5,12 @@
 # ============================================================================
 
 import shlex
+import typing
 from os.path import relpath
 
 from denite import util, process
 from denite.base.source import Base
+from denite.util import Nvim, UserContext, Candidates, Candidate
 
 
 GREP_HEADER_SYNTAX = (
@@ -32,7 +34,7 @@ GREP_LINE_HIGHLIGHT = 'highlight default link deniteSource_grepLineNR LineNR'
 GREP_PATTERNS_HIGHLIGHT = 'highlight default link deniteGrepPatterns Function'
 
 
-def _candidate(result, path):
+def _candidate(result: typing.List[typing.Any], path: str) -> Candidate:
     return {
         'word': result[3],
         'abbr': '{}:{}{} {}'.format(
@@ -49,7 +51,7 @@ def _candidate(result, path):
 
 class Source(Base):
 
-    def __init__(self, vim):
+    def __init__(self, vim: Nvim) -> None:
         super().__init__(vim)
 
         self.name = 'grep'
@@ -66,7 +68,7 @@ class Source(Base):
         self.matchers = ['matcher/ignore_globs', 'matcher/regexp']
         self.is_volatile = True
 
-    def on_init(self, context):
+    def on_init(self, context: UserContext) -> None:
         context['__proc'] = None
 
         # Backwards compatibility for `ack`
@@ -86,12 +88,12 @@ class Source(Base):
         # patterns
         context['__patterns'] = self._init_patterns(context, args)
 
-    def on_close(self, context):
+    def on_close(self, context: UserContext) -> None:
         if context['__proc']:
             context['__proc'].kill()
             context['__proc'] = None
 
-    def highlight(self):
+    def highlight(self) -> None:
         self.vim.command(GREP_HEADER_SYNTAX)
         self.vim.command(GREP_FILE_SYNTAX)
         self.vim.command(GREP_FILE_HIGHLIGHT)
@@ -99,7 +101,7 @@ class Source(Base):
         self.vim.command(GREP_LINE_HIGHLIGHT)
         self.vim.command(GREP_PATTERNS_HIGHLIGHT)
 
-    def define_syntax(self):
+    def define_syntax(self) -> None:
         self.vim.command(
             'syntax region ' + self.syntax_name + ' start=// end=/$/ '
             'contains=deniteSource_grepHeader,deniteMatchedRange contained')
@@ -111,7 +113,7 @@ class Source(Base):
                     for pattern in self.context['__patterns']) +
                 'contained containedin=' + self.syntax_name)
 
-    def gather_candidates(self, context):
+    def gather_candidates(self, context: UserContext) -> Candidates:
         if context['event'] == 'interactive':
             # Update input
             self.on_close(context)
@@ -152,7 +154,8 @@ class Source(Base):
         context['__proc'] = process.Process(args, context, context['path'])
         return self._async_gather_candidates(context, 0.5)
 
-    def _async_gather_candidates(self, context, timeout):
+    def _async_gather_candidates(self, context: UserContext,
+                                 timeout: float) -> Candidates:
         outs, errs = context['__proc'].communicate(timeout=timeout)
         if errs:
             self.error_message(context, errs)
@@ -170,7 +173,8 @@ class Source(Base):
             candidates.append(_candidate(result, path))
         return candidates
 
-    def _init_paths(self, context, args):
+    def _init_paths(self, context: UserContext,
+                    args: typing.List[str]) -> typing.List[str]:
         paths = []
         arg = args.get(0, [])
         if arg:
@@ -185,7 +189,8 @@ class Source(Base):
             paths = [context['path']]
         return [util.abspath(self.vim, x) for x in paths]
 
-    def _init_arguments(self, context, args):
+    def _init_arguments(self, context: UserContext,
+                        args: typing.List[str]) -> typing.List[str]:
         arguments = []
         arg = args.get(1, [])
         if arg:
@@ -200,7 +205,8 @@ class Source(Base):
                     '`args[1]` needs to be a `str` or `list`')
         return arguments
 
-    def _init_patterns(self, context, args):
+    def _init_patterns(self, context: UserContext,
+                       args: typing.List[str]) -> typing.List[str]:
         patterns = []
         arg = args.get(2, [])
         if arg:
