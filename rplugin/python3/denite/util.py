@@ -17,8 +17,10 @@ from os.path import normpath, normcase, join, dirname, exists
 
 if importlib.util.find_spec('pynvim'):
     from pynvim import Nvim
+    from pynvim.api import Buffer
 else:
     from neovim import Nvim
+    from neovim.api import Buffer  # noqa
 
 UserContext = typing.Dict[str, typing.Any]
 Candidates = typing.List[typing.Dict[str, typing.Any]]

@@ -4,11 +4,14 @@
 # License: MIT license
 # ============================================================================
 
+import typing
+
 from os.path import getatime, exists
 from time import localtime, strftime, time
 from sys import maxsize
 
 from denite.base.source import Base
+from denite.util import Nvim, UserContext, Candidates, Buffer
 
 BUFFER_HIGHLIGHT_SYNTAX = [
     {'name': 'Name',     'link': 'Function',  're': r'[^/ \[\]]\+\s'},
@@ -22,7 +25,7 @@ BUFFER_HIGHLIGHT_SYNTAX = [
 
 class Source(Base):
 
-    def __init__(self, vim):
+    def __init__(self, vim: Nvim) -> None:
         super().__init__(vim)
 
         self.name = 'buffer'
@@ -33,13 +36,13 @@ class Source(Base):
             'exclude_filetypes': ['denite']
         }
 
-    def on_init(self, context):
+    def on_init(self, context: UserContext) -> None:
         context['__exclude_unlisted'] = ('!' not in context['args'] and
                                          self.vars['exclude_unlisted'])
         context['__caller_bufnr'] = context['bufnr']
         context['__alter_bufnr'] = self.vim.call('bufnr', '#')
 
-    def highlight(self):
+    def highlight(self) -> None:
         for syn in BUFFER_HIGHLIGHT_SYNTAX:
             self.vim.command(
                 'syntax match {0}_{1} /{2}/ contained containedin={0}'.format(
@@ -48,7 +51,7 @@ class Source(Base):
                 'highlight default link {}_{} {}'.format(
                     self.syntax_name, syn['name'], syn['link']))
 
-    def gather_candidates(self, context):
+    def gather_candidates(self, context: UserContext) -> Candidates:
         rjust = len(f'{len(self.vim.buffers)}') + 1
         ljustnm = 0
         rjustft = 0
@@ -73,14 +76,17 @@ class Source(Base):
             else -maxsize if context['__alter_bufnr'] == x['bufnr']
             else x['timestamp']))
 
-    def _is_excluded(self, context, buffer_attr):
+    def _is_excluded(self, context: UserContext,
+                     buffer_attr: typing.Dict[str, typing.Any]) -> bool:
         if context['__exclude_unlisted'] and buffer_attr['status'][0] == 'u':
             return True
         if buffer_attr['filetype'] in self.vars['exclude_filetypes']:
             return True
         return False
 
-    def _convert(self, buffer_attr, rjust, ljustnm, rjustft):
+    def _convert(self, buffer_attr: typing.Dict[str, typing.Any],
+                 rjust: int, ljustnm: int, rjustft: int) -> typing.Dict[
+                     str, typing.Any]:
         return {
             'bufnr': buffer_attr['number'],
             'word': buffer_attr['fn'],
@@ -99,7 +105,8 @@ class Source(Base):
             'timestamp': buffer_attr['timestamp']
         }
 
-    def _get_attributes(self, context, buf):
+    def _get_attributes(self, context: UserContext,
+                        buf: Buffer) -> typing.Dict[str, typing.Any]:
         attr = {
             'number': buf.number,
             'name': buf.name
