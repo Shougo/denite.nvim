@@ -9,11 +9,12 @@ import os
 
 from denite.base.filter import Base
 from denite.util import globruntime, convert2fuzzy_pattern
+from denite.util import Nvim, UserContext, Candidates
 
 
 class Filter(Base):
 
-    def __init__(self, vim):
+    def __init__(self, vim: Nvim) -> None:
         super().__init__(vim)
 
         self.name = 'matcher/cpsm'
@@ -22,7 +23,7 @@ class Filter(Base):
         self._initialized = False
         self._disabled = False
 
-    def filter(self, context):
+    def filter(self, context: UserContext) -> Candidates:
         if not context['candidates'] or not context[
                 'input'] or self._disabled:
             return context['candidates']
@@ -53,10 +54,11 @@ class Filter(Base):
         d = {x['word']: x for x in context['candidates']}
         return [d[x] for x in cpsm_result]
 
-    def convert_pattern(self, input_str):
+    def convert_pattern(self, input_str: str) -> str:
         return convert2fuzzy_pattern(input_str)
 
-    def _get_cpsm_result(self, ispath, candidates, pattern, bufname):
+    def _get_cpsm_result(self, ispath: bool, candidates: Candidates,
+                         pattern: str, bufname: str) -> Candidates:
         import cpsm_py
         return cpsm_py.ctrlp_match((d['word'] for d in candidates),
                                    pattern, limit=1000, ispath=ispath,
