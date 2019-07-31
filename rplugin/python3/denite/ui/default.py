@@ -205,7 +205,8 @@ class Default(object):
         self._update_buffer()
         self._move_to_pos(self._cursor)
 
-        if self._context['quick_move'] and self.quick_move():
+        if self._context['quick_move']:
+            do_map(self, 'quick_move', [])
             return
 
         if self._context['start_filter']:
