@@ -109,6 +109,7 @@ class Default(object):
 
         if is_manual and self._context['sources_queue']:
             self._context['input'] = ''
+            self._context['quick_move'] = ''
             self._start_sources_queue(self._context)
 
         return
@@ -149,7 +150,8 @@ class Default(object):
 
         self._start(context['sources_queue'][0], context)
 
-        context['sources_queue'].pop(0)
+        if context['sources_queue']:
+            context['sources_queue'].pop(0)
         context['path'] = self._context['path']
 
     def _start(self, sources, context):
@@ -205,7 +207,7 @@ class Default(object):
         self._update_buffer()
         self._move_to_pos(self._cursor)
 
-        if self._context['quick_move'] and self.quick_move():
+        if self._context['quick_move'] and do_map(self, 'quick_move', []):
             return
 
         if self._context['start_filter']:

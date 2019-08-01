@@ -109,10 +109,12 @@ def _print_messages(denite, params):
 
 
 def _quick_move(denite, params):
+    vim = denite._vim
+    context = denite._context
+
     def get_quick_move_table():
         table = {}
-        context = denite._context
-        base = denite._vim.call('line', '.')
+        base = vim.call('line', '.')
         for [key, number] in context['quick_move_table'].items():
             number = int(number)
             pos = ((base - number) if context['reversed']
@@ -122,42 +124,40 @@ def _quick_move(denite, params):
         return table
 
     def quick_move_redraw(table, is_define):
-        bufnr = denite._vim.current.buffer.number
+        bufnr = vim.current.buffer.number
         for [key, number] in table.items():
             signid = 2000 + number
             name = 'denite_quick_move_' + str(number)
             if is_define:
-                if denite._vim.call('exists', '*sign_define'):
-                    denite._vim.call('sign_define',
-                                     name, {'text': key, 'texthl': 'Special'})
-                    denite._vim.call('sign_place',
-                                     signid, '', name, bufnr,
-                                     {'lnum': number})
+                if vim.call('exists', '*sign_define'):
+                    vim.call('sign_define',
+                             name, {'text': key, 'texthl': 'Special'})
+                    vim.call('sign_place',
+                             signid, '', name, bufnr, {'lnum': number})
                 else:
-                    denite._vim.command(
+                    vim.command(
                         f'sign define {name} text={key} texthl=Special')
-                    denite._vim.command(
+                    vim.command(
                         f'sign place {signid} name={name} '
                         f'line={number} buffer={bufnr}')
             else:
-                if denite._vim.call('exists', '*sign_define'):
-                    denite._vim.call('sign_unplace', '',
-                                     {'id': signid, 'buffer': bufnr})
-                    denite._vim.call('sign_undefine', name)
+                if vim.call('exists', '*sign_define'):
+                    vim.call('sign_unplace', '',
+                             {'id': signid, 'buffer': bufnr})
+                    vim.call('sign_undefine', name)
                 else:
-                    denite._vim.command(
+                    vim.command(
                         f'silent! sign unplace {signid} buffer={bufnr}')
-                    denite._vim.command('silent! sign undefine ' + name)
+                    vim.command('silent! sign undefine ' + name)
 
     quick_move_table = get_quick_move_table()
-    denite._vim.command('echo "Input quick match key: "')
+    vim.command('echo "Input quick match key: "')
     quick_move_redraw(quick_move_table, True)
-    denite._vim.command('redraw')
+    vim.command('redraw')
 
     char = ''
     while char == '':
-        char = denite._vim.call('nr2char',
-                                denite._vim.call('denite#util#getchar'))
+        char = vim.call('nr2char', vim.call('denite#util#getchar'))
 
     quick_move_redraw(quick_move_table, False)
 
@@ -166,7 +166,9 @@ def _quick_move(denite, params):
 
     denite._move_to_pos(int(quick_move_table[char]))
 
-    if denite._context['quick_move'] == 'immediately':
+    if context['quick_move'] == 'immediately':
+        if context['sources_queue']:
+            context['sources_queue'].pop(0)
         denite.do_action('default', is_manual=True)
         return True
 
