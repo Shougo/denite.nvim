@@ -14,7 +14,7 @@ import time
 DEFAULT_SKIP_LIST = ['.git', '.hg']
 
 
-def scantree(path_name, skip_list=None):
+def scantree(path_name, skip_list=None, types='f'):
     """This function returns the files present in path_name, including the
     files present in subfolders.
 
@@ -28,8 +28,10 @@ def scantree(path_name, skip_list=None):
         for entry in (e for e in scandir(path_name)
                       if not is_ignored(e.path, skip_list)):
             if entry.is_dir(follow_symlinks=False):
-                yield from scantree(entry.path, skip_list)
-            else:
+                if 'd' in types:
+                    yield entry.path
+                yield from scantree(entry.path, skip_list, types)
+            elif 'f' in types:
                 yield entry.path
     except PermissionError:
         yield f'PermissionError reading {path_name}'
@@ -57,16 +59,20 @@ def output_files():
     parser.add_argument('--ignore', type=str,
                         help='command separated list of patterns to ignore',
                         default='.hg,.git')
+    parser.add_argument('--type', type=str, nargs='*',
+                        choices=['f', 'd'], default='f',
+                        help='output file types')
 
     args = parser.parse_args()
     ignore = list(set(args.ignore.split(',')))
+    types = ''.join(set(args.type))
     # later we can account for more paths
     for path_name in [args.path]:
         curr_list = []
         max_size = 40
         max_time_without_write = 0.005
         last_write_time = time.time()
-        for name in scantree(path_name, ignore):
+        for name in scantree(path_name, ignore, types):
             curr_list.append(name + '\n')
             if (len(curr_list) >= max_size or curr_list and
                     time.time() - last_write_time > max_time_without_write):

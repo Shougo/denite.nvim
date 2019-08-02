@@ -5,6 +5,8 @@
 # License: MIT license
 # ============================================================================
 
+import os
+
 from denite.source.file.rec import Source as Rec
 
 
@@ -18,21 +20,20 @@ class Source(Rec):
 
     def on_init(self, context):
         if not self.vars['command']:
-            self.vars['command'] = [
-                'find', '-L', ':directory',
-                '-path', '*/.git/*', '-prune', '-o',
-                '-type', 'l', '-print', '-o', '-type', 'd', '-print']
+            if context['is_windows']:
+                self.vars['command'] = [
+                    'scantree.py', '--type', 'd', '--path', ':directory']
+            else:
+                self.vars['command'] = [
+                    'find', '-L', ':directory',
+                    '-path', '*/.git/*', '-prune', '-o',
+                    '-type', 'l', '-print', '-o', '-type', 'd', '-print']
 
         super().on_init(context)
-
-        if context['is_windows']:
-            self.vars['command'] = []
-            self.error_message(context,
-                               'Windows environment is not supported.')
 
     def gather_candidates(self, context):
         candidates = [x for x in super().gather_candidates(context)
                       if x['action__path'] != context['__directory']]
         for candidate in candidates:
-            candidate['abbr'] = candidate['word'] + '/'
+            candidate['abbr'] = candidate['word'] + os.sep
         return candidates
