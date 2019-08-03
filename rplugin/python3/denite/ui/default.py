@@ -354,7 +354,7 @@ class Default(object):
     def _get_wininfo(self):
         return [
             self._vim.options['columns'], self._vim.options['lines'],
-            self._vim.call('win_getid'),
+            self._vim.call('win_getid'), self._vim.call('tabpagebuflist')
         ]
 
     def _switch_prev_buffer(self):
