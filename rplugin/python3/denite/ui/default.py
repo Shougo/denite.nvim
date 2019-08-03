@@ -9,7 +9,6 @@ import re
 from denite.util import (
     echo, error, regex_convert_py_vim, clearmatch)
 from denite.parent import SyncParent
-from denite.ui.map import do_map
 
 
 class Default(object):
@@ -155,6 +154,8 @@ class Default(object):
         context['path'] = self._context['path']
 
     def _start(self, sources, context):
+        from denite.ui.map import do_map
+
         self._vim.command('silent! autocmd! denite')
 
         if re.search(r'\[Command Line\]$', self._vim.current.buffer.name):

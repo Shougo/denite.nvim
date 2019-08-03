@@ -8,7 +8,7 @@ import typing
 
 from importlib.util import find_spec
 from denite.rplugin import Rplugin
-from deoplete.util import Nvim
+from denite.util import Nvim
 
 if find_spec('yarp'):
     import vim
@@ -53,7 +53,7 @@ if find_spec('yarp'):
 
     global_denite = Rplugin(vim)
 
-    def _denite_init():
+    def _denite_init() -> None:
         pass
 
     def _denite_start(args: Args) -> None:
