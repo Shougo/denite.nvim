@@ -16,12 +16,8 @@ DEFAULT_SKIP_LIST = ['.git', '.hg']
 SkipList = typing.Optional[typing.List[str]]
 
 
-<<<<<<< HEAD
-def scantree(path_name: str, skip_list: bool = None, types: str = 'f'):
-=======
-def scantree(path_name: str,
-             skip_list: SkipList = None) -> typing.Generator[str, None, None]:
->>>>>>> WIP
+def scantree(path_name: str, skip_list: SkipList = None,
+             types: str = 'f') -> typing.Generator[str, None, None]:
     """This function returns the files present in path_name, including the
     files present in subfolders.
 
