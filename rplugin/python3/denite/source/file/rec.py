@@ -103,7 +103,7 @@ class Source(Base):
             candidates = [{
                 'word': str(Path(x).relative_to(directory)),
                 'action__path': x,
-                } for x in outs if x != '']
+                } for x in outs if x != '' and directory in x]
         else:
             candidates = [{
                 'word': x,
