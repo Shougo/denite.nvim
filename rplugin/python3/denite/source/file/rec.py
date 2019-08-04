@@ -5,7 +5,6 @@
 # ============================================================================
 
 import argparse
-import itertools
 import shutil
 from sys import executable, base_exec_prefix
 from pathlib import Path
@@ -142,12 +141,10 @@ class Source(Base):
         """Given the user choice for --ignore get the corresponding value"""
 
         parser = argparse.ArgumentParser(description="parse scantree options")
-        parser.add_argument('--path')
         parser.add_argument('--ignore', type=str, default=None)
-        parser.add_argument('--type', nargs='*')
 
         # the first name on the list is 'scantree.py'
-        args = parser.parse_args(
+        (args, rest) = parser.parse_known_args(
             cmd[1:] if cmd and cmd[0] == 'scantree.py' else cmd)
         if args.ignore is None:
             ignore = self.vim.options['wildignore']
@@ -156,9 +153,6 @@ class Source(Base):
 
         scantree_py = Path(__file__).parent.parent.parent.joinpath(
             'scantree.py')
-        path_args = (['--path', args.path] if args.path else [])
-        type_args = list(itertools.chain.from_iterable(
-            ('--type', t) for t in (args.type or [])))
 
         return [Source.get_python_exe(), str(scantree_py), '--ignore', ignore,
-                *path_args, *type_args]
+                *rest]
