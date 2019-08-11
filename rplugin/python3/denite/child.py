@@ -41,7 +41,7 @@ class Child(object):
             encoding='utf-8',
             unicode_errors='surrogateescape')
 
-    def main_loop(self, stdout: sys.stdout):
+    def main_loop(self, stdout: sys.stdout) -> None:
         while True:
             feed = sys.stdin.buffer.raw.read(102400)
             if feed is None:
@@ -293,7 +293,7 @@ class Child(object):
         kind = kinds.pop()
         actions = kind.get_action_names()
         actions += self._get_custom_actions(kind.name).keys()
-        return actions
+        return actions  # type: ignore
 
     def is_async(self) -> bool:
         return len([x for x in self._current_sources
@@ -306,7 +306,7 @@ class Child(object):
         self._vim.call('denite#util#print_error', msg)
         self._vim.call('denite#util#getchar')
 
-    def _filter_candidates(self, context) -> typing.Generator[
+    def _filter_candidates(self, context: UserContext) -> typing.Generator[
             typing.Tuple[str, Candidates, typing.List[str], int], None, None]:
         for source in self._current_sources:
             ctx = source.context
@@ -376,7 +376,7 @@ class Child(object):
                   if x in self._filters]:
             ctx['candidates'] = f.filter(ctx)
 
-        return ctx['candidates']
+        return ctx['candidates']  # type: ignore
 
     def _gather_source_candidates(self, context: UserContext,
                                   source: Source) -> Candidates:
@@ -424,7 +424,7 @@ class Child(object):
                        matchers: typing.List[typing.Any]) -> Candidates:
         for matcher in matchers:
             ctx['candidates'] = matcher.filter(ctx)
-        return ctx['candidates']
+        return ctx['candidates']  # type: ignore
 
     def _set_custom_attribute(self, kind: str,
                               obj: typing.Any, attr: str) -> None:

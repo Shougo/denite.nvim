@@ -6,7 +6,6 @@
 # ============================================================================
 
 import re
-import typing
 
 from denite.base.source import Base
 from denite.util import globruntime, Nvim, UserContext, Candidates
@@ -19,7 +18,7 @@ class Source(Base):
 
         self.name = 'command'
         self.kind = 'command'
-        self.commands: typing.List[str] = []
+        self.commands: Candidates = []
 
         self._re_command = re.compile(r'^\|:.+\|')
         self._re_tokens = re.compile(
@@ -63,7 +62,10 @@ class Source(Base):
             with open(helpfile) as doc:
                 for line in [x for x in doc.readlines()
                              if self._re_command.match(x)]:
-                    tokens = self._re_tokens.match(line).groups()
+                    m = self._re_tokens.match(line)
+                    if not m:
+                        continue
+                    tokens = m.groups()
                     command = f"execute input(':{tokens[0]} ')"
                     self.commands.append({
                         'action__command': command,

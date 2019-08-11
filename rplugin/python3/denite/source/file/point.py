@@ -50,7 +50,7 @@ class Source(Base):
         return []
 
 
-def _checkhost(path: str) -> bool:
+def _checkhost(path: str) -> str:
     if not match(r'https?://', path):
         return ''
     try:

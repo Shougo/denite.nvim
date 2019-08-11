@@ -6,6 +6,7 @@
 
 import re
 import tempfile
+import typing
 from pathlib import Path
 from subprocess import CalledProcessError, check_output
 
@@ -57,7 +58,7 @@ class Source(Base):
         with tempfile.NamedTemporaryFile(
             mode='w', encoding=self.vars['encoding']
         ) as tf:
-            args = []
+            args: typing.List[str] = []
             args += self.vars['command']
             args += self.vars['options']
             args += [self.vars['file_opt'], tf.name]

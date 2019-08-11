@@ -557,7 +557,7 @@ class Default(object):
         abbr = candidate.get('abbr', candidate['word']).encode(
             encoding, errors='replace').decode(encoding, errors='replace')
         terms.append(abbr[:int(self._context['max_candidate_width'])])
-        return (self._context['selected_icon']
+        return (self._context['selected_icon']  # type: ignore
                 if index in self._selected_candidates
                 else ' ') + ' '.join(terms).replace('\n', '')
 
@@ -714,7 +714,7 @@ class Default(object):
     def _get_candidate(self, pos: int) -> Candidate:
         if not self._candidates or pos > len(self._candidates):
             return {}
-        return self._candidates[pos - 1]
+        return self._candidates[pos - 1]  # type: ignore
 
     def _get_selected_candidates(self) -> Candidates:
         if not self._selected_candidates:

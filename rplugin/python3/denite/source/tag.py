@@ -57,9 +57,9 @@ class Source(Base):
 
         return sorted(candidates, key=lambda value: value['word'])
 
-    def _get_candidate(self, filename: str, line: int) -> Candidate:
+    def _get_candidate(self, filename: str, line: str) -> Candidate:
         if re.match('!', line) or not line:
-            return
+            return {}
 
         info = parse_tagline(line.rstrip(), filename)
         candidate = {

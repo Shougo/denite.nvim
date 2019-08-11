@@ -54,7 +54,7 @@ class Source(Base):
 
     def gather_candidates(self, context: UserContext) -> Candidates:
         linenr = context['__linenr']
-        candidates = []
+        candidates: Candidates = []
         for bufnr in context['__bufnrs']:
             lines = [{
                 'word': x,

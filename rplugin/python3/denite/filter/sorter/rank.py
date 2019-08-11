@@ -42,7 +42,7 @@ BOUNDARY_CHARS = string.punctuation + string.whitespace
 
 def get_score(string: str, query_chars: str) -> float:
     # Highest possible score is the string length
-    best_score = len(string)
+    best_score: float = float(len(string))
     head, tail = query_chars[0], query_chars[1:]
 
     # For each occurence of the first character of the query in the string
@@ -51,7 +51,7 @@ def get_score(string: str, query_chars: str) -> float:
         # Get the score for the rest
         score, last_index = find_end_of_match(string, tail, first_index)
 
-        if last_index and score < best_score:
+        if last_index and score and score < best_score:
             best_score = score
 
     # Solve equal scores by sorting on the string length. The ** 0.5 part makes
@@ -60,8 +60,9 @@ def get_score(string: str, query_chars: str) -> float:
     return best_score
 
 
-def find_end_of_match(to_match: str, chars: typing.List[str],
-                      first_index: int) -> typing.Tuple[float, int]:
+def find_end_of_match(to_match: str, chars: str,
+                      first_index: int) -> typing.Tuple[
+                          typing.Optional[float], typing.Optional[int]]:
     score, last_index, last_type = 1.0, first_index, None
 
     for char in chars:

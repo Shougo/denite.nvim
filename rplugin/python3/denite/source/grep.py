@@ -206,8 +206,8 @@ class Source(Base):
         return arguments
 
     def _init_patterns(self, context: UserContext,
-                       args: typing.List[str]) -> typing.List[str]:
-        patterns = []
+                       args: typing.Dict[str, str]) -> typing.List[str]:
+        patterns: typing.List[str] = []
         arg = args.get(2, [])
         if arg:
             if isinstance(arg, str):

@@ -27,7 +27,7 @@ class Source(Base):
             'command': [],
             'cache_threshold': 10000,
         }
-        self._cache = {}
+        self._cache: typing.Dict[str, Candidates] = {}
 
     def on_init(self, context: UserContext) -> None:
         """scantree.py command has special meaning, using the internal
@@ -126,8 +126,9 @@ class Source(Base):
             return executable
 
         for exe in ['python3', 'python']:
-            if shutil.which(exe) is not None:
-                return shutil.which(exe)
+            which = shutil.which(exe)
+            if which is not None:
+                return which
 
         for name in (Path(base_exec_prefix).joinpath(v) for v in [
                 'python3', 'python',
@@ -140,7 +141,8 @@ class Source(Base):
         # return sys.executable anyway. This may not work on windows
         return executable
 
-    def parse_command_for_scantree(self, cmd: str) -> typing.List[str]:
+    def parse_command_for_scantree(self,
+                                   cmd: typing.List[str]) -> typing.List[str]:
         """Given the user choice for --ignore get the corresponding value"""
 
         parser = argparse.ArgumentParser(description="parse scantree options")

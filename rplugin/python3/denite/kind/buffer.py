@@ -18,8 +18,8 @@ class Kind(Openable):
 
         self.name = 'buffer'
         self.default_action = 'open'
-        self.redraw_actions += ['delete']
-        self.persist_actions += ['delete', 'preview']
+        self.redraw_actions += ['delete']  # type: ignore
+        self.persist_actions += ['delete', 'preview']  # type: ignore
         self._previewed_target: Candidate = {}
 
     def action_open(self, context: UserContext) -> None:

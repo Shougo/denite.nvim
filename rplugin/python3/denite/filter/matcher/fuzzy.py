@@ -21,7 +21,7 @@ class Filter(Base):
 
     def filter(self, context: UserContext) -> Candidates:
         if context['input'] == '':
-            return context['candidates']
+            return context['candidates']  # type: ignore
         pattern = context['input']
         if context['ignorecase']:
             pattern = pattern.lower()
@@ -32,7 +32,7 @@ class Filter(Base):
         else:
             context['candidates'] = [x for x in context['candidates']
                                      if p.search(x['word'])]
-        return context['candidates']
+        return context['candidates']  # type: ignore
 
     def convert_pattern(self, input_str: str) -> str:
         return convert2fuzzy_pattern(input_str)

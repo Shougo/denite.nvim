@@ -20,7 +20,7 @@ class Filter(Base):
 
     def filter(self, context: UserContext) -> Candidates:
         if context['input'] == '':
-            return context['candidates']
+            return context['candidates']  # type: ignore
         candidates = context['candidates']
         try:
             p = re.compile(context['input'], flags=re.IGNORECASE
@@ -28,7 +28,7 @@ class Filter(Base):
         except Exception:
             return []
         candidates = [x for x in candidates if p.search(x['word'])]
-        return candidates
+        return candidates  # type: ignore
 
     def convert_pattern(self, input_str: str) -> str:
         return convert2regex_pattern(input_str)

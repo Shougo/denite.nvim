@@ -62,11 +62,11 @@ class Source(Base):
                 lambda history: not self._is_ignore_command(history[1]),
                 histories
             ))
-        return histories
+        return histories  # type: ignore
 
     def _remove_duplicate_entry(self,
                                 seq: typing.List[str]) -> typing.List[str]:
-        seen = set()
+        seen: typing.Set[str] = set()
         seen_add = seen.add
         return [
             x for x in seq
@@ -111,7 +111,7 @@ class Kind(Command):
                              "command > ",
                              target['action__command'],
                              'command')
-        self._execute(command)
+        self._execute(context, command, target['action__histadd'])
 
     def action_delete(self, context: UserContext) -> None:
         for target in sorted(context['targets'],

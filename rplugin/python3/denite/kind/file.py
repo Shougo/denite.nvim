@@ -21,7 +21,7 @@ class Kind(Openable):
         self._vim = vim
         self.name = 'file'
         self.default_action = 'open'
-        self.persist_actions += ['preview', 'highlight']
+        self.persist_actions += ['preview', 'highlight']  # type: ignore
         self._previewed_target: typing.Dict[str, Candidate] = {}
 
     def action_open(self, context: UserContext) -> None:
