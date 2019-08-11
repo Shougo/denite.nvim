@@ -174,9 +174,9 @@ class Source(Base):
         return candidates
 
     def _init_paths(self, context: UserContext,
-                    args: typing.List[str]) -> typing.List[str]:
-        paths = []
-        arg = args.get(0, [])
+                    args: typing.Dict[int, str]) -> typing.List[str]:
+        paths: typing.List[str] = []
+        arg: typing.Union[str, typing.List[str]] = args.get(0, [])
         if arg:
             if isinstance(arg, str):
                 paths = [arg]
@@ -190,9 +190,9 @@ class Source(Base):
         return [util.abspath(self.vim, x) for x in paths]
 
     def _init_arguments(self, context: UserContext,
-                        args: typing.List[str]) -> typing.List[str]:
+                        args: typing.Dict[int, str]) -> typing.List[str]:
         arguments: typing.List[str] = []
-        arg = args.get(1, [])
+        arg: typing.Union[str, typing.List[str]] = args.get(1, [])
         if arg:
             if isinstance(arg, str):
                 if arg == '!':
@@ -206,9 +206,9 @@ class Source(Base):
         return arguments
 
     def _init_patterns(self, context: UserContext,
-                       args: typing.Dict[str, str]) -> typing.List[str]:
+                       args: typing.Dict[int, str]) -> typing.List[str]:
         patterns: typing.List[str] = []
-        arg = args.get(2, [])
+        arg: typing.Union[str, typing.List[str]] = args.get(2, [])
         if arg:
             if isinstance(arg, str):
                 if arg == '!':

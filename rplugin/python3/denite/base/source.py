@@ -21,11 +21,11 @@ class Base(ABC):
         self.kind: typing.Union[str, Kind] = Kind(self.vim)
         self.default_action = 'default'
         self.max_candidates = 1000
-        self.matchers = ['matcher/fuzzy']
-        self.sorters = ['sorter/rank']
-        self.converters = []
-        self.context = {}
-        self.vars = {}
+        self.matchers: typing.List[str] = ['matcher/fuzzy']
+        self.sorters: typing.List[str] = ['sorter/rank']
+        self.converters: typing.List[str] = []
+        self.context: UserContext = {}
+        self.vars: typing.Dict[str, typing.Any] = {}
         self.is_public_context = False
         self.is_volatile = False
 
