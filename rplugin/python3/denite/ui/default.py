@@ -19,13 +19,13 @@ class Default(object):
 
     def __init__(self, vim: Nvim) -> None:
         self._vim = vim
-        self._denite = None
-        self._selected_candidates = []
-        self._candidates = []
+        self._denite: typing.Optional[SyncParent] = None
+        self._selected_candidates: typing.List[int] = []
+        self._candidates: Candidates = []
         self._cursor = 0
         self._entire_len = 0
         self._result: typing.List[typing.Any] = []
-        self._context = {}
+        self._context: UserContext = {}
         self._bufnr = -1
         self._winid = -1
         self._winrestcmd = ''
@@ -36,15 +36,15 @@ class Default(object):
         self._is_multi = False
         self._is_async = False
         self._matched_pattern = ''
-        self._displayed_texts = []
+        self._displayed_texts: typing.List[str] = []
         self._statusline_sources = ''
         self._titlestring = ''
         self._ruler = False
         self._prev_action = ''
-        self._prev_status = {}
-        self._prev_curpos = []
-        self._save_window_options = {}
-        self._sources_history = []
+        self._prev_status: typing.Dict[str, typing.Any] = {}
+        self._prev_curpos: typing.List[typing.Any] = []
+        self._save_window_options: typing.Dict[str, typing.Any] = {}
+        self._sources_history: typing.List[typing.Any] = []
         self._previous_text = ''
         self._floating = False
         self._updated = False
@@ -68,7 +68,7 @@ class Default(object):
     def do_action(self, action_name: str,
                   command: str = '', is_manual: bool = False) -> None:
         candidates = self._get_selected_candidates()
-        if not candidates or not action_name:
+        if not self._denite or not candidates or not action_name:
             return
 
         self._prev_action = action_name
@@ -127,7 +127,8 @@ class Default(object):
         self._context['is_redraw'] = False
 
     def quit(self) -> None:
-        self._denite.on_close(self._context)
+        if self._denite:
+            self._denite.on_close(self._context)
         self._quit_buffer()
         self._result = []
         return
@@ -394,9 +395,13 @@ class Default(object):
                            ' conceal contained') % (
                                self._context['selected_icon']))
 
-        self._denite.init_syntax(self._context, self._is_multi)
+        if self._denite:
+            self._denite.init_syntax(self._context, self._is_multi)
 
-    def _update_candidates(self) -> None:
+    def _update_candidates(self) -> bool:
+        if not self._denite:
+            return False
+
         [self._is_async, pattern, statuses, self._entire_len,
          self._candidates] = self._denite.filter_candidates(self._context)
 
@@ -714,7 +719,7 @@ class Default(object):
     def _get_candidate(self, pos: int) -> Candidate:
         if not self._candidates or pos > len(self._candidates):
             return {}
-        return self._candidates[pos - 1]  # type: ignore
+        return self._candidates[pos - 1]
 
     def _get_selected_candidates(self) -> Candidates:
         if not self._selected_candidates:
@@ -723,15 +728,17 @@ class Default(object):
         return [self._candidates[x] for x in self._selected_candidates]
 
     def _init_denite(self) -> None:
-        self._denite.start(self._context)
-        self._denite.on_init(self._context)
+        if self._denite:
+            self._denite.start(self._context)
+            self._denite.on_init(self._context)
         self._initialized = True
         self._winheight = int(self._context['winheight'])
         self._winwidth = int(self._context['winwidth'])
 
     def _gather_candidates(self) -> None:
         self._selected_candidates = []
-        self._denite.gather_candidates(self._context)
+        if self._denite:
+            self._denite.gather_candidates(self._context)
 
     def _init_cursor(self) -> None:
         if self._context['reversed']:
@@ -740,7 +747,7 @@ class Default(object):
         else:
             self._move_to_first_line()
 
-    def _move_to_pos(self, pos) -> None:
+    def _move_to_pos(self, pos: int) -> None:
         self._vim.call('cursor', pos, 0)
         self._cursor = pos
 
