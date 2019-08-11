@@ -191,7 +191,7 @@ class Source(Base):
 
     def _init_arguments(self, context: UserContext,
                         args: typing.List[str]) -> typing.List[str]:
-        arguments = []
+        arguments: typing.List[str] = []
         arg = args.get(1, [])
         if arg:
             if isinstance(arg, str):

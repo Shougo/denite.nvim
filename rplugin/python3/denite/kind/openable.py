@@ -10,14 +10,14 @@ from abc import abstractmethod
 from copy import copy
 
 from denite.base.kind import Base
-from denite.util import UserContext, Candidate
+from denite.util import Nvim, UserContext, Candidate
 
 Fallback = typing.Callable[[UserContext], None]
 
 
 class Kind(Base):
 
-    def __init__(self, vim):
+    def __init__(self, vim: Nvim) -> None:
         super().__init__(vim)
 
         self.name = 'openable'
@@ -25,6 +25,10 @@ class Kind(Base):
 
     @abstractmethod
     def action_open(self, context: UserContext) -> None:
+        pass
+
+    @abstractmethod
+    def _winid(self, target: Candidate) -> typing.Optional[int]:
         pass
 
     def action_split(self, context: UserContext) -> None:

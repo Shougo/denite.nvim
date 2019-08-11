@@ -18,7 +18,7 @@ class Base(ABC):
         self.vim = vim
         self.name = 'base'
         self.syntax_name = ''
-        self.kind = Kind(self.vim)
+        self.kind: typing.Union[str, Kind] = Kind(self.vim)
         self.default_action = 'default'
         self.max_candidates = 1000
         self.matchers = ['matcher/fuzzy']

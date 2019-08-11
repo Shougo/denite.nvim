@@ -17,7 +17,7 @@ class Base(ABC):
         self.vim = vim
         self.name = 'base'
         self.description = ''
-        self.vars = {}
+        self.vars: typing.Dict[str, typing.Any] = {}
 
     @abstractmethod
     def filter(self, context: UserContext) -> Candidates:

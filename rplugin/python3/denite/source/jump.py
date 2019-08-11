@@ -139,6 +139,8 @@ class Source(Base):
                     prefix = 'text: ' if file_text != '-invalid-' else ''
 
                 m = re.search(r'(^>*\s+\w+\s+\w+\s+\w+)', row_data)
+                if not m:
+                    continue
                 word = m.group(0) + ' ' + prefix + file_text
 
             else:
@@ -153,4 +155,4 @@ class Source(Base):
         return jump_list
 
     def gather_candidates(self, context: UserContext) -> Candidates:
-        return context['__jumps']
+        return context['__jumps']  # type: ignore

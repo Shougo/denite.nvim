@@ -19,7 +19,7 @@ class Socket(object):
                  context: UserContext, timeout: int) -> None:
         self._enc = context.get('encoding', 'utf-8')
         self._eof = False
-        self._outs = []
+        self._outs: typing.List[str] = []
         self._timeout = timeout
         self._context = context
 
@@ -27,8 +27,9 @@ class Socket(object):
         self._welcome = self.receive()
         self.sendall(commands)
 
-        self._queue_out = Queue()
-        self._thread = Thread(target=self.enqueue_output)
+        self._queue_out: Queue[str] = Queue()
+        self._thread: typing.Optional[Thread] = Thread(
+            target=self.enqueue_output)
         self._thread.start()
 
     @property
@@ -43,18 +44,24 @@ class Socket(object):
             self._sock.close()
 
         self._sock = None
-        self._queue_out = None
-        self._thread.join(1.0)
+        self._queue_out = Queue()
+        if self._thread is not None:
+            self._thread.join(1.0)
         self._thread = None
 
     def sendall(self, commands: typing.List[str]) -> None:
+        if self._sock is None:
+            return
         for command in commands:
             self._sock.sendall(f'{command}\n'.encode(self._enc))
 
     def receive(self, num: int = 1024) -> str:
+        if self._sock is None:
+            return ''
         return self._sock.recv(num).decode(self._enc, errors='replace')
 
-    def connect(self, host: str, port: int, timeout: int) -> socket.socket:
+    def connect(self, host: str, port: int,
+                timeout: int) -> typing.Optional[socket.socket]:
         for res in socket.getaddrinfo(host, port, socket.AF_UNSPEC,
                                       socket.SOCK_STREAM, socket.IPPROTO_TCP,
                                       socket.AI_ADDRCONFIG):
@@ -74,6 +81,7 @@ class Socket(object):
                     raise e
                 else:
                     raise OSError('Socket: getaddrinfo returns an empty list')
+        return None
 
     def enqueue_output(self) -> None:
         if not self._queue_out:
@@ -92,7 +100,7 @@ class Socket(object):
                     buffer += more
 
     def communicate(self, timeout: int) -> typing.List[str]:
-        if not self._sock:
+        if not self._sock or not self._thread:
             return []
 
         start = time()

@@ -9,7 +9,7 @@ import typing
 
 from denite.base.source import Base
 from denite.kind.file import Kind as File
-from denite.util import Nvim, UserContext, Candidates
+from denite.util import Nvim, UserContext, Candidates, Candidate
 
 
 MARK_HIGHLIGHT_SYNTAX = [
@@ -37,7 +37,7 @@ class Source(Base):
                 'highlight default link {}_{} {}'.format(
                     self.syntax_name, syn['name'], syn['link']))
 
-    def _get_marks(self, context: UserContext) -> typing.List[str]:
+    def _get_marks(self, context: UserContext) -> Candidates:
         # see :help mark-motions
         # file marks
         lower_marks = [chr(c) for c in range(ord('a'), ord('z'))]
@@ -45,7 +45,7 @@ class Source(Base):
         num_marks = [str(n) for n in range(1, 10)]
         others_marks = ['\'', '`', '\"', '[', ']', '^', '.', '<', '>']
 
-        mark_list = []
+        mark_list: Candidates = []
 
         # mark order same as :marks
         for m in [others_marks[0]] + lower_marks + \
@@ -88,7 +88,7 @@ class Kind(File):
         super().__init__(vim)
 
         self.name = 'mark'
-        self._previewed_target = None
+        self._previewed_target: Candidate = {}
 
     def action_delete(self, context: UserContext) -> None:
         mark = context['targets'][0]['mark']

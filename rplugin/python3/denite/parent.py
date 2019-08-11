@@ -32,8 +32,7 @@ class _Parent(ABC):
         pass
 
     @abstractmethod
-    def _put(self, name: str,
-             args: typing.List[typing.Any]) -> typing.Optional[int]:
+    def _put(self, name: str, args: typing.List[typing.Any]) -> str:
         pass
 
     @abstractmethod
@@ -77,8 +76,7 @@ class SyncParent(_Parent):
         from denite.child import Child
         self._child = Child(self._vim)
 
-    def _put(self, name: str,
-             args: typing.List[typing.Any]) -> typing.Optional[int]:
+    def _put(self, name: str, args: typing.List[typing.Any]) -> str:
         return self._child.main(name, args, queue_id=None)  # type: ignore
 
     def _get(self, name: str, args: typing.List[typing.Any],
@@ -90,8 +88,8 @@ class ASyncParent(_Parent):
     def _start_process(self) -> None:
         self._stdin = None
         self._queue_id = ''
-        self._queue_in = Queue()
-        self._queue_out = Queue()
+        self._queue_in: Queue[str] = Queue()
+        self._queue_out: Queue[str] = Queue()
         self._packer = msgpack.Packer(
             use_bin_type=True,
             encoding='utf-8',
@@ -139,10 +137,9 @@ class ASyncParent(_Parent):
     #     results = get[0]
     #     return results if results else [False, '', [], [], 0]
 
-    def _put(self, name: str,
-             args: typing.List[typing.Any]) -> typing.Optional[int]:
+    def _put(self, name: str, args: typing.List[typing.Any]) -> str:
         if not self._hnd:
-            return None
+            return ''
 
         queue_id = str(time.time())
         msg = self._packer.pack({

@@ -92,7 +92,7 @@ class Kind(Openable):
     def action_location(self, context: UserContext) -> None:
         self._qfloc(context, 'loc')
 
-    def _qfloc(self, context: UserContext, listtype: str) -> typing.List[str]:
+    def _qfloc(self, context: UserContext, listtype: str) -> None:
         qfloclist = []
         for target in [x for x in context['targets']
                        if 'action__line' in x and 'action__text' in x]:
@@ -151,7 +151,7 @@ class Kind(Openable):
         return bool(self._vim.call('denite#helper#_get_preview_window'))
 
     # Needed for openable actions
-    def _winid(self, target: Candidate) -> int:
+    def _winid(self, target: Candidate) -> typing.Optional[int]:
         if 'action__bufnr' in target:
             bufnr = target['action__bufnr']
         else:

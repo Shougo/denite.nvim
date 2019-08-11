@@ -26,7 +26,7 @@ class Filter(Base):
 
     def filter(self, context: UserContext) -> Candidates:
         if len(context['input']) < 1:
-            return context['candidates']
+            return context['candidates']  # type: ignore
         for c in context['candidates']:
             c['filter__rank'] = 0
 
@@ -40,7 +40,7 @@ class Filter(Base):
 BOUNDARY_CHARS = string.punctuation + string.whitespace
 
 
-def get_score(string: str, query_chars: typing.List[str]) -> float:
+def get_score(string: str, query_chars: str) -> float:
     # Highest possible score is the string length
     best_score = len(string)
     head, tail = query_chars[0], query_chars[1:]

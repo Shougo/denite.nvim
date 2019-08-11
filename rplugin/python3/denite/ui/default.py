@@ -24,7 +24,7 @@ class Default(object):
         self._candidates = []
         self._cursor = 0
         self._entire_len = 0
-        self._result = []
+        self._result: typing.List[typing.Any] = []
         self._context = {}
         self._bufnr = -1
         self._winid = -1
@@ -51,7 +51,7 @@ class Default(object):
         self._timers: typing.Dict[str, int] = {}
 
     def start(self, sources: typing.List[typing.Any],
-              context: UserContext) -> None:
+              context: UserContext) -> typing.List[typing.Any]:
         if not self._denite:
             # if hasattr(self._vim, 'run_coroutine'):
             #     self._denite = ASyncParent(self._vim)

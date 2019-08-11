@@ -20,7 +20,7 @@ class Kind(Openable):
         self.default_action = 'open'
         self.redraw_actions += ['delete']
         self.persist_actions += ['delete', 'preview']
-        self._previewed_target = {}
+        self._previewed_target: Candidate = {}
 
     def action_open(self, context: UserContext) -> None:
         for target in context['targets']:
@@ -53,9 +53,9 @@ class Kind(Openable):
         self._previewed_target = target
 
     def _get_preview_window(self) -> bool:
-        return bool(next(filterfalse(lambda x:
-                                     not x.options['previewwindow'],
-                                     self.vim.windows), None))
+        return bool(next(filterfalse(
+            lambda x: not x.options['previewwindow'],  # type: ignore
+            self.vim.windows), None))
 
     # Needed for openable actions
     def _winid(self, target: Candidate) -> typing.Optional[int]:

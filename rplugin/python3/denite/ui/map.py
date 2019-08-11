@@ -45,11 +45,12 @@ def _change_sorters(denite: Default, params: Params) -> typing.Any:
 
 def _choose_action(denite: Default, params: Params) -> typing.Any:
     candidates = denite._get_selected_candidates()
-    if not candidates:
+    if not candidates or not denite._denite:
         return
 
-    denite._vim.vars['denite#_actions'] = denite._denite.get_action_names(
+    action_names = denite._denite.get_action_names(
         denite._context, candidates)
+    denite._vim.vars['denite#_actions'] = action_names
     clear_cmdline(denite._vim)
     action = input(denite._vim, denite._context,
                    'Action: ', '',

@@ -17,7 +17,7 @@ class Base(object):
         self.name = 'base'
         self.default_action = 'echo'
         self.persist_actions = ['echo', 'preview']
-        self.redraw_actions = []
+        self.redraw_actions: typing.List[str] = []
 
     def debug(self, expr: str) -> None:
         denite.util.debug(self.vim, expr)
