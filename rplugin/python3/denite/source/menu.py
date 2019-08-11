@@ -5,6 +5,8 @@
 # License: MIT license
 # ============================================================================
 
+import typing
+
 from denite.base.source import Base
 from denite.util import Nvim, UserContext, Candidates
 
@@ -31,8 +33,8 @@ class Source(Base):
                 self.vim.vars['unite_source_menu_menus']
             )
 
-    def filter_candidates(self, candidates: Candidates,
-                          filetype: str = None) -> Candidates:
+    def filter_candidates(self, candidates: typing.Any,
+                          filetype: str = '') -> typing.Any:
         if not filetype:
             return candidates
 

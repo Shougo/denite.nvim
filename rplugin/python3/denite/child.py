@@ -28,11 +28,11 @@ class Child(object):
 
     def __init__(self, vim: Nvim) -> None:
         self._vim = vim
-        self._sources = {}
-        self._filters = {}
-        self._kinds = {}
+        self._sources: typing.Dict[str, typing.Any] = {}
+        self._filters: typing.Dict[str, typing.Any] = {}
+        self._kinds: typing.Dict[str, typing.Any] = {}
         self._runtimepath = ''
-        self._current_sources = []
+        self._current_sources: typing.List[typing.Any] = []
         self._unpacker = msgpack.Unpacker(
             encoding='utf-8',
             unicode_errors='surrogateescape')
@@ -41,9 +41,9 @@ class Child(object):
             encoding='utf-8',
             unicode_errors='surrogateescape')
 
-    def main_loop(self, stdout: sys.stdout) -> None:
+    def main_loop(self, stdout: typing.Any) -> None:
         while True:
-            feed = sys.stdin.buffer.raw.read(102400)
+            feed = sys.stdin.buffer.raw.read(102400)  # type: ignore
             if feed is None:
                 continue
             if feed == b'':
@@ -66,7 +66,7 @@ class Child(object):
 
     def main(self, name: str, args: typing.List[typing.Any],
              queue_id: int) -> typing.Any:
-        ret = None
+        ret: typing.Any = None
         if name == 'start':
             self.start(args[0])
         elif name == 'gather_candidates':
@@ -100,7 +100,7 @@ class Child(object):
         self._runtimepath = self._vim.options['runtimepath']
 
         # Check invalid alias
-        aliases = []
+        aliases: typing.List[typing.Any] = []
         aliases += [[x, y] for [x, y] in
                     self._custom['alias_source'].items()
                     if x not in self._sources]
@@ -110,7 +110,7 @@ class Child(object):
         for base, alias in aliases:
             self.error(f'Invalid base: {base} for {alias}')
 
-    def gather_candidates(self, context: UserContext) -> Candidates:
+    def gather_candidates(self, context: UserContext) -> None:
         for source in self._current_sources:
             ctx = source.context
             ctx['is_redraw'] = context['is_redraw']
@@ -202,7 +202,7 @@ class Child(object):
                           context: UserContext) -> typing.List[typing.Any]:
         pattern = ''
         statuses = []
-        candidates = []
+        candidates: Candidates = []
         total_entire_len = 0
         for status, partial, patterns, entire_len in self._filter_candidates(
                 context):
@@ -221,7 +221,7 @@ class Child(object):
 
         if context['unique']:
             unique_candidates = []
-            unique_words = set()
+            unique_words: typing.Set[str] = set()
             for candidate in candidates:
                 # Normalize file paths
                 word = candidate['word']
@@ -307,7 +307,7 @@ class Child(object):
         self._vim.call('denite#util#getchar')
 
     def _filter_candidates(self, context: UserContext) -> typing.Generator[
-            typing.Tuple[str, Candidates, typing.List[str], int], None, None]:
+            typing.Tuple[str, Candidates, typing.Any, int], None, None]:
         for source in self._current_sources:
             ctx = source.context
             ctx['matchers'] = context['matchers']
@@ -342,7 +342,7 @@ class Child(object):
                 c['source_name'] = source.name
                 c['source_index'] = source.index
 
-            patterns = filterfalse(lambda x: x == '', (
+            patterns = filterfalse(lambda x: x == '', (  # type: ignore
                 self._filters[x].convert_pattern(ctx['input'])
                 for x in source.matchers if self._filters[x]))
 
@@ -355,7 +355,7 @@ class Child(object):
 
     def _filter_source_candidates(self, ctx: UserContext,
                                   source: Source) -> Candidates:
-        partial = []
+        partial: Candidates = []
         entire = ctx['all_candidates']
         ctx['candidates'] = entire
 
@@ -388,8 +388,8 @@ class Child(object):
 
     def _get_action_targets(self, context: UserContext, action_name: str,
                             targets: Candidates) -> Action:
-        actions = set()
-        action = None
+        actions: typing.Set[Action] = set()
+        action: Action = {}
         for target in targets:
             action = self._get_action_target(context, action_name, target)
             if action:
@@ -537,7 +537,7 @@ class Child(object):
         return kind
 
     def _get_action_target(self, context: UserContext,
-                           action_name: str, target: Candidate) -> Action:
+                           action_name: str, target: Candidate) -> typing.Any:
         kind = self._get_kind(context, target)
         if not kind:
             return {}
@@ -577,7 +577,7 @@ class Child(object):
 
     def _get_custom_actions(self,
                             kind_name: str) -> typing.Dict[str, typing.Any]:
-        actions = {}
+        actions: typing.Dict[str, typing.Any] = {}
         if '_' in self._custom['action']:
             actions.update(self._custom['action']['_'])
         if kind_name in self._custom['action']:
