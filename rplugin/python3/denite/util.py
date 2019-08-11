@@ -259,7 +259,7 @@ def find_rplugins(context: UserContext, source: str,
 
 def import_rplugins(name: str, context: UserContext, source: str,
                     loaded_paths: typing.List[str]) -> typing.Generator[
-                        typing.Tuple[str, str, str], None, None]:
+                        typing.Tuple[typing.Any, str, str], None, None]:
     """Import available module and yield specified attr
 
     It uses 'find_rplugins' to find available modules and yield

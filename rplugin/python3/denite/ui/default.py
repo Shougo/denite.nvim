@@ -5,18 +5,19 @@
 # ============================================================================
 
 import re
+import typing
 
-from denite.util import (
-    echo, error, regex_convert_py_vim, clearmatch)
+from denite.util import echo, error, regex_convert_py_vim, clearmatch
+from denite.util import Nvim, UserContext, Candidates, Candidate
 from denite.parent import SyncParent
 
 
 class Default(object):
     @property
-    def is_async(self):
+    def is_async(self) -> bool:
         return self._is_async
 
-    def __init__(self, vim):
+    def __init__(self, vim: Nvim) -> None:
         self._vim = vim
         self._denite = None
         self._selected_candidates = []
@@ -47,9 +48,10 @@ class Default(object):
         self._previous_text = ''
         self._floating = False
         self._updated = False
-        self._timers = {}
+        self._timers: typing.Dict[str, int] = {}
 
-    def start(self, sources, context):
+    def start(self, sources: typing.List[typing.Any],
+              context: UserContext) -> None:
         if not self._denite:
             # if hasattr(self._vim, 'run_coroutine'):
             #     self._denite = ASyncParent(self._vim)
@@ -63,7 +65,8 @@ class Default(object):
 
         return self._result
 
-    def do_action(self, action_name, command='', is_manual=False):
+    def do_action(self, action_name: str,
+                  command: str = '', is_manual: bool = False) -> None:
         candidates = self._get_selected_candidates()
         if not candidates or not action_name:
             return
@@ -113,7 +116,7 @@ class Default(object):
 
         return
 
-    def redraw(self, is_force=True):
+    def redraw(self, is_force: bool = True) -> None:
         self._context['is_redraw'] = is_force
         if is_force:
             self._gather_candidates()
@@ -123,13 +126,13 @@ class Default(object):
             self._update_status()
         self._context['is_redraw'] = False
 
-    def quit(self):
+    def quit(self) -> None:
         self._denite.on_close(self._context)
         self._quit_buffer()
         self._result = []
         return
 
-    def _restart(self):
+    def _restart(self) -> None:
         self._context['input'] = ''
         self._quit_buffer()
         self._init_denite()
@@ -138,7 +141,7 @@ class Default(object):
         self._update_candidates()
         self._update_buffer()
 
-    def _start_sources_queue(self, context):
+    def _start_sources_queue(self, context: UserContext) -> None:
         if not context['sources_queue']:
             return
 
@@ -153,7 +156,8 @@ class Default(object):
             context['sources_queue'].pop(0)
         context['path'] = self._context['path']
 
-    def _start(self, sources, context):
+    def _start(self, sources: typing.List[typing.Any],
+               context: UserContext) -> None:
         from denite.ui.map import do_map
 
         self._vim.command('silent! autocmd! denite')
@@ -214,7 +218,7 @@ class Default(object):
         if self._context['start_filter']:
             do_map(self, 'open_filter_buffer', [])
 
-    def _init_buffer(self):
+    def _init_buffer(self) -> None:
         self._prev_status = dict()
         self._displayed_texts = []
 
@@ -289,7 +293,7 @@ class Default(object):
 
         self._init_syntax()
 
-    def _switch_buffer(self):
+    def _switch_buffer(self) -> None:
         split = self._context['split']
         if (split != 'no' and self._winid > 0 and
                 self._vim.call('win_gotoid', self._winid)):
@@ -339,8 +343,8 @@ class Default(object):
                 'denite#util#execute_path',
                 f'silent keepalt {command}', bufname)
 
-    def _get_direction(self):
-        direction = self._context['direction']
+    def _get_direction(self) -> str:
+        direction = str(self._context['direction'])
         if direction == 'dynamictop' or direction == 'dynamicbottom':
             self._update_displayed_texts()
             winwidth = self._vim.call('winwidth', 0)
@@ -352,20 +356,20 @@ class Default(object):
                 direction = 'belowright' if is_fit else 'botright'
         return direction
 
-    def _get_wininfo(self):
+    def _get_wininfo(self) -> typing.List[typing.Any]:
         return [
             self._vim.options['columns'], self._vim.options['lines'],
             self._vim.call('win_getid'), self._vim.call('tabpagebuflist')
         ]
 
-    def _switch_prev_buffer(self):
+    def _switch_prev_buffer(self) -> None:
         if (self._prev_bufnr == self._bufnr or
                 self._vim.buffers[self._prev_bufnr].name == ''):
             self._vim.command('enew')
         else:
             self._vim.command('buffer ' + str(self._prev_bufnr))
 
-    def _init_syntax(self):
+    def _init_syntax(self) -> None:
         self._vim.command('syntax case ignore')
         self._vim.command('highlight default link deniteInput ModeMsg')
         self._vim.command('highlight link deniteMatchedRange ' +
@@ -392,7 +396,7 @@ class Default(object):
 
         self._denite.init_syntax(self._context, self._is_multi)
 
-    def _update_candidates(self):
+    def _update_candidates(self) -> None:
         [self._is_async, pattern, statuses, self._entire_len,
          self._candidates] = self._denite.filter_candidates(self._context)
 
@@ -419,7 +423,7 @@ class Default(object):
 
         return self._updated
 
-    def _update_displayed_texts(self):
+    def _update_displayed_texts(self) -> None:
         candidates_len = len(self._candidates)
         if not self._is_async and self._context['auto_resize']:
             winminheight = int(self._context['winminheight'])
@@ -445,7 +449,7 @@ class Default(object):
             for i in range(0, candidates_len)
         ]
 
-    def _update_buffer(self):
+    def _update_buffer(self) -> None:
         if self._bufnr != self._vim.current.buffer.number:
             return
 
@@ -494,7 +498,7 @@ class Default(object):
         self._updated = False
         self._stop_timer('update_buffer')
 
-    def _update_status(self):
+    def _update_status(self) -> None:
         inpt = ''
         if self._context['input']:
             inpt = self._context['input'] + ' '
@@ -532,7 +536,7 @@ class Default(object):
                     "%#deniteStatusLinePath# %{denite#get_status('path')}%*" +
                     "%#deniteStatusLineNumber#%{" + linenr + "}%*")
 
-    def _get_display_source_name(self, name):
+    def _get_display_source_name(self, name: str) -> str:
         source_names = self._context['source_names']
         if not self._is_multi or source_names == 'hide':
             source_name = ''
@@ -542,7 +546,7 @@ class Default(object):
             source_name = short_name if source_names == 'short' else name
         return source_name
 
-    def _get_candidate_display_text(self, index):
+    def _get_candidate_display_text(self, index: int) -> str:
         source_names = self._context['source_names']
         candidate = self._candidates[index]
         terms = []
@@ -557,13 +561,13 @@ class Default(object):
                 if index in self._selected_candidates
                 else ' ') + ' '.join(terms).replace('\n', '')
 
-    def _get_max_height(self):
+    def _get_max_height(self) -> int:
         return int(self._vim.options['lines']) if not self._floating else (
             int(self._vim.options['lines']) -
             int(self._context['winrow']) -
             int(self._vim.options['cmdheight']))
 
-    def _resize_buffer(self):
+    def _resize_buffer(self) -> None:
         split = self._context['split']
         if (split == 'no' or split == 'tab' or
                 self._vim.call('winnr', '$') == 1):
@@ -593,7 +597,7 @@ class Default(object):
         elif is_vertical and self._vim.current.window.width != winwidth:
             self._vim.command('vertical resize ' + str(winwidth))
 
-    def _check_do_option(self):
+    def _check_do_option(self) -> bool:
         if self._context['do'] != '':
             self._do_command(self._context['do'])
             return True
@@ -604,7 +608,7 @@ class Default(object):
         return not (self._context['empty'] or
                     self._is_async or self._candidates)
 
-    def _check_move_option(self):
+    def _check_move_option(self) -> None:
         if self._context['cursor_pos'].isnumeric():
             self._cursor = int(self._context['cursor_pos']) + 1
         elif re.match(r'\+\d+', self._context['cursor_pos']):
@@ -616,7 +620,7 @@ class Default(object):
         elif self._context['cursor_pos'] == '$':
             self._move_to_last_line()
 
-    def _do_immediately(self):
+    def _do_immediately(self) -> None:
         goto = self._winid > 0 and self._vim.call(
             'win_gotoid', self._winid)
         if goto:
@@ -633,7 +637,7 @@ class Default(object):
             # Move to the previous window
             self._vim.command('wincmd p')
 
-    def _do_command(self, command):
+    def _do_command(self, command: str) -> None:
         self._init_cursor()
         cursor = 1
         while cursor < len(self._candidates):
@@ -641,7 +645,7 @@ class Default(object):
             self._move_to_next_line()
         self._quit_buffer()
 
-    def _cleanup(self):
+    def _cleanup(self) -> None:
         self._stop_timer('update_candidates')
         self._stop_timer('update_buffer')
 
@@ -660,13 +664,13 @@ class Default(object):
             self._vim.options['titlestring'] = self._titlestring
             self._vim.options['ruler'] = self._ruler
 
-    def _close_current_window(self):
+    def _close_current_window(self) -> None:
         if self._vim.call('winnr', '$') == 1:
             self._vim.command('buffer #')
         else:
             self._vim.command('close!')
 
-    def _quit_buffer(self):
+    def _quit_buffer(self) -> None:
         self._cleanup()
         if self._vim.call('bufwinnr', self._bufnr) < 0:
             # Denite buffer is already closed
@@ -704,57 +708,57 @@ class Default(object):
 
         clearmatch(self._vim)
 
-    def _get_cursor_candidate(self):
+    def _get_cursor_candidate(self) -> Candidate:
         return self._get_candidate(self._cursor)
 
-    def _get_candidate(self, pos):
+    def _get_candidate(self, pos: int) -> Candidate:
         if not self._candidates or pos > len(self._candidates):
             return {}
         return self._candidates[pos - 1]
 
-    def _get_selected_candidates(self):
+    def _get_selected_candidates(self) -> Candidates:
         if not self._selected_candidates:
             return [self._get_cursor_candidate()
                     ] if self._get_cursor_candidate() else []
         return [self._candidates[x] for x in self._selected_candidates]
 
-    def _init_denite(self):
+    def _init_denite(self) -> None:
         self._denite.start(self._context)
         self._denite.on_init(self._context)
         self._initialized = True
         self._winheight = int(self._context['winheight'])
         self._winwidth = int(self._context['winwidth'])
 
-    def _gather_candidates(self):
+    def _gather_candidates(self) -> None:
         self._selected_candidates = []
         self._denite.gather_candidates(self._context)
 
-    def _init_cursor(self):
+    def _init_cursor(self) -> None:
         if self._context['reversed']:
             self._move_to_last_line()
             self._vim.command('normal! zb')
         else:
             self._move_to_first_line()
 
-    def _move_to_pos(self, pos):
+    def _move_to_pos(self, pos) -> None:
         self._vim.call('cursor', pos, 0)
         self._cursor = pos
 
-    def _move_to_next_line(self):
+    def _move_to_next_line(self) -> None:
         if self._cursor < len(self._candidates):
             self._cursor += 1
 
-    def _move_to_prev_line(self):
+    def _move_to_prev_line(self) -> None:
         if self._cursor >= 1:
             self._cursor -= 1
 
-    def _move_to_first_line(self):
+    def _move_to_first_line(self) -> None:
         self._cursor = 1
 
-    def _move_to_last_line(self):
+    def _move_to_last_line(self) -> None:
         self._cursor = len(self._candidates)
 
-    def _start_timer(self, key):
+    def _start_timer(self, key: str) -> None:
         if key in self._timers:
             return
 
@@ -765,7 +769,7 @@ class Default(object):
             self._timers[key] = self._vim.call(
                 'denite#helper#_start_update_buffer_timer')
 
-    def _stop_timer(self, key):
+    def _stop_timer(self, key: str) -> None:
         if key not in self._timers:
             return
 

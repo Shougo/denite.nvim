@@ -4,6 +4,8 @@
 # License: MIT license
 # ============================================================================
 
+import typing
+
 import denite.util
 from denite.util import Nvim, UserContext
 
@@ -45,7 +47,7 @@ class Base(object):
             _paste(self.vim,
                    target.get('action__text', target['word']), 'p', 'v')
 
-    def get_action_names(self) -> None:
+    def get_action_names(self) -> typing.List[str]:
         return ['default'] + [x.replace('action_', '') for x in dir(self)
                               if x.find('action_') == 0]
 

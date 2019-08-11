@@ -10,6 +10,7 @@ import os
 import msgpack
 import subprocess
 import typing
+from abc import ABC, abstractmethod
 from functools import partial
 from pathlib import Path
 from queue import Queue
@@ -18,13 +19,27 @@ from denite.aprocess import Process
 from denite.util import error_tb, error, Nvim, UserContext, Candidates
 
 
-class _Parent(object):
+class _Parent(ABC):
     def __init__(self, vim: Nvim) -> None:
         self.name = 'parent'
 
         self._vim = vim
 
         self._start_process()
+
+    @abstractmethod
+    def _start_process(self) -> None:
+        pass
+
+    @abstractmethod
+    def _put(self, name: str,
+             args: typing.List[typing.Any]) -> typing.Optional[int]:
+        pass
+
+    @abstractmethod
+    def _get(self, name: str, args: typing.List[typing.Any],
+             is_async: bool = False) -> typing.Any:
+        return self._put(name, args)
 
     def start(self, context: UserContext) -> None:
         self._put('start', [context])
@@ -64,9 +79,9 @@ class SyncParent(_Parent):
 
     def _put(self, name: str,
              args: typing.List[typing.Any]) -> typing.Optional[int]:
-        return self._child.main(name, args, queue_id=None)
+        return self._child.main(name, args, queue_id=None)  # type: ignore
 
-    def _get(self, name, args: typing.List[typing.Any],
+    def _get(self, name: str, args: typing.List[typing.Any],
              is_async: bool = False) -> typing.Any:
         return self._put(name, args)
 
@@ -150,8 +165,7 @@ class ASyncParent(_Parent):
         if not self._hnd:
             return None
 
-        c = asyncio.sleep(5)
-        self._vim.run_coroutine(c)
+        self._vim.run_coroutine(asyncio.sleep(5))
         return self._vim.vars['denite#_ret']
 
         # outs = []
