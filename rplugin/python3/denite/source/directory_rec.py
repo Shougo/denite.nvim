@@ -8,17 +8,18 @@
 import os
 
 from denite.source.file.rec import Source as Rec
+from denite.util import Nvim, UserContext, Candidates
 
 
 class Source(Rec):
 
-    def __init__(self, vim):
+    def __init__(self, vim: Nvim) -> None:
         super().__init__(vim)
 
         self.name = 'directory_rec'
         self.kind = 'directory'
 
-    def on_init(self, context):
+    def on_init(self, context: UserContext) -> None:
         if not self.vars['command']:
             if context['is_windows']:
                 self.vars['command'] = [
@@ -31,7 +32,7 @@ class Source(Rec):
 
         super().on_init(context)
 
-    def gather_candidates(self, context):
+    def gather_candidates(self, context: UserContext) -> Candidates:
         candidates = [x for x in super().gather_candidates(context)
                       if x['action__path'] != context['__directory']]
         for candidate in candidates:

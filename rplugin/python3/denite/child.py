@@ -7,6 +7,8 @@
 from denite.util import (
     get_custom, debug, regex_convert_str_vim,
     import_rplugins, expand, split_input, abspath)
+from denite.util import Nvim, UserContext, Candidates, Candidate
+from denite.base.source import Base as Source
 
 import copy
 import msgpack
@@ -14,20 +16,23 @@ import os
 import re
 import sys
 import time
+import typing
 from os.path import normpath, normcase
 from collections import ChainMap
 from itertools import filterfalse
 
+Action = typing.Dict[str, typing.Any]
+
 
 class Child(object):
 
-    def __init__(self, vim):
+    def __init__(self, vim: Nvim) -> None:
         self._vim = vim
-        self._sources = {}
-        self._filters = {}
-        self._kinds = {}
+        self._sources: typing.Dict[str, typing.Any] = {}
+        self._filters: typing.Dict[str, typing.Any] = {}
+        self._kinds: typing.Dict[str, typing.Any] = {}
         self._runtimepath = ''
-        self._current_sources = []
+        self._current_sources: typing.List[typing.Any] = []
         self._unpacker = msgpack.Unpacker(
             encoding='utf-8',
             unicode_errors='surrogateescape')
@@ -36,9 +41,9 @@ class Child(object):
             encoding='utf-8',
             unicode_errors='surrogateescape')
 
-    def main_loop(self, stdout):
+    def main_loop(self, stdout: typing.Any) -> None:
         while True:
-            feed = sys.stdin.buffer.raw.read(102400)
+            feed = sys.stdin.buffer.raw.read(102400)  # type: ignore
             if feed is None:
                 continue
             if feed == b'':
@@ -59,8 +64,9 @@ class Child(object):
                     print(ret)
                     self._vim.vars['denite#_ret'] = ret
 
-    def main(self, name, args, queue_id):
-        ret = None
+    def main(self, name: str, args: typing.List[typing.Any],
+             queue_id: int) -> typing.Any:
+        ret: typing.Any = None
         if name == 'start':
             self.start(args[0])
         elif name == 'gather_candidates':
@@ -81,7 +87,7 @@ class Child(object):
             ret = self.get_action_names(args[0], args[1])
         return ret
 
-    def start(self, context):
+    def start(self, context: UserContext) -> None:
         self._custom = context['custom']
 
         if self._vim.options['runtimepath'] == self._runtimepath:
@@ -94,7 +100,7 @@ class Child(object):
         self._runtimepath = self._vim.options['runtimepath']
 
         # Check invalid alias
-        aliases = []
+        aliases: typing.List[typing.Any] = []
         aliases += [[x, y] for [x, y] in
                     self._custom['alias_source'].items()
                     if x not in self._sources]
@@ -104,7 +110,7 @@ class Child(object):
         for base, alias in aliases:
             self.error(f'Invalid base: {base} for {alias}')
 
-    def gather_candidates(self, context):
+    def gather_candidates(self, context: UserContext) -> None:
         for source in self._current_sources:
             ctx = source.context
             ctx['is_redraw'] = context['is_redraw']
@@ -124,7 +130,7 @@ class Child(object):
 
             context['messages'] = ctx['messages']
 
-    def on_init(self, context):
+    def on_init(self, context: UserContext) -> None:
         self._current_sources = []
         index = 0
         for [name, args] in [[x['name'], x['args']]
@@ -164,12 +170,12 @@ class Child(object):
                        if x.vars and x.name in self._custom['filter']]:
             filter.vars.update(self._custom['filter'][filter.name])
 
-    def on_close(self, context):
+    def on_close(self, context: UserContext) -> None:
         for source in self._current_sources:
             if hasattr(source, 'on_close'):
                 source.on_close(source.context)
 
-    def init_syntax(self, context, is_multi):
+    def init_syntax(self, context: UserContext, is_multi: bool) -> None:
         for source in self._current_sources:
             name = re.sub('[^a-zA-Z0-9_]', '_', source.name)
             source_name = self._get_display_source_name(
@@ -192,10 +198,11 @@ class Child(object):
             source.highlight()
             source.define_syntax()
 
-    def filter_candidates(self, context):
+    def filter_candidates(self,
+                          context: UserContext) -> typing.List[typing.Any]:
         pattern = ''
         statuses = []
-        candidates = []
+        candidates: Candidates = []
         total_entire_len = 0
         for status, partial, patterns, entire_len in self._filter_candidates(
                 context):
@@ -214,7 +221,7 @@ class Child(object):
 
         if context['unique']:
             unique_candidates = []
-            unique_words = set()
+            unique_words: typing.Set[str] = set()
             for candidate in candidates:
                 # Normalize file paths
                 word = candidate['word']
@@ -234,7 +241,8 @@ class Child(object):
         return [self.is_async(), pattern, statuses, total_entire_len,
                 candidates]
 
-    def do_action(self, context, action_name, targets):
+    def do_action(self, context: UserContext,
+                  action_name: str, targets: Candidates) -> bool:
         action = self._get_action_targets(context, action_name, targets)
         if not action:
             return True
@@ -255,8 +263,10 @@ class Child(object):
                            action['kind'], action['name'], context))
         if new_context:
             context.update(new_context)
+        return False
 
-    def get_action(self, context, action_name, targets):
+    def get_action(self, context: UserContext,
+                   action_name: str, targets: Candidates) -> typing.Any:
         action = self._get_action_targets(context, action_name, targets)
         if not action:
             return action
@@ -268,7 +278,8 @@ class Child(object):
             'is_redraw': action['is_redraw'],
         }
 
-    def get_action_names(self, context, targets):
+    def get_action_names(self, context: UserContext,
+                         targets: Candidates) -> typing.List[str]:
         kinds = set()
         for target in targets:
             k = self._get_kind(context, target)
@@ -282,20 +293,21 @@ class Child(object):
         kind = kinds.pop()
         actions = kind.get_action_names()
         actions += self._get_custom_actions(kind.name).keys()
-        return actions
+        return actions  # type: ignore
 
-    def is_async(self):
+    def is_async(self) -> bool:
         return len([x for x in self._current_sources
                     if x.context['is_async']]) > 0
 
-    def debug(self, expr):
+    def debug(self, expr: typing.Any) -> None:
         debug(self._vim, expr)
 
-    def error(self, msg):
+    def error(self, msg: str) -> None:
         self._vim.call('denite#util#print_error', msg)
         self._vim.call('denite#util#getchar')
 
-    def _filter_candidates(self, context):
+    def _filter_candidates(self, context: UserContext) -> typing.Generator[
+            typing.Tuple[str, Candidates, typing.Any, int], None, None]:
         for source in self._current_sources:
             ctx = source.context
             ctx['matchers'] = context['matchers']
@@ -330,7 +342,7 @@ class Child(object):
                 c['source_name'] = source.name
                 c['source_index'] = source.index
 
-            patterns = filterfalse(lambda x: x == '', (
+            patterns = filterfalse(lambda x: x == '', (  # type: ignore
                 self._filters[x].convert_pattern(ctx['input'])
                 for x in source.matchers if self._filters[x]))
 
@@ -341,8 +353,9 @@ class Child(object):
 
             yield status, partial, patterns, len(ctx['all_candidates'])
 
-    def _filter_source_candidates(self, ctx, source):
-        partial = []
+    def _filter_source_candidates(self, ctx: UserContext,
+                                  source: Source) -> Candidates:
+        partial: Candidates = []
         entire = ctx['all_candidates']
         ctx['candidates'] = entire
 
@@ -363,18 +376,20 @@ class Child(object):
                   if x in self._filters]:
             ctx['candidates'] = f.filter(ctx)
 
-        return ctx['candidates']
+        return ctx['candidates']  # type: ignore
 
-    def _gather_source_candidates(self, context, source):
+    def _gather_source_candidates(self, context: UserContext,
+                                  source: Source) -> Candidates:
         max_len = int(context['max_candidate_width']) * 2
         candidates = source.gather_candidates(context)
         for candidate in [x for x in candidates if len(x['word']) > max_len]:
             candidate['word'] = candidate['word'][: max_len]
         return candidates
 
-    def _get_action_targets(self, context, action_name, targets):
-        actions = set()
-        action = None
+    def _get_action_targets(self, context: UserContext, action_name: str,
+                            targets: Candidates) -> Action:
+        actions: typing.Set[Action] = set()
+        action: Action = {}
         for target in targets:
             action = self._get_action_target(context, action_name, target)
             if action:
@@ -384,12 +399,14 @@ class Child(object):
             return {}
         return action if actions else {}
 
-    def _get_source_status(self, context, source, entire, partial):
+    def _get_source_status(self, context: UserContext, source: Source,
+                           entire: Candidates, partial: Candidates) -> str:
         return (source.get_status(context) if not partial else
                 f'{source.get_status(context)}'
                 f'({len(partial)}/{len(entire)})')
 
-    def _match_candidates(self, context, matchers):
+    def _match_candidates(self, context: UserContext,
+                          matchers: typing.List[typing.Any]) -> None:
         for pattern in split_input(context['input']):
             ctx = copy.copy(context)
             if pattern and pattern[0] == '!':
@@ -403,16 +420,18 @@ class Child(object):
                 ctx['input'] = pattern
                 context['candidates'] = self._call_matchers(ctx, matchers)
 
-    def _call_matchers(self, ctx, matchers):
+    def _call_matchers(self, ctx: UserContext,
+                       matchers: typing.List[typing.Any]) -> Candidates:
         for matcher in matchers:
             ctx['candidates'] = matcher.filter(ctx)
-        return ctx['candidates']
+        return ctx['candidates']  # type: ignore
 
-    def _set_custom_attribute(self, kind, obj, attr):
+    def _set_custom_attribute(self, kind: str,
+                              obj: typing.Any, attr: str) -> None:
         setattr(obj, attr, get_custom(
             self._custom, kind, obj.name, attr, getattr(obj, attr)))
 
-    def _load_sources(self, context):
+    def _load_sources(self, context: UserContext) -> None:
         # Load sources from runtimepath
         # Note: load "denite.source" for old sources compatibility
         import denite.source # noqa
@@ -420,8 +439,8 @@ class Child(object):
             normcase(normpath(x.path))
             for x in self._sources.values()
         ])
-        for Source, path, _ in rplugins:
-            source = Source(self._vim)
+        for SourceClass, path, _ in rplugins:
+            source = SourceClass(self._vim)
             self._sources[source.name] = source
             source.path = path
             syntax_name = 'deniteSource_' + re.sub(
@@ -432,7 +451,7 @@ class Child(object):
             if source.name in self._custom['alias_source']:
                 # Load alias
                 for alias in self._custom['alias_source'][source.name]:
-                    self._sources[alias] = Source(self._vim)
+                    self._sources[alias] = SourceClass(self._vim)
                     self._sources[alias].name = alias
                     self._sources[alias].path = path
                     self._sources[alias].syntax_name = syntax_name
@@ -442,7 +461,7 @@ class Child(object):
             list(self._sources.keys()),
         )
 
-    def _load_filters(self, context):
+    def _load_filters(self, context: UserContext) -> None:
         # Load filters from runtimepath
         rplugins = import_rplugins('Filter', context, 'filter', [
             normcase(normpath(x.path))
@@ -476,7 +495,7 @@ class Child(object):
                 self._filters[alias].name = alias
                 self._filters[alias].path = path
 
-    def _load_kinds(self, context):
+    def _load_kinds(self, context: UserContext) -> None:
         # Load kinds from runtimepath
         rplugins = import_rplugins('Kind', context, 'kind', [
             normcase(normpath(x.path))
@@ -501,7 +520,7 @@ class Child(object):
 
             self._kinds[kind.name] = kind
 
-    def _get_kind(self, context, target):
+    def _get_kind(self, context: UserContext, target: Candidate) -> typing.Any:
         k = target['kind'] if 'kind' in target else (
                 self._current_sources[int(target['source_index'])].kind)
 
@@ -517,7 +536,8 @@ class Child(object):
 
         return kind
 
-    def _get_action_target(self, context, action_name, target):
+    def _get_action_target(self, context: UserContext,
+                           action_name: str, target: Candidate) -> typing.Any:
         kind = self._get_kind(context, target)
         if not kind:
             return {}
@@ -555,15 +575,17 @@ class Child(object):
             'is_redraw': (action_name in kind.redraw_actions),
         }
 
-    def _get_custom_actions(self, kind_name):
-        actions = {}
+    def _get_custom_actions(self,
+                            kind_name: str) -> typing.Dict[str, typing.Any]:
+        actions: typing.Dict[str, typing.Any] = {}
         if '_' in self._custom['action']:
             actions.update(self._custom['action']['_'])
         if kind_name in self._custom['action']:
             actions.update(self._custom['action'][kind_name])
         return actions
 
-    def _get_display_source_name(self, context, is_multi, name):
+    def _get_display_source_name(self, context: UserContext,
+                                 is_multi: bool, name: str) -> str:
         source_names = context['source_names']
         if not is_multi or source_names == 'hide':
             source_name = ''

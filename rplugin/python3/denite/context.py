@@ -3,16 +3,22 @@
 # AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
 # License: MIT license
 # ============================================================================
+
+import typing
 from pathlib import PurePath
+
+from denite.util import Nvim
+
+UserContext = typing.Dict[str, typing.Any]
 
 
 class Context(object):
 
-    def __init__(self, vim):
+    def __init__(self, vim: Nvim) -> None:
         self._vim = vim
-        self._context = {}
+        self._context: UserContext = {}
 
-    def get(self, user_context):
+    def get(self, user_context: UserContext) -> UserContext:
         buffer_name = user_context.get('buffer_name', 'default')
         context = self._internal_options()
         context.update(self._vim.call('denite#init#_user_options'))
@@ -50,7 +56,7 @@ class Context(object):
 
         return context
 
-    def _internal_options(self):
+    def _internal_options(self) -> UserContext:
         return {
             'bufnr': self._vim.current.buffer.number,
             'command': '',

@@ -5,7 +5,7 @@
 # ============================================================================
 
 from denite.base.source import Base
-from denite.util import abspath
+from denite.util import abspath, Nvim, UserContext, Candidates
 
 LINE_NUMBER_SYNTAX = (
     'syntax match deniteSource_lineNumber '
@@ -16,7 +16,7 @@ LINE_NUMBER_HIGHLIGHT = 'highlight default link deniteSource_lineNumber LineNR'
 
 class Source(Base):
 
-    def __init__(self, vim):
+    def __init__(self, vim: Nvim) -> None:
         super().__init__(vim)
 
         self.name = 'line'
@@ -24,7 +24,7 @@ class Source(Base):
         self.matchers = ['matcher/regexp']
         self.sorters = []
 
-    def on_init(self, context):
+    def on_init(self, context: UserContext) -> None:
         context['__linenr'] = self.vim.current.window.cursor[0]
         context['__bufnrs'] = [self.vim.current.buffer.number]
         context['__direction'] = 'all'
@@ -48,13 +48,13 @@ class Source(Base):
         if emptiness == 'noempty':
             context['__emptiness'] = emptiness
 
-    def highlight(self):
+    def highlight(self) -> None:
         self.vim.command(LINE_NUMBER_SYNTAX + self.syntax_name)
         self.vim.command(LINE_NUMBER_HIGHLIGHT)
 
-    def gather_candidates(self, context):
+    def gather_candidates(self, context: UserContext) -> Candidates:
         linenr = context['__linenr']
-        candidates = []
+        candidates: Candidates = []
         for bufnr in context['__bufnrs']:
             lines = [{
                 'word': x,

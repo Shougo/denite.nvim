@@ -5,19 +5,19 @@
 # ============================================================================
 
 from denite.base.source import Base
-from denite.util import globruntime
+from denite.util import globruntime, Nvim, UserContext, Candidates
 
 
 class Source(Base):
 
-    def __init__(self, vim):
+    def __init__(self, vim: Nvim) -> None:
         super().__init__(vim)
         self.vim = vim
         self.name = 'help'
         self.kind = 'command'
 
-    def gather_candidates(self, context):
-        candidates = []
+    def gather_candidates(self, context: UserContext) -> Candidates:
+        candidates: Candidates = []
         extend = candidates.extend
         for f in globruntime(context['runtimepath'], 'doc/tags'):
             with open(f, 'r') as ins:

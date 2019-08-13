@@ -10,11 +10,14 @@ from os.path import basename
 import argparse
 import fnmatch
 import time
+import typing
 
 DEFAULT_SKIP_LIST = ['.git', '.hg']
+SkipList = typing.Optional[typing.List[str]]
 
 
-def scantree(path_name, skip_list=None, types='f'):
+def scantree(path_name: str, skip_list: SkipList = None,
+             types: str = 'f') -> typing.Generator[str, None, None]:
     """This function returns the files present in path_name, including the
     files present in subfolders.
 
@@ -37,7 +40,7 @@ def scantree(path_name, skip_list=None, types='f'):
         yield f'PermissionError reading {path_name}'
 
 
-def output_lines(lines):
+def output_lines(lines: typing.List[str]) -> None:
     try:
         sys.stdout.write(''.join(lines))
         sys.stdout.flush()
@@ -45,13 +48,13 @@ def output_lines(lines):
         pass
 
 
-def is_ignored(name, ignore_list):
+def is_ignored(name: str, ignore_list: typing.List[str]) -> bool:
     """checks if file name matches the ignore list"""
     name = basename(name)
-    return any(fnmatch.fnmatch(name, p) for p in ignore_list)
+    return bool(any(fnmatch.fnmatch(name, p) for p in ignore_list))
 
 
-def output_files():
+def output_files() -> None:
     """print the list of files to stdout"""
     parser = argparse.ArgumentParser()
     parser.add_argument('--path', type=str, default=curdir,

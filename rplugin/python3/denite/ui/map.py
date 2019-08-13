@@ -4,30 +4,36 @@
 # License: MIT license
 # ============================================================================
 
+import typing
+
 from denite.util import debug, clear_cmdline, input
+from denite.ui.default import Default
 from os.path import dirname
 
+Params = typing.List[str]
+Action = typing.Callable[[Default, Params], typing.Any]
 
-def do_map(denite, name, params):
+
+def do_map(denite: Default, name: str, params: Params) -> typing.Any:
     if name not in MAPPINGS:
         return
     return MAPPINGS[name](denite, params)
 
 
-def _auto_action(denite, params):
+def _auto_action(denite: Default, params: Params) -> typing.Any:
     if not denite._context['auto_action']:
         return
     return denite.do_action(denite._context['auto_action'])
 
 
-def _change_path(denite, params):
+def _change_path(denite: Default, params: Params) -> typing.Any:
     path = denite._vim.call('input', 'Path: ',
                             denite._context['path'], 'dir')
     denite._context['path'] = path
     return denite._restart()
 
 
-def _change_sorters(denite, params):
+def _change_sorters(denite: Default, params: Params) -> typing.Any:
     sorters = ''.join(params)
     context = denite._context
     if context['sorters'] != sorters:
@@ -37,13 +43,14 @@ def _change_sorters(denite, params):
     return denite.redraw()
 
 
-def _choose_action(denite, params):
+def _choose_action(denite: Default, params: Params) -> typing.Any:
     candidates = denite._get_selected_candidates()
-    if not candidates:
+    if not candidates or not denite._denite:
         return
 
-    denite._vim.vars['denite#_actions'] = denite._denite.get_action_names(
+    action_names = denite._denite.get_action_names(
         denite._context, candidates)
+    denite._vim.vars['denite#_actions'] = action_names
     clear_cmdline(denite._vim)
     action = input(denite._vim, denite._context,
                    'Action: ', '',
@@ -53,16 +60,16 @@ def _choose_action(denite, params):
     return denite.do_action(action, is_manual=True)
 
 
-def _do_action(denite, params):
+def _do_action(denite: Default, params: Params) -> typing.Any:
     name = params[0] if params else 'default'
     return denite.do_action(name, is_manual=True)
 
 
-def _do_previous_action(denite, params):
+def _do_previous_action(denite: Default, params: Params) -> typing.Any:
     return denite.do_action(denite._prev_action, is_manual=True)
 
 
-def _filter(denite, params):
+def _filter(denite: Default, params: Params) -> typing.Any:
     text = params[0] if params else ''
 
     if denite._previous_text == text and not denite.is_async:
@@ -75,7 +82,7 @@ def _filter(denite, params):
     _update_buffer(denite, params)
 
 
-def _filter_async(denite, params):
+def _filter_async(denite: Default, params: Params) -> typing.Any:
     text = params[0] if params else ''
 
     if denite._previous_text == text and not denite.is_async:
@@ -87,32 +94,32 @@ def _filter_async(denite, params):
     denite._update_candidates()
 
 
-def _move_up_path(denite, params):
+def _move_up_path(denite: Default, params: Params) -> typing.Any:
     denite._context['path'] = dirname(denite._context['path'])
     return denite._restart()
 
 
-def _nop(denite, params):
+def _nop(denite: Default, params: Params) -> typing.Any:
     pass
 
 
-def _open_filter_buffer(denite, params):
+def _open_filter_buffer(denite: Default, params: Params) -> typing.Any:
     denite._vim.call('denite#filter#_open',
                      denite._context, denite._bufnr,
                      denite._entire_len, denite.is_async)
 
 
-def _print_messages(denite, params):
+def _print_messages(denite: Default, params: Params) -> typing.Any:
     for mes in denite._context['messages']:
         debug(denite._vim, mes)
     denite._vim.call('denite#util#getchar')
 
 
-def _quick_move(denite, params):
+def _quick_move(denite: Default, params: Params) -> typing.Any:
     vim = denite._vim
     context = denite._context
 
-    def get_quick_move_table():
+    def get_quick_move_table() -> typing.Dict[str, int]:
         table = {}
         base = vim.call('line', '.')
         for [key, number] in context['quick_move_table'].items():
@@ -123,7 +130,8 @@ def _quick_move(denite, params):
                 table[key] = pos
         return table
 
-    def quick_move_redraw(table, is_define):
+    def quick_move_redraw(table: typing.Dict[str, int],
+                          is_define: bool) -> None:
         bufnr = vim.current.buffer.number
         for [key, number] in table.items():
             signid = 2000 + number
@@ -173,19 +181,19 @@ def _quick_move(denite, params):
         return True
 
 
-def _quit(denite, params):
+def _quit(denite: Default, params: Params) -> typing.Any:
     return denite.quit()
 
 
-def _redraw(denite, params):
+def _redraw(denite: Default, params: Params) -> typing.Any:
     return denite.redraw()
 
 
-def _restart(denite, params):
+def _restart(denite: Default, params: Params) -> typing.Any:
     return denite._restart()
 
 
-def _restore_sources(denite, params):
+def _restore_sources(denite: Default, params: Params) -> typing.Any:
     if len(denite._sources_history) < 2:
         return
 
@@ -202,7 +210,7 @@ def _restore_sources(denite, params):
     denite._start_sources_queue(denite._context)
 
 
-def _toggle_matchers(denite, params):
+def _toggle_matchers(denite: Default, params: Params) -> typing.Any:
     matchers = ''.join(params)
     context = denite._context
     if context['matchers'] != matchers:
@@ -212,28 +220,28 @@ def _toggle_matchers(denite, params):
     return denite.redraw()
 
 
-def _toggle_select(denite, params):
+def _toggle_select(denite: Default, params: Params) -> typing.Any:
     index = denite._vim.call('line', '.') - 1
     _toggle_select_candidate(denite, index)
     denite._update_displayed_texts()
     return denite._update_buffer()
 
 
-def _toggle_select_candidate(denite, index):
+def _toggle_select_candidate(denite: Default, index: int) -> None:
     if index in denite._selected_candidates:
         denite._selected_candidates.remove(index)
     else:
         denite._selected_candidates.append(index)
 
 
-def _toggle_select_all(denite, params):
+def _toggle_select_all(denite: Default, params: Params) -> typing.Any:
     for index in range(0, len(denite._candidates)):
         _toggle_select_candidate(denite, index)
     denite._update_displayed_texts()
     return denite._update_buffer()
 
 
-def _update_buffer(denite, params):
+def _update_buffer(denite: Default, params: Params) -> typing.Any:
     if denite._updated:
         try:
             denite._update_buffer()
@@ -243,13 +251,13 @@ def _update_buffer(denite, params):
         denite._update_status()
 
 
-def _update_candidates(denite, params):
+def _update_candidates(denite: Default, params: Params) -> typing.Any:
     if not denite._is_async:
         return
     denite._update_candidates()
 
 
-MAPPINGS = {
+MAPPINGS: typing.Dict[str, Action] = {
     'auto_action': _auto_action,
     'change_path': _change_path,
     'change_sorters': _change_sorters,

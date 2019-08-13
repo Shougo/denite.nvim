@@ -6,15 +6,16 @@
 # ============================================================================
 
 from denite.base.filter import Base
+from denite.util import Nvim, UserContext, Candidates
 
 
 class Filter(Base):
 
-    def __init__(self, vim):
+    def __init__(self, vim: Nvim) -> None:
         super().__init__(vim)
 
         self.name = 'sorter/word'
         self.description = 'sort candidates by ascii order of word'
 
-    def filter(self, context):
+    def filter(self, context: UserContext) -> Candidates:
         return sorted(context['candidates'], key=lambda x: x['word'])

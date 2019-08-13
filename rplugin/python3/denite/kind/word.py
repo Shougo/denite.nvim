@@ -5,11 +5,12 @@
 # ============================================================================
 
 from denite.base.kind import Base
+from denite.util import Nvim
 
 
 class Kind(Base):
 
-    def __init__(self, vim):
+    def __init__(self, vim: Nvim) -> None:
         super().__init__(vim)
 
         self.name = 'word'

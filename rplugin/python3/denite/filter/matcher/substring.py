@@ -7,18 +7,18 @@
 import re
 
 from denite.base.filter import Base
-from denite.util import split_input
+from denite.util import split_input, Nvim, UserContext, Candidates
 
 
 class Filter(Base):
-    def __init__(self, vim):
+    def __init__(self, vim: Nvim) -> None:
         super().__init__(vim)
 
         self.name = 'matcher/substring'
         self.description = 'simple substring matcher'
 
-    def filter(self, context):
-        candidates = context['candidates']
+    def filter(self, context: UserContext) -> Candidates:
+        candidates: Candidates = context['candidates']
         ignorecase = context['ignorecase']
         if context['input'] == '':
             return candidates
@@ -32,5 +32,5 @@ class Filter(Base):
             candidates = [x for x in candidates if pattern in x['word']]
         return candidates
 
-    def convert_pattern(self, input_str):
+    def convert_pattern(self, input_str: str) -> str:
         return '|'.join([re.escape(x) for x in split_input(input_str)])

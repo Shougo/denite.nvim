@@ -4,32 +4,35 @@
 # License: MIT license
 # ============================================================================
 
+import typing
 from abc import ABC, abstractmethod
+
 import denite.util
+from denite.util import Nvim, UserContext, Candidates
 
 
 class Base(ABC):
 
-    def __init__(self, vim):
+    def __init__(self, vim: Nvim) -> None:
         self.vim = vim
         self.name = 'base'
         self.description = ''
-        self.vars = {}
+        self.vars: typing.Dict[str, typing.Any] = {}
 
     @abstractmethod
-    def filter(self, context):
+    def filter(self, context: UserContext) -> Candidates:
         pass
 
-    def convert_pattern(self, input_str):
+    def convert_pattern(self, input_str: str) -> str:
         return ''
 
-    def debug(self, expr):
+    def debug(self, expr: str) -> None:
         denite.util.debug(self.vim, expr)
 
-    def print_message(self, context, expr):
+    def print_message(self, context: UserContext, expr: typing.Any) -> None:
         context['messages'].append(self.name + ': ' + str(expr))
 
-    def error_message(self, context, expr):
+    def error_message(self, context: UserContext, expr: typing.Any) -> None:
         prefix = self.name + ': '
         if isinstance(expr, list):
             for line in expr:

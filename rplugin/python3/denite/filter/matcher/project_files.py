@@ -5,18 +5,18 @@
 # ============================================================================
 
 from denite.base.filter import Base
-from denite.util import path2project
+from denite.util import path2project, Nvim, UserContext, Candidates
 
 
 class Filter(Base):
 
-    def __init__(self, vim):
+    def __init__(self, vim: Nvim) -> None:
         super().__init__(vim)
 
         self.name = 'matcher/project_files'
         self.description = 'project files matcher'
 
-    def filter(self, context):
+    def filter(self, context: UserContext) -> Candidates:
         project = path2project(self.vim,
                                context.get('path', ''),
                                context.get('root_markers', ''))

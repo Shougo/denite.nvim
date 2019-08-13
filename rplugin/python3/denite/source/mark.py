@@ -5,8 +5,11 @@
 # License: MIT license
 # ============================================================================
 
+import typing
+
 from denite.base.source import Base
 from denite.kind.file import Kind as File
+from denite.util import Nvim, UserContext, Candidates, Candidate
 
 
 MARK_HIGHLIGHT_SYNTAX = [
@@ -20,12 +23,12 @@ MARK_HIGHLIGHT_SYNTAX = [
 
 class Source(Base):
 
-    def __init__(self,  vim):
+    def __init__(self,  vim: Nvim) -> None:
         super().__init__(vim)
         self.name = 'mark'
         self.kind = Kind(vim)
 
-    def highlight(self):
+    def highlight(self) -> None:
         for syn in MARK_HIGHLIGHT_SYNTAX:
             self.vim.command(
                 'syntax match {0}_{1} /{2}/ contained containedin={0}'.format(
@@ -34,7 +37,7 @@ class Source(Base):
                 'highlight default link {}_{} {}'.format(
                     self.syntax_name, syn['name'], syn['link']))
 
-    def _get_marks(self, context):
+    def _get_marks(self, context: UserContext) -> Candidates:
         # see :help mark-motions
         # file marks
         lower_marks = [chr(c) for c in range(ord('a'), ord('z'))]
@@ -42,7 +45,7 @@ class Source(Base):
         num_marks = [str(n) for n in range(1, 10)]
         others_marks = ['\'', '`', '\"', '[', ']', '^', '.', '<', '>']
 
-        mark_list = []
+        mark_list: Candidates = []
 
         # mark order same as :marks
         for m in [others_marks[0]] + lower_marks + \
@@ -71,23 +74,23 @@ class Source(Base):
             })
         return mark_list
 
-    def gather_candidates(self, context):
+    def gather_candidates(self, context: UserContext) -> Candidates:
         return self._get_marks(context)
 
-    def empty_mark(self, mark_info):
+    def empty_mark(self, mark_info: typing.List[str]) -> bool:
         return mark_info[1] == 0 and \
             mark_info[2] == 0 and \
             mark_info[3] == 0
 
 
 class Kind(File):
-    def __init__(self, vim):
+    def __init__(self, vim: Nvim) -> None:
         super().__init__(vim)
 
         self.name = 'mark'
-        self._previewed_target = None
+        self._previewed_target: Candidate = {}
 
-    def action_delete(self, context):
+    def action_delete(self, context: UserContext) -> None:
         mark = context['targets'][0]['mark']
 
         # ' mark cannot delete

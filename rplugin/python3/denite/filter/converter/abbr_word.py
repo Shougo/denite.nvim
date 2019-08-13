@@ -5,18 +5,19 @@
 # ============================================================================
 
 from denite.base.filter import Base
+from denite.util import Nvim, UserContext, Candidates
 
 
 class Filter(Base):
 
-    def __init__(self, vim):
+    def __init__(self, vim: Nvim) -> None:
         super().__init__(vim)
 
         self.name = 'converter/abbr_word'
         self.description = 'convert candidate abbr to word'
 
-    def filter(self, context):
+    def filter(self, context: UserContext) -> Candidates:
         for candidate in context['candidates']:
             if 'abbr' in candidate:
                 candidate['word'] = candidate['abbr']
-        return context['candidates']
+        return context['candidates']  # type: ignore
