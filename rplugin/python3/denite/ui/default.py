@@ -584,17 +584,18 @@ class Default(object):
 
         if not is_vertical and self._vim.current.window.height != winheight:
             if self._floating:
-                self._vim.call(
-                    'nvim_win_set_config', self._winid,
-                    {'height': winheight})
+                self._vim.call('nvim_win_set_config', self._winid, {
+                    'relative': 'editor',
+                    'height': winheight,
+                })
+
                 filter_winid = self._vim.vars['denite#_filter_winid']
                 if self._vim.call('win_id2win', filter_winid) > 0:
-                    self._vim.call(
-                        'nvim_win_set_config', filter_winid, {
-                            'relative': 'editor',
-                            'row': self._context['winrow'] + winheight,
-                            'col': int(self._context['wincol']),
-                         })
+                    self._vim.call('nvim_win_set_config', filter_winid, {
+                        'relative': 'editor',
+                        'row': self._context['winrow'] + winheight,
+                        'col': int(self._context['wincol']),
+                    })
 
             self._vim.command('resize ' + str(winheight))
             if self._context['reversed']:

@@ -51,6 +51,9 @@ class Rplugin:
         from denite.ui.map import do_map
         bufnr = args[0]
         bufvars = self._vim.buffers[bufnr].vars
+        if 'denite' not in bufvars:
+            return
+
         try:
             ui = self.get_ui(bufvars['denite']['buffer_name'])
             ui._cursor = self._vim.call('line', '.')
