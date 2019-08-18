@@ -304,6 +304,8 @@ class Default(object):
             self._winrestcmd = ''
             return
 
+        self._floating = False
+
         command = 'edit'
         if split == 'tab':
             self._vim.command('tabnew')
