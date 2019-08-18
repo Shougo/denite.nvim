@@ -586,6 +586,7 @@ class Default(object):
             if self._floating:
                 self._vim.call('nvim_win_set_config', self._winid, {
                     'relative': 'editor',
+                    'width': winwidth,
                     'height': winheight,
                 })
 
