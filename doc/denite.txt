@@ -159,7 +159,8 @@ EXAMPLES						*denite-examples*
 	\  (has('win32') ? '-g:' : '-g='), ''])
 	" For python script scantree.py
 	" Read bellow on this file to learn more about scantree.py
-	call denite#custom#var('file/rec', 'command', ['scantree.py'])
+	call denite#custom#var('file/rec', 'command',
+	\ ['scantree.py', '--path', ':directory'])
 
 	" Change matchers.
 	call denite#custom#source(
@@ -251,7 +252,8 @@ EXAMPLES						*denite-examples*
 	      \ ['git', 'ls-files', '-co', '--exclude-standard'])
 
 	call denite#custom#alias('source', 'file/rec/py', 'file/rec')
-	call denite#custom#var('file/rec/py', 'command',['scantree.py'])
+	call denite#custom#var('file/rec/py', 'command',
+	\ ['scantree.py', '--path', ':directory'])
 
 	" Change ignore_globs
 	call denite#custom#filter('matcher/ignore_globs', 'ignore_globs',
@@ -1036,7 +1038,7 @@ file/rec
 				To use it other environments you can do:
 >
 				call denite#custom#var('file/rec', 'command',
-					\ ['scantree.py'])
+				\ ['scantree.py', '--path', ':directory'])
 <
 				By default it ignores the files or folders
 				matching your |'wildignore'| setting.
@@ -1051,14 +1053,16 @@ file/rec
 				the command:
 >
 				call denite#custom#var('file/rec', 'command',
-					\ ['scantree.py', "--ignore=''"])
+				\ ['scantree.py', '--path', ':directory',
+				\  "--ignore=''"])
 <
 				or
 >
 				let ignore=&wildignore .
 				    \ ',*.pyc,.git,.hg,.svn'
 				call denite#custom#var('file/rec', 'command',
-				    \ ['scantree.py', '--ignore', ignore])
+				\ ['scantree.py', '--path', ':directory',
+				\  '--ignore', ignore])
 <
 				The first example doesn't ignore any files,
 				the second ignores everything matching
