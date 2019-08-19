@@ -147,6 +147,7 @@ class Source(Base):
 
         parser = argparse.ArgumentParser(description="parse scantree options")
         parser.add_argument('--ignore', type=str, default=None)
+        parser.add_argument('--path', type=str, default=None)
 
         # the first name on the list is 'scantree.py'
         (args, rest) = parser.parse_known_args(
@@ -155,9 +156,13 @@ class Source(Base):
             ignore = self.vim.options['wildignore']
         else:
             ignore = args.ignore
+        if args.path is None:
+            path = ':directory'
+        else:
+            path = args.path
 
         scantree_py = Path(__file__).parent.parent.parent.joinpath(
             'scantree.py')
 
-        return [Source.get_python_exe(), str(scantree_py), '--ignore', ignore,
-                *rest]
+        return [Source.get_python_exe(), str(scantree_py),
+                '--ignore', ignore, '--path', path, *rest]
