@@ -1985,6 +1985,13 @@ A: >
 	call denite#custom#source('file/rec',
 	\ 'matchers', ['converter/tail_path', 'matcher/fuzzy'])
 
+Q: In a large git repo, the candidates list doesn't update as I type.
+
+A: You need to set |denite-option-max-dynamic-update-candidates|. >
+
+	call denite#custom#option('_',
+	\ 'max_dynamic_update_candidates', 100000)
+
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
 
