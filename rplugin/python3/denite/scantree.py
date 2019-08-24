@@ -16,8 +16,9 @@ DEFAULT_SKIP_LIST = ['.git', '.hg']
 SkipList = typing.Optional[typing.List[str]]
 
 
-def scantree(path_name: str, skip_list: SkipList = None,
-             types: str = 'f') -> typing.Generator[str, None, None]:
+def scantree(
+    path_name: str, skip_list: SkipList = None, types: str = 'f'
+) -> typing.Generator[typing.Union[str, PermissionError], None, None]:
     """This function returns the files present in path_name, including the
     files present in subfolders.
 
@@ -36,14 +37,19 @@ def scantree(path_name: str, skip_list: SkipList = None,
                 yield from scantree(entry.path, skip_list, types)
             elif 'f' in types:
                 yield entry.path
-    except PermissionError:
-        yield f'PermissionError reading {path_name}'
+    except PermissionError as exc:
+        yield exc
 
 
-def output_lines(lines: typing.List[str]) -> None:
+def output_lines(out: typing.List[str], err: typing.List[str]) -> None:
     try:
-        sys.stdout.write(''.join(lines))
+        sys.stdout.write(''.join(out))
         sys.stdout.flush()
+    except UnicodeEncodeError:
+        pass
+    try:
+        sys.stderr.write(''.join(err))
+        sys.stderr.flush()
     except UnicodeEncodeError:
         pass
 
@@ -71,20 +77,26 @@ def output_files() -> None:
     types = ''.join(set(args.type))
     # later we can account for more paths
     for path_name in [args.path]:
-        curr_list = []
+        curr_outs = []
+        curr_errs = []
         max_size = 40
         max_time_without_write = 0.005
         last_write_time = time.time()
         for name in scantree(path_name, ignore, types):
-            curr_list.append(name + '\n')
-            if (len(curr_list) >= max_size or curr_list and
-                    time.time() - last_write_time > max_time_without_write):
-                output_lines(curr_list)
-                curr_list = []
+            if isinstance(name, str):
+                curr_outs.append(name + '\n')
+            elif isinstance(name, Exception):
+                curr_errs.append(str(name) + '\n')
+            if (max(len(curr_outs), len(curr_errs)) >= max_size
+                or ((curr_outs or curr_errs) and
+                    time.time() - last_write_time > max_time_without_write)):
+                output_lines(curr_outs, curr_errs)
+                curr_outs = []
+                curr_errs = []
                 last_write_time = time.time()
 
-        if curr_list:
-            output_lines(curr_list)
+        if curr_outs or curr_errs:
+            output_lines(curr_outs, curr_errs)
 
 
 if __name__ == "__main__":
