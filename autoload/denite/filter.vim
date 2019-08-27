@@ -88,9 +88,14 @@ endfunction
 
 function! s:new_filter_buffer(context) abort
   if a:context['split'] ==# 'floating' && exists('*nvim_open_win')
+    let row = win_screenpos(win_getid())[0] - 1
+    " Note: win_screenpos() == [1, 1] if start_filter
+    if row <= 0
+      let row = str2nr(a:context['winrow'])
+    endif
     call nvim_open_win(bufnr('%'), v:true, {
           \ 'relative': 'editor',
-          \ 'row': win_screenpos(win_getid())[0] + winheight(0) - 1,
+          \ 'row': row + winheight(0),
           \ 'col': str2nr(a:context['wincol']),
           \ 'width': str2nr(a:context['winwidth']),
           \ 'height': 1,
