@@ -41,7 +41,7 @@ class Source(Base):
         cfile = context['__cfile']
         if match('[./]+$', cfile):
             return []
-        if os.path.exists(cfile):
+        if os.path.exists(cfile) and os.path.isfile(cfile):
             return [{'word': cfile,
                      'action__path': abspath(self.vim, cfile)}]
         if _checkhost(cfile) or match(
