@@ -115,5 +115,15 @@ endfunction
 
 ## Screenshots
 
-![denite new UI](https://user-images.githubusercontent.com/1239245/58742567-a155ea80-8460-11e9-9925-09082def2c80.gif)
-![denite new UI2](https://user-images.githubusercontent.com/41671631/58790351-cf832800-8622-11e9-912d-813408876b86.gif)
+### Old UI
+
+![denite old UI](https://user-images.githubusercontent.com/13142418/65154984-06107180-da5f-11e9-8cbf-e0a544d0dbc5.jpg)
+
+### New UI
+
+![denite new UI](https://user-images.githubusercontent.com/13142418/65154937-f002b100-da5e-11e9-8aef-723233e3704d.jpg)
+
+### Others
+
+![denite new UI2](https://user-images.githubusercontent.com/1239245/58742567-a155ea80-8460-11e9-9925-09082def2c80.gif)
+![denite new UI3](https://user-images.githubusercontent.com/41671631/58790351-cf832800-8622-11e9-912d-813408876b86.gif)
