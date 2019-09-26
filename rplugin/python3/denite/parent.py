@@ -98,10 +98,10 @@ class ASyncParent(_Parent):
             encoding='utf-8',
             unicode_errors='surrogateescape')
 
-        startupinfo = None
+        info = None
         if os.name == 'nt':
-            startupinfo = subprocess.STARTUPINFO()
-            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+            info = subprocess.STARTUPINFO()  # type: ignore
+            info.dwFlags |= subprocess.STARTF_USESHOWWINDOW  # type: ignore
 
         main = str(Path(__file__).parent.parent.parent.parent.joinpath(
             'autoload', 'denite', '_main.py'))
@@ -113,7 +113,7 @@ class ASyncParent(_Parent):
                 main,
                 self._vim.vars['denite#_serveraddr'],
                 stderr=None,
-                startupinfo=startupinfo))
+                startupinfo=info))
 
     # def _connect_stdin(self, stdin):
     #     self._stdin = stdin

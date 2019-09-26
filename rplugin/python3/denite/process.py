@@ -17,16 +17,16 @@ from denite.util import UserContext
 class Process(object):
     def __init__(self, commands: typing.List[str],
                  context: UserContext, cwd: str) -> None:
-        startupinfo = None
+        info = None
         if os.name == 'nt':
-            startupinfo = subprocess.STARTUPINFO()
-            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+            info = subprocess.STARTUPINFO()  # type: ignore
+            info.dwFlags |= subprocess.STARTF_USESHOWWINDOW  # type: ignore
         self._proc: typing.Optional[typing.Any] = subprocess.Popen(
             commands,
             stdin=subprocess.DEVNULL,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            startupinfo=startupinfo,
+            startupinfo=info,
             cwd=cwd)
         self._eof = False
         self._context = context
