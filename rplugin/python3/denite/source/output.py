@@ -16,6 +16,7 @@ class Source(Base):
         super().__init__(vim)
         self.name = 'output'
         self.default_action = 'yank'
+        self.kind = 'word'
 
     def define_syntax(self) -> None:
         if not self.context['args']:
