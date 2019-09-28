@@ -26,6 +26,9 @@ class Rplugin:
             context = Context(self._vim).get(args[1])
             ui = self.get_ui(context['buffer_name'])
             return ui.start(args[0], context)
+        except NameError as ex:
+            import denite.util
+            denite.util.error(self._vim, str(ex))
         except Exception:
             import traceback
             import denite.util
