@@ -61,6 +61,7 @@ function! s:init_buffer() abort
   setlocal nospell
   setlocal noswapfile
   setlocal nowrap
+  setlocal signcolumn=auto
   setlocal winfixheight
 
   resize 1
