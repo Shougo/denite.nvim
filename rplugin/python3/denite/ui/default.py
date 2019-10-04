@@ -264,6 +264,7 @@ class Default(object):
             'list': False,
             'number': False,
             'relativenumber': False,
+            'signcolumn': 'no',
             'spell': False,
             'winfixheight': True,
             'wrap': False,
