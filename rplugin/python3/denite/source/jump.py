@@ -45,7 +45,6 @@ class Source(Base):
         index = pointer + 1
         inc = -1
         for jump in jump_info:
-
             if index == 0:
                 inc = 1
 
@@ -55,10 +54,9 @@ class Source(Base):
             cur_buf = self.vim.current.buffer
             cur_bufnr = cur_buf.number
             jump_bufnr = jump['bufnr']
-            jump_bufname = self.vim.buffers[jump_bufnr].name
+            jump_bufname = self.vim.call('bufname', jump_bufnr)
 
-            # TODO: if buf not loaded, it will get lnum 1
-            if len(self.vim.buffers[jump_bufnr]) < lnum:
+            if not self.vim.call('bufloaded', jump_bufnr):
                 jump_bufname = cur_buf.name
                 jump_bufnr = cur_buf.number
                 cur_pos = self.vim.call('getcurpos')
@@ -66,9 +64,9 @@ class Source(Base):
                 file_or_text = '-invalid-'
             elif jump_bufnr == cur_bufnr:
                 # cur_buf start with zero, so lnum - 1
-                file_or_text = "text:" + cur_buf[lnum - 1]
+                file_or_text = 'text:' + cur_buf[lnum - 1]
             elif jump_bufnr != cur_bufnr:
-                file_or_text = "file: " + jump_bufname
+                file_or_text = 'file: ' + jump_bufname
 
             if index == 0:
                 word = '> {:>3} {:>5} {:>5} {}'.format(
