@@ -64,7 +64,7 @@ You must install "pynvim" module with pip
 
     pip3 install --user pynvim
 
-If you want to read the Neovim-python/python3 interface install documentation,
+If you want to read the pynvim/python3 interface install documentation,
 you should read `:help provider-python`.
 
 For Vim8:

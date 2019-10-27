@@ -100,7 +100,7 @@ You can enable Python3 interface with pip >
 
     pip3 install --user pynvim
 
-If you want to read for Neovim-python/python3 interface install documentation,
+If you want to read for pynvim/python3 interface install documentation,
 you should read |nvim-python| and the Wiki.
 
 You can check the Python3 installation |:checkhealth|
