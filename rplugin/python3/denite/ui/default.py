@@ -437,7 +437,7 @@ class Default(object):
             winminheight = int(self._context['winminheight'])
             max_height = min(int(self._context['winheight']),
                              self._get_max_height())
-            if (winminheight is not -1 and candidates_len < winminheight):
+            if (winminheight != -1 and candidates_len < winminheight):
                 self._winheight = winminheight
             elif candidates_len > max_height:
                 self._winheight = max_height
