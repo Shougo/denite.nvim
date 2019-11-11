@@ -115,7 +115,6 @@ class Kind(Openable):
             self.vim.command('lopen')
 
     def _open(self, context: UserContext, command: str) -> None:
-        cwd = self.vim.call('getcwd')
         for target in context['targets']:
             if 'action__bufnr' in target:
                 bufnr = target['action__bufnr']
@@ -128,6 +127,7 @@ class Kind(Openable):
                     # URI
                     self.vim.call('denite#util#open', path)
                     continue
+                cwd = self.vim.call('getcwd')
                 if path.startswith(cwd):
                     path = os.path.relpath(path, cwd)
 
