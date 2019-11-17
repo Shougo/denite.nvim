@@ -6,7 +6,7 @@
 
 import typing
 
-from denite.util import debug, clear_cmdline, input
+from denite.util import debug, clear_cmdline
 from denite.ui.default import Default
 from os.path import dirname
 
@@ -52,9 +52,10 @@ def _choose_action(denite: Default, params: Params) -> typing.Any:
         denite._context, candidates)
     denite._vim.vars['denite#_actions'] = action_names
     clear_cmdline(denite._vim)
-    action = input(denite._vim, denite._context,
-                   'Action: ', '',
-                   'customlist,denite#helper#complete_actions')
+    action = str(denite._vim.call('denite#util#input',
+                                  'Action: ',
+                                  '',
+                                  'customlist,denite#helper#complete_actions'))
     if action == '':
         return
     return denite.do_action(action, is_manual=True)

@@ -5,7 +5,6 @@
 # ============================================================================
 
 from denite.base.kind import Base
-from denite import util
 from denite.util import Nvim, UserContext
 
 
@@ -24,10 +23,10 @@ class Kind(Base):
 
     def action_edit(self, context: UserContext) -> None:
         target = context['targets'][0]
-        command = util.input(self.vim, context,
-                             "command > ",
-                             target['action__command'],
-                             'command')
+        command = str(self.vim.call('denite#util#input',
+                                    'command > ',
+                                    target['action__command'],
+                                    'command'))
         self._execute(context, command,
                       target.get('action__histadd', False))
 

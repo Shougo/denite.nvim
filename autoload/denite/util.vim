@@ -200,6 +200,15 @@ function! denite#util#delete_buffer(command, bufnr) abort
   silent execute a:bufnr a:command
 endfunction
 
+function! denite#util#input(prompt, text, completion) abort
+    try
+        return input(a:prompt, a:text, a:completion)
+    catch
+        " ignore the errors
+        return ''
+    endtry
+endfunction
+
 function! denite#util#input_yesno(message) abort
   let yesno = input(a:message . ' [yes/no]: ')
   while yesno !~? '^\%(y\%[es]\|n\%[o]\)$'
