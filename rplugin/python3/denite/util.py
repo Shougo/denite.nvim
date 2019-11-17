@@ -184,26 +184,6 @@ def parse_command(array: typing.List[str],
     return [parse_arg(i) for i in array]
 
 
-# XXX: It override the builtin 'input()' function.
-def input(vim: Nvim, context: UserContext,
-          prompt: str = '', text: str = '', completion: str = '') -> str:
-    try:
-        if completion != '':
-            return str(vim.call('input', prompt, text, completion))
-        else:
-            return str(vim.call('input', prompt, text))
-    except vim.error as e:
-        # NOTE:
-        # neovim raise nvim.error instead of KeyboardInterrupt when Ctrl-C
-        # has pressed so treat it as a real KeyboardInterrupt exception.
-        if str(e) != "b'Keyboard interrupt'":
-            raise e
-    except KeyboardInterrupt:
-        pass
-    # Ignore the interrupt
-    return ''
-
-
 def find_rplugins(context: UserContext, source: str,
                   loaded_paths: typing.List[str]) -> typing.Generator[
                       typing.Tuple[str, str], None, None]:

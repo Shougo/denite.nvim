@@ -31,7 +31,10 @@ class Kind(Openable):
         self._open(context, 'drop')
 
     def action_new(self, context: UserContext) -> None:
-        path = util.input(self.vim, context, 'New file: ', completion='file')
+        path = str(self.vim.call('denite#util#input',
+                                 'New file: ',
+                                 '',
+                                 'file'))
         if not path:
             return
         context['targets'] = [{
