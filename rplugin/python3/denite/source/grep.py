@@ -228,8 +228,10 @@ class Source(Base):
         elif context['input']:
             patterns = [context['input']]
         else:
-            patterns = self.vim.call('denite#util#input',
-                                     'Pattern: ',
-                                     '',
-                                     '')
+            patterns = [
+                self.vim.call('denite#util#input',
+                              'Pattern: ',
+                              '',
+                              '')
+            ]
         return [x for x in patterns if x]
