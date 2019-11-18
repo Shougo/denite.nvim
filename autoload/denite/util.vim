@@ -201,12 +201,16 @@ function! denite#util#delete_buffer(command, bufnr) abort
 endfunction
 
 function! denite#util#input(prompt, text, completion) abort
-    try
-        return input(a:prompt, a:text, a:completion)
-    catch
-        " ignore the errors
-        return ''
-    endtry
+  try
+    if a:completion !=# ''
+      return input(a:prompt, a:text, a:completion)
+    else
+      return input(a:prompt, a:text)
+    endif
+  catch
+    " ignore the errors
+    return ''
+  endtry
 endfunction
 
 function! denite#util#input_yesno(message) abort
