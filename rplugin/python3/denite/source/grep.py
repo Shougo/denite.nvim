@@ -197,9 +197,7 @@ class Source(Base):
             if isinstance(arg, str):
                 if arg == '!':
                     arg = str(self.vim.call('denite#util#input',
-                                            'Argument: ',
-                                            '',
-                                            ''))
+                                            'Argument: '))
                 arguments = shlex.split(arg)
             elif isinstance(arg, list):
                 arguments = arg[:]
@@ -229,9 +227,6 @@ class Source(Base):
             patterns = [context['input']]
         else:
             patterns = [
-                self.vim.call('denite#util#input',
-                              'Pattern: ',
-                              '',
-                              '')
+                self.vim.call('denite#util#input', 'Pattern: ')
             ]
         return [x for x in patterns if x]

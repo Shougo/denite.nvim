@@ -200,12 +200,14 @@ function! denite#util#delete_buffer(command, bufnr) abort
   silent execute a:bufnr a:command
 endfunction
 
-function! denite#util#input(prompt, text, completion) abort
+function! denite#util#input(prompt, ...) abort
+  let text = get(a:000, 0, '')
+  let completion = get(a:000, 1, '')
   try
-    if a:completion !=# ''
-      return input(a:prompt, a:text, a:completion)
+    if completion !=# ''
+      return input(a:prompt, text, completion)
     else
-      return input(a:prompt, a:text)
+      return input(a:prompt, text)
     endif
   catch
     " ignore the errors
