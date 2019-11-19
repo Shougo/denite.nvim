@@ -106,10 +106,12 @@ class ASyncParent(_Parent):
         main = str(Path(__file__).parent.parent.parent.parent.joinpath(
             'autoload', 'denite', '_main.py'))
 
+        command = (self._vim.vars['python3_host_prog']
+                   if 'python3_host_prog' in self._vim.vars else 'python3')
         self._hnd = self._vim.loop.create_task(
             self._vim.loop.subprocess_exec(
                 partial(Process, self),
-                self._vim.vars.get('python3_host_prog', 'python3'),
+                command,
                 main,
                 self._vim.vars['denite#_serveraddr'],
                 stderr=None,

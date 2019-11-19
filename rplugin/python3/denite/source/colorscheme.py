@@ -21,8 +21,9 @@ class Source(Base):
         self.kind = Kind(vim)
 
     def on_init(self, context: UserContext) -> None:
-        context['__current_color'] = self.vim.vars.get(
-            'colors_name', 'default')
+        context['__current_color'] = (
+            self.vim.vars['colors_name']
+            if 'colors_name' in self.vim.vars else 'default')
 
     def on_close(self, context: UserContext) -> None:
         self.vim.command(
