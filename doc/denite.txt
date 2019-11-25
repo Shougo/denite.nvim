@@ -28,7 +28,7 @@ Compatibility		|denite-compatibility|
 ==============================================================================
 INTRODUCTION						*denite-introduction*
 
-*denite* or *denite.vim* is a common extensible interface for searching and
+*denite* or *denite.nvim* is a common extensible interface for searching and
 displaying lists of information from within NeoVim/Vim. It can display and
 search through any arbitrary source, from files and directories to buffers.
 
