@@ -90,6 +90,29 @@ You must install "pynvim" module with pip
 
 **Note:** You need to do 1. and 2. with the common-arch files (x86 or x64).
 
+## Installation
+
+For [dein.vim](https://github.com/Shougo/dein.vim)
+
+```
+call dein#add('Shougo/denite.nvim')
+if !has('nvim')
+  call dein#add('roxma/nvim-yarp')
+  call dein#add('roxma/vim-hug-neovim-rpc')
+endif
+```
+
+For [vim-plug](https://github.com/junegunn/vim-plug)
+
+```
+if has('nvim')
+  Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/denite.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
+```
 
 ## Examples
 
