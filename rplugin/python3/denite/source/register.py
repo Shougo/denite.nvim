@@ -29,7 +29,7 @@ class Source(Base):
            'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
            'u', 'v', 'w', 'x', 'y', 'z',
            '-', '.', ':', '#', '%', '/', '=']:
-            register = self.vim.call('getreg', reg, 1)
+            register = self.vim.call('denite#util#getreg', reg)
             if not register:
                 continue
 

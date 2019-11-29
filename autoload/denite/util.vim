@@ -259,3 +259,8 @@ function! denite#util#rpcrequest(method, args, is_async) abort
     endif
   endif
 endfunction
+
+function! denite#util#getreg(reg) abort
+  " Note: Substitute <80><fd>
+  return substitute(getreg(a:reg, 1), '[\xfd\x80]', '', 'g')
+endfunction
