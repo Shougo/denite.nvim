@@ -6,6 +6,7 @@
 
 import glob
 import os
+import re
 
 from denite.base.source import Base
 from denite.util import abspath, expand, Nvim, UserContext, Candidates
@@ -48,12 +49,14 @@ class Source(Base):
                 filename).startswith('.') else '/*'
             for f in glob.glob(glb):
                 fullpath = abspath(self.vim, f)
+                f = re.sub(r'\n', r'\\n', f)
+                isdir = os.path.isdir(f)
                 candidates.append({
                     'word': f,
                     'abbr': (os.path.relpath(f, path) if fullpath != path
                              else os.path.normpath(f)) + (
-                                 '/' if os.path.isdir(f) else ''),
-                    'kind': ('directory' if os.path.isdir(f) else 'file'),
+                                 '/' if isdir else ''),
+                    'kind': ('directory' if isdir else 'file'),
                     'action__path': fullpath,
                 })
         return candidates
