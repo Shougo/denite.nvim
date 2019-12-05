@@ -4,7 +4,7 @@
 " License: MIT license
 "=============================================================================
 
-if exists('g:loaded_denite')
+if exists('g:loaded_denite') && v:version < 800
   finish
 endif
 let g:loaded_denite = 1
