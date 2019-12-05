@@ -30,8 +30,11 @@ function! denite#init#_initialize() abort
   endif
 
   if has('nvim') && !has('nvim-0.3.0')
-    call denite#util#print_error(
-          \ 'denite.nvim requires nvim +v0.3.0.')
+    call denite#util#print_error('denite.nvim requires nvim +v0.3.0.')
+    return 1
+  endif
+  if !has('nvim') && v:version < 800
+    call denite#util#print_error('denite.nvim requires Vim 8.0+.')
     return 1
   endif
 
