@@ -681,7 +681,7 @@ class Default(object):
         self._vim.vars['denite#_previewed_buffers'] = {}
 
         self._vim.command('highlight! link CursorLine CursorLine')
-        if self._floating:
+        if self._floating or self._filter_floating:
             self._vim.options['titlestring'] = self._titlestring
             self._vim.options['ruler'] = self._ruler
 
