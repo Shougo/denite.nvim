@@ -99,19 +99,19 @@ function! s:new_filter_buffer(context) abort
     if a:context['split'] ==# 'floating'
       call nvim_open_win(bufnr('%'), v:true, {
             \ 'relative': 'editor',
-        \ 'row': row + winheight(0),
-        \ 'col': str2nr(a:context['wincol']),
-        \ 'width': str2nr(a:context['winwidth']),
-        \ 'height': 1,
-        \})
+            \ 'row': row + winheight(0),
+            \ 'col': str2nr(a:context['wincol']),
+            \ 'width': str2nr(a:context['winwidth']),
+            \ 'height': 1,
+            \})
     else
       call nvim_open_win(bufnr('%'), v:true, {
-        \ 'relative': 'editor',
-        \ 'row': row + winheight(0) + 1,
-        \ 'col': win_screenpos(0)[1],
-        \ 'width': winwidth(0),
-        \ 'height': 1,
-        \})
+            \ 'relative': 'editor',
+            \ 'row': row + winheight(0) + 1,
+            \ 'col': win_screenpos(0)[1],
+            \ 'width': winwidth(0),
+            \ 'height': 1,
+            \})
     endif
     if exists('*bufadd')
       let bufnr = bufadd('denite-filter')
