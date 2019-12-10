@@ -306,6 +306,7 @@ class Default(object):
             return
 
         self._floating = False
+        self._filter_floating = False
 
         command = 'edit'
         if split == 'tab':
@@ -325,6 +326,10 @@ class Default(object):
                     'width': int(self._context['winwidth']),
                     'height': int(self._context['winheight']),
                 })
+        elif (self._context['filter_split_direction'] == 'floating' and
+                self._vim.call('exists', '*nvim_open_win')):
+            self._titlestring = self._vim.options['titlestring']
+            self._filter_floating = True
         elif split != 'no':
             command = self._get_direction()
             command += ' vsplit' if split == 'vertical' else ' split'
@@ -531,7 +536,7 @@ class Default(object):
         linenr = "printf('%'.(len(line('$'))+2).'d/%d',line('.'),line('$'))"
 
         if self._context['statusline']:
-            if self._floating:
+            if self._floating or self._filter_floating:
                 self._vim.options['titlestring'] = (
                     "%{denite#get_status('input')}%* " +
                     "%{denite#get_status('sources')} " +
