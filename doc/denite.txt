@@ -673,7 +673,15 @@ OPTIONS							*denite-options*
 					*denite-option-filter-split-direction*
 -filter-split-direction={direction}
 		Specify the Denite filter window direction as {direction}.
-		Note: If |denite-option-split| is "floating", it is ignored.
+
+		When {direction} is "floating", the filter uses neovim
+		floating window. If statusline is at the bottom, the filter
+		overwrites statusline. Otherwise, it is located one line below
+		statusline.
+
+		Note: To use "floating", you need to use neovim
+		0.4.0+(|nvim_open_win()|).
+		neovim 0.3(includes 0.3.7) does not work.
 
 		Default: "botright"
 
