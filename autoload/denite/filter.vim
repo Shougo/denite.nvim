@@ -88,19 +88,31 @@ function! s:init_buffer() abort
 endfunction
 
 function! s:new_filter_buffer(context) abort
-  if a:context['split'] ==# 'floating' && exists('*nvim_open_win')
+  if (a:context['split'] ==# 'floating' ||
+      \ a:context['filter_split_direction'] ==# 'floating')
+      \ && exists('*nvim_open_win')
     let row = win_screenpos(win_getid())[0] - 1
     " Note: win_screenpos() == [1, 1] if start_filter
     if row <= 0
       let row = str2nr(a:context['winrow'])
     endif
-    call nvim_open_win(bufnr('%'), v:true, {
-          \ 'relative': 'editor',
-          \ 'row': row + winheight(0),
-          \ 'col': str2nr(a:context['wincol']),
-          \ 'width': str2nr(a:context['winwidth']),
-          \ 'height': 1,
-          \})
+    if a:context['split'] ==# 'floating'
+      call nvim_open_win(bufnr('%'), v:true, {
+            \ 'relative': 'editor',
+        \ 'row': row + winheight(0),
+        \ 'col': str2nr(a:context['wincol']),
+        \ 'width': str2nr(a:context['winwidth']),
+        \ 'height': 1,
+        \})
+    else
+      call nvim_open_win(bufnr('%'), v:true, {
+        \ 'relative': 'editor',
+        \ 'row': row + winheight(0) + 1,
+        \ 'col': win_screenpos(0)[1],
+        \ 'width': winwidth(0),
+        \ 'height': 1,
+        \})
+    endif
     if exists('*bufadd')
       let bufnr = bufadd('denite-filter')
       execute bufnr 'buffer'
