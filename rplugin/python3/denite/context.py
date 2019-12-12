@@ -39,6 +39,7 @@ class Context(object):
                 'denite#project#path2project_directory',
                 context['path'], context['root_markers']
             )
+        context['filter_winrow'] = int(context['winrow'])
 
         # Add buffer name to context
         bufname = PurePath(self._vim.current.buffer.name)

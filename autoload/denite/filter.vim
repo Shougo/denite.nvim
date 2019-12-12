@@ -94,7 +94,7 @@ function! s:new_filter_buffer(context) abort
     let row = win_screenpos(win_getid())[0] - 1
     " Note: win_screenpos() == [1, 1] if start_filter
     if row <= 0
-      let row = str2nr(a:context['winrow'])
+      let row = a:context['filter_winrow']
     endif
     if a:context['split'] ==# 'floating'
       call nvim_open_win(bufnr('%'), v:true, {

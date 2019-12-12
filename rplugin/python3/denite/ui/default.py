@@ -605,6 +605,7 @@ class Default(object):
                 })
 
                 filter_winid = self._vim.vars['denite#_filter_winid']
+                self._context['filter_winrow'] = row
                 if self._vim.call('win_id2win', filter_winid) > 0:
                     self._vim.call('nvim_win_set_config', filter_winid, {
                         'relative': 'editor',
