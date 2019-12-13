@@ -434,6 +434,8 @@ class Default(object):
             self._updated = True
             self._start_timer('update_buffer')
 
+        if self._context['search'] and self._context['input']:
+            self._vim.call('setreg', '/', self._context['input'])
         return self._updated
 
     def _update_displayed_texts(self) -> None:

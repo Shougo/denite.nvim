@@ -837,6 +837,12 @@ OPTIONS							*denite-options*
 		It is splitted by comma.
 		Default: ""
 
+						*denite-option-search*
+-search
+		If it is true, denite update |quote/| register after user input.
+		It is useful when you want to use |gn| mapping.
+		Default: false
+
 						*denite-option-smartcase*
 -smartcase
 		If it is true, denite ignores the case when the input contains
