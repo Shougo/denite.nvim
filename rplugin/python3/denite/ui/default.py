@@ -47,6 +47,7 @@ class Default(object):
         self._sources_history: typing.List[typing.Any] = []
         self._previous_text = ''
         self._floating = False
+        self._filter_floating = False
         self._updated = False
         self._timers: typing.Dict[str, int] = {}
 
