@@ -34,12 +34,9 @@ class Child(object):
         self._runtimepath = ''
         self._current_sources: typing.List[typing.Any] = []
         self._unpacker = msgpack.Unpacker(
-            encoding='utf-8',
             unicode_errors='surrogateescape')
         self._packer = msgpack.Packer(
-            use_bin_type=True,
-            encoding='utf-8',
-            unicode_errors='surrogateescape')
+            use_bin_type=True)
 
     def main_loop(self, stdout: typing.Any) -> None:
         while True:
