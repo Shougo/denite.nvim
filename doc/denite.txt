@@ -2006,6 +2006,19 @@ A: You need to set |denite-option-max-dynamic-update-candidates|. >
 	call denite#custom#option('_',
 	\ 'max_dynamic_update_candidates', 100000)
 
+Q: I want to define source depend key mappings.
+
+A: It is not supported. But you can define |denite-option-buffer-name| depend
+key mappings. >
+
+	autocmd FileType denite call s:denite_my_settings()
+	function! s:denite_my_settings() abort
+	  if b:denite.buffer_name == 'foo'
+	    nnoremap <silent><buffer><expr> p
+	    \ denite#do_map('do_action', 'preview')
+	  endif
+	endfunction
+
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
 
