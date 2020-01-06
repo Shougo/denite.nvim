@@ -241,18 +241,13 @@ class Default(object):
         self._winheight = self._vim.current.window.height
         self._winwidth = self._vim.current.window.width
 
-        self._options = self._vim.current.buffer.options
-        self._options['buftype'] = 'nofile'
-        self._options['bufhidden'] = 'delete'
-        self._options['swapfile'] = False
-        self._options['buflisted'] = False
-        self._options['modeline'] = False
-        self._options['filetype'] = 'denite'
-        self._options['modifiable'] = False
+        self._bufvars = self._vim.current.buffer.vars
+        self._bufvars['denite'] = {
+            'buffer_name': self._context['buffer_name'],
+        }
+        self._bufvars['denite_statusline'] = {}
 
-        if self._floating:
-            # Disable ruler
-            self._vim.options['ruler'] = False
+        self._vim.vars['denite#_previewed_buffers'] = {}
 
         self._window_options = self._vim.current.window.options
         window_options = {
@@ -277,13 +272,17 @@ class Default(object):
             self._save_window_options[k] = self._window_options[k]
             self._window_options[k] = v
 
-        self._bufvars = self._vim.current.buffer.vars
-        self._bufvars['denite'] = {
-            'buffer_name': self._context['buffer_name'],
-        }
-        self._bufvars['denite_statusline'] = {}
-
-        self._vim.vars['denite#_previewed_buffers'] = {}
+        self._options = self._vim.current.buffer.options
+        if self._floating:
+            # Disable ruler
+            self._vim.options['ruler'] = False
+        self._options['buftype'] = 'nofile'
+        self._options['bufhidden'] = 'delete'
+        self._options['swapfile'] = False
+        self._options['buflisted'] = False
+        self._options['modeline'] = False
+        self._options['modifiable'] = False
+        self._options['filetype'] = 'denite'
 
         self._vim.command('silent doautocmd WinEnter')
         self._vim.command('silent doautocmd BufWinEnter')
