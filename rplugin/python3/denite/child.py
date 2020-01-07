@@ -342,7 +342,7 @@ class Child(object):
                 c['source_name'] = source.name
                 c['source_index'] = source.index
 
-            patterns = filterfalse(lambda x: x == '', (  # type: ignore
+            patterns = filterfalse(lambda x: x == '', (
                 self._filters[x].convert_pattern(ctx['input'])
                 for x in source.matchers if self._filters[x]))
 
