@@ -101,7 +101,7 @@ You can enable Python3 interface with pip >
     pip3 install --user pynvim
 
 If you want to read for pynvim/python3 interface install documentation,
-you should read |nvim-python| and the Wiki.
+you should read |provider-python| and the Wiki.
 
 You can check the Python3 installation |:checkhealth|
 command.
@@ -292,7 +292,8 @@ COMMANDS 						*denite-commands*
 
 		Denite can accept a list of strings, separated with ":", after
 		the name of sources.  You must escape ":" and "\" with "\"
-		in parameters themselves, or surround the parameter with quotes.
+		in parameters themselves, or surround the parameter with
+		quotes.
 
 		Examples:
 		"file/rec:foo:bar": the parameters of source file are
@@ -344,7 +345,7 @@ do_action:{action}
 		You can find the actions list in |denite-kinds|.
 		If {action} is empty, "default" will be used.
 
-						*denite-map-do_previous_action*
+					*denite-map-do_previous_action*
 do_previous_action
 		Fire the previous action.
 
@@ -361,7 +362,7 @@ move_up_path
 nop
 		No operation.
 
-						*denite-map-open_filter_buffer*
+					*denite-map-open_filter_buffer*
 open_filter_buffer
 		Open filter buffer to filtering.
 
@@ -463,7 +464,7 @@ denite#custom#action({kind}, {name}, {func}[, {options}])
 		Note: {kind} is comma separated.
 		Note: lambda function is not supported in Vim8.
 
-							*denite#custom#alias()*
+						*denite#custom#alias()*
 denite#custom#alias({type}, {alias-name}, {base-name})
 		Define {alias-name} alias based on {base-name}.
 		{type} must be "source" or "filter".
@@ -485,7 +486,7 @@ denite#custom#kind({kind-name}, {option-name}, {value})
 
 		default_action			(String)
 		Specify the kind default action.
-		|denite-kind-attribute-default-action|
+		|denite-kind-attribute-default_action|
 
 						*denite#custom#option()*
 denite#custom#option({buffer-name}, {option-name}, {value})
@@ -495,13 +496,13 @@ denite#custom#option({buffer-name}, {dict})
 		If {buffer-name} is "_", the options are used for all buffers.
 		If {dict} is available, the key is {option-name} and the value
 		is {value}.
-		Note: The all options are in |denite-options|.  However, "-" is
+		Note: The all options are in |denite-options|.  However, "-"
+		is substituted to "_", and "-" prefix is removed. >
 		substituted to "_", and "-" prefix is removed. >
 
 	call denite#custom#option('default', {
 	      \ 'source_names': 'short',
 	      \ })
-<
 						*denite#custom#source()*
 denite#custom#source({source-name}, {option-name}, {value})
 		Set {source-name} source specialized {option-name} to {value}.
@@ -521,7 +522,7 @@ denite#custom#source({source-name}, {option-name}, {value})
 
 		default_action			(String)
 		Specify the source default action.
-		|denite-source-attribute-default-action|
+		|denite-source-attribute-default_action|
 
 		matchers			(List)
 		Specify a list of matcher names.
@@ -583,9 +584,10 @@ denite#initialize()
 denite#start({sources}[, {context}])
 		Creates a new Denite buffer.
 
-		{sources} is a list of elements which are formatted as
-		"{'name': {source-name}, 'args': {source-args}}".
-
+		{sources} is a list of elements which are formatted as:
+>
+		"{'name': {source-name}, 'args': {source-args}}"
+<
 		Refer to |denite-notation-{context}| about {context}.  If you
 		skip a value, it uses the default value.
 >
@@ -692,7 +694,7 @@ OPTIONS							*denite-options*
 
 		Default: 100
 
-	                            *denite-option-highlight-filter-background*
+                            *denite-option-highlight-filter-background*
 -highlight-filter-background
 		Change backgroud color group in floating filter window.
 		Default: "NormalFloat"
@@ -702,7 +704,7 @@ OPTIONS							*denite-options*
 		Matched characters highlight.
 		Default: "Search"
 
-					*denite-option-highlight-matched-range*
+				*denite-option-highlight-matched-range*
 -highlight-matched-range
 		Matched range highlight.
 		Default: "Underlined"
@@ -717,7 +719,7 @@ OPTIONS							*denite-options*
 		Prompt highlight in filter window.
 		Default: "Special"
 
-	                            *denite-option-highlight-window-background*
+                            *denite-option-highlight-window-background*
 -highlight-window-background
 		Change backgroud color group in floating window.
 		Default: "NormalFloat"
@@ -839,7 +841,8 @@ OPTIONS							*denite-options*
 
 						*denite-option-search*
 -search
-		If it is true, denite update |quote/| register after user input.
+		If it is true, denite update |quote/| register after user
+		input.
 		It is useful when you want to use |gn| mapping.
 		Default: false
 
@@ -953,7 +956,7 @@ buffer		Gather buffers and jump to the buffer.
 				  (default is '1')
 		exclude_filetypes
 				  the list of excluded filetypes
-				  (default is ['denite'])
+				  (default is ["denite"])
 
 						*denite-source-change*
 change		Gather results of |:changes|.
@@ -964,7 +967,7 @@ colorscheme	Gather colorschemes and change the colorscheme.
 						*denite-source-command*
 command		Gather commands and put on ex-mode.
 
-						*denite-source-command-history*
+					*denite-source-command-history*
 command_history	Gather command histories and run it.
 
 		Source custom variables:
@@ -976,8 +979,8 @@ command_history	Gather command histories and run it.
 
 						*denite-source-directory_rec*
 directory_rec	Gather directories recursive and nominates all directory names
-		under the search directory (argument 0) or the current directory
-		(if argument is omitted) as candidates.
+		under the search directory (argument 0) or the current
+		directory (if argument is omitted) as candidates.
 		Note: Windows environment is not supported.
 
 		Source args:
@@ -1055,7 +1058,7 @@ file/rec
 				\ ['scantree.py', '--path', ':directory'])
 <
 				By default it ignores the files or folders
-				matching your |'wildignore'| setting.
+				matching your 'wildignore' setting.
 				You can change which files to ignore with the
 				following command line argument:
 				  --ignore pat1,pat2,...
@@ -1080,7 +1083,7 @@ file/rec
 <
 				The first example doesn't ignore any files,
 				the second ignores everything matching
-				|'wildignore'| plus the given patterns.
+				'wildignore' plus the given patterns.
 				Note: The patterns are based on fnmatch python
 				module.
 
@@ -1171,7 +1174,7 @@ menu		Gather custom menus.
 				candidates of type list.
 
 		unite_source_menu_compatibility
-				'boolean' to determine whether or not to
+				"boolean" to determine whether or not to
 				include menus previously defined in Unite
 				configurations.
 
@@ -1183,7 +1186,7 @@ outline		Gather outline and jump to the target.
 
 		Source custom variables:
 		command 	the default command to get outline
-				(default: ['ctags'])
+				(default: ["ctags"])
 		options 	the default options for command
 				(default: [])
 		file_opt 	the default option for writing to
@@ -1341,10 +1344,10 @@ openable	An interface to open the object.
 				Open the object in the next tab.
 
 			split
-				open the object with 'split'.
+				open the object with |:split|.
 
 			vsplit
-				open the object with 'vsplit'.
+				open the object with |:vsplit|.
 
 			switch
 				Switch to the window that is opening the
@@ -1446,8 +1449,9 @@ sorter/reverse
 
 						*denite-filter-sorter/sublime*
 sorter/sublime
-		Uses the scoring algorithm from this article and its implementation:
-		https://bit.ly/reverse-engineering-sublime-text-s-fuzzy-match
+		Uses the scoring algorithm from this article and its
+		implementation:
+	https://bit.ly/reverse-engineering-sublime-text-s-fuzzy-match
 
 						*denite-filter-sorter/word*
 sorter/word
@@ -1501,6 +1505,11 @@ converters	(List)				(Optional)
 
 		Default: []
 
+				*denite-source-attribute-default_action*
+default_action
+		(String)			(Optional)
+		Define the source specific default action.
+
 				*denite-source-attribute-define-syntax*
 define_syntax
 		(Function)			(Optional)
@@ -1524,7 +1533,7 @@ gather_candidates
 
 					*denite-source-attribute-get_status*
 get_status	(Function)			(Optional)
-		It is called to get the status for the |statusline|.
+		It is called to get the status for the 'statusline'.
 		It takes {self} and {context} as its parameter.
 
 		Default: |denite-source-attribute-name|
@@ -1707,7 +1716,7 @@ default_action  (String)
 name 		(String) 			(Required)
 		The name of a Kind.
 
-					*denite-kind-attribute-persist_actions*
+				*denite-kind-attribute-persist_actions*
 persist_actions (List) 				(Optional)
 		List of action names which not close Denite buffer after
 		executed.
@@ -1838,7 +1847,7 @@ Q: grep source is very slow.
 A: Because your machine is very slow.  The modern grep command like ripgrep is
 optimized for modern multi core processors.  It uses 4 processes heavily.
 More than a quad core CPU is recommended.  A dual core CPU is very slow.
-And you can change |denite-option-updatetime| option.
+And you can change |denite-option-filter-updatetime| option.
 
 Q: I want to use grep source as interactive mode.  The interactive mode gives
 you a prompt, and searches once the input is complete like helm-swoop.el.
@@ -1856,7 +1865,7 @@ Q: What is "ch x was closed by the client"?
 
 A: Python process was crashed.  I cannot fix the error.
 I think the process was under heavy load.  You should change
-|denite-option-updatetime| option.
+|denite-option-filter-updatetime| option.
 
 Q: Does hw (highway) work in denite.nvim?
 
@@ -2057,7 +2066,7 @@ COMPATIBILITY						*denite-compatibility*
  instead.
 
 2018.01.14
-* context['source'] is deprecated.  Please use target['source_context']
+* context["source"] is deprecated.  Please use target["source_context"]
   instead.
 
 2017.09.24
