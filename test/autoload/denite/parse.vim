@@ -31,6 +31,16 @@ function! s:suite.parse_options_args() abort
         \ ], {'do': 'hoge'}])
 
   call s:assert.equals(denite#helper#_parse_options_args(
+        \ '-resume -buffer-name="foo" file/rec'), [[
+        \ {'name': 'file/rec', 'args': []},
+        \ ], {'resume': v:true, 'buffer_name': 'foo'}])
+
+  call s:assert.equals(denite#helper#_parse_options_args(
+        \ 'grep -buffer-name="foo" -resume'), [[
+        \ {'name': 'grep', 'args': []},
+        \ ], {'resume': v:true, 'buffer_name': 'foo'}])
+
+  call s:assert.equals(denite#helper#_parse_options_args(
         \ '-path=c:\\FolderX\\FolderY file/rec:'), [[
         \ {'name': 'file/rec', 'args': []},
         \ ], {'path': 'c:\FolderX\FolderY'}])
