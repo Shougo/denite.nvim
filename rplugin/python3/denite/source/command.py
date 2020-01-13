@@ -8,6 +8,7 @@
 import re
 
 from denite.base.source import Base
+from denite.kind.command import Kind as Command
 from denite.util import globruntime, Nvim, UserContext, Candidates
 
 
@@ -17,7 +18,7 @@ class Source(Base):
         super().__init__(vim)
 
         self.name = 'command'
-        self.kind = 'command'
+        self.kind = Kind(vim)
         self.commands: Candidates = []
 
         self._re_command = re.compile(r'^\|:.+\|')
@@ -73,3 +74,14 @@ class Source(Base):
                             tokens[0], tokens[2],
                         ),
                     })
+
+
+class Kind(Command):
+
+    def __init__(self, vim: Nvim) -> None:
+        super().__init__(vim)
+
+        self.name = 'command'
+
+    def action_edit(self, context: UserContext) -> None:
+        return super().action_execute(context)
