@@ -23,12 +23,7 @@ class Kind(Base):
 
     def action_edit(self, context: UserContext) -> None:
         target = context['targets'][0]
-        command = str(self.vim.call('denite#util#input',
-                                    'command > ',
-                                    target['action__command'],
-                                    'command'))
-        self._execute(context, command,
-                      target.get('action__histadd', False))
+        self.vim.call('feedkeys', f":{target['action__command']}")
 
     def _execute(self, context: UserContext,
                  command: str, histadd: bool) -> None:

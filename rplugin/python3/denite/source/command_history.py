@@ -104,14 +104,6 @@ class Kind(Command):
         self.redraw_actions = 'delete'
         self.persist_actions = 'delete'
 
-    def action_edit(self, context: UserContext) -> None:
-        target = context['targets'][0]
-        command = str(self.vim.call('denite#util#input',
-                                    'command > ',
-                                    target['action__command'],
-                                    'command'))
-        self._execute(context, command, target['action__histadd'])
-
     def action_delete(self, context: UserContext) -> None:
         for target in sorted(context['targets'],
                              key=lambda x: x['source__index'],
