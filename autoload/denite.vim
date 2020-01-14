@@ -70,9 +70,6 @@ function! denite#_call_map(name, is_async, args) abort
 
     noautocmd call win_gotoid(g:denite#_filter_winid)
 
-    " Fix to echo problem in actions
-    echo ''
-
     if &l:filetype ==# 'denite-filter'
       resize 1
       let b:denite_statusline = denite_statusline
