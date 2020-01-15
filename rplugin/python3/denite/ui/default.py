@@ -595,7 +595,7 @@ class Default(object):
         if not is_vertical and self._vim.current.window.height != winheight:
             if self._floating:
                 row = int(self._context['winrow'])
-                if self._context['auto_resize']:
+                if self._context['auto_resize'] and row > 0:
                     row += int(self._context['winheight']) - self._winheight
 
                 self._vim.call('nvim_win_set_config', self._winid, {
