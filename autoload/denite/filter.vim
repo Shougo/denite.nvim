@@ -96,11 +96,13 @@ function! s:new_filter_buffer(context) abort
     if row <= 0
       let row = a:context['filter_winrow']
     endif
+    let winrow = str2nr(a:context['winrow'])
+    let wincol = str2nr(a:context['wincol'])
     if a:context['split'] ==# 'floating'
       call nvim_open_win(bufnr('%'), v:true, {
             \ 'relative': 'editor',
-            \ 'row': row + winheight(0),
-            \ 'col': str2nr(a:context['wincol']),
+            \ 'row': winrow == 1 ? 0 : row + winheight(0),
+            \ 'col': wincol,
             \ 'width': str2nr(a:context['winwidth']),
             \ 'height': 1,
             \})

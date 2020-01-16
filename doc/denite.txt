@@ -922,6 +922,7 @@ OPTIONS							*denite-options*
 -winrow={window-row}
 		Set the row position of the Denite window if
 		|denite-option-split| is "floating".
+		If it is 1, Denite filter window position is always top.
 
 		Default: &lines / 2 - 10
 
