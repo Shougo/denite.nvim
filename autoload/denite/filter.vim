@@ -212,7 +212,7 @@ function! s:quit() abort
   call denite#filter#_move_to_parent(v:false)
 
   let context = g:denite#_filter_context
-  if &filetype == 'denite' && context['split'] ==# 'floating'
+  if &filetype ==# 'denite' && context['split'] ==# 'floating'
         \ && str2nr(context['winrow']) == 0
     call denite#util#reposition(context, {'row': 0})
   endif
