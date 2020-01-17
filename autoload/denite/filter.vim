@@ -96,14 +96,29 @@ function! s:new_filter_buffer(context) abort
     if row <= 0
       let row = a:context['filter_winrow']
     endif
+
     let winrow = str2nr(a:context['winrow'])
     let wincol = str2nr(a:context['wincol'])
+    let winwidth = str2nr(a:context['winwidth'])
+    let winheight = str2nr(a:context['winheight'])
+
     if a:context['split'] ==# 'floating'
+      if winrow == 0
+        " Reposition denite window
+        call nvim_win_set_config(win_getid(), {
+              \ 'relative': 'editor',
+              \ 'row': 1,
+              \ 'col': wincol,
+              \ 'width': winwidth,
+              \ 'height': winheight,
+              \})
+      endif
+
       call nvim_open_win(bufnr('%'), v:true, {
             \ 'relative': 'editor',
-            \ 'row': winrow == 1 ? 0 : row + winheight(0),
+            \ 'row': winrow <= 1 ? 0 : row + winheight(0),
             \ 'col': wincol,
-            \ 'width': str2nr(a:context['winwidth']),
+            \ 'width': winwidth,
             \ 'height': 1,
             \})
     else
@@ -115,16 +130,19 @@ function! s:new_filter_buffer(context) abort
             \ 'height': 1,
             \})
     endif
+
     if exists('*bufadd')
       let bufnr = bufadd('denite-filter')
       execute bufnr 'buffer'
     else
       silent edit denite-filter
     endif
+
     let &l:winhighlight = 'Normal:' . a:context['highlight_filter_background']
   else
     silent execute a:context['filter_split_direction'] 'split' 'denite-filter'
   endif
+
   let g:denite#_filter_winid = win_getid()
   let g:denite#_filter_bufnr = bufnr('%')
 endfunction

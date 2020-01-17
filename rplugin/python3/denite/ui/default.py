@@ -599,22 +599,23 @@ class Default(object):
                 if self._context['auto_resize'] and row > 1:
                     row += int(self._context['winheight']) - self._winheight
 
+                filter_winid = self._vim.vars['denite#_filter_winid']
+                self._context['filter_winrow'] = row
+                filter_winnr = self._vim.call('win_id2win', filter_winid)
+                if filter_winnr > 0:
+                    self._vim.call('nvim_win_set_config', filter_winid, {
+                        'relative': 'editor',
+                        'row': 0 if wincol <= 1 else row + winheight,
+                        'col': int(self._context['wincol']),
+                    })
+
                 self._vim.call('nvim_win_set_config', self._winid, {
                     'relative': 'editor',
-                    'row': row,
+                    'row': 1 if filter_winnr > 0 and row == 0 else row,
                     'col': int(self._context['wincol']),
                     'width': winwidth,
                     'height': winheight,
                 })
-
-                filter_winid = self._vim.vars['denite#_filter_winid']
-                self._context['filter_winrow'] = row
-                if self._vim.call('win_id2win', filter_winid) > 0:
-                    self._vim.call('nvim_win_set_config', filter_winid, {
-                        'relative': 'editor',
-                        'row': 0 if wincol == 1 else row + winheight,
-                        'col': int(self._context['wincol']),
-                    })
 
             self._vim.command('resize ' + str(winheight))
             if self._context['reversed']:
