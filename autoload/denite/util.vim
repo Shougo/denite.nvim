@@ -264,3 +264,14 @@ function! denite#util#getreg(reg) abort
   " Note: Substitute <80><fd>
   return substitute(getreg(a:reg, 1), '[\xfd\x80]', '', 'g')
 endfunction
+
+function! denite#util#reposition(context, opts) abort
+  let opts = extend({
+        \ 'relative': 'editor',
+        \ 'row': str2nr(a:context['winrow']),
+        \ 'col': str2nr(a:context['wincol']),
+        \ 'width': str2nr(a:context['winwidth']),
+        \ 'height': str2nr(a:context['winheight']),
+        \ }, a:opts)
+  call nvim_win_set_config(win_getid(), opts)
+endfunction

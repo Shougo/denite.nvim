@@ -105,13 +105,7 @@ function! s:new_filter_buffer(context) abort
     if a:context['split'] ==# 'floating'
       if winrow == 0
         " Reposition denite window
-        call nvim_win_set_config(win_getid(), {
-              \ 'relative': 'editor',
-              \ 'row': 1,
-              \ 'col': wincol,
-              \ 'width': winwidth,
-              \ 'height': winheight,
-              \})
+        call denite#util#reposition(a:context, {'row' : 1})
       endif
 
       call nvim_open_win(bufnr('%'), v:true, {
@@ -145,6 +139,7 @@ function! s:new_filter_buffer(context) abort
 
   let g:denite#_filter_winid = win_getid()
   let g:denite#_filter_bufnr = bufnr('%')
+  let g:denite#_filter_context = a:context
 endfunction
 
 function! s:init_prompt(context) abort
@@ -215,6 +210,12 @@ function! s:quit() abort
   endif
 
   call denite#filter#_move_to_parent(v:false)
+
+  let context = g:denite#_filter_context
+  if &filetype == 'denite' && context['split'] ==# 'floating'
+        \ && str2nr(context['winrow']) == 0
+    call denite#util#reposition(context, {'row': 0})
+  endif
 
   call s:stop_timer()
 
