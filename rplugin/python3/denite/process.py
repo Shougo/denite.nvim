@@ -73,7 +73,7 @@ class Process(object):
         outs = []
 
         if self._queue_out.empty():
-            sleep(0.1)
+            sleep(0.01)
         while not self._queue_out.empty() and time() < start + timeout:
             outs.append(self._queue_out.get_nowait())
 
