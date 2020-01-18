@@ -188,9 +188,12 @@ function! s:async_update() abort
 endfunction
 
 function! s:quit() abort
+  let context = g:denite#_filter_context
+
   if winnr('$') ==# 1
     buffer #
-  else
+  elseif (context['split'] !=# 'floating' &&
+      \ context['filter_split_direction'] !=# 'floating')
     close!
   endif
 
