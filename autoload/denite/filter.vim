@@ -88,9 +88,7 @@ function! s:init_buffer() abort
 endfunction
 
 function! s:new_filter_buffer(context) abort
-  if (a:context['split'] ==# 'floating' ||
-      \ a:context['filter_split_direction'] ==# 'floating')
-      \ && exists('*nvim_open_win')
+  if denite#util#check_floating(a:context)
     let row = win_screenpos(win_getid())[0] - 1
     " Note: win_screenpos() == [1, 1] if start_filter
     if row <= 0

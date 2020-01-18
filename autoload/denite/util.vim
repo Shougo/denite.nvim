@@ -264,3 +264,9 @@ function! denite#util#getreg(reg) abort
   " Note: Substitute <80><fd>
   return substitute(getreg(a:reg, 1), '[\xfd\x80]', '', 'g')
 endfunction
+
+function! denite#util#check_floating(context) abort
+  return (a:context['split'] ==# 'floating' ||
+        \ a:context['filter_split_direction'] ==# 'floating')
+        \ && exists('*nvim_open_win')
+endfunction
