@@ -190,21 +190,17 @@ endfunction
 function! s:quit(force_quit) abort
   let context = g:denite#_filter_context
 
-  let quit_filter = v:false
-
   if winnr('$') ==# 1
     buffer #
-    let quit_filter = v:true
   elseif a:force_quit || !context['start_filter']
     close!
-    let quit_filter = v:true
   endif
 
   call denite#filter#_move_to_parent(v:false)
 
   call s:stop_timer()
 
-  if quit_filter
+  if win_id2win(g:denite#_filter_winid) < 0
     let g:denite#_filter_winid = -1
   endif
 endfunction
