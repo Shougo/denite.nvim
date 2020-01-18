@@ -67,13 +67,13 @@ function! s:init_buffer() abort
   resize 1
 
   nnoremap <buffer><silent> <Plug>(denite_filter_update)
-        \ :<C-u>call <SID>async_update()<CR>
+        \ :<C-u>call <SID>async_update(v:true)<CR>
   inoremap <buffer><silent> <Plug>(denite_filter_update)
-        \ <ESC>:call <SID>async_update()<CR>
+        \ <ESC>:call <SID>async_update(v:false)<CR>
   nnoremap <buffer><silent> <Plug>(denite_filter_quit)
-        \ :<C-u>call <SID>quit()<CR>
+        \ :<C-u>call <SID>quit(v:true)<CR>
   inoremap <buffer><silent> <Plug>(denite_filter_quit)
-        \ <ESC>:<C-u>call <SID>quit()<CR>
+        \ <ESC>:<C-u>call <SID>quit(v:true)<CR>
   inoremap <buffer><silent><expr> <Plug>(denite_filter_backspace)
         \ col('.') == 1 ? "a\<BS>" : "\<BS>"
 
@@ -175,33 +175,40 @@ function! s:update() abort
   noautocmd call win_gotoid(g:denite#_filter_winid)
 endfunction
 
-function! s:async_update() abort
+function! s:async_update(force_quit) abort
   if &filetype !=# 'denite-filter'
     return
   endif
 
   let input = getline('.')
 
-  call s:quit()
+  call s:quit(a:force_quit)
 
   call denite#call_async_map('filter', input)
 endfunction
 
-function! s:quit() abort
+function! s:quit(force_quit) abort
   let context = g:denite#_filter_context
+
+  let quit_filter = v:false
 
   if winnr('$') ==# 1
     buffer #
-  elseif (context['split'] !=# 'floating' &&
-      \ context['filter_split_direction'] !=# 'floating')
+    let quit_filter = v:true
+  elseif a:force_quit
+        \ || !denite#util#check_floating(context)
+        \ || !context['start_filter']
     close!
+    let quit_filter = v:true
   endif
 
   call denite#filter#_move_to_parent(v:false)
 
   call s:stop_timer()
 
-  let g:denite#_filter_winid = -1
+  if quit_filter
+    let g:denite#_filter_winid = -1
+  endif
 endfunction
 
 function! denite#filter#_move_to_parent(is_async) abort
