@@ -195,9 +195,7 @@ function! s:quit(force_quit) abort
   if winnr('$') ==# 1
     buffer #
     let quit_filter = v:true
-  elseif a:force_quit
-        \ || !denite#util#check_floating(context)
-        \ || !context['start_filter']
+  elseif a:force_quit || !context['start_filter']
     close!
     let quit_filter = v:true
   endif
