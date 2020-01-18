@@ -67,9 +67,9 @@ function! s:init_buffer() abort
   resize 1
 
   nnoremap <buffer><silent> <Plug>(denite_filter_update)
-        \ :<C-u>call <SID>async_update(v:true)<CR>
+        \ :<C-u>call <SID>async_update()<CR>
   inoremap <buffer><silent> <Plug>(denite_filter_update)
-        \ <ESC>:call <SID>async_update(v:false)<CR>
+        \ <ESC>:call <SID>async_update()<CR>
   nnoremap <buffer><silent> <Plug>(denite_filter_quit)
         \ :<C-u>call <SID>quit(v:true)<CR>
   inoremap <buffer><silent> <Plug>(denite_filter_quit)
@@ -175,14 +175,14 @@ function! s:update() abort
   noautocmd call win_gotoid(g:denite#_filter_winid)
 endfunction
 
-function! s:async_update(force_quit) abort
+function! s:async_update() abort
   if &filetype !=# 'denite-filter'
     return
   endif
 
   let input = getline('.')
 
-  call s:quit(a:force_quit)
+  call s:quit(v:false)
 
   call denite#call_async_map('filter', input)
 endfunction
