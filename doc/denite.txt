@@ -410,25 +410,19 @@ FILTER KEY MAPPINGS 				*denite-filter-key-mappings*
 Below mappings are only available in denite filter buffer.
 
 				*denite-map-i_<Plug>(denite_filter_backspace)*
-i_<Plug>(denite_filter_backspace)
+<Plug>(denite_filter_backspace)
 		Delete the back word.
 
-				*denite-map-i_<Plug>(denite_filter_update)*
-i_<Plug>(denite_filter_update)
-		Update the current input and quit filter buffer.
-
-
+				*denite-map-<Plug>(denite_filter_quit)*
 				*denite-map-i_<Plug>(denite_filter_quit)*
-i_<Plug>(denite_filter_quit)
+<Plug>(denite_filter_quit)
 		Quit filter buffer.
 
 				*denite-map-<Plug>(denite_filter_update)*
+				*denite-map-i_<Plug>(denite_filter_update)*
 <Plug>(denite_filter_update)
 		Update the current input and quit filter buffer.
 
-				*denite-map-<Plug>(denite_filter_quit)*
-<Plug>(denite_filter_quit)
-		Quit filter buffer.
 
 					*denite-filter-default-key-mappings*
 Following keymappings are default keymappings.
@@ -442,9 +436,9 @@ q			<Plug>(denite_filter_quit)
 Insert mode default mappings.
 {lhs}			{rhs}
 --------		-----------------------------
-<BS>			i_<Plug>(denite_filter_backspace)
-<C-h>			i_<Plug>(denite_filter_backspace)
-<CR>			i_<Plug>(denite_filter_update)
+<BS>			<Plug>(denite_filter_backspace)
+<C-h>			<Plug>(denite_filter_backspace)
+<CR>			<Plug>(denite_filter_update)
 
 ------------------------------------------------------------------------------
 FUNCTIONS						*denite-functions*
@@ -2027,6 +2021,15 @@ key mappings. >
 	    nnoremap <silent><buffer><expr> p
 	    \ denite#do_map('do_action', 'preview')
 	  endif
+	endfunction
+
+Q: I want to close denite filter window after hitting <ESC>.
+
+A:
+>
+	autocmd FileType denite-filter call s:denite_filter_my_settings()
+	function! s:denite_filter_my_settings() abort
+	  imap <silent><buffer> <Esc>       <Plug>(denite_filter_update)
 	endfunction
 
 ==============================================================================
