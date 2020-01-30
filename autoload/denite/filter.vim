@@ -188,6 +188,10 @@ function! s:async_update() abort
 endfunction
 
 function! s:quit(force_quit) abort
+  if a:force_quit
+    call s:update()
+  endif
+
   let context = g:denite#_filter_context
 
   if winnr('$') ==# 1

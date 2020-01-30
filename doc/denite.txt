@@ -422,6 +422,8 @@ Below mappings are only available in denite filter buffer.
 				*denite-map-i_<Plug>(denite_filter_update)*
 <Plug>(denite_filter_update)
 		Update the current input and quit filter buffer.
+		Note: It does not close filter window if
+		|denite-option-start-filter| is enabled.
 
 
 					*denite-filter-default-key-mappings*
@@ -2029,7 +2031,7 @@ A:
 >
 	autocmd FileType denite-filter call s:denite_filter_my_settings()
 	function! s:denite_filter_my_settings() abort
-	  imap <silent><buffer> <Esc>       <Plug>(denite_filter_update)
+	  imap <silent><buffer> <Esc>       <Plug>(denite_filter_quit)
 	endfunction
 
 ==============================================================================
