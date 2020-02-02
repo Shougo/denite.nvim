@@ -676,9 +676,12 @@ class Default(object):
 
         if self._vim.current.buffer.number == self._bufnr:
             self._cursor = self._vim.call('line', '.')
-        # Clear previewed buffers
+
+        # Note: Close filter window before preview window
+        self._vim.call('denite#filter#_close_filter_window')
         if not self._context['has_preview_window']:
             self._vim.command('pclose!')
+        # Clear previewed buffers
         for bufnr in self._vim.vars['denite#_previewed_buffers'].keys():
             if not self._vim.call('win_findbuf', bufnr):
                 self._vim.command('silent bdelete ' + str(bufnr))

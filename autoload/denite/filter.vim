@@ -123,6 +123,7 @@ function! s:new_filter_buffer(context) abort
   else
     silent execute a:context['filter_split_direction'] 'split' 'denite-filter'
   endif
+
   let g:denite#_filter_winid = win_getid()
   let g:denite#_filter_bufnr = bufnr('%')
 endfunction
@@ -221,6 +222,19 @@ function! denite#filter#_move_to_parent(is_async) abort
   else
     call win_gotoid(id[0])
   endif
+endfunction
+function! denite#filter#_close_filter_window() abort
+  if !exists('g:denite#_filter_winid')
+        \ || win_id2win(g:denite#_filter_winid) < 0
+    return
+  endif
+
+  let prev = win_getid()
+
+  call win_gotoid(g:denite#_filter_winid)
+  close!
+
+  call win_gotoid(prev)
 endfunction
 
 function! s:start_timer() abort
