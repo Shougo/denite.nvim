@@ -284,7 +284,7 @@ def parse_tagline(line: str, tagpath: str) -> typing.Dict[str, typing.Any]:
                 info['line'] = elem[2]
             else:
                 info['pattern'] = re.sub(
-                    r'([~.*\[\]\\])', r'\\\1',
+                    r'([~.*\[\]])', r'\\\1',
                     re.sub(r'^/|/;"$', '', elem[2]))
         return info
 
@@ -292,7 +292,7 @@ def parse_tagline(line: str, tagpath: str) -> typing.Dict[str, typing.Any]:
     if re.match(r'\d+;"$', pattern):
         info['line'] = re.sub(r';"$', '', pattern)
     else:
-        info['pattern'] = re.sub(r'([~.*\[\]\\])', r'\\\1',
+        info['pattern'] = re.sub(r'([~.*\[\]])', r'\\\1',
                                  re.sub(r'^/|/;"$', '', pattern))
 
     elem = rest[len(pattern)+1:].split("\t")
