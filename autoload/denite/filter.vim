@@ -225,6 +225,7 @@ function! denite#filter#_move_to_parent(is_async) abort
 endfunction
 function! denite#filter#_close_filter_window() abort
   if !exists('g:denite#_filter_winid')
+        \ || g:denite#_filter_winid < 0
         \ || win_id2win(g:denite#_filter_winid) < 0
     return
   endif
