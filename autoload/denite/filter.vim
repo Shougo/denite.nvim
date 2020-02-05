@@ -205,7 +205,7 @@ function! s:quit(force_quit) abort
 
   call s:stop_timer()
 
-  if win_id2win(g:denite#_filter_winid) < 0
+  if win_id2win(g:denite#_filter_winid) <= 0
     let g:denite#_filter_winid = -1
   endif
 endfunction
@@ -226,7 +226,7 @@ endfunction
 function! denite#filter#_close_filter_window() abort
   if !exists('g:denite#_filter_winid')
         \ || g:denite#_filter_winid < 0
-        \ || win_id2win(g:denite#_filter_winid) < 0
+        \ || win_id2win(g:denite#_filter_winid) <= 0
     return
   endif
 
