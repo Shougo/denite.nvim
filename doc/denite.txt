@@ -692,8 +692,10 @@ OPTIONS							*denite-options*
 
 					*denite-option-floating-preview*
 -floating-preview
-		Open the preview window in floating window.
-		It is enabled when |denite-option-vertical-preview|.
+		Open the preview window in floating window when
+		|denite-option-vertical-preview|.
+		Note: To use it, you need to use neovim
+		0.4.0+(|nvim_open_win()|).
 
 		Default: false
 
