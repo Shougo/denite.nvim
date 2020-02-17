@@ -33,9 +33,7 @@ class Base(ABC):
         pass
 
     def define_syntax(self) -> None:
-        self.vim.command(
-            'syntax region ' + self.syntax_name + ' start=// end=/$/ '
-            'contains=deniteMatchedRange contained')
+        pass
 
     def print_message(self, context: UserContext, expr: typing.Any) -> None:
         context['messages'].append(self.name + ': ' + str(expr))

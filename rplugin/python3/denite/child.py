@@ -196,6 +196,10 @@ class Child(object):
             )
             self._vim.command(syntax_line)
             source.highlight()
+
+            self._vim.command(
+                'syntax region ' + source.syntax_name + ' start=// end=/$/ '
+                'contains=deniteMatchedRange contained')
             source.define_syntax()
 
     def filter_candidates(self,
