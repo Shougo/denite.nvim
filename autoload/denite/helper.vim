@@ -44,15 +44,32 @@ endfunction
 
 function! denite#helper#preview_file(context, filename) abort
   if a:context.vertical_preview
-    let denite_winwidth = &columns
+    let pos = win_screenpos(win_getid())
+    let win_width = winwidth(0)
+
     call denite#util#execute_path(
           \ 'silent rightbelow vertical pedit!', a:filename)
     wincmd P
-    execute 'vert resize ' . (denite_winwidth / 2)
+
+    if a:context.floating_preview && exists('*nvim_win_set_config')
+      let win_col = pos[1] - 1 + win_width
+      if a:context.split !=# 'floating'
+        let win_col -= a:context.preview_width
+      endif
+      call nvim_win_set_config(win_getid(), {
+           \ 'relative': 'editor',
+           \ 'row': pos[0] - 1,
+           \ 'col': win_col,
+           \ 'width': a:context.preview_width,
+           \ 'height': a:context.preview_height,
+           \ })
+    else
+      execute 'vert resize ' . a:context.preview_width
+    endif
   else
     let previewheight_save = &previewheight
     try
-      let &previewheight = a:context.previewheight
+      let &previewheight = a:context.preview_height
       call denite#util#execute_path('silent aboveleft pedit!', a:filename)
     finally
       let &previewheight = previewheight_save

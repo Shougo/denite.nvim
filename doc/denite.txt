@@ -690,6 +690,13 @@ OPTIONS							*denite-options*
 
 		Default: 100
 
+					*denite-option-floating-preview*
+-floating-preview
+		Open the preview window in floating window.
+		It is enabled when |denite-option-vertical-preview|.
+
+		Default: false
+
                             *denite-option-highlight-filter-background*
 -highlight-filter-background
 		Change backgroud color group in floating filter window.
@@ -782,6 +789,19 @@ OPTIONS							*denite-options*
 		Note: It must one or two characters.
 
 		Default: ""
+
+						*denite-option-preview-height*
+-preview-height={preview-height}
+		Specify the preview window height.
+
+		Default: 'previewheight'
+
+						*denite-option-preview-width*
+-preview-width={preview-width}
+		Specify the preview width when
+		|denite-option-vertical-preview|.
+
+		Default: 40
 
 						*denite-option-quick-move*
 -quick-move={action}
@@ -2036,6 +2056,9 @@ A:
 
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
+
+2020.02.17
+* Rename "-previewheight" option to "-preview-height".
 
 2019.05.01
 * Version 3.0
