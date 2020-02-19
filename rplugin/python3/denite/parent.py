@@ -92,10 +92,8 @@ class ASyncParent(_Parent):
         self._queue_out: Queue[str] = Queue()
         self._packer = msgpack.Packer(
             use_bin_type=True,
-            encoding='utf-8',
             unicode_errors='surrogateescape')
         self._unpacker = msgpack.Unpacker(
-            encoding='utf-8',
             unicode_errors='surrogateescape')
 
         info = None
