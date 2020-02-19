@@ -55,7 +55,7 @@ function! denite#init#_initialize() abort
     call denite#util#print_error(v:exception)
     call denite#util#print_error(v:throwpoint)
 
-    if !denite#init#_msgpack_version_check()
+    if denite#init#_msgpack_version_check()
       call denite#util#print_error('denite requires msgpack 1.0.0+.')
     endif
 
