@@ -1,6 +1,6 @@
 *denite.txt*	Dark powered asynchronous unite all interfaces for NeoVim/Vim.
 
-Version: 3.1
+Version: 3.2
 Author:  Shougo <Shougo.Matsu at gmail.com>
 License: MIT license
 
@@ -86,7 +86,10 @@ INSTALL							*denite-install*
 
 Note: denite requires Neovim 0.3.0+ or Vim 8.0+ with |:python3| enabled.
 
-Note: You need to install Python3.6.1+.
+Note: Please install/upgrade msgpack package (1.0.0+).
+https://github.com/msgpack/msgpack-python
+
+Note: You need to install Python 3.6.1+.
 
 For neovim:
 
@@ -2058,6 +2061,10 @@ A:
 
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
+
+2020.02.19
+* msgpack 1.0.0+ is required
+https://github.com/msgpack/msgpack-python#major-breaking-changes-in-msgpack-10
 
 2020.02.17
 * Rename "-previewheight" option to "-preview-height".

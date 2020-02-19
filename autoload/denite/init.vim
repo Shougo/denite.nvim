@@ -55,6 +55,10 @@ function! denite#init#_initialize() abort
     call denite#util#print_error(v:exception)
     call denite#util#print_error(v:throwpoint)
 
+    if !denite#init#_msgpack_version_check()
+      call denite#util#print_error('denite requires msgpack 1.0.0+.')
+    endif
+
     if denite#util#has_yarp()
       if !has('nvim') && !exists('*neovim_rpc#serveraddr')
         call denite#util#print_error(
@@ -159,4 +163,13 @@ vim.vars['denite#_python_version_check'] = (
     sys.version_info.micro) < (3, 6, 1)
 EOF
   return g:denite#_python_version_check
+endfunction
+
+function! denite#init#_msgpack_version_check() abort
+  python3 << EOF
+import vim
+import msgpack
+vim.vars['denite#_msgpack_version_check'] = msgpack.version < (1, 0, 0)
+EOF
+  return get(g:, 'denite#_msgpack_version_check', 0)
 endfunction
