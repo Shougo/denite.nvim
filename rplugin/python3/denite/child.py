@@ -36,7 +36,6 @@ class Child(object):
         self._unpacker = msgpack.Unpacker(
             unicode_errors='surrogateescape')
         self._packer = msgpack.Packer(
-            use_bin_type=True,
             unicode_errors='surrogateescape')
 
     def main_loop(self, stdout: typing.Any) -> None:
