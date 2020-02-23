@@ -1684,7 +1684,7 @@ Kind class, let's take "openable" for example: >
             target = context['targets'][0]
             path = target['action__path']
             # assume you have a MyEdit command
-            self.vim.call('MyEdit', path)
+            self.vim.command('MyEdit', path)
 >
 After create new Kind class, alias it to your source by >
 
