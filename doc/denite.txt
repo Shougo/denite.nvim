@@ -2059,6 +2059,16 @@ A:
 	  imap <silent><buffer> <Esc>       <Plug>(denite_filter_quit)
 	endfunction
 
+Q: Is it possible to configure the floating window appearance?  I would like
+to add line numbers to it.
+
+A: You can use |User| "denite-preview" autocmd. >
+
+	autocmd User denite-preview call s:denite_preview()
+	function! s:denite_preview() abort
+	  setlocal number
+	endfunction
+
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
 

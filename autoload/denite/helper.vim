@@ -74,7 +74,11 @@ function! denite#helper#preview_file(context, filename) abort
     finally
       let &previewheight = previewheight_save
     endtry
+
+    wincmd P
   endif
+
+  doautocmd User denite-preview
 endfunction
 
 function! denite#helper#options() abort
