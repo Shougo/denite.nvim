@@ -52,13 +52,21 @@ function! denite#helper#preview_file(context, filename) abort
     wincmd P
 
     if a:context.floating_preview && exists('*nvim_win_set_config')
-      let win_col = pos[1] - 1 + win_width
+      if a:context['split'] ==# 'floating'
+        let win_row = str2nr(a:context['winrow'])
+        let win_col = str2nr(a:context['wincol'])
+      else
+        let win_row = pos[0] - 1
+        let win_col = pos[1] - 1
+      endif
+      let win_col += win_width
       if a:context.split !=# 'floating'
         let win_col -= a:context.preview_width
       endif
+
       call nvim_win_set_config(win_getid(), {
            \ 'relative': 'editor',
-           \ 'row': pos[0] - 1,
+           \ 'row': win_row,
            \ 'col': win_col,
            \ 'width': a:context.preview_width,
            \ 'height': a:context.preview_height,
