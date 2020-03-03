@@ -249,28 +249,44 @@ class Default(object):
 
         self._vim.vars['denite#_previewed_buffers'] = {}
 
-        self._window_options = self._vim.current.window.options
-        window_options = {
-            'colorcolumn': '',
-            'concealcursor': 'inv',
-            'conceallevel': 3,
-            'cursorcolumn': False,
-            'foldcolumn': 0,
-            'foldenable': False,
-            'list': False,
-            'number': False,
-            'relativenumber': False,
-            'signcolumn': 'no',
-            'spell': False,
-            'winfixheight': True,
-            'wrap': False,
-        }
+        # Note: Have to use setlocal instead of "current.window.options"
+        # "current.window.options" changes global value instead of local in
+        # neovim.
+        self._vim.command('setlocal colorcolumn=')
+        self._vim.command('setlocal conceallevel=3')
+        self._vim.command('setlocal concealcursor=inv')
+        self._vim.command('setlocal nocursorcolumn')
+        self._vim.command('setlocal nofoldenable')
+        self._vim.command('setlocal foldcolumn=0')
+        self._vim.command('setlocal nolist')
+        self._vim.command('setlocal nonumber')
+        self._vim.command('setlocal norelativenumber')
+        self._vim.command('setlocal nospell')
+        self._vim.command('setlocal winfixheight')
+        self._vim.command('setlocal nowrap')
+        self._vim.command('setlocal signcolumn=no')
         if self._context['cursorline']:
-            window_options['cursorline'] = True
+            self._vim.command('setlocal cursorline')
+
         self._save_window_options = {}
-        for k, v in window_options.items():
-            self._save_window_options[k] = self._window_options[k]
-            self._window_options[k] = v
+        window_options = {
+            'colorcolumn',
+            'concealcursor',
+            'conceallevel',
+            'cursorcolumn',
+            'cursorline',
+            'foldcolumn',
+            'foldenable',
+            'list',
+            'number',
+            'relativenumber',
+            'signcolumn',
+            'spell',
+            'winfixheight',
+            'wrap',
+        }
+        for k in window_options:
+            self._save_window_options[k] = self._vim.current.window.options[k]
 
         self._options = self._vim.current.buffer.options
         if self._floating:
@@ -545,7 +561,7 @@ class Default(object):
                     " %{denite#get_status('path')}%*" +
                     "%{" + linenr + "}%*")
             else:
-                self._window_options['statusline'] = (
+                self._vim.current.window.options['statusline'] = (
                     "%#deniteInput#%{denite#get_status('input')}%* " +
                     "%{denite#get_status('sources')} %=" +
                     "%#deniteStatusLinePath# %{denite#get_status('path')}%*" +
@@ -715,7 +731,6 @@ class Default(object):
 
         # Restore the window
         if self._context['split'] == 'no':
-            self._window_options['cursorline'] = False
             self._switch_prev_buffer()
             for k, v in self._save_window_options.items():
                 self._vim.current.window.options[k] = v
