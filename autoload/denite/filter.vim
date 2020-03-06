@@ -104,7 +104,15 @@ function! s:new_filter_buffer(context) abort
             \ 'width': str2nr(a:context['winwidth']),
             \ 'height': 1,
             \})
-    else
+    elseif a:context['split'] ==# 'floating_relative'
+      call nvim_open_win(bufnr('%'), v:true, {
+            \ 'relative': 'editor',
+            \ 'row': row + winheight(0),
+            \ 'col': win_screenpos(0)[1],
+            \ 'width': winwidth(0),
+            \ 'height': 1,
+            \})
+    elseif a:context['filter_split_direction'] ==# 'floating'
       call nvim_open_win(bufnr('%'), v:true, {
             \ 'relative': 'editor',
             \ 'row': row + winheight(0) + 1,
