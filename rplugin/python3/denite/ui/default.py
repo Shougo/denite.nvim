@@ -747,6 +747,8 @@ class Default(object):
         self._vim.call('setpos', '.', self._prev_curpos)
 
         if self._get_wininfo() and self._get_wininfo() == self._prev_wininfo:
+            # Note: execute restcmd twice to restore layout properly
+            self._vim.command(self._winrestcmd)
             self._vim.command(self._winrestcmd)
 
         clearmatch(self._vim)
