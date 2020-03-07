@@ -345,14 +345,15 @@ class Default(object):
                         'height': int(self._context['winheight']),
                     })
             elif split == 'floating_relative':
-                pos = self._vim.call('winsaveview')
-                bot_height = (self._vim.call('winheight', 0)
-                              - (pos['lnum'] - pos['topline']))
+                opened_pos = (self._vim.call('win_screenpos', '.')[0] +
+                              self._vim.call('winline') - 1)
                 width = int(self._context['winwidth'])
                 height = int(self._context['winheight'])
-                if bot_height < height:
-                    row = -height
+                if opened_pos + height > self._vim.eval('&lines'):
+                    anchor = 'SW'
+                    row = 0
                 else:
+                    anchor = 'NW'
                     row = 1
                 self._vim.call(
                     'nvim_open_win',
@@ -362,6 +363,7 @@ class Default(object):
                         'col': 0,
                         'width': width,
                         'height': height,
+                        'anchor': anchor,
                     })
         elif (self._context['filter_split_direction'] == 'floating' and
                 self._vim.call('exists', '*nvim_open_win')):
