@@ -322,26 +322,47 @@ class Default(object):
             return
 
         self._floating = False
+        if (split in ['floating', 'floating_relative'] and
+           self._vim.call('exists', '*nvim_open_win')):
+            self._floating = True
         self._filter_floating = False
 
         command = 'edit'
         if split == 'tab':
             self._vim.command('tabnew')
-        elif (split == 'floating' and
-                self._vim.call('exists', '*nvim_open_win')):
+        if self._floating:
+            # Use floating window
             if self._vim.current.buffer.options['filetype'] != 'denite':
                 self._titlestring = self._vim.options['titlestring']
-            # Use floating window
-            self._floating = True
-            self._vim.call(
-                'nvim_open_win',
-                self._vim.call('bufnr', '%'), True, {
-                    'relative': 'editor',
-                    'row': int(self._context['winrow']),
-                    'col': int(self._context['wincol']),
-                    'width': int(self._context['winwidth']),
-                    'height': int(self._context['winheight']),
-                })
+            if split == 'floating':
+                self._vim.call(
+                    'nvim_open_win',
+                    self._vim.call('bufnr', '%'), True, {
+                        'relative': 'editor',
+                        'row': int(self._context['winrow']),
+                        'col': int(self._context['wincol']),
+                        'width': int(self._context['winwidth']),
+                        'height': int(self._context['winheight']),
+                    })
+            elif split == 'floating_relative':
+                pos = self._vim.call('winsaveview')
+                bot_height = (self._vim.call('winheight', 0)
+                              - (pos['lnum'] - pos['topline']))
+                width = int(self._context['winwidth'])
+                height = int(self._context['winheight'])
+                if bot_height < height:
+                    row = -height
+                else:
+                    row = 1
+                self._vim.call(
+                    'nvim_open_win',
+                    self._vim.call('bufnr', '%'), True, {
+                        'relative': 'cursor',
+                        'row': row,
+                        'col': 0,
+                        'width': width,
+                        'height': height,
+                    })
         elif (self._context['filter_split_direction'] == 'floating' and
                 self._vim.call('exists', '*nvim_open_win')):
             self._titlestring = self._vim.options['titlestring']
@@ -353,8 +374,9 @@ class Default(object):
         if self._vim.call('exists', '*bufadd'):
             bufnr = self._vim.call('bufadd', bufname)
             vertical = 'vertical' if split == 'vertical' else ''
-            command = ('buffer' if split in ['no', 'tab', 'floating']
-                       else 'sbuffer')
+            command = (
+              'buffer' if split
+              in ['no', 'tab', 'floating', 'floating_relative'] else 'sbuffer')
             self._vim.command(
                 'silent keepalt %s %s %s %s' % (
                     self._get_direction(),
