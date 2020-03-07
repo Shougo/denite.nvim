@@ -7,6 +7,7 @@
 import re
 
 from denite.base.source import Base
+from denite.kind.word import Kind as Word
 from denite.util import Nvim, UserContext, Candidates
 
 
@@ -16,7 +17,7 @@ class Source(Base):
         super().__init__(vim)
 
         self.name = 'register'
-        self.kind = 'word'
+        self.kind = Kind(vim)
 
     def gather_candidates(self, context: UserContext) -> Candidates:
         candidates = []
@@ -37,5 +38,24 @@ class Source(Base):
                 'word': reg + ': ' + re.sub(
                     r'\n', r'\\n', register)[:200],
                 'action__text': register,
+                'action__register': reg,
             })
         return candidates
+
+
+class Kind(Word):
+    def __init__(self, vim: Nvim) -> None:
+        super().__init__(vim)
+
+        self.name = 'register'
+        self.persist_actions += ['edit']  # type: ignore
+        self.redraw_actions += ['edit']  # type: ignore
+
+    def action_edit(self, context: UserContext) -> None:
+        for target in context['targets']:
+            new_value = str(self.vim.call(
+                'denite#util#input',
+                f"Register {target['action__register']}: ",
+                target['action__text'],
+            ))
+            self.vim.call('setreg', target['action__register'], new_value)
