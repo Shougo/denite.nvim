@@ -108,7 +108,7 @@ function! s:new_filter_buffer(context) abort
       call nvim_open_win(bufnr('%'), v:true, {
             \ 'relative': 'editor',
             \ 'row': row + winheight(0),
-            \ 'col': win_screenpos(0)[1],
+            \ 'col': win_screenpos(0)[1] - 1,
             \ 'width': winwidth(0),
             \ 'height': 1,
             \})
@@ -116,7 +116,7 @@ function! s:new_filter_buffer(context) abort
       call nvim_open_win(bufnr('%'), v:true, {
             \ 'relative': 'editor',
             \ 'row': row + winheight(0) + 1,
-            \ 'col': win_screenpos(0)[1],
+            \ 'col': win_screenpos(0)[1] - 1,
             \ 'width': winwidth(0),
             \ 'height': 1,
             \})
