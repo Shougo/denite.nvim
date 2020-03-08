@@ -356,9 +356,11 @@ class Default(object):
                 if opened_pos + height > self._vim.eval('&lines'):
                     anchor = 'SW'
                     row = 0
+                    self._context['filter_winrow'] = row + opened_pos
                 else:
                     anchor = 'NW'
                     row = 1
+                    self._context['filter_winrow'] = row + height + opened_pos
                 self._vim.call(
                     'nvim_open_win',
                     self._vim.call('bufnr', '%'), True, {
