@@ -643,7 +643,8 @@ class Default(object):
                 row = wincol
                 if split == 'floating':
                     if self._context['auto_resize'] and row > 1:
-                        row += int(self._context['winheight']) - self._winheight
+                        row += int(self._context['winheight'])
+                        row -= self._winheight
                     self._vim.call('nvim_win_set_config', self._winid, {
                         'relative': 'editor',
                         'row': row,
