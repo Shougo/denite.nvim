@@ -887,6 +887,8 @@ OPTIONS							*denite-options*
 		"no": No split
 		"tab": Create the new tab for denite buffer
 		"floating": Use neovim floating window feature
+		"floating_relative": similar to "floating" but open floating
+		window near the cursor.
 
 		Note: To use "floating", you need to use neovim
 		0.4.0+(|nvim_open_win()|).
@@ -934,6 +936,8 @@ OPTIONS							*denite-options*
 -winheight={window-height}
 		Set the height of the Denite window if |denite-option-split|
 		is "horizontal".
+		if |denite-option-split| is "floating" or "floating_relative",
+		set the height of the floating window.
 		If auto-resize is set, |denite-option-winheight| is the
 		maximum size of the window.
 
@@ -951,6 +955,8 @@ OPTIONS							*denite-options*
 -winwidth={window-width}
 		Set the width of the Denite window if |denite-option-split|
 		is "vertical".
+		if |denite-option-split| is "floating" or "floating_relative",
+		set the width of the floating window.
 
 		Default: &columns / 2
 
