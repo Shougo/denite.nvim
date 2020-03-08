@@ -330,7 +330,7 @@ class Default(object):
         command = 'edit'
         if split == 'tab':
             self._vim.command('tabnew')
-        if self._floating:
+        elif self._floating:
             # Use floating window
             if self._vim.current.buffer.options['filetype'] != 'denite':
                 self._titlestring = self._vim.options['titlestring']
@@ -353,7 +353,8 @@ class Default(object):
                 else:
                     width = int(self._context['winwidth'])
                     height = int(self._context['winheight'])
-                if opened_pos + height > self._vim.eval('&lines'):
+
+                if opened_pos + height + 3 > self._vim.eval('&lines'):
                     anchor = 'SW'
                     row = 0
                     self._context['filter_winrow'] = row + opened_pos
