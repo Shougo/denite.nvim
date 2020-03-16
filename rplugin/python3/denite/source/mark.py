@@ -77,10 +77,8 @@ class Source(Base):
     def gather_candidates(self, context: UserContext) -> Candidates:
         return self._get_marks(context)
 
-    def empty_mark(self, mark_info: typing.List[str]) -> bool:
-        return mark_info[1] == 0 and \
-            mark_info[2] == 0 and \
-            mark_info[3] == 0
+    def empty_mark(self, mark_info: typing.List[int]) -> bool:
+        return mark_info[1] == 0 and mark_info[2] == 0 and mark_info[3] == 0
 
 
 class Kind(File):
