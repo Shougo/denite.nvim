@@ -108,12 +108,13 @@ function! s:new_filter_buffer(context) abort
             \ 'height': 1,
             \})
     elseif a:context['split'] ==# 'floating_relative'
-      " cursor pos cannot be get from this function.
-      " so estimate cursor position from floating buffer position instead.
+      " cursor position cannot be gotten from this function.
+      " so instead estimating it from floating buffer position.
         call nvim_open_win(bufnr('%'), v:true, {
-            \ 'relative': 'win',
+            \ 'relative': 'editor',
             \ 'row': on_start_filter ? row : row + winheight(0),
-            \ 'col': nvim_win_get_config(0)['col'],
+            \ 'col': on_start_filter ? nvim_win_get_config(0)['col']
+              \ : win_screenpos(0)[1] - 1,
             \ 'width': winwidth(0),
             \ 'height': 1,
             \})
