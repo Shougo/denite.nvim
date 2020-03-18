@@ -872,4 +872,7 @@ class Default(object):
             return
 
         self._vim.call('timer_stop', self._timers[key])
-        self._timers.pop(key)
+
+        # Note: After timer_stop is called, self._timers may be removed
+        if key in self._timers:
+            self._timers.pop(key)
