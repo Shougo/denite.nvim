@@ -321,10 +321,7 @@ class Default(object):
             self._winrestcmd = ''
             return
 
-        self._floating = False
-        if (split in ['floating', 'floating_relative'] and
-           self._vim.call('exists', '*nvim_open_win')):
-            self._floating = True
+        self._floating = split in ['floating', 'floating_relative']
         self._filter_floating = False
 
         command = 'edit'
@@ -373,8 +370,7 @@ class Default(object):
                         'anchor': anchor,
                     })
 
-        elif (self._context['filter_split_direction'] == 'floating' and
-                self._vim.call('exists', '*nvim_open_win')):
+        elif self._context['filter_split_direction'] == 'floating':
             self._titlestring = self._vim.options['titlestring']
             self._filter_floating = True
         elif split != 'no':
