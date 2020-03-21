@@ -8,7 +8,7 @@ from denite.base.source import Base
 from denite.util import Nvim, UserContext, Candidates, Candidate
 from denite import util, process
 
-from os.path import relpath
+from pathlib import Path
 import typing
 
 LINE_NUMBER_SYNTAX = (
@@ -48,14 +48,32 @@ class Source(Base):
         }
 
     def on_init(self, context: UserContext) -> None:
-        context['__bufnr'] = self.vim.current.buffer.number
+        buf = self.vim.current.buffer
+
+        context['__bufnr'] = buf.number
         context['__fmt'] = '%' + str(len(
             str(self.vim.call('line', '$')))) + 'd: %s'
-        context['__path'] = util.abspath(self.vim,
-                                         self.vim.current.buffer.name)
+
+        bufpath = util.abspath(self.vim, buf.name)
+        context['__temp'] = ''
+        if (buf.options['modified'] or 'nofile' in buf.options['buftype'] or
+                not self.vim.call('filereadable', bufpath)):
+            context['__temp'] = self.vim.call(
+                'denite#helper#_get_temp_file', buf.number)
+            context['__path'] = context['__temp']
+        else:
+            context['__path'] = bufpath
 
         # Interactive mode
         context['is_interactive'] = True
+
+    def on_close(self, context: UserContext) -> None:
+        if not context['__temp']:
+            return
+
+        path = Path(context['__temp'])
+        if path.exists() and not path.is_dir():
+            path.unlink()
 
     def highlight(self) -> None:
         self.vim.command(LINE_NUMBER_SYNTAX + self.syntax_name)
@@ -86,7 +104,6 @@ class Source(Base):
             result = util.parse_jump_line(context['path'], line)
             if not result:
                 continue
-            path = relpath(result[0], start=context['path'])
             candidates.append(_candidate(
                 result, context['__bufnr'], context['__fmt']))
         return candidates

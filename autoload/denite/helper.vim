@@ -258,3 +258,9 @@ function! denite#helper#_start_update_buffer_timer() abort
   return timer_start(50,
         \ {-> denite#call_map('update_buffer')}, {'repeat': -1})
 endfunction
+
+function! denite#helper#_get_temp_file(bufnr) abort
+  let temp = tempname()
+  call writefile(getbufline(a:bufnr, 1, '$'), temp)
+  return temp
+endfunction
