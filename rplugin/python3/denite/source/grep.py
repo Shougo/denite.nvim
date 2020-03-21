@@ -133,22 +133,7 @@ class Source(Base):
         if not context['__patterns'] or not self.vars['command']:
             return []
 
-        args = [util.expand(self.vars['command'][0])]
-        args += self.vars['command'][1:]
-        args += self.vars['default_opts']
-        args += self.vars['recursive_opts']
-        args += context['__arguments']
-        if self.vars['pattern_opt']:
-            for pattern in context['__patterns']:
-                args += self.vars['pattern_opt'] + [pattern]
-            args += self.vars['separator']
-        else:
-            args += self.vars['separator']
-            args += context['__patterns']
-        if context['__paths']:
-            args += context['__paths']
-        args += self.vars['final_opts']
-
+        args = self._init_grep_args(context)
         self.print_message(context, args)
 
         context['__proc'] = process.Process(args, context, context['path'])
@@ -172,6 +157,24 @@ class Source(Base):
             path = relpath(result[0], start=context['path'])
             candidates.append(_candidate(result, path))
         return candidates
+
+    def _init_grep_args(self, context: UserContext):
+        args = [util.expand(self.vars['command'][0])]
+        args += self.vars['command'][1:]
+        args += self.vars['default_opts']
+        args += self.vars['recursive_opts']
+        args += context['__arguments']
+        if self.vars['pattern_opt']:
+            for pattern in context['__patterns']:
+                args += self.vars['pattern_opt'] + [pattern]
+            args += self.vars['separator']
+        else:
+            args += self.vars['separator']
+            args += context['__patterns']
+        if context['__paths']:
+            args += context['__paths']
+        args += self.vars['final_opts']
+        return args
 
     def _init_paths(self, context: UserContext,
                     args: typing.Dict[int, str]) -> typing.List[str]:
