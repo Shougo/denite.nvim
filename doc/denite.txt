@@ -1187,6 +1187,12 @@ line		Gather current buffer lines as candidates.
 		"empty":     Include empty lines
 		"noempty":   Do not include empty lines
 		Note: By default, empty lines are included.
+
+						*denite-source-line/external*
+line/external	Gather current buffer lines as candidates.
+		It is simpler but faster than |denite-source-line|.
+		It is useful for huge buffers.
+
 						*denite-source-mark*
 mark		Gather |:mark|.
 

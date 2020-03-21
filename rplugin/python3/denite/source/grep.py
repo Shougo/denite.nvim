@@ -158,7 +158,7 @@ class Source(Base):
             candidates.append(_candidate(result, path))
         return candidates
 
-    def _init_grep_args(self, context: UserContext):
+    def _init_grep_args(self, context: UserContext) -> typing.List[str]:
         args = [util.expand(self.vars['command'][0])]
         args += self.vars['command'][1:]
         args += self.vars['default_opts']
