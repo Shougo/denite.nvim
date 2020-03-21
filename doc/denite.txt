@@ -1192,6 +1192,19 @@ line		Gather current buffer lines as candidates.
 line/external	Gather current buffer lines as candidates.
 		It is simpler but faster than |denite-source-line|.
 		It is useful for huge buffers.
+		Note: The command result must be "path:linenr:text" pattern.
+
+		Source custom variables:
+		command		the default grep command
+				(default: ["grep"])
+		default_opts	the grep default options
+				(default: ["-inH"])
+		pattern_opt	the pattern option
+				(default: ["-e"]
+		separator	the argument separator
+				(default: ["--"])
+		final_opts	the final arguments
+				(default: [])
 
 						*denite-source-mark*
 mark		Gather |:mark|.
