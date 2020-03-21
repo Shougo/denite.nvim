@@ -19,11 +19,11 @@ LINE_NUMBER_HIGHLIGHT = 'highlight default link deniteSource_lineNumber LineNR'
 
 
 def _candidate(result: typing.List[typing.Any],
-               path: str, fmt: str) -> Candidate:
+               bufnr: int, fmt: str) -> Candidate:
     return {
         'word': result[3],
         'abbr': fmt % (int(result[1]), result[3]),
-        'action__path': result[0],
+        'action__bufnr': bufnr,
         'action__line': result[1],
         'action__col': result[2],
         'action__text': result[3],
@@ -87,7 +87,8 @@ class Source(Base):
             if not result:
                 continue
             path = relpath(result[0], start=context['path'])
-            candidates.append(_candidate(result, path, context['__fmt']))
+            candidates.append(_candidate(
+                result, context['__bufnr'], context['__fmt']))
         return candidates
 
     def _init_args(self, context: UserContext) -> typing.List[str]:
