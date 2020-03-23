@@ -64,8 +64,16 @@ class Source(Base):
         else:
             context['__path'] = bufpath
 
+        # Backwards compatibility for `ack`
+        if (self.vars['command'] and
+                self.vars['command'][0] == 'ack' and
+                self.vars['pattern_opt'] == ['-e']):
+            self.vars['pattern_opt'] = ['--match']
+
         # Interactive mode
         context['is_interactive'] = True
+
+        context['__args'] = ''
 
     def on_close(self, context: UserContext) -> None:
         if not context['__temp']:
@@ -84,6 +92,10 @@ class Source(Base):
             return []
 
         args = self._init_args(context)
+        if args == context['__args'] and context['__proc']:
+            return self._async_gather_candidates(context, 0.5)
+
+        context['__args'] = args
         self.print_message(context, str(args))
 
         context['__proc'] = process.Process(args, context, context['path'])
