@@ -201,49 +201,58 @@ EXAMPLES						*denite-examples*
 	call denite#custom#var('menu', 'menus', s:menus)
 
 	" Ag command on grep source
-	call denite#custom#var('grep', 'command', ['ag'])
-	call denite#custom#var('grep', 'default_opts',
-			\ ['-i', '--vimgrep'])
-	call denite#custom#var('grep', 'recursive_opts', [])
-	call denite#custom#var('grep', 'pattern_opt', [])
-	call denite#custom#var('grep', 'separator', ['--'])
-	call denite#custom#var('grep', 'final_opts', [])
+	call denite#custom#var('grep', {
+		\ 'command': ['ag'],
+		\ 'default_opts': ['-i', '--vimgrep'],
+		\ 'recursive_opts': [],
+		\ 'pattern_opt:, [],
+		\ 'separator': ['--'],
+		\ 'final_opts': [],
+		\ })
 
 	" Ack command on grep source
-	call denite#custom#var('grep', 'command', ['ack'])
-	call denite#custom#var('grep', 'default_opts',
-			\ ['--ackrc', $HOME.'/.ackrc', '-H', '-i',
-			\  '--nopager', '--nocolor', '--nogroup', '--column'])
-	call denite#custom#var('grep', 'recursive_opts', [])
-	call denite#custom#var('grep', 'pattern_opt', ['--match'])
-	call denite#custom#var('grep', 'separator', ['--'])
-	call denite#custom#var('grep', 'final_opts', [])
+	call denite#custom#var('grep', {
+		\ 'command': ['ack'])
+		\ 'default_opts': [
+		\   '--ackrc', $HOME.'/.ackrc', '-H', '-i',
+		\   '--nopager', '--nocolor', '--nogroup', '--column'
+		\ ],
+		\ 'recursive_opts': [],
+		\ 'pattern_opt': ['--match'],
+		\ 'separator': ['--'],
+		\ 'final_opts': [],
+		\ })
 
 	" Ripgrep command on grep source
-	call denite#custom#var('grep', 'command', ['rg'])
-	call denite#custom#var('grep', 'default_opts',
-			\ ['-i', '--vimgrep', '--no-heading'])
-	call denite#custom#var('grep', 'recursive_opts', [])
-	call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
-	call denite#custom#var('grep', 'separator', ['--'])
-	call denite#custom#var('grep', 'final_opts', [])
+	call denite#custom#var('grep', {
+		\ 'command': ['rg'])
+		\ 'default_opts': ['-i', '--vimgrep', '--no-heading'],
+		\ 'recursive_opts': [],
+		\ 'pattern_opt': ['--regexp'],
+		\ 'separator': ['--'],
+		\ 'final_opts': [],
+		\ })
 
 	" Pt command on grep source
-	call denite#custom#var('grep', 'command', ['pt'])
-	call denite#custom#var('grep', 'default_opts',
-			\ ['-i', '--nogroup', '--nocolor', '--smart-case'])
-	call denite#custom#var('grep', 'recursive_opts', [])
-	call denite#custom#var('grep', 'pattern_opt', [])
-	call denite#custom#var('grep', 'separator', ['--'])
-	call denite#custom#var('grep', 'final_opts', [])
+	call denite#custom#var('grep', {
+		\ 'command': ['pt'])
+		\ 'default_opts': [
+		\   '-i', '--nogroup', '--nocolor', '--smart-case'],
+		\ 'recursive_opts': [],
+		\ 'pattern_opt': [],
+		\ 'separator': ['--'],
+		\ 'final_opts': [],
+		\ })
 
 	" jvgrep command on grep source
-	call denite#custom#var('grep', 'command', ['jvgrep'])
-	call denite#custom#var('grep', 'default_opts', ['-i'])
-	call denite#custom#var('grep', 'recursive_opts', ['-R'])
-	call denite#custom#var('grep', 'pattern_opt', [])
-	call denite#custom#var('grep', 'separator', [])
-	call denite#custom#var('grep', 'final_opts', [])
+	call denite#custom#var('grep', {
+		\ 'command': ['jvgrep'])
+		\ 'default_opts': ['-i'],
+		\ 'recursive_opts': ['-R'],
+		\ 'pattern_opt': [],
+		\ 'separator': [],
+		\ 'final_opts': [],
+		\ })
 
 	" Specify multiple paths in grep source
 	"call denite#start([{'name': 'grep',
@@ -470,16 +479,22 @@ denite#custom#alias({type}, {alias-name}, {base-name})
 
 						*denite#custom#filter()*
 denite#custom#filter({filter-name}, {variable-name}, {value})
+denite#custom#filter({filter-name}, {dict})
 		Set {filter-name} filter specialized variable {variable-name}
 		to {value}.  You may specify multiple filters with the
 		separator "," in {filter-name}.
+		If {dict} is available, the key is {option-name} and the value
+		is {value}.
 
 						*denite#custom#kind()*
 denite#custom#kind({kind-name}, {option-name}, {value})
+denite#custom#kind({kind-name}, {dict})
 		Set {kind-name} kind specialized {option-name} to {value}.
 		You may specify multiple kinds with the separator "," in
 		{kind-name}.
 		A {kind-name} of "_" sets the default for all kinds.
+		If {dict} is available, the key is {option-name} and the value
+		is {value}.
 
 		The options below are available:
 
@@ -497,17 +512,19 @@ denite#custom#option({buffer-name}, {dict})
 		is {value}.
 		Note: The all options are in |denite-options|.  However, "-"
 		is substituted to "_", and "-" prefix is removed. >
-		substituted to "_", and "-" prefix is removed. >
 
 	call denite#custom#option('default', {
 	      \ 'source_names': 'short',
 	      \ })
 						*denite#custom#source()*
 denite#custom#source({source-name}, {option-name}, {value})
+denite#custom#source({source-name}, {dict})
 		Set {source-name} source specialized {option-name} to {value}.
 		You may specify multiple sources with the separator "," in
 		{source-name}.
 		A {source-name} of "_" sets the default for all sources.
+		If {dict} is available, the key is {option-name} and the value
+		is {value}.
 
 		The options below are available:
 
@@ -537,9 +554,12 @@ denite#custom#source({source-name}, {option-name}, {value})
 
 							*denite#custom#var()*
 denite#custom#var({source-name}, {var-name}, {value})
+denite#custom#var({source-name}, {dict})
 		Set {source-name} source specialized variable {variable-name}
 		to {value}.  You may specify multiple sources with the
 		separator "," in {source-name}.
+		If {dict} is available, the key is {var-name} and the value
+		is {value}.
 
 							*denite#do_action()*
 denite#do_action({context}, {action-name}, {targets})
