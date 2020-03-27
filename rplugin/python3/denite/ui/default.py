@@ -249,25 +249,6 @@ class Default(object):
 
         self._vim.vars['denite#_previewed_buffers'] = {}
 
-        # Note: Have to use setlocal instead of "current.window.options"
-        # "current.window.options" changes global value instead of local in
-        # neovim.
-        self._vim.command('setlocal colorcolumn=')
-        self._vim.command('setlocal conceallevel=3')
-        self._vim.command('setlocal concealcursor=inv')
-        self._vim.command('setlocal nocursorcolumn')
-        self._vim.command('setlocal nofoldenable')
-        self._vim.command('setlocal foldcolumn=0')
-        self._vim.command('setlocal nolist')
-        self._vim.command('setlocal nonumber')
-        self._vim.command('setlocal norelativenumber')
-        self._vim.command('setlocal nospell')
-        self._vim.command('setlocal winfixheight')
-        self._vim.command('setlocal nowrap')
-        self._vim.command('setlocal signcolumn=no')
-        if self._context['cursorline']:
-            self._vim.command('setlocal cursorline')
-
         self._save_window_options = {}
         window_options = {
             'colorcolumn',
@@ -287,6 +268,25 @@ class Default(object):
         }
         for k in window_options:
             self._save_window_options[k] = self._vim.current.window.options[k]
+
+        # Note: Have to use setlocal instead of "current.window.options"
+        # "current.window.options" changes global value instead of local in
+        # neovim.
+        self._vim.command('setlocal colorcolumn=')
+        self._vim.command('setlocal conceallevel=3')
+        self._vim.command('setlocal concealcursor=inv')
+        self._vim.command('setlocal nocursorcolumn')
+        self._vim.command('setlocal nofoldenable')
+        self._vim.command('setlocal foldcolumn=0')
+        self._vim.command('setlocal nolist')
+        self._vim.command('setlocal nonumber')
+        self._vim.command('setlocal norelativenumber')
+        self._vim.command('setlocal nospell')
+        self._vim.command('setlocal winfixheight')
+        self._vim.command('setlocal nowrap')
+        self._vim.command('setlocal signcolumn=no')
+        if self._context['cursorline']:
+            self._vim.command('setlocal cursorline')
 
         self._options = self._vim.current.buffer.options
         if self._floating:
