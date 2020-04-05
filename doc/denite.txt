@@ -466,6 +466,8 @@ denite#call_map({map-name}[, {args}])			*denite#call_map()*
 						*denite#custom#action()*
 denite#custom#action({kind}, {name}, {func}[, {options}])
 		Define {name} action for {kind}.
+		If {kind} is "source/{source-name}", you can define
+		{source-name} specific action.
 		{func} must be a |Funcref| or the name of a function.
 		{options} is an optional dictionary which overrides the
 		action behaviors "is_quit" and/or "is_redraw".

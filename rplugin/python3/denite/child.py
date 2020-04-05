@@ -18,7 +18,6 @@ import sys
 import time
 import typing
 from os.path import normpath, normcase
-from collections import ChainMap
 from itertools import filterfalse
 
 Action = typing.Dict[str, typing.Any]
@@ -257,11 +256,12 @@ class Child(object):
             } if source.is_public_context else {}
 
         context['targets'] = targets
+        index = action['kind'] + ',source/' + action['source']
         new_context = (action['func'](context)
                        if action['func']
                        else self._vim.call(
                            'denite#custom#_call_action',
-                           action['kind'], action['name'], context))
+                           index, action['name'], context))
         if new_context:
             context.update(new_context)
         return False
@@ -282,10 +282,13 @@ class Child(object):
     def get_action_names(self, context: UserContext,
                          targets: Candidates) -> typing.List[str]:
         kinds = set()
+        sources = set()
         for target in targets:
             k = self._get_kind(context, target)
+            source = self._current_sources[int(target['source_index'])]
             if k:
                 kinds.add(k)
+            sources.add(source)
         if len(kinds) != 1:
             if len(kinds) > 1:
                 self.error('Multiple kinds are detected')
@@ -294,6 +297,9 @@ class Child(object):
         kind = kinds.pop()
         actions = kind.get_action_names()
         actions += self._get_custom_actions(kind.name).keys()
+        if len(sources) == 1:
+            actions += self._get_custom_actions(
+                'source/' + sources.pop().name).keys()
         return actions  # type: ignore
 
     def is_async(self) -> bool:
@@ -554,15 +560,19 @@ class Child(object):
 
         # Custom action
         custom_actions = self._get_custom_actions(kind.name)
+        custom_actions.update(
+            self._get_custom_actions('source/' + source.name))
         if action_name in custom_actions:
             _, user_attrs = custom_actions[action_name]
-            return ChainMap(user_attrs, {
+            user_attrs.update({
                 'name': action_name,
                 'kind': kind.name,
+                'source': source.name,
                 'func': None,
                 'is_quit': True,
                 'is_redraw': False,
             })
+            return user_attrs
 
         action_attr = 'action_' + action_name
         if not hasattr(kind, action_attr):
@@ -571,6 +581,7 @@ class Child(object):
         return {
             'name': action_name,
             'kind': kind.name,
+            'source': source.name,
             'func': getattr(kind, action_attr),
             'is_quit': (action_name not in kind.persist_actions),
             'is_redraw': (action_name in kind.redraw_actions),
