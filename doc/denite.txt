@@ -279,6 +279,9 @@ EXAMPLES						*denite-examples*
 	call denite#custom#action('file', 'test2',
 	      \ {context -> denite#do_action(
 	      \  context, 'open', context['targets'])})
+	" Source specific action
+	call denite#custom#action('source/file', 'test',
+	      \ {context -> execute('let g:bar = 1')})
 <
 ==============================================================================
 INTERFACE						*denite-interface*
