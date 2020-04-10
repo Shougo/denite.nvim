@@ -236,7 +236,7 @@ class Default(object):
         self._bufnr = self._vim.current.buffer.number
         self._winid = self._vim.call('win_getid')
 
-        self._resize_buffer()
+        self._resize_buffer(True)
 
         self._winheight = self._vim.current.window.height
         self._winwidth = self._vim.current.window.width
@@ -523,14 +523,16 @@ class Default(object):
         buffer[:] = self._displayed_texts
         buffer.options['modifiable'] = False
 
+        self._previous_text = self._context['input']
+
+        self._resize_buffer(is_current_buffer)
+
         if is_current_buffer:
-            self._resize_buffer()
             self._vim.call('cursor', [prev_linenr, 0])
 
             is_changed = (self._context['reversed'] or
                           self._previous_text != self._context['input'])
             if self._updated and is_changed:
-                self._previous_text = self._context['input']
                 self._init_cursor()
                 self._move_to_pos(self._cursor)
 
@@ -611,7 +613,7 @@ class Default(object):
             int(self._context['winrow']) -
             int(self._vim.options['cmdheight']))
 
-    def _resize_buffer(self) -> None:
+    def _resize_buffer(self, is_current_buffer: bool) -> None:
         split = self._context['split']
         if (split == 'no' or split == 'tab' or
                 self._vim.call('winnr', '$') == 1):
@@ -620,6 +622,10 @@ class Default(object):
         winheight = max(self._winheight, 1)
         winwidth = max(self._winwidth, 1)
         is_vertical = split == 'vertical'
+
+        if not is_current_buffer:
+            restore = self._vim.call('win_getid')
+            self._vim.call('win_gotoid', self._winid)
 
         if not is_vertical and self._vim.current.window.height != winheight:
             if self._floating:
@@ -669,6 +675,9 @@ class Default(object):
                 self._vim.command('normal! zb')
         elif is_vertical and self._vim.current.window.width != winwidth:
             self._vim.command('vertical resize ' + str(winwidth))
+
+        if not is_current_buffer:
+            self._vim.call('win_gotoid', restore)
 
     def _check_do_option(self) -> bool:
         if self._context['do'] != '':

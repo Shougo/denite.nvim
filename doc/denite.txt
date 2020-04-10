@@ -2125,6 +2125,9 @@ A: You can use |User| "denite-preview" autocmd. >
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
 
+2020.04.10
+* Remove matched highlight feature to optimize update denite buffer
+
 2020.02.19
 * msgpack 1.0.0+ is required
 https://github.com/msgpack/msgpack-python#major-breaking-changes-in-msgpack-10
