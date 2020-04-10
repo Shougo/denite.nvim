@@ -7,7 +7,7 @@
 import re
 import typing
 
-from denite.util import echo, error
+from denite.util import echo, error, clearmatch
 from denite.util import Nvim, UserContext, Candidates, Candidate
 from denite.parent import SyncParent
 
@@ -791,6 +791,8 @@ class Default(object):
             # Note: execute restcmd twice to restore layout properly
             self._vim.command(self._winrestcmd)
             self._vim.command(self._winrestcmd)
+
+        clearmatch(self._vim)
 
     def _get_cursor_candidate(self) -> Candidate:
         return self._get_candidate(self._cursor)
