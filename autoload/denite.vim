@@ -81,7 +81,8 @@ function! denite#_update_map(name, bufnr, is_async) abort
   endif
 endfunction
 function! s:update_filter() abort
-  let denite_statusline = get(b:, 'denite_statusline', {})
+  let denite_statusline = getbufvar(g:denite#_filter_parent,
+        \ 'denite_statusline', {})
 
   if win_getid() != g:denite#_filter_winid
     noautocmd call win_gotoid(g:denite#_filter_winid)

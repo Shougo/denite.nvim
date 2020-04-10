@@ -511,9 +511,9 @@ class Default(object):
     def _update_buffer(self) -> None:
         is_current_buffer = self._bufnr == self._vim.current.buffer.number
 
-        if is_current_buffer:
-            self._update_status()
+        self._update_status()
 
+        if is_current_buffer:
             if self._vim.call('hlexists', 'deniteMatchedRange'):
                 self._vim.command('silent! syntax clear deniteMatchedRange')
             if self._vim.call('hlexists', 'deniteMatchedChar'):
@@ -592,11 +592,12 @@ class Default(object):
                     " %{denite#get_status('path')}%*" +
                     "%{" + linenr + "}%*")
             else:
-                self._vim.current.window.options['statusline'] = (
+                winnr = self._vim.call('win_id2win', self._winid)
+                self._vim.call('setwinvar', winnr, '&statusline', (
                     "%#deniteInput#%{denite#get_status('input')}%* " +
                     "%{denite#get_status('sources')} %=" +
                     "%#deniteStatusLinePath# %{denite#get_status('path')}%*" +
-                    "%#deniteStatusLineNumber#%{" + linenr + "}%*")
+                    "%#deniteStatusLineNumber#%{" + linenr + "}%*"))
 
     def _get_display_source_name(self, name: str) -> str:
         source_names = self._context['source_names']
