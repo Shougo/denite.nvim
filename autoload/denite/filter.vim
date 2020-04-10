@@ -181,13 +181,7 @@ function! s:update() abort
     return
   endif
 
-  let input = getline('.')
-
-  call denite#filter#_move_to_parent(v:true)
-
-  call denite#call_map('filter', input)
-
-  noautocmd call win_gotoid(g:denite#_filter_winid)
+  call denite#call_map('filter', getline('.'))
 endfunction
 
 function! s:async_update() abort
