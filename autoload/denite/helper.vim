@@ -250,13 +250,15 @@ function! denite#helper#_get_preview_window() abort
 endfunction
 
 
-function! denite#helper#_start_update_candidates_timer() abort
+function! denite#helper#_start_update_candidates_timer(bufnr) abort
   return timer_start(100,
-        \ {-> denite#call_async_map('update_candidates')}, {'repeat': -1})
+        \ {-> denite#call_async_map('update_candidates')},
+        \ {'repeat': -1})
 endfunction
-function! denite#helper#_start_update_buffer_timer() abort
+function! denite#helper#_start_update_buffer_timer(bufnr) abort
   return timer_start(50,
-        \ {-> denite#call_map('update_buffer')}, {'repeat': -1})
+        \ {-> denite#_update_map('update_buffer', a:bufnr, v:false)},
+        \ {'repeat': -1})
 endfunction
 
 function! denite#helper#_get_temp_file(bufnr) abort
