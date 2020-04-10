@@ -513,25 +513,6 @@ class Default(object):
 
         self._update_status()
 
-        if is_current_buffer:
-            if self._vim.call('hlexists', 'deniteMatchedRange'):
-                self._vim.command('silent! syntax clear deniteMatchedRange')
-            if self._vim.call('hlexists', 'deniteMatchedChar'):
-                self._vim.command('silent! syntax clear deniteMatchedChar')
-            if self._matched_pattern != '':
-                self._vim.command(
-                    r'silent! syntax match deniteMatchedRange /\c%s/ contained' %
-                    (regex_convert_py_vim(self._matched_pattern))
-                )
-                self._vim.command((
-                    'silent! syntax match deniteMatchedChar /[%s]/ '
-                    'containedin=deniteMatchedRange contained'
-                ) % re.sub(
-                    r'([\[\]\\^-])',
-                    r'\\\1',
-                    self._context['input'].replace(' ', '')
-                ))
-
         prev_linenr = self._vim.call('line', '.')
         prev_candidate = self._get_cursor_candidate()
 
