@@ -205,7 +205,7 @@ EXAMPLES						*denite-examples*
 		\ 'command': ['ag'],
 		\ 'default_opts': ['-i', '--vimgrep'],
 		\ 'recursive_opts': [],
-		\ 'pattern_opt:, [],
+		\ 'pattern_opt': [],
 		\ 'separator': ['--'],
 		\ 'final_opts': [],
 		\ })
