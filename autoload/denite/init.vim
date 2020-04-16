@@ -121,6 +121,7 @@ function! denite#init#_user_options() abort
         \ 'immediately_1': v:false,
         \ 'input': '',
         \ 'matchers': '',
+        \ 'match_highlight': v:false,
         \ 'max_candidate_width': 200,
         \ 'max_dynamic_update_candidates': 20000,
         \ 'path': getcwd(),
