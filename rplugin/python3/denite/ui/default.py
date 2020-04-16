@@ -528,7 +528,7 @@ class Default(object):
             if self._matched_pattern != '':
                 self._matched_range_id = self._vim.call(
                     'matchadd', 'deniteMatchedRange',
-                    '\c' + regex_convert_py_vim(self._matched_pattern),
+                    r'\c' + regex_convert_py_vim(self._matched_pattern),
                     10, -1, {'window': self._winid})
                 matched_char_pattern = '[{}]'.format(re.sub(
                     r'([\[\]\\^-])',
