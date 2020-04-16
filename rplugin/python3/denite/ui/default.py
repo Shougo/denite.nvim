@@ -7,7 +7,7 @@
 import re
 import typing
 
-from denite.util import echo, error, regex_convert_py_vim, clearmatch
+from denite.util import echo, error, clearmatch
 from denite.util import Nvim, UserContext, Candidates, Candidate
 from denite.parent import SyncParent
 
@@ -236,7 +236,7 @@ class Default(object):
         self._bufnr = self._vim.current.buffer.number
         self._winid = self._vim.call('win_getid')
 
-        self._resize_buffer()
+        self._resize_buffer(True)
 
         self._winheight = self._vim.current.window.height
         self._winwidth = self._vim.current.window.width
@@ -288,17 +288,17 @@ class Default(object):
         if self._context['cursorline']:
             self._vim.command('setlocal cursorline')
 
-        self._options = self._vim.current.buffer.options
+        options = self._vim.current.buffer.options
         if self._floating:
             # Disable ruler
             self._vim.options['ruler'] = False
-        self._options['buftype'] = 'nofile'
-        self._options['bufhidden'] = 'delete'
-        self._options['swapfile'] = False
-        self._options['buflisted'] = False
-        self._options['modeline'] = False
-        self._options['modifiable'] = False
-        self._options['filetype'] = 'denite'
+        options['buftype'] = 'nofile'
+        options['bufhidden'] = 'delete'
+        options['swapfile'] = False
+        options['buflisted'] = False
+        options['modeline'] = False
+        options['modifiable'] = False
+        options['filetype'] = 'denite'
 
         self._vim.command('silent doautocmd WinEnter')
         self._vim.command('silent doautocmd BufWinEnter')
@@ -509,50 +509,36 @@ class Default(object):
         ]
 
     def _update_buffer(self) -> None:
-        if self._bufnr != self._vim.current.buffer.number:
-            return
+        is_current_buffer = self._bufnr == self._vim.current.buffer.number
 
         self._update_status()
-
-        if self._vim.call('hlexists', 'deniteMatchedRange'):
-            self._vim.command('silent! syntax clear deniteMatchedRange')
-        if self._vim.call('hlexists', 'deniteMatchedChar'):
-            self._vim.command('silent! syntax clear deniteMatchedChar')
-        if self._matched_pattern != '':
-            self._vim.command(
-                r'silent! syntax match deniteMatchedRange /\c%s/ contained' %
-                (regex_convert_py_vim(self._matched_pattern))
-            )
-            self._vim.command((
-                'silent! syntax match deniteMatchedChar /[%s]/ '
-                'containedin=deniteMatchedRange contained'
-            ) % re.sub(
-                r'([\[\]\\^-])',
-                r'\\\1',
-                self._context['input'].replace(' ', '')
-            ))
 
         prev_linenr = self._vim.call('line', '.')
         prev_candidate = self._get_cursor_candidate()
 
-        self._options['modifiable'] = True
+        buffer = self._vim.buffers[self._bufnr]
+        buffer.options['modifiable'] = True
         self._vim.vars['denite#_candidates'] = [
             x['word'] for x in self._candidates]
-        self._vim.current.buffer[:] = self._displayed_texts
-        self._options['modifiable'] = False
-        self._resize_buffer()
+        buffer[:] = self._displayed_texts
+        buffer.options['modifiable'] = False
 
-        self._vim.call('cursor', [prev_linenr, 0])
+        self._previous_text = self._context['input']
 
-        if self._updated and (self._context['reversed'] or
-                              self._previous_text != self._context['input']):
-            self._previous_text = self._context['input']
-            self._init_cursor()
-            self._move_to_pos(self._cursor)
+        self._resize_buffer(is_current_buffer)
 
-        if (self._context['auto_action'] and
-                prev_candidate != self._get_cursor_candidate()):
-            self.do_action(self._context['auto_action'])
+        if is_current_buffer:
+            self._vim.call('cursor', [prev_linenr, 0])
+
+            is_changed = (self._context['reversed'] or
+                          self._previous_text != self._context['input'])
+            if self._updated and is_changed:
+                self._init_cursor()
+                self._move_to_pos(self._cursor)
+
+            if (self._context['auto_action'] and
+                    prev_candidate != self._get_cursor_candidate()):
+                self.do_action(self._context['auto_action'])
 
         self._updated = False
         self._stop_timer('update_buffer')
@@ -589,11 +575,12 @@ class Default(object):
                     " %{denite#get_status('path')}%*" +
                     "%{" + linenr + "}%*")
             else:
-                self._vim.current.window.options['statusline'] = (
+                winnr = self._vim.call('win_id2win', self._winid)
+                self._vim.call('setwinvar', winnr, '&statusline', (
                     "%#deniteInput#%{denite#get_status('input')}%* " +
                     "%{denite#get_status('sources')} %=" +
                     "%#deniteStatusLinePath# %{denite#get_status('path')}%*" +
-                    "%#deniteStatusLineNumber#%{" + linenr + "}%*")
+                    "%#deniteStatusLineNumber#%{" + linenr + "}%*"))
 
     def _get_display_source_name(self, name: str) -> str:
         source_names = self._context['source_names']
@@ -626,7 +613,7 @@ class Default(object):
             int(self._context['winrow']) -
             int(self._vim.options['cmdheight']))
 
-    def _resize_buffer(self) -> None:
+    def _resize_buffer(self, is_current_buffer: bool) -> None:
         split = self._context['split']
         if (split == 'no' or split == 'tab' or
                 self._vim.call('winnr', '$') == 1):
@@ -635,6 +622,10 @@ class Default(object):
         winheight = max(self._winheight, 1)
         winwidth = max(self._winwidth, 1)
         is_vertical = split == 'vertical'
+
+        if not is_current_buffer:
+            restore = self._vim.call('win_getid')
+            self._vim.call('win_gotoid', self._winid)
 
         if not is_vertical and self._vim.current.window.height != winheight:
             if self._floating:
@@ -684,6 +675,9 @@ class Default(object):
                 self._vim.command('normal! zb')
         elif is_vertical and self._vim.current.window.width != winwidth:
             self._vim.command('vertical resize ' + str(winwidth))
+
+        if not is_current_buffer:
+            self._vim.call('win_gotoid', restore)
 
     def _check_do_option(self) -> bool:
         if self._context['do'] != '':
@@ -858,10 +852,10 @@ class Default(object):
 
         if key == 'update_candidates':
             self._timers[key] = self._vim.call(
-                'denite#helper#_start_update_candidates_timer')
+                'denite#helper#_start_update_candidates_timer', self._bufnr)
         elif key == 'update_buffer':
             self._timers[key] = self._vim.call(
-                'denite#helper#_start_update_buffer_timer')
+                'denite#helper#_start_update_buffer_timer', self._bufnr)
 
     def _stop_timer(self, key: str) -> None:
         if key not in self._timers:

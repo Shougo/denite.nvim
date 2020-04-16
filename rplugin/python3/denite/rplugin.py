@@ -53,6 +53,8 @@ class Rplugin:
     def do_map(self, args: Args) -> typing.Any:
         from denite.ui.map import do_map
         bufnr = args[0]
+        if not self._vim.call('bufexists', bufnr):
+            return
         bufvars = self._vim.buffers[bufnr].vars
         if 'denite' not in bufvars:
             return
