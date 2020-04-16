@@ -530,12 +530,18 @@ class Default(object):
         if is_current_buffer:
             self._vim.call('cursor', [prev_linenr, 0])
 
-            is_changed = (self._context['reversed'] or
-                          self._previous_text != self._context['input'])
-            if self._updated and is_changed:
-                self._init_cursor()
-                self._move_to_pos(self._cursor)
+        is_changed = (self._context['reversed'] or
+                        self._previous_text != self._context['input'])
+        if self._updated and is_changed:
+            if not is_current_buffer:
+                save_winid = self._vim.call('win_getid')
+                self._vim.call('win_gotoid', self._winid)
+            self._init_cursor()
+            self._move_to_pos(self._cursor)
+            if not is_current_buffer:
+                self._vim.call('win_gotoid', save_winid)
 
+        if is_current_buffer:
             if (self._context['auto_action'] and
                     prev_candidate != self._get_cursor_candidate()):
                 self.do_action(self._context['auto_action'])
