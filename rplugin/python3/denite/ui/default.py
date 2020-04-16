@@ -52,6 +52,8 @@ class Default(object):
         self._timers: typing.Dict[str, int] = {}
         self._matched_range_id = -1
         self._matched_char_id = -1
+        self._check_matchdelete = bool(self._vim.call(
+            'has', 'patch-8.1.1084'))
 
     def start(self, sources: typing.List[typing.Any],
               context: UserContext) -> typing.List[typing.Any]:
@@ -515,7 +517,7 @@ class Default(object):
 
         self._update_status()
 
-        if self._vim.call('has', 'patch-8.1.1084'):
+        if self._check_matchdelete and self._context['match_highlight']:
             if self._matched_range_id > 0:
                 self._vim.call('matchdelete',
                                self._matched_range_id, self._winid)

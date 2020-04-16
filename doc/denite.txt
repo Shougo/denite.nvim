@@ -779,6 +779,12 @@ OPTIONS							*denite-options*
 		Specify an initial narrowing text.
 		Default: ""
 
+						*denite-option-match-highlight*
+-match-highlight
+		Highlight matched chars.
+		Note: Vim 8.1.1084+ is needed for it.
+		Default: v:false
+
 						*denite-option-matchers*
 -matchers
 		Specify a list of matcher names.  They overwrite the source
