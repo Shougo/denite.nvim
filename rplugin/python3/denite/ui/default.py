@@ -556,11 +556,9 @@ class Default(object):
 
         self._resize_buffer(is_current_buffer)
 
-        if is_current_buffer:
-            self._vim.call('cursor', [prev_linenr, 0])
-
         is_changed = (self._context['reversed'] or
-                      self._previous_text != self._context['input'])
+                      (is_current_buffer and
+                       self._previous_text != self._context['input']))
         if self._updated and is_changed:
             if not is_current_buffer:
                 save_winid = self._vim.call('win_getid')
@@ -569,6 +567,8 @@ class Default(object):
             self._move_to_pos(self._cursor)
             if not is_current_buffer:
                 self._vim.call('win_gotoid', save_winid)
+        elif is_current_buffer:
+            self._vim.call('cursor', [prev_linenr, 0])
 
         if is_current_buffer:
             if (self._context['auto_action'] and
