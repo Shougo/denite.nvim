@@ -7,7 +7,7 @@
 import re
 import typing
 
-from denite.util import echo, error, clearmatch
+from denite.util import echo, error, clearmatch, regex_convert_py_vim
 from denite.util import Nvim, UserContext, Candidates, Candidate
 from denite.parent import SyncParent
 
@@ -50,6 +50,8 @@ class Default(object):
         self._filter_floating = False
         self._updated = False
         self._timers: typing.Dict[str, int] = {}
+        self._matched_range_id = -1
+        self._matched_char_id = -1
 
     def start(self, sources: typing.List[typing.Any],
               context: UserContext) -> typing.List[typing.Any]:
@@ -512,6 +514,31 @@ class Default(object):
         is_current_buffer = self._bufnr == self._vim.current.buffer.number
 
         self._update_status()
+
+        if self._vim.call('has', 'patch-8.1.1084'):
+            if self._matched_range_id > 0:
+                self._vim.call('matchdelete',
+                               self._matched_range_id, self._winid)
+                self._matched_range_id = -1
+            if self._matched_char_id > 0:
+                self._vim.call('matchdelete',
+                               self._matched_char_id, self._winid)
+                self._matched_char_id = -1
+
+            if self._matched_pattern != '':
+                self._matched_range_id = self._vim.call(
+                    'matchadd', 'deniteMatchedRange',
+                    '\c' + regex_convert_py_vim(self._matched_pattern),
+                    10, -1, {'window': self._winid})
+                matched_char_pattern = '[{}]'.format(re.sub(
+                    r'([\[\]\\^-])',
+                    r'\\\1',
+                    self._context['input'].replace(' ', '')
+                ))
+                self._matched_char_id = self._vim.call(
+                    'matchadd', 'deniteMatchedChar',
+                    matched_char_pattern,
+                    10, -1, {'window': self._winid})
 
         prev_linenr = self._vim.call('line', '.')
         prev_candidate = self._get_cursor_candidate()
