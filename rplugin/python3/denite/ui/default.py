@@ -560,7 +560,7 @@ class Default(object):
             self._vim.call('cursor', [prev_linenr, 0])
 
         is_changed = (self._context['reversed'] or
-                        self._previous_text != self._context['input'])
+                      self._previous_text != self._context['input'])
         if self._updated and is_changed:
             if not is_current_buffer:
                 save_winid = self._vim.call('win_getid')
