@@ -783,6 +783,7 @@ OPTIONS							*denite-options*
 -match-highlight
 		Highlight matched chars.
 		Note: Vim 8.1.1084+ is needed for it.
+		Note: It is slow.
 		Default: v:false
 
 						*denite-option-matchers*
@@ -883,6 +884,7 @@ OPTIONS							*denite-options*
 						*denite-option-reversed*
 -reversed
 		The candidates are reversed.
+		Note: It is slow.
 		Default: false
 
 						*denite-option-root-markers*
@@ -2132,7 +2134,8 @@ A: You can use |User| "denite-preview" autocmd. >
 COMPATIBILITY						*denite-compatibility*
 
 2020.04.10
-* Remove matched highlight feature to optimize update denite buffer
+* Remove matched highlight feature to optimize update denite buffer.
+  But you can use -match-highlight option if you use Vim 8.1.1084+.
 
 2020.02.19
 * msgpack 1.0.0+ is required
