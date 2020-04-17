@@ -563,7 +563,7 @@ class Child(object):
         custom_actions.update(
             self._get_custom_actions('source/' + source.name))
         if action_name in custom_actions:
-            user_attrs = {
+            attrs = {
                 'name': action_name,
                 'kind': kind.name,
                 'source': source.name,
@@ -571,9 +571,9 @@ class Child(object):
                 'is_quit': True,
                 'is_redraw': False,
             }
-            _, overwrite_attrs = custom_actions[action_name]
-            user_attrs.update(overwrite_attrs)
-            return user_attrs
+            _, user_attrs = custom_actions[action_name]
+            attrs.update(user_attrs)
+            return attrs
 
         action_attr = 'action_' + action_name
         if not hasattr(kind, action_attr):
