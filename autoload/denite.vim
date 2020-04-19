@@ -101,3 +101,13 @@ endfunction
 function! denite#call_async_map(name, ...) abort
   call denite#_call_map(a:name, v:true, get(a:000, 0, []))
 endfunction
+
+" For mapping functions
+function! denite#move_to_filter() abort
+  call win_gotoid(g:denite#_filter_winid)
+  return ''
+endfunction
+function! denite#move_to_parent() abort
+  call denite#filter#_move_to_parent(v:false)
+  return ''
+endfunction

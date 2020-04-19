@@ -604,6 +604,15 @@ denite#initialize()
 		Initialize denite and sources.
 		Note: You don't have to call it manually.
 
+denite#move_to_filter()				*denite#move_to_filter()*
+		Move to the filter buffer.
+		Note: It is only used to define mappings.
+
+denite#move_to_parent()				*denite#move_to_parent()*
+		Move to the parent denite buffer.
+		Note: It is only used to define mappings.
+		Note: It can be used in denite-filter buffer.
+
 							*denite#start()*
 denite#start({sources}[, {context}])
 		Creates a new Denite buffer.
@@ -1996,10 +2005,14 @@ must force this behaviour. >
 
 	autocmd FileType denite-filter call s:denite_filter_my_settings()
 	function! s:denite_filter_my_settings() abort
-	  inoremap <silent><buffer> <C-j>
-	  \ <Esc><C-w>p:call cursor(line('.')+1,0)<CR><C-w>pA
-	  inoremap <silent><buffer> <C-k>
-	  \ <Esc><C-w>p:call cursor(line('.')-1,0)<CR><C-w>pA
+	  inoremap <silent><buffer> <C-j> <Esc>
+	        \:call denite#move_to_parent()<CR>
+	        \:call cursor(line('.')+1,0)<CR>
+	        \:call denite#move_to_filter()<CR>A
+	  inoremap <silent><buffer> <C-k> <Esc>
+	        \:call denite#move_to_parent()<CR>
+	        \:call cursor(line('.')-1,0)<CR>
+	        \:call denite#move_to_filter()<CR>A
 	endfunction
 
 Note: This is very slow in Vim8 environment. See the |denite-examples| for an
