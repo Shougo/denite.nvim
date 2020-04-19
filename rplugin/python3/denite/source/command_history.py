@@ -102,7 +102,7 @@ class Kind(Command):
 
         self.name = 'command/history'
         self.redraw_actions = 'delete'
-        self.persist_actions = 'delete'
+        self.persist_actions = ['preview','delete']
 
     def action_delete(self, context: UserContext) -> None:
         for target in sorted(context['targets'],
