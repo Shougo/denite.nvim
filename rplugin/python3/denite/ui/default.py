@@ -304,9 +304,14 @@ class Default(object):
         options['modifiable'] = False
         options['filetype'] = 'denite'
 
-        self._vim.command('silent doautocmd WinEnter')
-        self._vim.command('silent doautocmd BufWinEnter')
-        self._vim.command('doautocmd FileType denite')
+        if self._vim.call('exists', '#WinEnter'):
+            self._vim.command('doautocmd WinEnter')
+
+        if self._vim.call('exists', '#BufWinEnter'):
+            self._vim.command('doautocmd BufWinEnter')
+
+        if self._vim.call('exists', '#FileType#denite'):
+            self._vim.command('doautocmd FileType denite')
 
         if self._context['auto_action']:
             self._vim.command('autocmd denite '
