@@ -101,8 +101,8 @@ class Kind(Command):
         super().__init__(vim)
 
         self.name = 'command/history'
-        self.redraw_actions = 'delete'
-        self.persist_actions = 'delete'
+        self.redraw_actions += ['delete']
+        self.persist_actions += ['delete']
 
     def action_delete(self, context: UserContext) -> None:
         for target in sorted(context['targets'],

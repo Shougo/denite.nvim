@@ -48,8 +48,8 @@ class Kind(Word):
         super().__init__(vim)
 
         self.name = 'register'
-        self.persist_actions += ['edit']  # type: ignore
-        self.redraw_actions += ['edit']  # type: ignore
+        self.persist_actions += ['edit']
+        self.redraw_actions += ['edit']
 
     def action_edit(self, context: UserContext) -> None:
         for target in context['targets']:
