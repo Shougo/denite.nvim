@@ -74,9 +74,11 @@ class Default(object):
                   command: str = '', is_manual: bool = False) -> None:
         if is_manual:
             candidates = self._get_selected_candidates()
+        elif self._get_cursor_candidate():
+            candidates = [self._get_cursor_candidate()]
         else:
-            candidates = [self._get_cursor_candidate()
-                          ] if self._get_cursor_candidate() else []
+            candidates = []
+
         if not self._denite or not candidates or not action_name:
             return
 
