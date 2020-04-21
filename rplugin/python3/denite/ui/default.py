@@ -72,7 +72,11 @@ class Default(object):
 
     def do_action(self, action_name: str,
                   command: str = '', is_manual: bool = False) -> None:
-        candidates = self._get_selected_candidates()
+        if is_manual:
+            candidates = self._get_selected_candidates()
+        else:
+            candidates = [self._get_cursor_candidate()
+                          ] if self._get_cursor_candidate() else []
         if not self._denite or not candidates or not action_name:
             return
 
@@ -110,7 +114,7 @@ class Default(object):
             # Disable quit flag
             is_quit = False
 
-        if not is_quit:
+        if not is_quit and is_manual:
             self._selected_candidates = []
             self.redraw(action['is_redraw'])
 
