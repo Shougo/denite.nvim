@@ -333,8 +333,10 @@ COMMANDS 						*denite-commands*
 		directory.
 
 :DeniteCursorWord [{options}] {sources}			*:DeniteCursorWord*
-		Equivalent to |:Denite| except that it targets the word under
+		Equivalent to |:Denite| except that it targets <cword> under
 		the cursor for the initial narrowing text.
+		Note: <cword> means 'iskeyword' characters.  If you want to
+		custom <cword> pattern, you need to set 'iskeyword' option.
 
 :DeniteProjectDir [{options}] {sources}			*:DeniteProjectDir*
 		Equivalent to |:Denite| except that it targets the project
