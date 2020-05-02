@@ -31,7 +31,9 @@ class Context(object):
         context.update(user_context)
 
         if context['command'] == 'DeniteCursorWord':
-            context['input'] = self._vim.call('expand', '<cword>')
+            context['input'] = self._vim.call(
+                'denite#util#escape_match',
+                self._vim.call('expand', '<cword>'))
         elif context['command'] == 'DeniteBufferDir':
             context['path'] = self._vim.call('expand', '%:p:h')
         elif context['command'] == 'DeniteProjectDir':

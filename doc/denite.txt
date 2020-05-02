@@ -337,6 +337,7 @@ COMMANDS 						*denite-commands*
 		the cursor for the initial narrowing text.
 		Note: <cword> means 'iskeyword' characters.  If you want to
 		custom <cword> pattern, you need to set 'iskeyword' option.
+		Note: <cword> characters are escaped automatically.
 
 :DeniteProjectDir [{options}] {sources}			*:DeniteProjectDir*
 		Equivalent to |:Denite| except that it targets the project
