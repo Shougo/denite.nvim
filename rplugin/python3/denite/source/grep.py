@@ -10,7 +10,7 @@ from os.path import relpath
 
 from denite import util, process
 from denite.base.source import Base
-from denite.util import Nvim, UserContext, Candidates, Candidate
+from denite.util import Nvim, UserContext, Candidates, Candidate, truncate
 
 
 GREP_HEADER_SYNTAX = (
@@ -59,11 +59,12 @@ class Source(Base):
         self.vars = {
             'command': ['grep'],
             'default_opts': ['-inH'],
-            'recursive_opts': ['-r'],
-            'pattern_opt': ['-e'],
-            'separator': ['--'],
             'final_opts': [],
-            'min_interactive_pattern': 3,
+            'max_path_length': 50,
+            'min_interactive_length': 3,
+            'pattern_opt': ['-e'],
+            'recursive_opts': ['-r'],
+            'separator': ['--'],
         }
         self.matchers = ['matcher/ignore_globs', 'matcher/regexp']
         self.is_volatile = True
@@ -120,7 +121,7 @@ class Source(Base):
 
             if (not context['input'] or
                     len(context['input']) <
-                    self.vars['min_interactive_pattern']):
+                    self.vars['min_interactive_length']):
                 return []
 
             context['__patterns'] = [
@@ -154,7 +155,9 @@ class Source(Base):
             result = util.parse_jump_line(context['path'], line)
             if not result:
                 continue
-            path = relpath(result[0], start=context['path'])
+            path = truncate(self.vim,
+                            relpath(result[0], start=context['path']),
+                            self.vars['max_path_length'])
             candidates.append(_candidate(result, path))
         return candidates
 

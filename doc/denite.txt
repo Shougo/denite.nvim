@@ -1196,14 +1196,21 @@ grep		Gather grep results and nominates them.
 				(default: ["grep"])
 		default_opts	the grep default options
 				(default: ["-inH"])
-		recursive_opts	the recursive search arguments
-				(default: ["-r"])
-		pattern_opt	the pattern option
-				(default: ["-e"]
-		separator	the argument separator
-				(default: ["--"])
 		final_opts	the final arguments
 				(default: [])
+		max_path_length
+				the maximum path length.
+				(default: 50)
+		min_interactive_length
+				the minimum input length of interactive
+				filter.
+				(default: 3)
+		pattern_opt	the pattern option
+				(default: ["-e"]
+		recursive_opts	the recursive search arguments
+				(default: ["-r"])
+		separator	the argument separator
+				(default: ["--"])
 
 						*denite-source-help*
 help		Search through doc tags

@@ -311,3 +311,19 @@ def clearmatch(vim: Nvim) -> None:
     vim.command('silent! call matchdelete({})'.format(
         vim.current.window.vars['denite_match_id']))
     vim.command('silent! unlet w:denite_match_id')
+
+
+def strwidth(vim: Nvim, word: str) -> int:
+    return (int(vim.call('strwidth', word))
+            if len(word) != len(bytes(word, 'utf-8',
+                                      'surrogatepass')) else len(word))
+
+
+def truncate(vim: Nvim, word: str, max_length: int) -> str:
+    if (strwidth(vim, word) > max_length or
+            len(word) != len(bytes(word, 'utf-8', 'surrogatepass'))):
+        return str(vim.call(
+            'denite#util#truncate',
+            word, max_length, int(max_length / 3), '...'))
+
+    return word
