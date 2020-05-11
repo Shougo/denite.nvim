@@ -98,7 +98,6 @@ function! denite#init#_user_options() abort
   return {
         \ 'auto_action': '',
         \ 'auto_resize': v:false,
-        \ 'auto_resume': v:false,
         \ 'buffer_name': 'default',
         \ 'cursor_pos': '',
         \ 'cursorline': v:true,

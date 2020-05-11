@@ -649,11 +649,6 @@ OPTIONS							*denite-options*
 		Auto resize the Denite window height automatically.
 		Default: false
 
-						*denite-option-auto-resume*
--auto-resume
-		Auto resume when enter the Denite window.
-		Default: false
-
 						*denite-option-buffer-name*
 -buffer-name={buffer-name}
 		Specify the name of denite buffer.
