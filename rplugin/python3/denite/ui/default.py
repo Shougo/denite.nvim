@@ -53,7 +53,7 @@ class Default(object):
         self._matched_range_id = -1
         self._matched_char_id = -1
         self._check_matchdelete = bool(self._vim.call(
-            'has', 'patch-8.1.1084'))
+            'denite#util#check_matchdelete'))
 
     def start(self, sources: typing.List[typing.Any],
               context: UserContext) -> typing.List[typing.Any]:

@@ -271,6 +271,19 @@ function! denite#util#check_floating(context) abort
         \ a:context['filter_split_direction'] ==# 'floating')
         \ && exists('*nvim_open_win')
 endfunction
+function! denite#util#check_matchdelete() abort
+  if !exists('s:check_matchdelete')
+    let s:check_matchdelete = v:false
+    try
+      call getmatches(win_getid())
+      let s:check_matchdelete = v:true
+    catch
+      " Ignore error
+    endtry
+  endif
+
+  return s:check_matchdelete
+endfunction
 
 function! denite#util#escape_match(str) abort
   return escape(a:str, '~\.^$[]')
