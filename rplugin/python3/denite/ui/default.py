@@ -316,8 +316,9 @@ class Default(object):
         if self._vim.call('exists', '#BufWinEnter'):
             self._vim.command('doautocmd BufWinEnter')
 
-        if self._vim.call('exists', '#FileType#denite'):
-            self._vim.command('doautocmd FileType denite')
+        if not self._vim.call('has', 'nvim'):
+            # In Vim8, FileType autocmd is not fired after set filetype option.
+            self._vim.command('silent doautocmd FileType denite')
 
         if self._context['auto_action']:
             self._vim.command('autocmd denite '
