@@ -530,11 +530,13 @@ class Default(object):
         self._update_status()
 
         if self._check_matchdelete and self._context['match_highlight']:
-            if self._matched_range_id > 0:
+            matches = [x['id'] for x in
+                       self._vim.call('getmatches', self._winid)]
+            if self._matched_range_id in matches:
                 self._vim.call('matchdelete',
                                self._matched_range_id, self._winid)
                 self._matched_range_id = -1
-            if self._matched_char_id > 0:
+            if self._matched_char_id in matches:
                 self._vim.call('matchdelete',
                                self._matched_char_id, self._winid)
                 self._matched_char_id = -1
