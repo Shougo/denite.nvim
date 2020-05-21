@@ -212,7 +212,7 @@ EXAMPLES						*denite-examples*
 
 	" Ack command on grep source
 	call denite#custom#var('grep', {
-		\ 'command': ['ack'])
+		\ 'command': ['ack'],
 		\ 'default_opts': [
 		\   '--ackrc', $HOME.'/.ackrc', '-H', '-i',
 		\   '--nopager', '--nocolor', '--nogroup', '--column'
@@ -225,7 +225,7 @@ EXAMPLES						*denite-examples*
 
 	" Ripgrep command on grep source
 	call denite#custom#var('grep', {
-		\ 'command': ['rg'])
+		\ 'command': ['rg'],
 		\ 'default_opts': ['-i', '--vimgrep', '--no-heading'],
 		\ 'recursive_opts': [],
 		\ 'pattern_opt': ['--regexp'],
@@ -235,7 +235,7 @@ EXAMPLES						*denite-examples*
 
 	" Pt command on grep source
 	call denite#custom#var('grep', {
-		\ 'command': ['pt'])
+		\ 'command': ['pt'],
 		\ 'default_opts': [
 		\   '-i', '--nogroup', '--nocolor', '--smart-case'],
 		\ 'recursive_opts': [],
@@ -246,7 +246,7 @@ EXAMPLES						*denite-examples*
 
 	" jvgrep command on grep source
 	call denite#custom#var('grep', {
-		\ 'command': ['jvgrep'])
+		\ 'command': ['jvgrep'],
 		\ 'default_opts': ['-i'],
 		\ 'recursive_opts': ['-R'],
 		\ 'pattern_opt': [],
