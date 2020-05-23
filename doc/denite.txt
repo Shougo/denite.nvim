@@ -2149,6 +2149,10 @@ A: You can use |User| "denite-preview" autocmd. >
 	function! s:denite_preview() abort
 	  setlocal number
 	endfunction
+	
+Q: Are there any source which is the same as history/yank in Unite?
+
+A: Use https://github.com/Shougo/neoyank.vim
 
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
