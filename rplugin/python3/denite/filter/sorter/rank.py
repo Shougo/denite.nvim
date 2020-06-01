@@ -43,11 +43,11 @@ BOUNDARY_CHARS = string.punctuation + string.whitespace
 def get_score(string: str, query_chars: str) -> float:
     # Highest possible score is the string length
     best_score: float = float(len(string))
-    head, tail = query_chars[0], query_chars[1:]
+    head, tail = query_chars[0].lower(), query_chars[1:]
 
     # For each occurence of the first character of the query in the string
     for first_index in (idx for idx, val in enumerate(string)
-                        if val == head):
+                        if val.lower() == head):
         # Get the score for the rest
         score, last_index = find_end_of_match(string, tail, first_index)
 
@@ -67,7 +67,7 @@ def find_end_of_match(to_match: str, chars: str,
 
     for char in chars:
         try:
-            index = to_match.index(char, last_index + 1)
+            index = to_match.lower().index(char.lower(), last_index + 1)
         except ValueError:
             return None, None
         if not index:
