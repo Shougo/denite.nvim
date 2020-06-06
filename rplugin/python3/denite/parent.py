@@ -6,9 +6,9 @@
 
 import asyncio
 import time
-import os
 import msgpack
 import subprocess
+import sys
 import typing
 from abc import ABC, abstractmethod
 from functools import partial
@@ -96,9 +96,9 @@ class ASyncParent(_Parent):
             unicode_errors='surrogateescape')
 
         info = None
-        if os.name == 'nt':
-            info = subprocess.STARTUPINFO()  # type: ignore
-            info.dwFlags |= subprocess.STARTF_USESHOWWINDOW  # type: ignore
+        if sys.platform == 'win32':
+            info = subprocess.STARTUPINFO()
+            info.dwFlags |= subprocess.STARTF_USESHOWWINDOW
 
         main = str(Path(__file__).parent.parent.parent.parent.joinpath(
             'autoload', 'denite', '_main.py'))
