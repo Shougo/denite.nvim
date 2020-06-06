@@ -152,7 +152,7 @@ EXAMPLES						*denite-examples*
 	call denite#custom#var('file/rec', 'command',
 	\ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
 	" For ripgrep
-	" Note: It is slower than ag
+	" Note: rg is faster than ag
 	call denite#custom#var('file/rec', 'command',
 	\ ['rg', '--files', '--glob', '!.git'])
 	" For Pt(the platinum searcher)
