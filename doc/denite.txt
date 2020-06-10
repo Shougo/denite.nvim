@@ -340,9 +340,9 @@ COMMANDS 						*denite-commands*
 		Note: <cword> characters are escaped automatically.
 
 :DeniteProjectDir [{options}] {sources}			*:DeniteProjectDir*
-		Equivalent to |:Denite| except that it targets the project
-		directory.
-		Note: You can change the rooted directory by
+		Equivalent to |:Denite| except that it search the VCS project
+		directory from parent.
+		Note: You can change the search directory by
 		|denite-option-path| instead of |getcwd()|.
 
 ------------------------------------------------------------------------------
