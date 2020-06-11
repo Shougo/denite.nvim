@@ -294,7 +294,10 @@ class Default(object):
         self._vim.command('setlocal nospell')
         self._vim.command('setlocal winfixheight')
         self._vim.command('setlocal nowrap')
-        self._vim.command('setlocal signcolumn=no')
+        if self._context['prompt']:
+            self._vim.command('setlocal signcolumn=yes')
+        else:
+            self._vim.command('setlocal signcolumn=no')
         if self._context['cursorline']:
             self._vim.command('setlocal cursorline')
 

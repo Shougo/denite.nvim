@@ -21,6 +21,12 @@ function! denite#filter#_open(context, parent, entire_len, is_async) abort
 
   call s:init_buffer()
 
+  if a:context['prompt'] !=# ''
+    setlocal signcolumn=yes
+  else
+    setlocal signcolumn=no
+  endif
+
   let b:denite_statusline = denite_statusline
 
   " Set the current input
