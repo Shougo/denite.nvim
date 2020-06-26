@@ -1,5 +1,5 @@
 # ============================================================================
-# FILE: kind.py
+# FILE: base/kind.py
 # AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
 # License: MIT license
 # ============================================================================

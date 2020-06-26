@@ -4,7 +4,7 @@
 # License: MIT license
 # ============================================================================
 
-from denite.base.source import Base
+from denite.base.source.interactive import Source as Base
 from denite.util import Nvim, UserContext, Candidates, Candidate
 from denite import util, process
 
@@ -39,13 +39,6 @@ class Source(Base):
         self.kind = 'file'
         self.matchers = ['matcher/regexp']
         self.sorters = []
-        self.vars = {
-            'grep_command': ['grep'],
-            'grep_default_opts': ['-inH'],
-            'grep_pattern_opt': ['-e'],
-            'grep_separator': ['--'],
-            'grep_final_opts': [],
-        }
 
     def on_init(self, context: UserContext) -> None:
         buf = self.vim.current.buffer
@@ -63,12 +56,6 @@ class Source(Base):
             context['__path'] = context['__temp']
         else:
             context['__path'] = bufpath
-
-        # Backwards compatibility for `ack`
-        if (self.vars['grep_command'] and
-                self.vars['grep_command'][0] == 'ack' and
-                self.vars['grep_pattern_opt'] == ['-e']):
-            self.vars['grep_pattern_opt'] = ['--match']
 
         # Interactive mode
         context['is_interactive'] = True
@@ -95,7 +82,7 @@ class Source(Base):
         if not context['input']:
             return []
 
-        args = self._init_args(context)
+        args = self.init_grep_args(context)
         if args == context['__args'] and context['__proc']:
             return self._async_gather_candidates(context, 0.5)
 
@@ -127,21 +114,3 @@ class Source(Base):
             candidates.append(_candidate(
                 result, context['__bufnr'], context['__fmt']))
         return candidates
-
-    def _init_args(self, context: UserContext) -> typing.List[str]:
-        patterns = [
-            '.*'.join(util.split_input(context['input']))]
-
-        args = [util.expand(self.vars['grep_command'][0])]
-        args += self.vars['grep_command'][1:]
-        args += self.vars['grep_default_opts']
-        if self.vars['grep_pattern_opt']:
-            for pattern in patterns:
-                args += self.vars['grep_pattern_opt'] + [pattern]
-            args += self.vars['grep_separator']
-        else:
-            args += self.vars['grep_separator']
-            args += patterns
-        args.append(context['__path'])
-        args += self.vars['grep_final_opts']
-        return args

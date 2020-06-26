@@ -1,5 +1,5 @@
 # ============================================================================
-# FILE: filter.py
+# FILE: base/filter.py
 # AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
 # License: MIT license
 # ============================================================================
