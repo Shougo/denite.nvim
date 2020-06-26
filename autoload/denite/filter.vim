@@ -82,6 +82,8 @@ function! s:init_buffer() abort
         \ <ESC>:<C-u>call <SID>quit(v:true)<CR>
   inoremap <buffer><silent><expr> <Plug>(denite_filter_backspace)
         \ col('.') == 1 ? "a\<BS>" : "\<BS>"
+  inoremap <buffer><silent> <Plug>(denite_filter_space)
+        \ <ESC>:call <SID>filter_async()<CR>a<Space>
 
   nmap <buffer> <CR> <Plug>(denite_filter_update)
   nmap <buffer> q    <Plug>(denite_filter_quit)
@@ -89,6 +91,7 @@ function! s:init_buffer() abort
   imap <buffer> <CR> <Plug>(denite_filter_update)
   imap <buffer> <BS> <Plug>(denite_filter_backspace)
   imap <buffer> <C-h> <Plug>(denite_filter_backspace)
+  imap <buffer> <Space> <Plug>(denite_filter_space)
 
   setfiletype denite-filter
 endfunction
@@ -183,19 +186,25 @@ function! s:filter_async() abort
 endfunction
 
 function! s:update() abort
+  let input = getline('.')
+
   if &filetype !=# 'denite-filter'
+        \ || input ==# g:denite#_filter_prev_input
     return
   endif
 
-  call denite#call_map('filter', getline('.'))
+  call denite#call_map('filter', input)
 endfunction
 
 function! s:async_update() abort
+  let input = getline('.')
+
   if &filetype !=# 'denite-filter'
+        \ || input ==# g:denite#_filter_prev_input
     return
   endif
 
-  let input = getline('.')
+  let g:denite#_filter_prev_input = input
 
   call s:quit(v:false)
 
