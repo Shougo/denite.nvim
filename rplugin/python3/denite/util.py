@@ -324,6 +324,6 @@ def truncate(vim: Nvim, word: str, max_length: int) -> str:
             len(word) != len(bytes(word, 'utf-8', 'surrogatepass'))):
         return str(vim.call(
             'denite#util#truncate',
-            word, max_length, int(max_length / 3), '...'))
+            word, max_length, int(max_length / 2), '...'))
 
     return word
