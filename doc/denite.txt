@@ -1572,6 +1572,10 @@ converter/relative_word
 converter/tail_path
 		Convert candidate tail path to word.
 
+				*denite-filter-converter/tail_path*
+converter/truncate_abbr
+		Truncate candidate abbr by |denite-option-winwidth|.
+
 ==============================================================================
 CREATE SOURCE						*denite-create-source*
 

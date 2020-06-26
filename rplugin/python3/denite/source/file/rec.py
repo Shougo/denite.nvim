@@ -27,6 +27,8 @@ class Source(Base):
             'command': [],
             'cache_threshold': 10000,
         }
+        self.converters = ['converter/truncate_abbr']
+
         self._cache: typing.Dict[str, Candidates] = {}
 
     def on_init(self, context: UserContext) -> None:
