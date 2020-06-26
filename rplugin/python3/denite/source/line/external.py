@@ -40,11 +40,11 @@ class Source(Base):
         self.matchers = ['matcher/regexp']
         self.sorters = []
         self.vars = {
-            'command': ['grep'],
-            'default_opts': ['-inH'],
-            'pattern_opt': ['-e'],
-            'separator': ['--'],
-            'final_opts': [],
+            'grep_command': ['grep'],
+            'grep_default_opts': ['-inH'],
+            'grep_pattern_opt': ['-e'],
+            'grep_separator': ['--'],
+            'grep_final_opts': [],
         }
 
     def on_init(self, context: UserContext) -> None:
@@ -65,10 +65,10 @@ class Source(Base):
             context['__path'] = bufpath
 
         # Backwards compatibility for `ack`
-        if (self.vars['command'] and
-                self.vars['command'][0] == 'ack' and
-                self.vars['pattern_opt'] == ['-e']):
-            self.vars['pattern_opt'] = ['--match']
+        if (self.vars['grep_command'] and
+                self.vars['grep_command'][0] == 'ack' and
+                self.vars['grep_pattern_opt'] == ['-e']):
+            self.vars['grep_pattern_opt'] = ['--match']
 
         # Interactive mode
         context['is_interactive'] = True
@@ -76,7 +76,7 @@ class Source(Base):
         context['__args'] = ''
 
     def on_close(self, context: UserContext) -> None:
-        if context['__proc']:
+        if context.get('__proc'):
             context['__proc'].kill()
             context['__proc'] = None
 
@@ -99,7 +99,7 @@ class Source(Base):
         if args == context['__args'] and context['__proc']:
             return self._async_gather_candidates(context, 0.5)
 
-        if context['__proc']:
+        if context.get('__proc'):
             context['__proc'].kill()
             context['__proc'] = None
 
@@ -132,16 +132,16 @@ class Source(Base):
         patterns = [
             '.*'.join(util.split_input(context['input']))]
 
-        args = [util.expand(self.vars['command'][0])]
-        args += self.vars['command'][1:]
-        args += self.vars['default_opts']
-        if self.vars['pattern_opt']:
+        args = [util.expand(self.vars['grep_command'][0])]
+        args += self.vars['grep_command'][1:]
+        args += self.vars['grep_default_opts']
+        if self.vars['grep_pattern_opt']:
             for pattern in patterns:
-                args += self.vars['pattern_opt'] + [pattern]
-            args += self.vars['separator']
+                args += self.vars['grep_pattern_opt'] + [pattern]
+            args += self.vars['grep_separator']
         else:
-            args += self.vars['separator']
+            args += self.vars['grep_separator']
             args += patterns
         args.append(context['__path'])
-        args += self.vars['final_opts']
+        args += self.vars['grep_final_opts']
         return args
