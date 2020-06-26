@@ -76,6 +76,10 @@ class Source(Base):
         context['__args'] = ''
 
     def on_close(self, context: UserContext) -> None:
+        if context['__proc']:
+            context['__proc'].kill()
+            context['__proc'] = None
+
         if not context['__temp']:
             return
 
@@ -94,6 +98,10 @@ class Source(Base):
         args = self._init_args(context)
         if args == context['__args'] and context['__proc']:
             return self._async_gather_candidates(context, 0.5)
+
+        if context['__proc']:
+            context['__proc'].kill()
+            context['__proc'] = None
 
         context['__args'] = args
         self.print_message(context, str(args))
