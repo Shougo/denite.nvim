@@ -4,8 +4,6 @@
 # License: MIT license
 # ============================================================================
 
-from pathlib import Path
-
 from denite.base.filter import Base
 from denite.util import Nvim, UserContext, Candidates, truncate
 
