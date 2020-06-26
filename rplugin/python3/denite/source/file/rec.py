@@ -103,7 +103,7 @@ class Source(Base):
         if not outs:
             return []
         directory = context['__directory']
-        if Path(outs[0]).is_absolute():
+        if outs and Path(outs[0]).is_absolute():
             candidates = [{
                 'word': str(Path(x).relative_to(directory)),
                 'action__path': x,
