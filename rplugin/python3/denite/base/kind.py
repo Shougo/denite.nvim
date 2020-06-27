@@ -54,6 +54,11 @@ class Base(object):
     def action_preview(self, context: UserContext) -> None:
         pass
 
+    def action_defx(self, context: UserContext) -> None:
+        self.vim.call('defx#start_candidates',
+                      [x.get('action__path', x['word']) for x
+                       in context['targets']], {})
+
 
 class Kind(Base):
 

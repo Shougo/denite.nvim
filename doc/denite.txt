@@ -1342,6 +1342,7 @@ KINDS							*denite-kinds*
 All candidates can support below actions.
 
 append		Insert the candidate word or text after the cursor.
+defx		Run |defx| by denite candidates.
 echo		Print the candidates to denite messages.
 replace		Replace the selected text to the candidate word.
 yank		Yank the candidate word.
