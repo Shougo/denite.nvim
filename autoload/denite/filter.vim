@@ -201,6 +201,7 @@ function! s:async_update() abort
 
   if &filetype !=# 'denite-filter'
         \ || input ==# g:denite#_filter_prev_input
+    call s:quit(v:false)
     return
   endif
 
