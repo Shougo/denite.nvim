@@ -55,6 +55,9 @@ class Base(object):
         pass
 
     def action_defx(self, context: UserContext) -> None:
+        if not self.vim.call('exists', '*defx#start_candidates'):
+            return
+
         self.vim.call('defx#start_candidates',
                       [x.get('action__path', x['word']) for x
                        in context['targets']], {})
