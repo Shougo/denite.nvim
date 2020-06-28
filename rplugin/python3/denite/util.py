@@ -4,10 +4,13 @@
 # License: MIT license
 # ============================================================================
 
+from pathlib import Path
+from sys import executable, base_exec_prefix
 import importlib.util
 import inspect
-import re
 import os
+import re
+import shutil
 import sys
 import traceback
 import typing
@@ -327,3 +330,24 @@ def truncate(vim: Nvim, word: str, max_length: int) -> str:
             word, max_length, int(max_length / 2), '...'))
 
     return word
+
+
+def get_python_exe() -> str:
+    if 'py' in str(Path(executable).name):
+        return executable
+
+    for exe in ['python3', 'python']:
+        which = shutil.which(exe)
+        if which is not None:
+            return which
+
+    for name in (Path(base_exec_prefix).joinpath(v) for v in [
+            'python3', 'python',
+            str(Path('bin').joinpath('python3')),
+            str(Path('bin').joinpath('python')),
+    ]):
+        if name.exists():
+            return str(name)
+
+    # return sys.executable anyway. This may not work on windows
+    return executable

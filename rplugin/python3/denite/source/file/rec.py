@@ -8,12 +8,12 @@ import argparse
 import shutil
 import typing
 
-from sys import executable, base_exec_prefix
 from pathlib import Path
 
 from denite.base.source import Base
 from denite.process import Process
 from denite.util import parse_command, abspath, Nvim, UserContext, Candidates
+from denite.util import get_python_exe
 
 
 class Source(Base):
@@ -122,27 +122,6 @@ class Source(Base):
 
         return candidates
 
-    @staticmethod
-    def get_python_exe() -> str:
-        if 'py' in str(Path(executable).name):
-            return executable
-
-        for exe in ['python3', 'python']:
-            which = shutil.which(exe)
-            if which is not None:
-                return which
-
-        for name in (Path(base_exec_prefix).joinpath(v) for v in [
-                'python3', 'python',
-                str(Path('bin').joinpath('python3')),
-                str(Path('bin').joinpath('python')),
-        ]):
-            if name.exists():
-                return str(name)
-
-        # return sys.executable anyway. This may not work on windows
-        return executable
-
     def parse_command_for_scantree(self,
                                    cmd: typing.List[str]) -> typing.List[str]:
         """Given the user choice for --ignore get the corresponding value"""
@@ -166,5 +145,5 @@ class Source(Base):
         scantree_py = Path(__file__).parent.parent.parent.joinpath(
             'scantree.py')
 
-        return [Source.get_python_exe(), str(scantree_py),
+        return [get_python_exe(), str(scantree_py),
                 '--ignore', ignore, '--path', path, *rest]
