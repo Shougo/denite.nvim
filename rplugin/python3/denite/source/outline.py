@@ -84,10 +84,9 @@ class Source(Base):
             p = run(args, check=True, stdout=PIPE, stderr=PIPE)
             outputs = p.stdout.decode(self.vars['encoding']).splitlines()
         except CalledProcessError as e:
-            self.error_message(context, e.stderr.decode(self.vars['encoding']).splitlines())
+            self.error_message(context,
+                               e.stderr.decode(self.vars['encoding']).splitlines())
             return []
-
-        ignore_types = self.vars['ignore_types']
 
         candidates = []
         for entry in outputs:
@@ -114,7 +113,8 @@ class Source(Base):
             if 'pattern' in info:
                 if 'line' not in info:
                     candidate['action__pattern'] = info['pattern']
-                info['pattern'] = '<-> ' + info['pattern'][2:-2].lstrip(' \t\v')
+                info['pattern'] = '<-> '
+                info['pattern'] += info['pattern'][2:-2].lstrip(' \t\v')
                 fmt += ' {pattern}'
             candidate['abbr'] = fmt.format(**info)
             candidates.append(candidate)
@@ -176,4 +176,3 @@ class Source(Base):
 
                     candidates.append(candidate)
         return candidates
-    
