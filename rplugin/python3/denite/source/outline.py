@@ -69,6 +69,8 @@ class Source(Base):
             return self.gather_candidates_legacy(context)
         elif self.vars['output'] == 'json':
             return self.gather_candidates_universal(context)
+        else:
+            return []
 
     def gather_candidates_universal(self, context: UserContext) -> Candidates:
         args: typing.List[str] = []
