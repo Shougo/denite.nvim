@@ -343,13 +343,14 @@ class Default(object):
         self._floating = split in ['floating', 'floating_relative']
         self._filter_floating = False
 
+        if self._vim.current.buffer.options['filetype'] != 'denite':
+            self._titlestring = self._vim.options['titlestring']
+
         command = 'edit'
         if split == 'tab':
             self._vim.command('tabnew')
         elif self._floating:
             # Use floating window
-            if self._vim.current.buffer.options['filetype'] != 'denite':
-                self._titlestring = self._vim.options['titlestring']
             if split == 'floating':
                 self._vim.call(
                     'nvim_open_win',
@@ -390,7 +391,6 @@ class Default(object):
                     })
 
         elif self._context['filter_split_direction'] == 'floating':
-            self._titlestring = self._vim.options['titlestring']
             self._filter_floating = True
         elif split != 'no':
             command = self._get_direction()
