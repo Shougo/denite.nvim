@@ -84,8 +84,8 @@ class Source(Base):
             p = run(args, check=True, stdout=PIPE, stderr=PIPE)
             outputs = p.stdout.decode(self.vars['encoding']).splitlines()
         except CalledProcessError as e:
-            self.error_message(context,
-                               e.stderr.decode(self.vars['encoding']).splitlines())
+            err_msg = e.stderr.decode(self.vars['encoding']).splitlines()
+            self.error_message(context, err_msg)
             return []
 
         candidates = []
