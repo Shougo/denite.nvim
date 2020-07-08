@@ -78,6 +78,9 @@ function! denite#helper#preview_file(context, filename) abort
       execute 'vert resize ' . preview_width
     endif
   else
+    let pos = win_screenpos(win_getid())
+    let win_width = winwidth(0)
+
     let previewheight_save = &previewheight
     try
       let &previewheight = preview_height
@@ -87,6 +90,20 @@ function! denite#helper#preview_file(context, filename) abort
     endtry
 
     wincmd P
+
+    if a:context.floating_preview && exists('*nvim_win_set_config')
+      if a:context['split'] ==# 'floating'
+
+        call nvim_win_set_config(0, {
+              \ 'relative': 'editor',
+              \ 'anchor': 'SW',
+              \ 'row': pos[0]-1,
+              \ 'col': pos[1]+1,
+              \ 'width': win_width,
+              \ 'height': preview_height,
+              \ })
+      endif
+    endif
   endif
 
   if exists('#User#denite-preview')
