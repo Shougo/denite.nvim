@@ -1285,6 +1285,12 @@ outline		Gather outline and jump to the target.
 		Source custom variables:
 		command 	the default command to get outline
 				(default: ["ctags"])
+		output          set as "json" to use json output 
+				with latest universal-ctags
+				(default: ["legacy"])
+		force_filetype  set "--language-force" option of ctags
+                		from buffer filetype
+                		(default: True)
 		options 	the default options for command
 				(default: [])
 		file_opt 	the default option for writing to
