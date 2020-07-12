@@ -173,5 +173,5 @@ class Kind(Openable):
     def _remove_previewed_buffer(self, bufnr: int) -> None:
         previewed_buffers = self._vim.vars['denite#_previewed_buffers']
         if str(bufnr) in previewed_buffers:
-            previewed_buffers.remove(str(bufnr))
+            previewed_buffers.pop(str(bufnr))
         self._vim.vars['denite#_previewed_buffers'] = previewed_buffers
