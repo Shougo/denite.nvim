@@ -72,9 +72,13 @@ endfunction
 function! denite#_update_map(name, bufnr, is_async) abort
   let is_filter = &l:filetype ==# 'denite-filter'
 
-  call denite#util#rpcrequest(
-        \ (a:is_async ? '_denite_do_async_map' : '_denite_do_map'),
-        \ [a:bufnr, a:name, []], a:is_async)
+  try
+    call denite#util#rpcrequest(
+          \ (a:is_async ? '_denite_do_async_map' : '_denite_do_map'),
+          \ [a:bufnr, a:name, []], a:is_async)
+  catch
+    " Ignore RPC errors
+  endtry
 
   if is_filter
     call s:update_filter()
