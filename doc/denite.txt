@@ -1019,7 +1019,7 @@ buffer		Gather buffers and jump to the buffer.
 		Source args:
 			0. '!' : a flag to show unlisted buffers
 
-		Source custom variables:
+		Custom variables:
 		date_format	  the format string to show date
 		exclude_unlisted
 				  a flag to exclude unlisted buffers
@@ -1040,7 +1040,7 @@ command		Gather commands and put on ex-mode.
 					*denite-source-command-history*
 command_history	Gather command histories and run it.
 
-		Source custom variables:
+		Custom variables:
 		ignore_command_regexp	 the regexp to exclude from histories.
 					Note: python3's regexp
 
@@ -1059,7 +1059,7 @@ directory_rec	Gather directories recursive and nominates all directory names
 			|expand()|.  The environment variable is only
 			expanded.
 
-		Source custom variables:
+		Custom variables:
 		command		 the default get directories command
 				(default is used "find" command in Unix
 				environment)
@@ -1098,7 +1098,7 @@ file/rec
 			|expand()|.  The environment variable is only
 			expanded.
 
-		Source custom variables:
+		Custom variables:
 		command		the default get files command.
 				default uses "find" command in Unix
 				environments:
@@ -1186,7 +1186,7 @@ grep		Gather grep results and nominates them.
 		Note: If the args 2 is empty, |denite-option-input| or user
 		input pattern is used.
 
-		Source custom variables:
+		Custom variables:
 		command		the default grep command
 				(default: ["grep"])
 		default_opts	the grep default options
@@ -1243,7 +1243,7 @@ line/external	Gather current buffer lines as candidates.
 		It is useful for huge buffers.
 		Note: The command result must be "path:linenr:text" pattern.
 
-		Source custom variables:
+		Custom variables:
 		grep_command	the default grep command
 				(default: ["grep"])
 		grep_default_opts
@@ -1266,7 +1266,7 @@ menu		Gather custom menus.
 		Source args:
 			0. The desired menu
 
-		Source custom variables:
+		Custom variables:
 		menus		dictionary containing menus in key value
 				pairs (See |denite-examples|). Only supports
 				candidates of type list.
@@ -1282,7 +1282,7 @@ outline		Gather outline and jump to the target.
 		Source arguments:
 		1. filename (use current buffer path if omitted)
 
-		Source custom variables:
+		Custom variables:
 		command 	the default command to get outline
 				(default: ["ctags"])
 		output          set as "json" to use json output 
@@ -1492,11 +1492,34 @@ word		An interface to paste the text.
 ==============================================================================
 FILTERS							*denite-filters*
 
+						*denite-filter-matcher/clap*
+matcher/clap
+		A matcher which filters the candidates using vim-clap Rust
+		matcher.
+		https://github.com/liuchengxu/vim-clap
+		It is faster than other matchers.
+
+		Note: You need to install vim-clap and build binary file and
+		specify the vim-clap path by |denite#custom#filter()|. >
+
+			$ cd vim-clap
+			$ cd pythonx/clap
+			$ make build
+<
+		Custom variables:
+		clap_path	the vim-clap installation path.
+				(default: "")
+>
+		call denite#custom#filter('matcher/clap',
+		      \ 'clap_path', expand('~/src/vim-clap'))
+<
 						*denite-filter-matcher/cpsm*
 matcher/cpsm
 		A matcher which filters the candidates using cpsm.
 		Note: cpsm plugin build/install is needed in 'runtimepath'.
 		https://github.com/nixprime/cpsm
+		Note: The matcher is deprecated.  |denite-filter-matcher/clap|
+		is recommended.
 		Note: You must use Python3 support enabled cpsm. >
 			$ PY3=ON ./install.sh
 <
@@ -1523,7 +1546,7 @@ matcher/ignore_globs
 		A matcher which ignores the globs matched files.
 		Note: This filtering is slow.
 
-		Source custom variables:
+		Custom variables:
 		ignore_globs	the ignore globs pattern.
 		(default is: >
 		[
@@ -1877,7 +1900,7 @@ name		(String)			(Required)
 DEOPLETE SOURCES				*denite-deoplete-sources*
 
 denite
-		Source custom variables:
+		Custom variables:
 		enable_buffer_pattern
 				If it is True, denite source use the buffer
 				pattern instead of original candidates word.
