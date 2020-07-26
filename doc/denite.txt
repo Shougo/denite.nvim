@@ -2190,6 +2190,10 @@ Q: Are there any source which is the same as history/yank in Unite?
 
 A: Use https://github.com/Shougo/neoyank.vim
 
+Q: I want to enable matched highlight in buffer.
+
+A: |denite-option-match-highlight|
+
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
 
