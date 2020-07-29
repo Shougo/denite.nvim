@@ -46,10 +46,10 @@ class Source(Base):
         )
         if self.vars['force_filetype']:
             filetype = self.vim.current.buffer.options['filetype']
-            context.pop('__langauge', None)
+            context.pop('__language', None)
             ctags_filetype = self.vars['language_map'].get(filetype, None)
             if ctags_filetype:
-                context['__langauge'] = ctags_filetype
+                context['__language'] = ctags_filetype
 
     def highlight(self) -> None:
         for syn in OUTLINE_HIGHLIGHT_SYNTAX:
