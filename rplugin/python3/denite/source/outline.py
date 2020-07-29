@@ -46,10 +46,10 @@ class Source(Base):
         )
         if self.vars['force_filetype']:
             filetype = self.vim.current.buffer.options['filetype']
-            context.pop('__langauge', None)
+            context.pop('__language', None)
             ctags_filetype = self.vars['language_map'].get(filetype, None)
             if ctags_filetype:
-                context['__langauge'] = ctags_filetype
+                context['__language'] = ctags_filetype
 
     def highlight(self) -> None:
         for syn in OUTLINE_HIGHLIGHT_SYNTAX:
@@ -77,10 +77,10 @@ class Source(Base):
         args += self.vars['command']
         args += self.vars['options']
         if self.vars['force_filetype'] and '__language' in context:
-            args.append('--language-force={}'.format(context['__langauge']))
+            args.append('--language-force={}'.format(context['__language']))
         args += ['--output-format=json', '-f', '-']
         args += [context['__path']]
-        self.print_message(context, args)
+        self.print_message(context, ' '.join(args))
 
         try:
             p = run(args, check=True, stdout=PIPE, stderr=PIPE)
@@ -98,28 +98,27 @@ class Source(Base):
                 'word': info['name'],
                 'action__path': info['path'],
             }
-            info['name'] = (
-                (info['name'][:33] + '..')
-                if len(info['name']) >= 33
-                else info['name']
-            )
-            fmt = '{name:<35} '
+            candidates.append(candidate)
+
+            fmt = '{name:<35.35} '
             if 'line' in info:
                 candidate['action__line'] = info['line']
                 fmt += '{line:<6}'
-            info['file'] = Path(info['path']).name
-            fmt += '@{file:<25}'
+            if 'scope' in info:
+                fmt += '@{scope:<25.25}'
+            else:
+                info['file'] = Path(info['path']).name
+                fmt += '@{file:<25}'
             if 'kind' in info:
                 info['kind'] = info['kind'][0]
                 fmt += ' [{kind}]'
             if 'pattern' in info:
                 if 'line' not in info:
                     candidate['action__pattern'] = info['pattern']
-                info['pattern'] = '<-> '
-                info['pattern'] += info['pattern'][2:-2].lstrip(' \t\v')
+                info['pattern'] = info['pattern'][2:-2].lstrip(' \t\v')
+                info['pattern'] = '<-> ' + info['pattern']
                 fmt += ' {pattern}'
             candidate['abbr'] = fmt.format(**info)
-            candidates.append(candidate)
 
         return candidates
 
