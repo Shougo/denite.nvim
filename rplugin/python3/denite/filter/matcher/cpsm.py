@@ -31,15 +31,15 @@ class Filter(Base):
         if not self._initialized:
             # cpsm installation check
             ext = '.pyd' if context['is_windows'] else '.so'
-            if globruntime(context['runtimepath'], 'bin/cpsm_py' + ext):
+            if globruntime(context['runtimepath'], 'autoload/cpsm_py' + ext):
                 # Add path
                 sys.path.append(os.path.dirname(
                     globruntime(context['runtimepath'],
-                                'bin/cpsm_py' + ext)[0]))
+                                'autoload/cpsm_py' + ext)[0]))
                 self._initialized = True
             else:
                 self.error_message(context,
-                                   'matcher/cpsm: bin/cpsm_py' + ext +
+                                   'matcher/cpsm: autoload/cpsm_py' + ext +
                                    ' is not found in your runtimepath.')
                 self.error_message(context,
                                    'matcher/cpsm: You must install/build' +
