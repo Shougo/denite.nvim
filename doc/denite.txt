@@ -1566,13 +1566,18 @@ matcher/substring
 		A matcher which filters the candidates using simple substring
 		matching.
 
+						*denite-filter-sorter/oldfiles*
+sorter/oldfiles
+		Use |v:oldfiles| for sorting.
+		Note: The candidates must contain "action__path" key.
+		Note: It should be used in neovim instead of Vim8.
+
 						*denite-filter-sorter/rank*
 sorter/rank
 		Uses the scoring algorithm from selecta:
 		https://github.com/garybernhardt/selecta.  If the matched
 		length is shorter, the rank is higher.  This sorter is useful
 		for file candidate source.
-
 
 						*denite-filter-sorter/reverse*
 sorter/reverse

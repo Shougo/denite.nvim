@@ -164,6 +164,8 @@ class Child(object):
 
         for filter in [x for x in self._filters.values()
                        if x.vars and x.name in self._custom['filter']]:
+            if hasattr(filter, 'on_init'):
+                filter.on_init(filter.context)
             filter.vars.update(self._custom['filter'][filter.name])
 
     def on_close(self, context: UserContext) -> None:
