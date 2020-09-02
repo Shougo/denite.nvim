@@ -1572,6 +1572,10 @@ sorter/oldfiles
 		Note: The candidates must contain "action__path" key.
 		Note: It should be used in neovim instead of Vim8.
 
+						*denite-filter-sorter/path*
+sorter/path
+		Simple filter to sort candidates by ascii order of path
+
 						*denite-filter-sorter/rank*
 sorter/rank
 		Uses the scoring algorithm from selecta:
