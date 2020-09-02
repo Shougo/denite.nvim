@@ -162,11 +162,11 @@ class Child(object):
             self._current_sources.append(source)
             index += 1
 
-        for filter in [x for x in self._filters.values()
-                       if x.vars and x.name in self._custom['filter']]:
+        for filter in self._filters.values():
             if hasattr(filter, 'on_init'):
-                filter.on_init(filter.context)
-            filter.vars.update(self._custom['filter'][filter.name])
+                filter.on_init(context)
+            if filter.vars and filter.name in self._custom['filter']:
+                filter.vars.update(self._custom['filter'][filter.name])
 
     def on_close(self, context: UserContext) -> None:
         for source in self._current_sources:

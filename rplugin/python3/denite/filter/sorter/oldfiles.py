@@ -7,7 +7,7 @@
 import math
 
 from denite.base.filter import Base
-from denite.util import Nvim, UserContext, Candidates
+from denite.util import expand, Nvim, UserContext, Candidates
 
 
 class Filter(Base):
@@ -24,6 +24,7 @@ class Filter(Base):
             self.vim.command('wviminfo | rviminfo!')
 
     def filter(self, context: UserContext) -> Candidates:
-        oldfiles = {x: i for i, x in enumerate(self.vim.vvars['oldfiles'])}
+        oldfiles = {expand(x): i for i, x in
+                    enumerate(self.vim.call('denite#helper#_get_oldfiles'))}
         return sorted(context['candidates'],
-                      key=lambda x: x.get(x['action__path'], math.inf))
+                      key=lambda x: oldfiles.get(x['action__path'], math.inf))
