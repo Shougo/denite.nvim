@@ -929,8 +929,10 @@ OPTIONS							*denite-options*
 		"no": No split
 		"tab": Create the new tab for denite buffer
 		"floating": Use neovim floating window feature
-		"floating_relative": similar to "floating" but open floating
-		window near the cursor.
+		"floating_relative_cursor": similar to "floating" but open
+		floating window near the cursor.
+		"floating_relative_window": similar to "floating" but open
+		floating window near the window.
 
 		Note: To use "floating", you need to use neovim
 		0.4.0+(|nvim_open_win()|).

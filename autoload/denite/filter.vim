@@ -116,7 +116,8 @@ function! s:new_filter_buffer(context) abort
             \ 'width': str2nr(a:context['winwidth']),
             \ 'height': 1,
             \})
-    elseif a:context['split'] ==# 'floating_relative'
+    elseif a:context['split'] ==# 'floating_relative_cursor'
+          \ || a:context['split'] ==# 'floating_relative_window'
       " cursor position cannot be gotten from this function.
       " so instead estimating it from floating buffer position.
         call nvim_open_win(bufnr('%'), v:true, {

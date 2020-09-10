@@ -43,8 +43,10 @@ class Context(object):
             )
         context['filter_winrow'] = int(context['winrow'])
 
-        if (context['split'] in ['floating', 'floating_relative'] and
-                not self._vim.call('exists', '*nvim_open_win')):
+        if (context['split'] in [
+                'floating', 'floating_relative_cursor',
+                'floating_absolute_window'] and not self._vim.call(
+                    'exists', '*nvim_open_win')):
             context['split'] = 'no'
         if (context['filter_split_direction'] == 'floating' and
                 not self._vim.call('exists', '*nvim_open_win')):
