@@ -24,7 +24,7 @@ class Filter(Base):
             project = self.vim.call('getcwd')
         project += '/'
 
-        max_width = int(context['max_candidate_width'])
+        max_width = context['max_candidate_width']
         return [x for x in context['candidates']
                 if 'action__path' not in x or
                 x['action__path'][:max_width].startswith(project)]

@@ -43,8 +43,8 @@ function! denite#helper#call_denite(command, args, line1, line2) abort
 endfunction
 
 function! denite#helper#preview_file(context, filename) abort
-  let preview_width = str2nr(a:context.preview_width)
-  let preview_height = str2nr(a:context.preview_height)
+  let preview_width = a:context.preview_width
+  let preview_height = a:context.preview_height
   let pos = win_screenpos(win_getid())
   let win_width = winwidth(0)
   let win_height = winheight(0)
@@ -56,8 +56,8 @@ function! denite#helper#preview_file(context, filename) abort
 
     if a:context.floating_preview && exists('*nvim_win_set_config')
       if a:context['split'] ==# 'floating'
-        let win_row = str2nr(a:context['winrow'])
-        let win_col = str2nr(a:context['wincol'])
+        let win_row = a:context['winrow']
+        let win_col = a:context['wincol']
       else
         let win_row = pos[0] - 1
         let win_col = pos[1] - 1

@@ -41,7 +41,17 @@ class Context(object):
                 'denite#project#path2project_directory',
                 context['path'], context['root_markers']
             )
+
         context['filter_winrow'] = int(context['winrow'])
+        context['max_candidate_width'] = int(context['max_candidate_width'])
+        context['prev_winid'] = int(context['prev_winid'])
+        context['preview_height'] = int(context['preview_height'])
+        context['preview_width'] = int(context['preview_width'])
+        context['wincol'] = int(context['winrow'])
+        context['winheight'] = int(context['winheight'])
+        context['winminheight'] = int(context['winminheight'])
+        context['winrow'] = int(context['winrow'])
+        context['winwidth'] = int(context['winwidth'])
 
         if (context['split'] in [
                 'floating', 'floating_relative_cursor',

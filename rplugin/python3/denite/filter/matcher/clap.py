@@ -48,7 +48,7 @@ class Filter(Base):
 
         result = self._get_clap_result(
             context['candidates'], context['input'],
-            int(context['max_candidate_width']))
+            context['max_candidate_width'])
         d = {x['word']: x for x in context['candidates']}
         return [d[x] for x in result[1]]
 
