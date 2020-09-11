@@ -47,7 +47,7 @@ class Context(object):
         context['prev_winid'] = int(context['prev_winid'])
         context['preview_height'] = int(context['preview_height'])
         context['preview_width'] = int(context['preview_width'])
-        context['wincol'] = int(context['winrow'])
+        context['wincol'] = int(context['wincol'])
         context['winheight'] = int(context['winheight'])
         context['winminheight'] = int(context['winminheight'])
         context['winrow'] = int(context['winrow'])
