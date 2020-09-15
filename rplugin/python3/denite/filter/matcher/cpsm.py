@@ -52,7 +52,7 @@ class Filter(Base):
             ispath, context['candidates'], context['input'],
             context['bufname'])
         d = {x['word']: x for x in context['candidates']}
-        return [d[x] for x in cpsm_result]
+        return [d[x] for x in cpsm_result if x in d]
 
     def convert_pattern(self, input_str: str) -> str:
         return convert2fuzzy_pattern(input_str)
