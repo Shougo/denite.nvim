@@ -115,7 +115,7 @@ function! denite#move_to_parent() abort
   call denite#filter#_move_to_parent(v:false)
   return ''
 endfunction
-function! denite#incremant_parent_cursor(inc) abort
+function! denite#increment_parent_cursor(inc) abort
   let ids = win_findbuf(g:denite#_filter_parent)
   if empty(ids) || !exists('*nvim_win_get_cursor')
     return ''

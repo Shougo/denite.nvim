@@ -602,8 +602,8 @@ denite#get_status({name})				*denite#get_status()*
 		"buffer_name": Current |denite-option-buffer-name|
 		"line_total": Total candidates. Part of "linenr".
 
-					*denite#incremant_parent_cursor()*
-denite#incremant_parent_cursor({inc})
+					*denite#increment_parent_cursor()*
+denite#increment_parent_cursor({inc})
 		Increment the parent denite cursor.
 		Note: It is only used to define mappings.
 		Note: It is only for neovim.
@@ -2078,13 +2078,13 @@ must force this behaviour. >
 	" For neovim only.
 	function! s:denite_filter_my_settings() abort
 	  inoremap <silent><buffer><expr> <C-j>
-	      \ denite#incremant_parent_cursor(1)
+	      \ denite#increment_parent_cursor(1)
 	  inoremap <silent><buffer><expr> <C-k>
-	      \ denite#incremant_parent_cursor(-1)
+	      \ denite#increment_parent_cursor(-1)
 	  nnoremap <silent><buffer><expr> <C-j>
-	      \ denite#incremant_parent_cursor(1)
+	      \ denite#increment_parent_cursor(1)
 	  nnoremap <silent><buffer><expr> <C-k>
-	      \ denite#incremant_parent_cursor(-1)
+	      \ denite#increment_parent_cursor(-1)
 	endfunction
 
 Note: This is very slow in Vim8 environment. See the |denite-examples| for an
