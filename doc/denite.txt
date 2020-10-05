@@ -2075,7 +2075,7 @@ must force this behaviour. >
 	      \:call denite#move_to_filter()<CR>A
 	endfunction
 
-	" For neovim only.
+	" It is faster version, but neovim only.
 	function! s:denite_filter_my_settings() abort
 	  inoremap <silent><buffer><expr> <C-j>
 	      \ denite#increment_parent_cursor(1)
