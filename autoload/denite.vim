@@ -115,3 +115,16 @@ function! denite#move_to_parent() abort
   call denite#filter#_move_to_parent(v:false)
   return ''
 endfunction
+function! denite#incremant_parent_cursor(inc) abort
+  let ids = win_findbuf(g:denite#_filter_parent)
+  if empty(ids) || !exists('*nvim_win_get_cursor')
+    return ''
+  endif
+
+  let cursor = nvim_win_get_cursor(ids[0])
+  let row = max([min([cursor[0] + a:inc,
+        \ nvim_buf_line_count(g:denite#_filter_parent)]), 1])
+  call nvim_win_set_cursor(ids[0], [row, cursor[1]])
+  redraw!
+  return ''
+endfunction

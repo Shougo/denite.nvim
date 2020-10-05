@@ -7,9 +7,9 @@
 function! denite#filter#_open(context, parent, entire_len, is_async) abort
   let denite_statusline = get(b:, 'denite_statusline', {})
 
-  let id = win_findbuf(g:denite#_filter_bufnr)
-  if !empty(id)
-    call win_gotoid(id[0])
+  let ids = win_findbuf(g:denite#_filter_bufnr)
+  if !empty(ids)
+    call win_gotoid(ids[0])
     call cursor(line('$'), 0)
   else
     call s:new_filter_buffer(a:context)
@@ -236,16 +236,16 @@ function! s:quit(force_quit) abort
 endfunction
 
 function! denite#filter#_move_to_parent(is_async) abort
-  let id = win_findbuf(g:denite#_filter_parent)
-  if empty(id)
+  let ids = win_findbuf(g:denite#_filter_parent)
+  if empty(ids)
     return
   endif
 
   if a:is_async
     " Note: noautocmd for statusline flicker
-    noautocmd call win_gotoid(id[0])
+    noautocmd call win_gotoid(ids[0])
   else
-    call win_gotoid(id[0])
+    call win_gotoid(ids[0])
   endif
 endfunction
 function! denite#filter#_close_filter_window() abort
