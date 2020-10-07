@@ -297,7 +297,7 @@ class Default(object):
         if self._context['prompt']:
             self._vim.command('setlocal signcolumn=yes')
         else:
-            self._vim.command('setlocal signcolumn=no')
+            self._vim.command('setlocal signcolumn=auto')
         if self._context['cursorline']:
             self._vim.command('setlocal cursorline')
 
