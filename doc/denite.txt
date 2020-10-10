@@ -1044,6 +1044,7 @@ colorscheme	Gather colorschemes and change the colorscheme.
 
 						*denite-source-command*
 command		Gather commands and put on ex-mode.
+		Note: |getcompletion()| "cmdline" feature is needed.
 
 					*denite-source-command-history*
 command_history	Gather command histories and run it.
