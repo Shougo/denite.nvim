@@ -84,7 +84,7 @@ USAGE							*denite-usage*
 ==============================================================================
 INSTALL							*denite-install*
 
-Note: denite requires Neovim 0.3.0+ or Vim 8.0+ with |:python3| enabled.
+Note: denite requires Neovim 0.4.0+ or Vim 8.0+ with |:python3| enabled.
 
 Note: Please install/upgrade msgpack package (1.0.0+).
 https://github.com/msgpack/msgpack-python
@@ -720,7 +720,6 @@ OPTIONS							*denite-options*
 
 		Note: To use "floating", you need to use neovim
 		0.4.0+(|nvim_open_win()|).
-		neovim 0.3(includes 0.3.7) does not work.
 
 		Default: "botright"
 
@@ -942,7 +941,6 @@ OPTIONS							*denite-options*
 
 		Note: To use "floating", you need to use neovim
 		0.4.0+(|nvim_open_win()|).
-		neovim 0.3(includes 0.3.7) does not work.
 
 		Default: "horizontal"
 
@@ -2165,11 +2163,6 @@ A: >
 	  nnoremap <silent><buffer><expr> U
 	  \ denite#do_map('do_action', 'dein_update')
 	endfunction
-
-Q: "-split=floating" does not work in neovim 0.3.7.
-
-A: To use "floating", you need to use neovim 0.4.0+(|nvim_open_win()|).
-neovim 0.3(includes 0.3.7) does not work.
 
 Q: I want to narrow by tail path instead of full path in file/rec source.
 
