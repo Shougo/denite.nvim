@@ -113,7 +113,7 @@ class Source(Base):
                 info['name'],
                 'action__path':
                 info['path']
-                if context.get('__nofile') == False else context['__path'],
+                if not context.get('__nofile') else context['__path'],
             }
             candidates.append(candidate)
 
