@@ -45,13 +45,15 @@ class Source(Base):
             if len(context['args']) > 0
             else cur_buffer.name
         )
-        if len(context['args']) <= 0 and not self.vim.funcs.filereadable(cur_buffer.name):
+        if len(context['args']) <= 0 and not self.vim.funcs.filereadable(
+                cur_buffer.name):
             context['__nofile'] = True
             context['__bufnr'] = int(cur_buffer.number)
             self.default_action = 'switch'
         if self.vars['force_filetype']:
             context['__language'] = cur_buffer.options['filetype']
-            ctags_filetype = self.vars['language_map'].get(context['__language'], None)
+            ctags_filetype = self.vars['language_map'].get(
+                context['__language'], None)
             if ctags_filetype:
                 context['__language'] = ctags_filetype
 
@@ -86,7 +88,9 @@ class Source(Base):
         if context.get('__nofile', False):
             tempfile = self.vim.funcs.tempname()
             with open(tempfile, "w") as f:
-                f.writelines(map(lambda x: x+'\n', self.vim.buffers[context['__bufnr']][:]))
+                f.writelines(
+                    map(lambda x: x + '\n',
+                        self.vim.buffers[context['__bufnr']][:]))
             args += [tempfile]
         else:
             args += [context['__path']]
@@ -105,8 +109,11 @@ class Source(Base):
             info = loads(entry)
 
             candidate = {
-                'word': info['name'],
-                'action__path': info['path'] if context.get('__nofile') == False else context['__path'],
+                'word':
+                info['name'],
+                'action__path':
+                info['path']
+                if context.get('__nofile') == False else context['__path'],
             }
             candidates.append(candidate)
 
