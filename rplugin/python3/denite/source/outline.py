@@ -42,8 +42,7 @@ class Source(Base):
         if len(context['args']) <= 0:
             cur_buffer = self.vim.current.buffer
             context['__path'] = cur_buffer.name
-            if len(context['args']) <= 0 and not self.vim.funcs.filereadable(
-                    cur_buffer.name):
+            if not self.vim.funcs.filereadable(cur_buffer.name):
                 context['__nofile'] = True
                 context['__bufnr'] = int(cur_buffer.number)
                 self.default_action = 'switch'
