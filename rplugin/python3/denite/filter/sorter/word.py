@@ -18,4 +18,5 @@ class Filter(Base):
         self.description = 'sort candidates by ascii order of word'
 
     def filter(self, context: UserContext) -> Candidates:
-        return sorted(context['candidates'], key=lambda x: x['word'])
+        return sorted(context['candidates'],
+                      key=lambda x: str(x['word']))

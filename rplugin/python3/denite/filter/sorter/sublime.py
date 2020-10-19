@@ -46,7 +46,7 @@ class Filter(Base):
 
         return sorted(
             context['candidates'],
-            key=lambda candidate: -candidate['filter__rank']
+            key=lambda candidate: -int(candidate['filter__rank'])
         )
 
 

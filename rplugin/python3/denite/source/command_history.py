@@ -106,6 +106,6 @@ class Kind(Command):
 
     def action_delete(self, context: UserContext) -> None:
         for target in sorted(context['targets'],
-                             key=lambda x: x['source__index'],
+                             key=lambda x: int(x['source__index']),
                              reverse=True):
             self.vim.call('histdel', ':', target['source__index'])

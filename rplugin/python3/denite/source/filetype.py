@@ -28,4 +28,5 @@ class Source(Base):
                 'action__command': 'set filetype=' + filetype
             }
 
-        return sorted(filetypes.values(), key=lambda value: value['word'])
+        return sorted(filetypes.values(),
+                      key=lambda value: str(value['word']))

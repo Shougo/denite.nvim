@@ -74,7 +74,7 @@ class Source(Base):
             lambda x:
             maxsize if context['__caller_bufnr'] == x['bufnr']
             else -maxsize if context['__alter_bufnr'] == x['bufnr']
-            else x['timestamp']))
+            else int(x['timestamp'])))
 
     def _is_excluded(self, context: UserContext,
                      buffer_attr: typing.Dict[str, typing.Any]) -> bool:

@@ -34,7 +34,7 @@ class Filter(Base):
             for c in context['candidates']:
                 c['filter__rank'] += get_score(c['word'], pattern)
         return sorted(context['candidates'],
-                      key=lambda x: x['filter__rank'])
+                      key=lambda x: int(x['filter__rank']))
 
 
 BOUNDARY_CHARS = string.punctuation + string.whitespace

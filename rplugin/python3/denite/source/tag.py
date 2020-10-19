@@ -55,7 +55,7 @@ class Source(Base):
                     if candidate:
                         candidates.append(candidate)
 
-        return sorted(candidates, key=lambda value: value['word'])
+        return sorted(candidates, key=lambda value: str(value['word']))
 
     def _get_candidate(self, filename: str, line: str) -> Candidate:
         if re.match('!', line) or not line:

@@ -39,7 +39,8 @@ class Source(Base):
                 'action__command': 'colorscheme ' + colorscheme
             }
 
-        return sorted(colorschemes.values(), key=lambda value: value['word'])
+        return sorted(colorschemes.values(),
+                      key=lambda value: str(value['word']))
 
 
 class Kind(Command):

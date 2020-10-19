@@ -89,7 +89,7 @@ class Source(Base):
             tempfile = self.vim.funcs.tempname()
             with open(tempfile, "w") as f:
                 f.writelines(
-                    map(lambda x: x + '\n',
+                    map(lambda x: str(x + '\n'),
                         self.vim.buffers[context['__bufnr']][:]))
             args += [tempfile]
         else:
