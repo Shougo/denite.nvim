@@ -39,23 +39,32 @@ class Source(Base):
         }
 
     def on_init(self, context: UserContext) -> None:
-        cur_buffer = self.vim.current.buffer
-        context['__path'] = (
-            context['args'][0]
-            if len(context['args']) > 0
-            else cur_buffer.name
-        )
-        if len(context['args']) <= 0 and not self.vim.funcs.filereadable(
-                cur_buffer.name):
-            context['__nofile'] = True
-            context['__bufnr'] = int(cur_buffer.number)
-            self.default_action = 'switch'
-        if self.vars['force_filetype']:
-            context['__language'] = cur_buffer.options['filetype']
-            ctags_filetype = self.vars['language_map'].get(
-                context['__language'], None)
-            if ctags_filetype:
-                context['__language'] = ctags_filetype
+        if len(context['args']) <= 0:
+            cur_buffer = self.vim.current.buffer
+            context['__path'] = cur_buffer.name
+            if len(context['args']) <= 0 and not self.vim.funcs.filereadable(
+                    cur_buffer.name):
+                context['__nofile'] = True
+                context['__bufnr'] = int(cur_buffer.number)
+                self.default_action = 'switch'
+            if self.vars['force_filetype']:
+                context['__language'] = cur_buffer.options['filetype']
+                ctags_filetype = self.vars['language_map'].get(
+                    context['__language'], None)
+                if ctags_filetype:
+                    context['__language'] = ctags_filetype
+        else:
+            context['__path'] = context['args'][0]
+            if self.vars['force_filetype']:
+                bufnr = self.vim.funcs.bufnr(context['args'][0])
+                if bufnr > 0:
+                    target_buffer = self.vim.buffers[bufnr]
+                    context['__language'] = target_buffer.options['filetype']
+                    ctags_filetype = self.vars['language_map'].get(
+                        context['__language'], None)
+                    if ctags_filetype:
+                        context['__language'] = ctags_filetype
+
 
     def highlight(self) -> None:
         for syn in OUTLINE_HIGHLIGHT_SYNTAX:
