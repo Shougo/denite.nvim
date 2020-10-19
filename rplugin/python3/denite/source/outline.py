@@ -64,7 +64,6 @@ class Source(Base):
                     if ctags_filetype:
                         context['__language'] = ctags_filetype
 
-
     def highlight(self) -> None:
         for syn in OUTLINE_HIGHLIGHT_SYNTAX:
             self.vim.command(
