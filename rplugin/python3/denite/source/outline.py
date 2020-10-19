@@ -52,17 +52,16 @@ class Source(Base):
                     context['__language'], None)
                 if ctags_filetype:
                     context['__language'] = ctags_filetype
-        else:
+        elif self.vars['force_filetype']:
             context['__path'] = context['args'][0]
-            if self.vars['force_filetype']:
-                bufnr = self.vim.funcs.bufnr(context['args'][0])
-                if bufnr > 0:
-                    target_buffer = self.vim.buffers[bufnr]
-                    context['__language'] = target_buffer.options['filetype']
-                    ctags_filetype = self.vars['language_map'].get(
-                        context['__language'], None)
-                    if ctags_filetype:
-                        context['__language'] = ctags_filetype
+            bufnr = self.vim.funcs.bufnr(context['args'][0])
+            if bufnr > 0:
+                target_buffer = self.vim.buffers[bufnr]
+                context['__language'] = target_buffer.options['filetype']
+                ctags_filetype = self.vars['language_map'].get(
+                    context['__language'], None)
+                if ctags_filetype:
+                    context['__language'] = ctags_filetype
 
     def highlight(self) -> None:
         for syn in OUTLINE_HIGHLIGHT_SYNTAX:
