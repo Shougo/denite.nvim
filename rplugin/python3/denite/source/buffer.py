@@ -39,6 +39,8 @@ class Source(Base):
     def on_init(self, context: UserContext) -> None:
         context['__exclude_unlisted'] = ('!' not in context['args'] and
                                          self.vars['exclude_unlisted'])
+        context['__only_modified'] = ('+' in context['args'] or
+                                      self.vars['only_modified'])
         context['__caller_bufnr'] = context['bufnr']
         context['__alter_bufnr'] = self.vim.call('bufnr', '#')
 
@@ -79,6 +81,8 @@ class Source(Base):
     def _is_excluded(self, context: UserContext,
                      buffer_attr: typing.Dict[str, typing.Any]) -> bool:
         if context['__exclude_unlisted'] and buffer_attr['status'][0] == 'u':
+            return True
+        if context['__only_modified'] and buffer_attr['status'][3] != '+':
             return True
         if buffer_attr['filetype'] in self.vars['exclude_filetypes']:
             return True

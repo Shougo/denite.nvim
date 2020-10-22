@@ -1033,6 +1033,9 @@ buffer		Gather buffers and jump to the buffer.
 		exclude_filetypes
 				  the list of excluded filetypes
 				  (default is ["denite"])
+		only_modified
+				  a flag to list only modified buffers
+				  (default is '0')
 
 						*denite-source-change*
 change		Gather results of |:changes|.
