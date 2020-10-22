@@ -32,7 +32,8 @@ class Source(Base):
         self.kind = 'buffer'
         self.vars = {
             'date_format': '%d %b %Y %H:%M:%S',
-            'exclude_unlisted': 1,
+            'exclude_unlisted': True,
+            'only_modified': False,
             'exclude_filetypes': ['denite']
         }
 
