@@ -124,8 +124,7 @@ class Source(Base):
                     self.vars['min_interactive_length']):
                 return []
 
-            context['__patterns'] = [
-                '.*'.join(util.split_input(context['input']))]
+            context['__patterns'] = [context['input']]
 
         if context['__proc']:
             return self._async_gather_candidates(
@@ -145,8 +144,9 @@ class Source(Base):
         outs, errs = context['__proc'].communicate(timeout=timeout)
         if errs:
             self.error_message(context, errs)
-        context['is_async'] = not context['__proc'].eof()
-        if context['__proc'].eof():
+        context['is_async'] = (
+            context['__proc'] and not context['__proc'].eof())
+        if context['__proc'] and context['__proc'].eof():
             context['__proc'] = None
 
         candidates = []
