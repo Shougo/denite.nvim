@@ -843,13 +843,15 @@ class Default(object):
     def _init_cursor(self) -> None:
         if self._context['reversed']:
             self._move_to_last_line()
-            self._vim.command('normal! zb')
         else:
             self._move_to_first_line()
 
     def _move_to_pos(self, pos: int) -> None:
         self._vim.call('cursor', pos, 0)
         self._cursor = pos
+
+        if self._context['reversed']:
+            self._vim.command('normal! zb')
 
     def _move_to_next_line(self) -> None:
         if self._cursor < len(self._candidates):
