@@ -3,6 +3,8 @@ denite.nvim
 
 [![Build Status](https://travis-ci.org/Shougo/denite.nvim.svg?branch=master)](https://travis-ci.org/Shougo/denite.nvim)
 
+Please read [help](doc/denite.txt) for details.
+
 Note: Denite.nvim does not define any of default mappings.  You need to define
 them.
 
@@ -83,6 +85,7 @@ You must install "pynvim" module with pip
     pip3 install --user pynvim
 
 
+
 ### For Windows users
 
 1. Install Vim from [Vim Win32 Installer
@@ -92,6 +95,7 @@ You must install "pynvim" module with pip
    the zip file to the folder where you installed Vim.
 
 **Note:** You need to do 1. and 2. with the common-arch files (x86 or x64).
+
 
 ## Installation
 
@@ -116,6 +120,7 @@ else
   Plug 'roxma/vim-hug-neovim-rpc'
 endif
 ```
+
 
 ## Examples
 
