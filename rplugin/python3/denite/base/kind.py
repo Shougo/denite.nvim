@@ -45,7 +45,14 @@ class Base(object):
     def action_append(self, context: UserContext) -> None:
         for target in context['targets']:
             _paste(self.vim,
-                   target.get('action__text', target['word']), 'p', 'v')
+                   target.get('action__text', target['word']), 'p',
+                   target.get('action__regtype', 'v'))
+
+    def action_insert(self, context: UserContext) -> None:
+        for target in context['targets']:
+            _paste(self.vim,
+                   target.get('action__text', target['word']), 'P',
+                   target.get('action__regtype', 'v'))
 
     def get_action_names(self) -> typing.List[str]:
         return ['default'] + [x.replace('action_', '') for x in dir(self)

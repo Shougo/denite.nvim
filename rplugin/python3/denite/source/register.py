@@ -39,6 +39,7 @@ class Source(Base):
                     r'\n', r'\\n', register)[:200],
                 'action__text': register,
                 'action__register': reg,
+                'action__regtype': self.vim.call('getregtype', reg),
             })
         return candidates
 
