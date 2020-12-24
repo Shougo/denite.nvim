@@ -28,7 +28,7 @@ class Filter(Base):
     def filter(self, context: UserContext) -> Candidates:
         if not context['candidates'] or not context[
                 'input'] or self._disabled or not self.vars['clap_path']:
-            return context['candidates']  # type: ignore
+            return list(context['candidates'])
 
         if not self._initialized:
             # vim-clap installation check
@@ -58,6 +58,7 @@ class Filter(Base):
     def _get_clap_result(self, candidates: Candidates,
                          pattern: str, winwidth: int) -> Candidates:
         import fuzzymatch_rs
-        return fuzzymatch_rs.fuzzy_match(   # type: ignore
-            pattern, tuple((d['word'] for d in candidates)),
-            winwidth, False, 'Full')
+        candidates = fuzzymatch_rs.fuzzy_match(
+                        pattern, tuple((d['word'] for d in candidates)),
+                        winwidth, False, 'Full')
+        return list(candidates)

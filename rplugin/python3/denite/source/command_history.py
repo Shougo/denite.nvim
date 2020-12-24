@@ -61,7 +61,7 @@ class Source(Base):
                 lambda history: not self._is_ignore_command(history[1]),
                 histories
             ))
-        return histories  # type: ignore
+        return list(histories)
 
     def _remove_duplicate_entry(self,
                                 seq: typing.List[str]) -> typing.List[str]:

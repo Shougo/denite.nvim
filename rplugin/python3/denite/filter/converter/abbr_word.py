@@ -20,4 +20,4 @@ class Filter(Base):
         for candidate in context['candidates']:
             if 'abbr' in candidate:
                 candidate['word'] = candidate['abbr']
-        return context['candidates']  # type: ignore
+        return list(context['candidates'])

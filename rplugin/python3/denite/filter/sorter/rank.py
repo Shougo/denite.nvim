@@ -26,7 +26,7 @@ class Filter(Base):
 
     def filter(self, context: UserContext) -> Candidates:
         if len(context['input']) < 1:
-            return context['candidates']  # type: ignore
+            return list(context['candidates'])
         for c in context['candidates']:
             c['filter__rank'] = 0
 
