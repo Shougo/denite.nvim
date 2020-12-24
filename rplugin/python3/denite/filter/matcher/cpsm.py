@@ -26,7 +26,7 @@ class Filter(Base):
     def filter(self, context: UserContext) -> Candidates:
         if not context['candidates'] or not context[
                 'input'] or self._disabled:
-            return context['candidates']  # type: ignore
+            return list(context['candidates'])
 
         if not self._initialized:
             # cpsm installation check
@@ -60,7 +60,8 @@ class Filter(Base):
     def _get_cpsm_result(self, ispath: bool, candidates: Candidates,
                          pattern: str, bufname: str) -> Candidates:
         import cpsm_py
-        return cpsm_py.ctrlp_match(  # type: ignore
-            (d['word'] for d in candidates),
-            pattern, limit=1000, ispath=ispath,
-            crfile=bufname if ispath else '')[0]
+        candidates = cpsm_py.ctrlp_match(
+                        (d['word'] for d in candidates),
+                        pattern, limit=1000, ispath=ispath,
+                        crfile=bufname if ispath else '')[0]
+        return list(candidates)

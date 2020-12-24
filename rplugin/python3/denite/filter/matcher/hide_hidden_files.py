@@ -21,7 +21,7 @@ class Filter(Base):
 
     def filter(self, context: UserContext) -> Candidates:
         if '.' in context['input']:
-            return context['candidates']  # type: ignore
+            return list(context['candidates'])
 
         return [x for x in context['candidates']
                 if not match(r'\.', basename(x['action__path']))]

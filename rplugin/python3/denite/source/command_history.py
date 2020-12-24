@@ -48,7 +48,7 @@ class Source(Base):
 
     def _get_histories(self) -> typing.List[str]:
         if self.vim.call('has', 'nvim'):
-            histories = self.vim.lua.history_source.get()
+            histories = list(self.vim.lua.history_source.get())
             histories.reverse()
         else:
             histories = [
@@ -61,7 +61,7 @@ class Source(Base):
                 lambda history: not self._is_ignore_command(history[1]),
                 histories
             ))
-        return histories  # type: ignore
+        return histories
 
     def _remove_duplicate_entry(self,
                                 seq: typing.List[str]) -> typing.List[str]:

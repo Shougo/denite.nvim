@@ -76,8 +76,8 @@ class SyncParent(_Parent):
         from denite.child import Child
         self._child = Child(self._vim)
 
-    def _put(self, name: str, args: typing.List[typing.Any]) -> str:
-        return self._child.main(name, args, queue_id=None)  # type: ignore
+    def _put(self, name: str, args: typing.List[typing.Any]) -> typing.Any:
+        return self._child.main(name, args, queue_id=0)
 
     def _get(self, name: str, args: typing.List[typing.Any],
              is_async: bool = False) -> typing.Any:

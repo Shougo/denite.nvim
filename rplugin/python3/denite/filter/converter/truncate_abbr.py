@@ -22,4 +22,4 @@ class Filter(Base):
                 candidate['abbr'] = candidate['word']
             candidate['abbr'] = truncate(
                 self.vim, candidate['abbr'], context['winwidth'])
-        return context['candidates']  # type: ignore
+        return list(context['candidates'])

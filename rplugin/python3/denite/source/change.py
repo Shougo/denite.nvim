@@ -68,4 +68,4 @@ class Source(Base):
         return change_list
 
     def gather_candidates(self, context: UserContext) -> Candidates:
-        return context['__parse']  # type: ignore
+        return list(context['__parse'])
