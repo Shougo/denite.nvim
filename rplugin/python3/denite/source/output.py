@@ -48,6 +48,7 @@ class Source(Base):
             syn_hi_name = (
                 'syntax match vimHiGroup' +
                 ' /' + hi + r'\>/' +
+                ' containedin=deniteSource_output'
                 ' nextgroup=' + hi +
                 ' skipwhite'
             )
