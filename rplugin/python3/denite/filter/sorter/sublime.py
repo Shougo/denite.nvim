@@ -38,7 +38,7 @@ class Filter(Base):
 
     def filter(self, context: UserContext) -> Candidates:
         if len(context['input']) == 0:
-            return list(context['candidates'])
+            return context['candidates']  # type: ignore
 
         for candidate in context['candidates']:
             candidate['filter__rank'] = get_score(

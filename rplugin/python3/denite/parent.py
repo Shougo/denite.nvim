@@ -77,7 +77,7 @@ class SyncParent(_Parent):
         self._child = Child(self._vim)
 
     def _put(self, name: str, args: typing.List[typing.Any]) -> str:
-        return str(self._child.main(name, args, queue_id=0))
+        return self._child.main(name, args, queue_id=None)  # type: ignore
 
     def _get(self, name: str, args: typing.List[typing.Any],
              is_async: bool = False) -> typing.Any:

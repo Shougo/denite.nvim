@@ -622,7 +622,7 @@ class Default(object):
         abbr = candidate.get('abbr', candidate['word']).encode(
             encoding, errors='replace').decode(encoding, errors='replace')
         terms.append(abbr[:int(self._context['max_candidate_width'])])
-        return (str(self._context['selected_icon'])
+        return (self._context['selected_icon']  # type: ignore
                 if index in self._selected_candidates
                 else ' ') + ' '.join(terms).replace('\n', '')
 

@@ -302,7 +302,7 @@ class Child(object):
         if len(sources) == 1:
             actions += self._get_custom_actions(
                 'source/' + sources.pop().name).keys()
-        return list(actions)
+        return actions  # type: ignore
 
     def is_async(self) -> bool:
         return len([x for x in self._current_sources
@@ -385,7 +385,7 @@ class Child(object):
                   if x in self._filters]:
             ctx['candidates'] = f.filter(ctx)
 
-        return list(ctx['candidates'])
+        return ctx['candidates']  # type: ignore
 
     def _gather_source_candidates(self, context: UserContext,
                                   source: Source) -> Candidates:
@@ -433,7 +433,7 @@ class Child(object):
                        matchers: typing.List[typing.Any]) -> Candidates:
         for matcher in matchers:
             ctx['candidates'] = matcher.filter(ctx)
-        return list(ctx['candidates'])
+        return ctx['candidates']  # type: ignore
 
     def _set_custom_attribute(self, kind: str,
                               obj: typing.Any, attr: str) -> None:

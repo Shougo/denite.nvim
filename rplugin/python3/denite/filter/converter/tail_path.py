@@ -24,4 +24,4 @@ class Filter(Base):
                 candidate['abbr'] = candidate['word']
             candidate['word'] = Path(candidate.get(
                 'action__path', candidate['word'])).name
-        return list(context['candidates'])
+        return context['candidates']  # type: ignore

@@ -153,4 +153,4 @@ class Source(Base):
         return jump_list
 
     def gather_candidates(self, context: UserContext) -> Candidates:
-        return list(context['__jumps'])
+        return context['__jumps']  # type: ignore

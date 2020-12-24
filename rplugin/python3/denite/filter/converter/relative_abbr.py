@@ -24,4 +24,4 @@ class Filter(Base):
                 candidate['abbr'] = relpath(
                     self.vim,
                     candidate.get('action__path', candidate['word']))
-        return list(context['candidates'])
+        return context['candidates']  # type: ignore
