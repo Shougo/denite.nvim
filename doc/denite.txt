@@ -1544,6 +1544,10 @@ matcher/hide_hidden_files
 		A matcher which hides the hidden files.  If your input
 		contains ".", the hidden files will be appeared.
 
+					*denite-filter-matcher/matchfuzzy*
+matcher/matchfuzzy
+		A matcher which filters the candidates by |matchfuzzy()|.
+
 				*denite-filter-matcher/project_files*
 matcher/project_files
 		A matcher which removes non project files.
