@@ -192,7 +192,7 @@ def find_rplugins(context: UserContext, source: str,
                       typing.Tuple[str, str], None, None]:
     """Find available modules from runtimepath and yield
 
-    It searches modules from rplugin/python3/denite/{source} recursvely
+    It searches modules from rplugin/python3/denite/{source} recursively
     and yields path and module path (dot separated path)
 
     Search will be performed with the following rules
