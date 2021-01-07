@@ -6,7 +6,7 @@
 
 import typing
 
-from os.path import getatime, exists
+from pathlib import Path
 from time import localtime, strftime, time
 from sys import maxsize
 
@@ -117,24 +117,25 @@ class Source(Base):
             'name': buf.name
         }
 
+        timestamp = (Path(attr['name']).stat().st_atime
+                     if Path(attr['name']).exists() else time())
+        mark_listed = (' ' if self.vim.call('buflisted', attr['number'])
+                       else 'u')
+        mark_bufnr = ('%' if attr['number'] == context['__caller_bufnr']
+                      else '#' if attr['number'] == context['__alter_bufnr']
+                      else ' ')
+        mark_alt = ('a' if self.vim.call('win_findbuf', attr['number'])
+                    else 'h' if self.vim.call('bufloaded', attr['number']) != 0
+                    else ' ')
+        mark_modified = ('=' if buf.options['readonly']
+                         else '+' if buf.options['modified']
+                         else '-' if buf.options['modifiable'] == 0
+                         else ' ')
         attr.update({
             'filetype': self.vim.call('getbufvar', buf.number, '&filetype'),
-            'timestamp': getatime(
-                attr['name']) if exists(attr['name']) else time(),
+            'timestamp': timestamp,
             'status': '{}{}{}{}'.format(
-                ' ' if self.vim.call('buflisted', attr['number'])
-                    else 'u',
-                '%' if attr['number'] == context['__caller_bufnr']
-                    else '#' if attr['number'] == context['__alter_bufnr']
-                    else ' ',
-                'a' if self.vim.call('win_findbuf', attr['number'])
-                    else 'h' if self.vim.call('bufloaded', attr['number']) != 0
-                    else ' ',
-                '=' if buf.options['readonly']
-                    else '+' if buf.options['modified']
-                    else '-' if buf.options['modifiable'] == 0
-                    else ' '
-            )
+                mark_listed, mark_bufnr, mark_alt, mark_modified)
         })
 
         return attr

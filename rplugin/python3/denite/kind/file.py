@@ -4,8 +4,8 @@
 # License: MIT license
 # ============================================================================
 
+from pathlib import Path
 import re
-import os
 import typing
 
 from denite.kind.openable import Kind as Openable
@@ -132,7 +132,7 @@ class Kind(Openable):
                     continue
                 cwd = self.vim.call('getcwd')
                 if path.startswith(cwd):
-                    path = os.path.relpath(path, cwd)
+                    path = str(Path(path).relative_to(cwd))
 
                 bufnr = self.vim.call('bufnr', match_path)
                 if (command == 'edit' and bufnr > 0 and

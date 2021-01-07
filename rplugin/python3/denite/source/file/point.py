@@ -4,8 +4,8 @@
 # License: MIT license
 # ============================================================================
 
+from pathlib import Path
 from re import sub, match
-import os
 
 from denite.base.source import Base
 from denite.util import parse_jump_line, expand, abspath
@@ -27,7 +27,7 @@ class Source(Base):
     def gather_candidates(self, context: UserContext) -> Candidates:
         result = parse_jump_line(
             self.vim.call('getcwd'), context['__line'])
-        if result and os.path.isfile(result[0]):
+        if result and Path(result[0]).is_file():
             return [{
                 'word': '{}: {}{}: {}'.format(
                     result[0], result[1],
@@ -38,15 +38,15 @@ class Source(Base):
                 'action__col': result[2],
             }]
 
-        cfile = context['__cfile']
-        if match('[./]+$', cfile):
+        cfile = Path(context['__cfile'])
+        if match('[./]+$', str(cfile)):
             return []
-        if os.path.exists(cfile) and os.path.isfile(cfile):
-            return [{'word': cfile,
-                     'action__path': abspath(self.vim, cfile)}]
-        if _checkhost(cfile) or match(
-                r'https?://(127\.0\.0\.1|localhost)[:/]', cfile):
-            return [{'word': cfile, 'action__path': cfile}]
+        if cfile.exists() and cfile.is_file():
+            return [{'word': str(cfile),
+                     'action__path': abspath(self.vim, str(cfile))}]
+        if _checkhost(str(cfile)) or match(
+                r'https?://(127\.0\.0\.1|localhost)[:/]', str(cfile)):
+            return [{'word': cfile, 'action__path': str(cfile)}]
         return []
 
 

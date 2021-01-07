@@ -4,9 +4,9 @@
 # License: MIT license
 # ============================================================================
 
+from pathlib import Path
 import shlex
 import typing
-from os.path import relpath
 
 from denite import util, process
 from denite.base.source import Base
@@ -156,7 +156,7 @@ class Source(Base):
             if not result:
                 continue
             path = truncate(self.vim,
-                            relpath(result[0], start=context['path']),
+                            str(Path(result[0]).relative_to(context['path'])),
                             self.vars['max_path_length'])
             candidates.append(_candidate(result, path))
         return candidates

@@ -4,11 +4,11 @@
 # License: MIT license
 # ============================================================================
 
-import sys
 from os import curdir, scandir
-from os.path import basename
+from pathlib import Path
 import argparse
 import fnmatch
+import sys
 import time
 import typing
 
@@ -56,7 +56,7 @@ def output_lines(out: typing.List[str], err: typing.List[str]) -> None:
 
 def is_ignored(name: str, ignore_list: typing.List[str]) -> bool:
     """checks if file name matches the ignore list"""
-    name = basename(name)
+    name = Path(name).name
     return bool(any(fnmatch.fnmatch(name, p) for p in ignore_list))
 
 

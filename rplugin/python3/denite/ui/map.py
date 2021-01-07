@@ -4,11 +4,11 @@
 # License: MIT license
 # ============================================================================
 
+from pathlib import Path
 import typing
 
 from denite.util import debug, clear_cmdline
 from denite.ui.default import Default
-from os.path import dirname
 
 Params = typing.List[str]
 Action = typing.Callable[[Default, Params], typing.Any]
@@ -96,7 +96,7 @@ def _filter_async(denite: Default, params: Params) -> typing.Any:
 
 
 def _move_up_path(denite: Default, params: Params) -> typing.Any:
-    denite._context['path'] = dirname(denite._context['path'])
+    denite._context['path'] = Path(denite._context['path']).parent
     return denite._restart()
 
 

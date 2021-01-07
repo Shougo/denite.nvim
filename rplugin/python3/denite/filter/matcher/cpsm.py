@@ -4,8 +4,8 @@
 # License: MIT license
 # ============================================================================
 
+from pathlib import Path
 import sys
-import os
 
 from denite.base.filter import Base
 from denite.util import globruntime, convert2fuzzy_pattern
@@ -33,9 +33,9 @@ class Filter(Base):
             ext = '.pyd' if context['is_windows'] else '.so'
             if globruntime(context['runtimepath'], 'autoload/cpsm_py' + ext):
                 # Add path
-                sys.path.append(os.path.dirname(
+                sys.path.append(str(Path(
                     globruntime(context['runtimepath'],
-                                'autoload/cpsm_py' + ext)[0]))
+                                'autoload/cpsm_py' + ext)[0]).parent))
                 self._initialized = True
             else:
                 self.error_message(context,
@@ -47,7 +47,7 @@ class Filter(Base):
                 self._disabled = True
                 return []
 
-        ispath = (os.path.exists(context['candidates'][0]['word']))
+        ispath = (Path(context['candidates'][0]['word']).exists())
         cpsm_result = self._get_cpsm_result(
             ispath, context['candidates'], context['input'],
             context['bufname'])

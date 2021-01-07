@@ -6,7 +6,6 @@
 
 import re
 import typing
-from os.path import exists
 from pathlib import Path
 
 from denite.base.source import Base
@@ -98,5 +97,5 @@ class Source(Base):
         return [
             x
             for x in self.vim.call('map', tagfiles, 'fnamemodify(v:val, ":p")')
-            if exists(x)
+            if Path(x).exists()
         ]
