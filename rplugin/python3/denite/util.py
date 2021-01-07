@@ -6,6 +6,7 @@
 
 from pathlib import Path
 from sys import executable, base_exec_prefix
+from os.path import expandvars
 import importlib.util
 import inspect
 import os
@@ -112,9 +113,9 @@ def get_custom(custom: typing.Dict[str, typing.Any], kind: str,
 
 
 def load_external_module(base: str, module: str) -> None:
-    current = os.path.dirname(os.path.abspath(base))
-    module_dir = join(os.path.dirname(current), module)
-    sys.path.insert(0, module_dir)
+    current = Path(base).resolve().parent
+    module_dir = current.parent.joinpath(module)
+    sys.path.insert(0, str(module_dir))
 
 
 def split_input(text: str) -> typing.List[str]:
@@ -122,7 +123,7 @@ def split_input(text: str) -> typing.List[str]:
 
 
 def path2dir(path: str) -> str:
-    return path if os.path.isdir(path) else os.path.dirname(path)
+    return path if Path(path).is_dir() else str(Path(path).parent)
 
 
 def path2project(vim: Nvim, path: str,
@@ -146,22 +147,23 @@ def parse_jump_line(path_head: str, line: str) -> typing.List[str]:
         linenr = '1'
     if not col:
         col = '0'
-    if not os.path.isabs(path):
-        path = join(path_head, path)
+    if not Path(path).is_absolute():
+        path = str(Path(path_head).joinpath(path))
 
     return [path, linenr, col, text]
 
 
 def expand(path: str) -> str:
-    return os.path.expandvars(os.path.expanduser(path))
+    return expandvars(Path(path).expanduser())
 
 
 def abspath(vim: Nvim, path: str) -> str:
-    return normpath(join(vim.call('getcwd'), expand(path)))
+    return str(Path(vim.call('getcwd')).joinpath(expand(path)).resolve())
 
 
 def relpath(vim: Nvim, path: str) -> str:
-    return str(normpath(vim.call('fnamemodify', expand(path), ':~:.')))
+    return str(Path(vim.call(
+        'fnamemodify', expand(path), ':~:.')).resolve())
 
 
 def convert2fuzzy_pattern(text: str) -> str:
@@ -265,13 +267,12 @@ def import_rplugins(name: str, context: UserContext, source: str,
 
 def parse_tagline(line: str, tagpath: str) -> typing.Dict[str, typing.Any]:
     elem = line.split("\t")
-    file_path = elem[1]
-    if not exists(file_path):
-        file_path = join(dirname(tagpath), elem[1])
-    file_path = normpath(file_path)
+    file_path = Path(elem[1]).resolve()
+    if not file_path.exists():
+        file_path = Path(tagpath).parent.joinpath(elem[1]).resolve()
     info = {
         'name': elem[0],
-        'file': file_path,
+        'file': str(file_path),
         'pattern': '',
         'line': '',
         'type': '',
