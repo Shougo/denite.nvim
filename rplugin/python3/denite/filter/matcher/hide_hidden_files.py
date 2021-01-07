@@ -4,7 +4,7 @@
 # License: MIT license
 # ============================================================================
 
-from os.path import basename
+from pathlib import Path
 from re import match
 
 from denite.base.filter import Base
@@ -24,4 +24,4 @@ class Filter(Base):
             return list(context['candidates'])
 
         return [x for x in context['candidates']
-                if not match(r'\.', basename(x['action__path']))]
+                if not match(r'\.', Path(x['action__path']).name)]

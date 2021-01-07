@@ -4,7 +4,8 @@
 # License: MIT license
 # ============================================================================
 
-from os.path import isabs, sep
+from os import sep
+from pathlib import Path
 from fnmatch import translate
 from re import search
 
@@ -32,7 +33,7 @@ class Filter(Base):
         # Convert globs
         patterns = []
         for glob in self.vars['ignore_globs']:
-            if not isabs(glob) and ':' not in glob:
+            if not Path(glob).is_absolute() and ':' not in glob:
                 glob = '*' + sep + glob
             if glob[:2] == '.' + sep:
                 glob = context['path'] + glob[1:]

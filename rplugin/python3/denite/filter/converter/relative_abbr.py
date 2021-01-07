@@ -4,7 +4,7 @@
 # License: MIT license
 # ============================================================================
 
-from os.path import isabs
+from pathlib import Path
 
 from denite.base.filter import Base
 from denite.util import relpath, Nvim, UserContext, Candidates
@@ -20,7 +20,7 @@ class Filter(Base):
 
     def filter(self, context: UserContext) -> Candidates:
         for candidate in context['candidates']:
-            if isabs(candidate['word']):
+            if Path(candidate['word']).is_absolute():
                 candidate['abbr'] = relpath(
                     self.vim,
                     candidate.get('action__path', candidate['word']))
