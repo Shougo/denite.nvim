@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 from unittest.mock import patch
 
 import pytest
@@ -82,8 +82,8 @@ def test_find_rplugins_kind(walk):
 
     context = { 'runtimepath': '/a,/b' }
     source = 'kind'
-    prefix = os.path.normpath('rplugin/python3/denite/%s' % source)
-    loaded_paths = [os.path.normpath(x % prefix) for x in (
+    prefix = str(Path('rplugin/python3/denite/%s' % source))
+    loaded_paths = [str(Path(x % prefix)) for x in (
         '/a/%s/loaded.py', '/a/%s/bar/loaded.py', '/a/%s/bar/hoge/loaded.py',
         '/b/%s/loaded.py', '/b/%s/bar/loaded.py', '/b/%s/bar/hoge/loaded.py',
     )]
@@ -100,7 +100,7 @@ def test_find_rplugins_kind(walk):
     assert next(it) == ('/a/%s/bar/hoge/foo.py' % prefix, 'bar.hoge.foo')
     assert next(it) == ('/a/%s/bar/hoge/base.py' % prefix, 'bar.hoge.base')
     walk.assert_called_once_with(
-        os.path.normpath('/a/%s' % prefix),
+        str(Path('/a/%s' % prefix)),
     )
     walk.reset_mock()
 
@@ -113,7 +113,7 @@ def test_find_rplugins_kind(walk):
     assert next(it) == ('/b/%s/bar/hoge/foo.py' % prefix, 'bar.hoge.foo')
     assert next(it) == ('/b/%s/bar/hoge/base.py' % prefix, 'bar.hoge.base')
     walk.assert_called_once_with(
-        os.path.normpath('/b/%s' % prefix),
+        str(Path('/b/%s' % prefix)),
     )
     walk.reset_mock()
 
@@ -129,12 +129,12 @@ def _walk_side_effect(top, topdown=True, onerror=None, followlinks=False):
         ['__init__.py', 'foo.py', 'base.py', 'loaded.py'],
     )
     yield (
-        os.path.join(top, 'bar'),
+        str(Path(top).joinpath('bar')),
         ['hoge'],
         ['__init__.py', 'foo.py', 'base.py', 'loaded.py'],
     )
     yield (
-        os.path.join(top, 'bar', 'hoge'),
+        str(Path(top).joinpath('bar', 'hoge')),
         ['hoge'],
         ['__init__.py', 'foo.py', 'base.py', 'loaded.py'],
     )
