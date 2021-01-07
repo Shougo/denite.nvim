@@ -76,7 +76,7 @@ def test_parse_tag_line():
         }
 
 
-@patch('denite.util.os.walk')
+@patch('denite.util.walk')
 def test_find_rplugins_kind(walk):
     walk.side_effect = _walk_side_effect
 

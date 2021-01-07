@@ -7,9 +7,9 @@
 from pathlib import Path
 from sys import executable, base_exec_prefix
 from os.path import expandvars
+from os import sep, walk
 import importlib.util
 import inspect
-import os
 import re
 import shutil
 import sys
@@ -17,7 +17,6 @@ import traceback
 import typing
 
 from glob import glob
-from os.path import normpath, normcase, join, dirname, exists
 
 if importlib.util.find_spec('pynvim'):
     from pynvim import Nvim
@@ -220,26 +219,26 @@ def find_rplugins(context: UserContext, source: str,
         path (str): A path of the module
         module_path (str): A dot separated module path used to import
     """
-    base = join('rplugin', 'python3', 'denite', source)
+    base = str(Path('rplugin').joinpath('python3', 'denite', source))
     for runtime in context.get('runtimepath', '').split(','):
-        root = normcase(normpath(join(runtime, base)))
-        for r, _, fs in os.walk(root):
+        root = Path(runtime).joinpath(base).resolve()
+        for r, _, fs in walk(str(root)):
             for f in fs:
-                path = normcase(normpath(join(r, f)))
+                path = str(Path(r).joinpath(f).resolve())
                 if not path.endswith('.py') or path in loaded_paths:
                     continue
-                module_path = os.path.relpath(path, root)
-                module_path = os.path.splitext(module_path)[0]
+                # Remove ext
+                module_path = str(Path(path).relative_to(root))[: -3]
                 if module_path == '__init__':
                     # __init__.py in {root} does not have implementation
                     # so skip
                     continue
-                if os.path.basename(module_path) == '__init__':
+                if Path(module_path).name == '__init__':
                     # 'foo/__init__.py' should be loaded as a module 'foo'
-                    module_path = os.path.dirname(module_path)
+                    module_path = str(Path(module_path).parent)
                 # Convert IO path to module path
-                module_path = module_path.replace(os.sep, '.')
-                yield (path, module_path)
+                module_str = module_path.replace(sep, '.')
+                yield (path, module_str)
 
 
 def import_rplugins(name: str, context: UserContext, source: str,
