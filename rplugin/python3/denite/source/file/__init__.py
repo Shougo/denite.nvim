@@ -4,8 +4,8 @@
 # License: MIT license
 # ============================================================================
 
+from pathlib import Path
 import glob
-import os
 import re
 
 from denite.base.source import Base
@@ -34,8 +34,9 @@ class Source(Base):
                 else context['path'])
         path = abspath(self.vim, path)
 
-        inp = expand(context['input'])
-        filename = (inp if os.path.isabs(inp) else os.path.join(path, inp))
+        inp = Path(expand(context['input']))
+        filename = (str(inp) if inp.is_absolute()
+                    else str(Path(path).joinpath(inp)))
         if new == 'new':
             candidates.append({
                 'word': filename,
@@ -43,20 +44,20 @@ class Source(Base):
                 'action__path': abspath(self.vim, filename),
             })
         else:
-            glb = os.path.dirname(filename) if os.path.dirname(
-                filename) != '/' else ''
-            glb += '/.*' if os.path.basename(
-                filename).startswith('.') else '/*'
+            file_path = Path(filename)
+            glb = (str(file_path.parent)
+                   if str(file_path.parent) != '/' else '')
+            glb += '/.*' if str(file_path.name).startswith('.') else '/*'
             for f in glob.glob(glb):
                 fullpath = abspath(self.vim, f)
                 f = re.sub(r'\n', r'\\n', f)
-                isdir = os.path.isdir(f)
+                f_path = Path(f)
                 candidates.append({
                     'word': f,
-                    'abbr': (os.path.relpath(f, path) if fullpath != path
-                             else os.path.normpath(f)) + (
-                                 '/' if isdir else ''),
-                    'kind': ('directory' if isdir else 'file'),
+                    'abbr': (str(f_path.relative_to(path)) if fullpath != path
+                             else str(f_path.resolve())) + (
+                                 '/' if f_path.is_dir() else ''),
+                    'kind': ('directory' if f_path.is_dir() else 'file'),
                     'action__path': fullpath,
                 })
         return candidates

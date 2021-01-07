@@ -12,12 +12,11 @@ from denite.base.source import Base as Source
 
 import copy
 import msgpack
-import os
 import re
 import sys
 import time
 import typing
-from os.path import normpath, normcase
+from pathlib import Path
 from itertools import filterfalse
 
 Action = typing.Dict[str, typing.Any]
@@ -227,11 +226,11 @@ class Child(object):
             for candidate in candidates:
                 # Normalize file paths
                 word = candidate['word']
-                if word.startswith('~') and os.path.exists(
-                        os.path.expanduser(word)):
-                    word = os.path.expanduser(word)
-                if os.path.exists(word):
-                    word = os.path.abspath(word)
+                path = Path(word)
+                if word.startswith('~') and path.exists():
+                    word = path.expanduser()
+                if path.exists():
+                    word = path.resolve()
                 if word not in unique_words:
                     unique_words.add(word)
                     unique_candidates.append(candidate)
@@ -445,7 +444,7 @@ class Child(object):
         # Note: load "denite.source" for old sources compatibility
         import denite.source # noqa
         rplugins = import_rplugins('Source', context, 'source', [
-            normcase(normpath(x.path))
+            str(Path(x.path).resolve())
             for x in self._sources.values()
         ])
         for SourceClass, path, _ in rplugins:
@@ -473,7 +472,7 @@ class Child(object):
     def _load_filters(self, context: UserContext) -> None:
         # Load filters from runtimepath
         rplugins = import_rplugins('Filter', context, 'filter', [
-            normcase(normpath(x.path))
+            str(Path(x.path).resolve())
             for x in self._filters.values()
         ])
         for Filter, path, module_path in rplugins:
@@ -507,7 +506,7 @@ class Child(object):
     def _load_kinds(self, context: UserContext) -> None:
         # Load kinds from runtimepath
         rplugins = import_rplugins('Kind', context, 'kind', [
-            normcase(normpath(x.path))
+            str(Path(x.path).resolve())
             for x in self._kinds.values()
         ])
         for Kind, path, module_path in rplugins:

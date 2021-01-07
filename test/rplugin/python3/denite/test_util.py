@@ -35,42 +35,42 @@ def test_parse_jump_line():
 def test_parse_tag_line():
     assert util.parse_tagline(
         'name	file	/pattern/;"', '') == {
-            'name': 'name', 'file': 'file',
+            'name': 'name', 'file': str(Path('file').resolve()),
             'pattern': 'pattern', 'line': '',
             'type': '', 'ref': '',
         }
 
     assert util.parse_tagline(
         'name	file	1100;"', '') == {
-            'name': 'name', 'file': 'file',
+            'name': 'name', 'file': str(Path('file').resolve()),
             'pattern': '', 'line': '1100',
             'type': '', 'ref': '',
         }
 
     assert util.parse_tagline(
         'name	file	/*foo*', '') == {
-            'name': 'name', 'file': 'file',
+            'name': 'name', 'file': str(Path('file').resolve()),
             'pattern': r'\*foo\*', 'line': '',
             'type': '', 'ref': '',
         }
 
     assert util.parse_tagline(
         'name	file	1;"	f', '') == {
-            'name': 'name', 'file': 'file',
+            'name': 'name', 'file': str(Path('file').resolve()),
             'pattern': '', 'line': '1',
             'type': 'f', 'ref': '',
         }
 
     assert util.parse_tagline(
         'name	file	1;"	f	foo	bar', '') == {
-            'name': 'name', 'file': 'file',
+            'name': 'name', 'file': str(Path('file').resolve()),
             'pattern': '', 'line': '1',
             'type': 'f', 'ref': 'foo bar',
         }
 
     assert util.parse_tagline(
         'name	file	/	pattern/;"', '') == {
-            'name': 'name', 'file': 'file',
+            'name': 'name', 'file': str(Path('file').resolve()),
             'pattern': '	pattern', 'line': '',
             'type': '', 'ref': '',
         }
