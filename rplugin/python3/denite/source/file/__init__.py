@@ -45,15 +45,14 @@ class Source(Base):
             })
         else:
             file_path = Path(filename)
-            glb = (str(file_path.parent)
-                   if str(file_path.parent) != '/' else '')
+            glb = str(file_path)
             glb += '/.*' if str(file_path.name).startswith('.') else '/*'
             for f in glob.glob(glb):
                 fullpath = abspath(self.vim, f)
                 f = re.sub(r'\n', r'\\n', f)
                 f_path = Path(f)
                 abbr = (str(f_path.relative_to(path))
-                        if fullpath != path and f_path.is_relative_to(path)
+                        if fullpath != path and f.startswith(path + '/')
                         else str(f_path.resolve())) + (
                             '/' if f_path.is_dir() else '')
                 candidates.append({
