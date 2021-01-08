@@ -55,7 +55,7 @@ class Source(Base):
                 candidates.append({
                     'word': f,
                     'abbr': (str(f_path.relative_to(path))
-                             if fullpath != path and f.startswith(path)
+                             if fullpath != path and f.startswith(path + '/')
                              else str(f_path.resolve())) + (
                                  '/' if f_path.is_dir() else ''),
                     'kind': ('directory' if f_path.is_dir() else 'file'),

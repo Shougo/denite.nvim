@@ -161,8 +161,7 @@ def abspath(vim: Nvim, path: str) -> str:
 
 
 def relpath(vim: Nvim, path: str) -> str:
-    return str(Path(vim.call(
-        'fnamemodify', expand(path), ':~:.')).resolve())
+    return str(Path(vim.call('fnamemodify', expand(path), ':~:.')))
 
 
 def convert2fuzzy_pattern(text: str) -> str:
