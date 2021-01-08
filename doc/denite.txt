@@ -749,7 +749,7 @@ OPTIONS							*denite-options*
 					*denite-option-highlight-matched-char*
 -highlight-matched-char
 		Matched characters highlight.
-		Default: "Search"
+		Default: "None"
 
 				*denite-option-highlight-matched-range*
 -highlight-matched-range

@@ -111,7 +111,7 @@ function! denite#init#_user_options() abort
         \ 'floating_preview': v:false,
         \ 'highlight_filter_background': 'NormalFloat',
         \ 'highlight_matched_range': 'Underlined',
-        \ 'highlight_matched_char': 'Search',
+        \ 'highlight_matched_char': 'None',
         \ 'highlight_preview_line': 'Search',
         \ 'highlight_prompt': 'Special',
         \ 'highlight_window_background': 'NormalFloat',
