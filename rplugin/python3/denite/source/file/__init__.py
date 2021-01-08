@@ -52,12 +52,13 @@ class Source(Base):
                 fullpath = abspath(self.vim, f)
                 f = re.sub(r'\n', r'\\n', f)
                 f_path = Path(f)
+                abbr = (str(f_path.relative_to(path))
+                        if fullpath != path and f_path.is_relative_to(path)
+                        else str(f_path.resolve())) + (
+                            '/' if f_path.is_dir() else '')
                 candidates.append({
                     'word': f,
-                    'abbr': (str(f_path.relative_to(path))
-                             if fullpath != path and f.startswith(path + '/')
-                             else str(f_path.resolve())) + (
-                                 '/' if f_path.is_dir() else ''),
+                    'abbr': abbr,
                     'kind': ('directory' if f_path.is_dir() else 'file'),
                     'action__path': fullpath,
                 })
