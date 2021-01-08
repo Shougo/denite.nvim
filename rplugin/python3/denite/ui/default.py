@@ -411,10 +411,12 @@ class Default(object):
     def _init_syntax(self) -> None:
         self._vim.command('syntax case ignore')
         self._vim.command('highlight default link deniteInput ModeMsg')
-        self._vim.command('highlight link deniteMatchedRange ' +
-                          self._context['highlight_matched_range'])
-        self._vim.command('highlight link deniteMatchedChar ' +
-                          self._context['highlight_matched_char'])
+        if self._context['highlight_matched_range']:
+            self._vim.command('highlight link deniteMatchedRange ' +
+                            self._context['highlight_matched_range'])
+        if self._context['highlight_matched_char']:
+            self._vim.command('highlight link deniteMatchedChar ' +
+                            self._context['highlight_matched_char'])
         self._vim.command('highlight default link ' +
                           'deniteStatusLinePath Comment')
         self._vim.command('highlight default link ' +
