@@ -220,10 +220,10 @@ def find_rplugins(context: UserContext, source: str,
     """
     base = str(Path('rplugin').joinpath('python3', 'denite', source))
     for runtime in context.get('runtimepath', '').split(','):
-        root = Path(runtime).joinpath(base).resolve()
+        root = Path(runtime).joinpath(base)
         for r, _, fs in walk(str(root)):
             for f in fs:
-                path = str(Path(r).joinpath(f).resolve())
+                path = str(Path(r).joinpath(f))
                 if not path.endswith('.py') or path in loaded_paths:
                     continue
                 # Remove ext
