@@ -155,10 +155,12 @@ class Source(Base):
             result = util.parse_jump_line(context['path'], line)
             if not result:
                 continue
-            path = truncate(self.vim,
-                            str(Path(result[0]).relative_to(context['path'])),
-                            self.vars['max_path_length'])
-            candidates.append(_candidate(result, path))
+            path = (str(Path(result[0]).relative_to(context['path']))
+                    if result[0] != context['path'] and
+                    result[0].startswith(context['path'] + '/')
+                    else context['path'])
+            truncated = truncate(self.vim, path, self.vars['max_path_length'])
+            candidates.append(_candidate(result, truncated))
         return candidates
 
     def _init_grep_args(self, context: UserContext) -> typing.List[str]:
