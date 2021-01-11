@@ -8,7 +8,7 @@ from pathlib import Path
 from re import sub, match
 
 from denite.base.source import Base
-from denite.util import parse_jump_line, expand, abspath
+from denite.util import parse_jump_line, abspath
 from denite.util import Nvim, UserContext, Candidates
 
 
@@ -22,7 +22,7 @@ class Source(Base):
 
     def on_init(self, context: UserContext) -> None:
         context['__line'] = self.vim.call('getline', '.')
-        context['__cfile'] = expand(self.vim.call('expand', '<cfile>'))
+        context['__cfile'] = self.vim.call('expand', '<cfile>')
 
     def gather_candidates(self, context: UserContext) -> Candidates:
         result = parse_jump_line(
@@ -38,15 +38,16 @@ class Source(Base):
                 'action__col': result[2],
             }]
 
-        cfile = Path(context['__cfile'])
-        if match('[./]+$', str(cfile)):
+        cfile = context['__cfile']
+        cpath = Path(cfile)
+        if match('[./]+$', cfile):
             return []
-        if cfile.exists() and cfile.is_file():
-            return [{'word': str(cfile),
-                     'action__path': abspath(self.vim, str(cfile))}]
-        if _checkhost(str(cfile)) or match(
-                r'https?://(127\.0\.0\.1|localhost)[:/]', str(cfile)):
-            return [{'word': cfile, 'action__path': str(cfile)}]
+        if cpath.exists() and cpath.is_file():
+            return [{'word': cfile,
+                     'action__path': abspath(self.vim, cfile)}]
+        if _checkhost(cfile) or match(
+                r'https?://(127\.0\.0\.1|localhost)[:/]', cfile):
+            return [{'word': cfile, 'action__path': cfile}]
         return []
 
 
