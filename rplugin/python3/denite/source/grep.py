@@ -155,9 +155,14 @@ class Source(Base):
             result = util.parse_jump_line(context['path'], line)
             if not result:
                 continue
-            path = truncate(self.vim,
-                            str(Path(result[0]).relative_to(context['path'])),
-                            self.vars['max_path_length'])
+            try:
+                path = truncate(self.vim,
+                                str(Path(result[0]).relative_to(context['path'])),
+                                self.vars['max_path_length'])
+            except ValueError:
+                path = truncate(self.vim,
+                                os.path.relpath(result[0], context['path']),
+                                self.vars['max_path_length'])
             candidates.append(_candidate(result, path))
         return candidates
 
