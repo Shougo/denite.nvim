@@ -153,7 +153,9 @@ def parse_jump_line(path_head: str, line: str) -> typing.List[str]:
 
 
 def expand(path: str) -> str:
-    return expandvars(Path(path).expanduser())
+    if path.startswith('~'):
+        path = str(Path(path).expanduser())
+    return expandvars(path)
 
 
 def abspath(vim: Nvim, path: str) -> str:

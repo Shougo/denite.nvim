@@ -1616,6 +1616,10 @@ sorter/word
 converter/abbr_word
 		Convert candidate abbr to word.
 
+				*denite-filter-converter/expand_input*
+converter/expand_input
+		Convert |expand()| input text.
+
 				*denite-filter-converter/relative_abbr*
 converter/relative_abbr
 		Convert candidate's abbr to the relative path.

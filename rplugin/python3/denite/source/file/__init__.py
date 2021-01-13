@@ -19,7 +19,11 @@ class Source(Base):
 
         self.name = 'file'
         self.kind = 'file'
-        self.matchers = ['matcher/fuzzy', 'matcher/hide_hidden_files']
+        self.matchers = [
+            'converter/expand_input',
+            'matcher/fuzzy',
+            'matcher/hide_hidden_files',
+        ]
         self.is_volatile = True
 
     def gather_candidates(self, context: UserContext) -> Candidates:
