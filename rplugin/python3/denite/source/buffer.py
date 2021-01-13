@@ -117,8 +117,10 @@ class Source(Base):
             'name': buf.name
         }
 
+        # Note: Use filereadable() to ignore stat() error in pathlib
         timestamp = (Path(attr['name']).stat().st_atime
-                     if Path(attr['name']).exists() else time())
+                     if self.vim.call(
+                         'filereadable', attr['name']) else time())
         mark_listed = (' ' if self.vim.call('buflisted', attr['number'])
                        else 'u')
         mark_bufnr = ('%' if attr['number'] == context['__caller_bufnr']
