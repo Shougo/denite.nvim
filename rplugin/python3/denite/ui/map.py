@@ -96,7 +96,7 @@ def _filter_async(denite: Default, params: Params) -> typing.Any:
 
 
 def _move_up_path(denite: Default, params: Params) -> typing.Any:
-    denite._context['path'] = Path(denite._context['path']).parent
+    denite._context['path'] = str(Path(denite._context['path']).parent)
     return denite._restart()
 
 
