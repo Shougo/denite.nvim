@@ -150,6 +150,7 @@ class Source(Base):
             context['__proc'] = None
 
         candidates = []
+        delimiter = '\\' if context['is_windows'] else '/'
 
         for line in outs:
             result = util.parse_jump_line(context['path'], line)
@@ -157,7 +158,7 @@ class Source(Base):
                 continue
             path = (str(Path(result[0]).relative_to(context['path']))
                     if result[0] != context['path'] and
-                    result[0].startswith(context['path'] + '/')
+                    result[0].startswith(context['path'] + delimiter)
                     else context['path'])
             truncated = truncate(self.vim, path, self.vars['max_path_length'])
             candidates.append(_candidate(result, truncated))
