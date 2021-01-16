@@ -6,6 +6,7 @@
 
 import typing
 
+from os import sep
 from pathlib import Path
 from time import localtime, strftime, time
 from sys import maxsize
@@ -34,6 +35,7 @@ class Source(Base):
             'date_format': '%d %b %Y %H:%M:%S',
             'exclude_unlisted': True,
             'only_modified': False,
+            'only_in_current_directory': False,
             'exclude_filetypes': ['denite']
         }
 
@@ -42,6 +44,8 @@ class Source(Base):
                                          self.vars['exclude_unlisted'])
         context['__only_modified'] = ('+' in context['args'] or
                                       self.vars['only_modified'])
+        context['__only_in_current_directory'] = \
+            self.vars['only_in_current_directory']
         context['__caller_bufnr'] = context['bufnr']
         context['__alter_bufnr'] = self.vim.call('bufnr', '#')
 
@@ -81,9 +85,14 @@ class Source(Base):
 
     def _is_excluded(self, context: UserContext,
                      buffer_attr: typing.Dict[str, typing.Any]) -> bool:
+        name = buffer_attr['name']
+
         if context['__exclude_unlisted'] and buffer_attr['status'][0] == 'u':
             return True
         if context['__only_modified'] and buffer_attr['status'][3] != '+':
+            return True
+        if context['__only_in_current_directory'] and \
+                (name == '' or not name.startswith(context['path'] + sep)):
             return True
         if buffer_attr['filetype'] in self.vars['exclude_filetypes']:
             return True
