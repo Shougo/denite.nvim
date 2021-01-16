@@ -49,7 +49,7 @@ class Source(Base):
             })
         else:
             file_path = Path(filename)
-            glb = str(file_path)
+            glb = str(file_path if file_path.is_dir() else file_path.parent)
             glb += '/.*' if str(file_path.name).startswith('.') else '/*'
             for f in glob.glob(glb):
                 fullpath = abspath(self.vim, f)
