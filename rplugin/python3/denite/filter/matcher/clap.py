@@ -60,5 +60,5 @@ class Filter(Base):
         import fuzzymatch_rs
         candidates = fuzzymatch_rs.fuzzy_match(
                         pattern, tuple((d['word'] for d in candidates)),
-                        winwidth, False, 'Full')
+                        winwidth, False, 'Full', 'files')
         return list(candidates)
