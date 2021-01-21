@@ -42,8 +42,8 @@ function! denite#filter#_open(context, parent, entire_len, is_async) abort
 
   augroup denite-filter
     autocmd!
-    autocmd InsertEnter <buffer> call s:start_timer()
-    autocmd InsertLeave <buffer> call s:stop_timer()
+    autocmd InsertEnter <buffer> call denite#filter#_start_filter_timer()
+    autocmd InsertLeave <buffer> call denite#filter#_stop_filter_timer()
     autocmd InsertLeave <buffer> call s:update()
   augroup END
 
@@ -228,7 +228,7 @@ function! s:quit(force_quit) abort
 
   call denite#filter#_move_to_parent(v:false)
 
-  call s:stop_timer()
+  call denite#filter#_stop_filter_timer()
 
   if win_id2win(g:denite#_filter_winid) <= 0
     let g:denite#_filter_winid = -1
@@ -263,7 +263,7 @@ function! denite#filter#_close_filter_window() abort
   call win_gotoid(prev)
 endfunction
 
-function! s:start_timer() abort
+function! denite#filter#_start_filter_timer() abort
   if exists('g:denite#_filter_candidates_timer')
     return
   endif
@@ -277,7 +277,7 @@ function! s:start_timer() abort
           \ {-> s:filter_async()}, {'repeat': -1})
   endif
 endfunction
-function! s:stop_timer() abort
+function! denite#filter#_stop_filter_timer() abort
   if !exists('g:denite#_filter_candidates_timer')
     return
   endif

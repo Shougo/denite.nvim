@@ -87,7 +87,8 @@ class Source(Base):
         self.print_message(context, args)
         context['__proc'] = Process(args, context, directory)
         context['__current_candidates'] = []
-        return self._async_gather_candidates(context, 0.5)
+        return self._async_gather_candidates(
+            context, context['async_timeout'])
 
     def _async_gather_candidates(self, context: UserContext,
                                  timeout: float) -> Candidates:
