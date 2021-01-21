@@ -1439,6 +1439,12 @@ file		An interface to jump to the file position.
 				Preview and highlight the file.  Close the
 				preview window if it is already exists.
 
+			preview_bat
+				Preview the file by "bat" command.  Close the
+				window if it is already exists.
+				Note: "bat" command is required.
+				https://github.com/sharkdp/bat
+
 			highlight
 				Highlight the location of the candidate if the
 				buffer is visible.

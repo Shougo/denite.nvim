@@ -21,8 +21,9 @@ class Kind(Openable):
         self._vim = vim
         self.name = 'file'
         self.default_action = 'open'
-        self.persist_actions += ['highlight']
+        self.persist_actions += ['highlight', 'preview_bat']
         self._previewed_target: typing.Dict[str, Candidate] = {}
+        self._previewed_winid: int = 0
 
     def action_open(self, context: UserContext) -> None:
         self._open(context, 'edit')
@@ -68,6 +69,44 @@ class Kind(Openable):
             self._add_previewed_buffer(self.vim.call('bufnr', '%'))
         self._jump(context, target)
         self._highlight(context, int(target.get('action__line', 0)))
+
+        self.vim.call('win_gotoid', prev_id)
+        self._previewed_target = target
+
+    def action_preview_bat(self, context: UserContext) -> None:
+        target = context['targets'][0]
+
+        if not self.vim.call('executable', 'bat'):
+            return
+
+        prev_id = self.vim.call('win_getid')
+        prev_bufnr = self.vim.call('bufnr', '%')
+
+        if self._previewed_winid:
+            self.vim.call('win_gotoid', self._previewed_winid)
+            if self.vim.call('win_getid') != prev_id:
+                self.vim.command('close!')
+            self.vim.call('win_gotoid', prev_id)
+            self._previewed_winid = 0
+
+            if self._previewed_target == target:
+                # Close the window only
+                return
+
+        self.vim.call('denite#helper#preview_file', context, '')
+
+        if 'action__bufnr' in target:
+            path = self.vim.call('bufname', target['action__bufnr'])
+        else:
+            path = target['action__path'].replace('/./', '/')
+
+        if self.vim.call('has', 'nvim'):
+            self.vim.call('termopen', ['bat', path])
+        else:
+            self.vim.call('term_start', ['bat', path], {'curwin': True})
+
+        self._add_previewed_buffer(self.vim.call('bufnr', '%'))
+        self._previewed_winid = self.vim.call('win_getid')
 
         self.vim.call('win_gotoid', prev_id)
         self._previewed_target = target

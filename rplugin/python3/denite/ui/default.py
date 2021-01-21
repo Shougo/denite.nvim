@@ -759,11 +759,15 @@ class Default(object):
         self._vim.call('denite#filter#_close_filter_window')
         if not self._context['has_preview_window']:
             self._vim.command('pclose!')
+
         # Clear previewed buffers
+        prev_bufnr = self._vim.call('bufnr', '%')
         for bufnr in self._vim.vars['denite#_previewed_buffers'].keys():
-            if not self._vim.call('win_findbuf', bufnr):
-                self._vim.command('silent bdelete ' + str(bufnr))
+            self._vim.command('silent bdelete! ' + str(bufnr))
         self._vim.vars['denite#_previewed_buffers'] = {}
+        if self._vim.call('bufnr', '%') != prev_bufnr:
+            # Restore buffer
+            self._vim.command('buffer ' + str(prev_bufnr))
 
         self._vim.command('highlight! link CursorLine CursorLine')
         if self._floating or self._filter_floating:

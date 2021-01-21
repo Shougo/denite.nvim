@@ -50,9 +50,13 @@ function! denite#helper#preview_file(context, filename) abort
   let win_height = winheight(0)
 
   if a:context.vertical_preview
-    call denite#util#execute_path(
-          \ 'silent rightbelow vertical pedit!', a:filename)
-    wincmd P
+    if a:filename == ''
+      silent rightbelow vnew
+    else
+      call denite#util#execute_path(
+            \ 'silent rightbelow vertical pedit!', a:filename)
+      wincmd P
+    endif
 
     if a:context.floating_preview && exists('*nvim_win_set_config')
       if a:context['split'] ==# 'floating'
@@ -78,9 +82,13 @@ function! denite#helper#preview_file(context, filename) abort
       execute 'vert resize ' . preview_width
     endif
   else
-    call denite#util#execute_path('silent aboveleft pedit!', a:filename)
+    if a:filename == ''
+      silent rightbelow new
+    else
+      call denite#util#execute_path('silent aboveleft pedit!', a:filename)
 
-    wincmd P
+      wincmd P
+    endif
 
     if a:context.floating_preview && exists('*nvim_win_set_config')
       let win_row = pos[0] - 1
