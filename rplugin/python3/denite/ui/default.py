@@ -442,6 +442,10 @@ class Default(object):
         if not self._denite:
             return False
 
+        # Disable timer until finished
+        # Note: overwrapped update_candidates breaks candidates
+        self._stop_timer('update_candidates')
+
         [self._is_async, pattern, statuses, self._entire_len,
          self._candidates] = self._denite.filter_candidates(self._context)
 
@@ -456,8 +460,6 @@ class Default(object):
 
         if self._is_async:
             self._start_timer('update_candidates')
-        else:
-            self._stop_timer('update_candidates')
 
         updated = (self._displayed_texts != prev_displayed_texts or
                    self._matched_pattern != prev_matched_pattern or
