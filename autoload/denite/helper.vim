@@ -50,7 +50,7 @@ function! denite#helper#preview_file(context, filename) abort
   let win_height = winheight(0)
 
   if a:context.vertical_preview
-    if a:filename == ''
+    if a:filename ==# ''
       silent rightbelow vnew
     else
       call denite#util#execute_path(
@@ -82,7 +82,7 @@ function! denite#helper#preview_file(context, filename) abort
       execute 'vert resize ' . preview_width
     endif
   else
-    if a:filename == ''
+    if a:filename ==# ''
       silent rightbelow new
     else
       call denite#util#execute_path('silent aboveleft pedit!', a:filename)

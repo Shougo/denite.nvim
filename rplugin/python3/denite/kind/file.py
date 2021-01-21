@@ -80,7 +80,6 @@ class Kind(Openable):
             return
 
         prev_id = self.vim.call('win_getid')
-        prev_bufnr = self.vim.call('bufnr', '%')
 
         if self._previewed_winid:
             self.vim.call('win_gotoid', self._previewed_winid)
