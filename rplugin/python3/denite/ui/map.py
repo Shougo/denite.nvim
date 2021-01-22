@@ -72,6 +72,9 @@ def _choose_action2(denite: Default, params: Params) -> typing.Any:
             'name': '_action',
             'args': [action_names, candidates],
     }])
+    denite._context['sources_queue'].append(
+        denite._sources_history[-1]['sources'])
+
     denite._start_sources_queue(denite._context)
 
 
@@ -204,7 +207,13 @@ def _quick_move(denite: Default, params: Params) -> typing.Any:
 
 
 def _quit(denite: Default, params: Params) -> typing.Any:
-    return denite.quit()
+    if denite._context['sources_queue']:
+        # Restore the sources
+        denite._context['input'] = ''
+        denite._context['quick_move'] = ''
+        denite._start_sources_queue(denite._context)
+    else:
+        denite.quit()
 
 
 def _redraw(denite: Default, params: Params) -> typing.Any:

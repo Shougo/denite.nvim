@@ -71,13 +71,15 @@ class Default(object):
         return self._result
 
     def do_action(self, action_name: str,
-                  command: str = '', is_manual: bool = False) -> None:
-        if is_manual:
-            candidates = self._get_selected_candidates()
-        elif self._get_cursor_candidate():
-            candidates = [self._get_cursor_candidate()]
-        else:
-            candidates = []
+                  command: str = '', is_manual: bool = False,
+                  candidates: Candidates = []) -> None:
+        if not candidates:
+            if is_manual:
+                candidates = self._get_selected_candidates()
+            elif self._get_cursor_candidate():
+                candidates = [self._get_cursor_candidate()]
+            else:
+                candidates = []
 
         if not self._denite or not candidates or not action_name:
             return
@@ -93,6 +95,8 @@ class Default(object):
         is_quit = action['is_quit'] or post_action == 'quit'
         if is_quit:
             self.quit()
+
+        self._context['next_actions'] = []
 
         self._denite.do_action(self._context, action_name, candidates)
         self._result = candidates
@@ -125,7 +129,13 @@ class Default(object):
             self._context['quick_move'] = ''
             self._start_sources_queue(self._context)
 
-        return
+        if self._context['next_actions']:
+            # Do actions
+            actions = self._context['next_actions']
+            self._context['next_actions'] = []
+            for next_ac in actions:
+                self.do_action(next_ac['name'], '', is_manual,
+                               next_ac['candidates'])
 
     def redraw(self, is_force: bool = True) -> None:
         self._context['is_redraw'] = is_force
@@ -142,7 +152,6 @@ class Default(object):
             self._denite.on_close(self._context)
         self._quit_buffer()
         self._result = []
-        return
 
     def debug(self, expr: typing.Any) -> None:
         error(self._vim, expr)

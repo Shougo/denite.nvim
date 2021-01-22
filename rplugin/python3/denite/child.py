@@ -265,6 +265,7 @@ class Child(object):
                            index, action['name'], context))
         if new_context:
             context.update(new_context)
+
         return False
 
     def get_action(self, context: UserContext,

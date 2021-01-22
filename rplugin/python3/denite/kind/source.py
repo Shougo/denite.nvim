@@ -19,5 +19,5 @@ class Kind(Base):
     def action_start(self, context: UserContext) -> None:
         context['sources_queue'].append([{
             'name': x['action__source'][0],
-            'args': x['action__source'][1:]
+            'args': x['action__source'][1:],
         } for x in context['targets']])
