@@ -61,6 +61,20 @@ def _choose_action(denite: Default, params: Params) -> typing.Any:
     return denite.do_action(action, is_manual=True)
 
 
+def _choose_action2(denite: Default, params: Params) -> typing.Any:
+    candidates = denite._get_selected_candidates()
+    if not candidates or not denite._denite:
+        return
+
+    action_names = denite._denite.get_action_names(
+        denite._context, candidates)
+    denite._context['sources_queue'].append([{
+            'name': '_action',
+            'args': [action_names, candidates],
+    }])
+    denite._start_sources_queue(denite._context)
+
+
 def _do_action(denite: Default, params: Params) -> typing.Any:
     name = params[0] if params else 'default'
     return denite.do_action(name, is_manual=True)
@@ -270,6 +284,7 @@ MAPPINGS: typing.Dict[str, Action] = {
     'change_path': _change_path,
     'change_sorters': _change_sorters,
     'choose_action': _choose_action,
+    'choose_action2': _choose_action2,
     'do_action': _do_action,
     'do_previous_action': _do_previous_action,
     'filter': _filter,

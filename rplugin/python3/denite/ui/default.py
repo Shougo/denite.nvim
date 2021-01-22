@@ -144,6 +144,9 @@ class Default(object):
         self._result = []
         return
 
+    def debug(self, expr: typing.Any) -> None:
+        error(self._vim, expr)
+
     def _restart(self) -> None:
         self._context['input'] = ''
         self._quit_buffer()
