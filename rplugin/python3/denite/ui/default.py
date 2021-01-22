@@ -129,14 +129,6 @@ class Default(object):
             self._context['quick_move'] = ''
             self._start_sources_queue(self._context)
 
-        if self._context['next_actions']:
-            # Do actions
-            actions = self._context['next_actions']
-            self._context['next_actions'] = []
-            for next_ac in actions:
-                self.do_action(next_ac['name'], '', is_manual,
-                               next_ac['candidates'])
-
     def redraw(self, is_force: bool = True) -> None:
         self._context['is_redraw'] = is_force
         if is_force:
@@ -792,7 +784,7 @@ class Default(object):
         if self._vim.call('winnr', '$') == 1:
             self._vim.command('buffer #')
         else:
-            self._vim.command('close!')
+            self._vim.command('silent! close!')
 
     def _quit_buffer(self) -> None:
         self._cleanup()

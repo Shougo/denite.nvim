@@ -5,6 +5,7 @@
 # ============================================================================
 
 from pathlib import Path
+import copy
 import typing
 
 from denite.util import debug
@@ -50,14 +51,21 @@ def _choose_action(denite: Default, params: Params) -> typing.Any:
 
     action_names = denite._denite.get_action_names(
         denite._context, candidates)
-    denite._context['sources_queue'].append([{
-            'name': '_action',
-            'args': [action_names, candidates],
-    }])
-    denite._context['sources_queue'].append(
-        denite._sources_history[-1]['sources'])
+    context = copy.copy(denite._context)
+    context['buffer_name'] = denite._context['buffer_name'] + '@'
 
-    denite._start_sources_queue(denite._context)
+    # Quit current denite
+    denite.quit()
+
+    # New denite for choose action
+    denite._vim.call('denite#start', [{
+            'name': '_action',
+            'args': [
+                action_names,
+                denite._context['buffer_name'],
+                candidates
+            ],
+    }], context)
 
 
 def _do_action(denite: Default, params: Params) -> typing.Any:

@@ -62,7 +62,22 @@ class Rplugin:
         try:
             ui = self.get_ui(bufvars['denite']['buffer_name'])
             ui._cursor = self._vim.call('line', '.')
-            return do_map(ui, args[1], args[2])
+            ui._context['next_actions'] = []
+
+            ret = do_map(ui, args[1], args[2])
+
+            if ui._context['next_actions']:
+                actions = ui._context['next_actions']
+                ui._context['next_actions'] = []
+
+                # Do actions
+                for action in actions:
+                    ui = self.get_ui(action['buffer_name'])
+                    ui._denite.do_action(
+                        ui._context, action['name'], action['targets']
+                    )
+
+            return ret
         except Exception:
             import traceback
             import denite.util

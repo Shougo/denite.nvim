@@ -18,14 +18,17 @@ class Source(Base):
         self.default_action = 'do'
 
     def gather_candidates(self, context: UserContext) -> Candidates:
-        if len(context['args']) < 2:
+        if len(context['args']) < 3:
             return []
 
         candidates: Candidates = []
         actions = context['args'][0]
         candidates = [
-            {'word': x, 'action__candidates': context['args'][1]}
-            for x in actions
+            {
+                'word': x,
+                'action__buffer_name': context['args'][1],
+                'action__targets': context['args'][2],
+            } for x in actions
         ]
         return candidates
 
@@ -38,13 +41,12 @@ class Kind(KindBase):
         super().__init__(vim)
 
         self.name = 'action'
-        self.persist_actions += ['do']
-        self.redraw_actions += ['do']
 
     def action_do(self, context: UserContext) -> None:
         context['next_actions'] = [
             {
                 'name': x['word'],
-                'candidates': x['action__candidates'],
+                'targets': x['action__targets'],
+                'buffer_name': x['action__buffer_name'],
             } for x in context['targets']
         ]
