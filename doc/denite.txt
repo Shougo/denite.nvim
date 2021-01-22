@@ -355,7 +355,7 @@ change_sorters:{arg}
 
 						*denite-map-choose_action*
 choose_action
-		Choose and fire the action.
+		Choose and fire the action by denite UI.
 
 						*denite-map-do_action*
 do_action:{action}
@@ -2237,6 +2237,9 @@ A: |denite-option-match-highlight|
 
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
+
+2021.01.22
+* "choose_action" uses denite UI instead
 
 2020.04.10
 * Remove matched highlight feature to optimize update denite buffer.

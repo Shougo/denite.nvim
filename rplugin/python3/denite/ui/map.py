@@ -7,7 +7,7 @@
 from pathlib import Path
 import typing
 
-from denite.util import debug, clear_cmdline
+from denite.util import debug
 from denite.ui.default import Default
 
 Params = typing.List[str]
@@ -44,24 +44,6 @@ def _change_sorters(denite: Default, params: Params) -> typing.Any:
 
 
 def _choose_action(denite: Default, params: Params) -> typing.Any:
-    candidates = denite._get_selected_candidates()
-    if not candidates or not denite._denite:
-        return
-
-    action_names = denite._denite.get_action_names(
-        denite._context, candidates)
-    denite._vim.vars['denite#_actions'] = action_names
-    clear_cmdline(denite._vim)
-    action = str(denite._vim.call('denite#util#input',
-                                  'Action: ',
-                                  '',
-                                  'customlist,denite#helper#complete_actions'))
-    if action == '':
-        return
-    return denite.do_action(action, is_manual=True)
-
-
-def _choose_action2(denite: Default, params: Params) -> typing.Any:
     candidates = denite._get_selected_candidates()
     if not candidates or not denite._denite:
         return
@@ -293,7 +275,6 @@ MAPPINGS: typing.Dict[str, Action] = {
     'change_path': _change_path,
     'change_sorters': _change_sorters,
     'choose_action': _choose_action,
-    'choose_action2': _choose_action2,
     'do_action': _do_action,
     'do_previous_action': _do_previous_action,
     'filter': _filter,

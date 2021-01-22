@@ -27,10 +27,6 @@ function! denite#helper#complete(arglead, cmdline, cursorpos) abort
 
   return uniq(sort(filter(_, 'stridx(v:val, a:arglead) == 0')))
 endfunction
-function! denite#helper#complete_actions(arglead, cmdline, cursorpos) abort
-  return uniq(sort(filter(copy(g:denite#_actions),
-        \ 'stridx(v:val, a:arglead) == 0')))
-endfunction
 
 function! denite#helper#call_denite(command, args, line1, line2) abort
   let [args, context] = denite#helper#_parse_options_args(a:args)
@@ -254,7 +250,7 @@ function! denite#helper#_get_available_sources() abort
         \ globpath(&runtimepath, 'rplugin/python3/denite/source/**/*.py', 1, 1),
         \ 's:_get_source_name(v:val)',
         \)
-  return copy(filter(s:source_names, '!empty(v:val)'))
+  return filter(s:source_names, "v:val !=# ''")
 endfunction
 function! denite#helper#_set_available_sources(source_names) abort
   " Called from rplugin/python3/denite/denite.py#load_sources
@@ -262,15 +258,18 @@ function! denite#helper#_set_available_sources(source_names) abort
 endfunction
 function! s:_get_source_name(path) abort
   let path_f = fnamemodify(a:path, ':gs?\\?/?')
-  if path_f ==# '__init__.py' || path_f ==# 'base.py'
-    return ''
-  elseif path_f[-12:] ==# '/__init__.py'
+  let path_t = fnamemodify(path_f, ':t')
+
+  if path_t ==# '__init__.py'
     if getfsize(path_f) == 0
       " Probably the file exists for making a namespace so ignore
       return ''
     endif
     return fnamemodify(path_f, ':h:s?.*/rplugin/python3/denite/source/??:r')
+  elseif path_t ==# 'base.py' || stridx(path_t, '_') == 0
+    return ''
   endif
+
   return fnamemodify(path_f, ':s?.*/rplugin/python3/denite/source/??:r')
 endfunction
 

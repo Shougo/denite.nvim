@@ -18,6 +18,9 @@ class Source(Base):
         self.default_action = 'do'
 
     def gather_candidates(self, context: UserContext) -> Candidates:
+        if len(context['args']) < 2:
+            return []
+
         candidates: Candidates = []
         actions = context['args'][0]
         candidates = [
@@ -25,6 +28,9 @@ class Source(Base):
             for x in actions
         ]
         return candidates
+
+    def get_status(self, context: UserContext) -> str:
+        return self.name
 
 
 class Kind(KindBase):
