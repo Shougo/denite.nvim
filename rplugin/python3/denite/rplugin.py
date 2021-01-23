@@ -60,11 +60,17 @@ class Rplugin:
             return
 
         try:
-            ui = self.get_ui(bufvars['denite']['buffer_name'])
+            buffer_name = bufvars['denite']['buffer_name']
+            ui = self.get_ui(buffer_name)
             ui._cursor = self._vim.call('line', '.')
             ui._context['next_actions'] = []
 
             ret = do_map(ui, args[1], args[2])
+
+            if args[1] == 'quit' and buffer_name[-1] == '@':
+                # Temporary buffer quit
+                # Resume the previous buffer
+                self.resume(buffer_name[:-1])
 
             if ui._context['next_actions']:
                 actions = ui._context['next_actions']
@@ -73,8 +79,10 @@ class Rplugin:
                 # Do actions
                 for action in actions:
                     ui = self.get_ui(action['buffer_name'])
-                    ui._denite.do_action(
-                        ui._context, action['name'], action['targets']
+                    self.resume(action['buffer_name'])
+
+                    ui.do_action(
+                        action['name'], '', True, action['targets']
                     )
 
             return ret
@@ -91,3 +99,11 @@ class Rplugin:
         if buffer_name not in self._uis:
             self._uis[buffer_name] = Default(self._vim)
         return self._uis[buffer_name]
+
+    def resume(self, buffer_name: str) -> None:
+        ui = self.get_ui(buffer_name)
+        ui._context.update({
+            'buffer_name': buffer_name,
+            'resume': True
+        })
+        ui.start([], ui._context)
