@@ -4,18 +4,16 @@
 # License: MIT license
 # =============================================================================
 
+from importlib.util import find_spec
+from pynvim import Nvim
 import typing
 
-from importlib.util import find_spec
 from denite.rplugin import Rplugin
-from denite.util import Nvim
 
 if find_spec('yarp'):
     import vim
-elif find_spec('pynvim'):
-    import pynvim as vim
 else:
-    import neovim as vim
+    import pynvim as vim
 
 Args = typing.List[typing.Any]
 

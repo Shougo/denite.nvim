@@ -4,15 +4,15 @@
 # License: MIT license
 # ============================================================================
 
+from pathlib import Path
+from pynvim import Nvim
 import argparse
 import shutil
 import typing
 
-from pathlib import Path
-
 from denite.base.source import Base
 from denite.process import Process
-from denite.util import parse_command, abspath, Nvim, UserContext, Candidates
+from denite.util import parse_command, abspath, UserContext, Candidates
 from denite.util import get_python_exe
 
 

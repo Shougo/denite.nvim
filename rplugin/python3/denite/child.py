@@ -4,20 +4,21 @@
 # License: MIT license
 # ============================================================================
 
-from denite.util import (
-    get_custom, debug, regex_convert_str_vim,
-    import_rplugins, expand, split_input, abspath)
-from denite.util import Nvim, UserContext, Candidates, Candidate
-from denite.base.source import Base as Source
-
+from itertools import filterfalse
+from pathlib import Path
+from pynvim import Nvim
 import copy
 import msgpack
 import re
 import sys
 import time
 import typing
-from pathlib import Path
-from itertools import filterfalse
+
+from denite.util import (
+    get_custom, debug, regex_convert_str_vim,
+    import_rplugins, expand, split_input, abspath)
+from denite.util import UserContext, Candidates, Candidate
+from denite.base.source import Base as Source
 
 Action = typing.Dict[str, typing.Any]
 
@@ -265,6 +266,7 @@ class Child(object):
                            index, action['name'], context))
         if new_context:
             context.update(new_context)
+
         return False
 
     def get_action(self, context: UserContext,

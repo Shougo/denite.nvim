@@ -4,10 +4,11 @@
 # License: MIT license
 # ============================================================================
 
+from pynvim import Nvim
 import math
 
 from denite.base.filter import Base
-from denite.util import expand, Nvim, UserContext, Candidates
+from denite.util import expand, UserContext, Candidates
 
 
 class Filter(Base):

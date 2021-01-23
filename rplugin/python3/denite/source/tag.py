@@ -7,10 +7,10 @@
 import re
 import typing
 from pathlib import Path
+from pynvim import Nvim
 
 from denite.base.source import Base
-from denite.util import (parse_tagline, Nvim,
-                         UserContext, Candidates, Candidate)
+from denite.util import parse_tagline, UserContext, Candidates, Candidate
 
 TAG_HIGHLIGHT_SYNTAX = [
     {'name': 'Type', 'link': 'Statement', 're': r'\[.\{-}\]'},

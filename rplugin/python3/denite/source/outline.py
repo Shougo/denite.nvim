@@ -4,15 +4,16 @@
 # License: MIT license
 # ============================================================================
 
+from json import loads
+from pathlib import Path
+from pynvim import Nvim
+from subprocess import CalledProcessError, check_output, run, PIPE
 import re
 import tempfile
 import typing
-from pathlib import Path
-from subprocess import CalledProcessError, check_output, run, PIPE
-from json import loads
 
 from denite.base.source import Base
-from denite.util import parse_tagline, Nvim, UserContext, Candidates
+from denite.util import parse_tagline, UserContext, Candidates
 
 OUTLINE_HIGHLIGHT_SYNTAX = [
     {'name': 'Type', 'link': 'Statement', 're': r'\[.\{-}\]'},

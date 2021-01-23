@@ -5,11 +5,12 @@
 # ============================================================================
 
 from pathlib import Path
+from pynvim import Nvim
 import glob
 import re
 
 from denite.base.source import Base
-from denite.util import abspath, expand, Nvim, UserContext, Candidates
+from denite.util import abspath, expand, UserContext, Candidates
 
 
 class Source(Base):

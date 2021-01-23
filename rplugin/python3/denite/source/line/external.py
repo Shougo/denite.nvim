@@ -4,12 +4,13 @@
 # License: MIT license
 # ============================================================================
 
-from denite.base.source.interactive import Source as Base
-from denite.util import Nvim, UserContext, Candidates, Candidate
-from denite import util, process
-
 from pathlib import Path
+from pynvim import Nvim
 import typing
+
+from denite.base.source.interactive import Source as Base
+from denite.util import UserContext, Candidates, Candidate
+from denite import util, process
 
 LINE_NUMBER_SYNTAX = (
     'syntax match deniteSource_lineNumber '

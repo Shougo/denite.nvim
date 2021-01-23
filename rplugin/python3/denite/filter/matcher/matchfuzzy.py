@@ -4,9 +4,11 @@
 # License: MIT license
 # ============================================================================
 
+from pynvim import Nvim
+
 from denite.base.filter import Base
 from denite.util import convert2fuzzy_pattern
-from denite.util import Nvim, UserContext, Candidates
+from denite.util import UserContext, Candidates
 
 
 class Filter(Base):

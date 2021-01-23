@@ -4,11 +4,12 @@
 # License: MIT license
 # ============================================================================
 
+from pynvim import Nvim
 import typing
 
 from itertools import filterfalse
 from denite.kind.openable import Kind as Openable
-from denite.util import Nvim, UserContext, Candidate
+from denite.util import UserContext, Candidate
 
 
 class Kind(Openable):

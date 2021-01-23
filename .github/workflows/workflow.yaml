@@ -16,7 +16,6 @@ jobs:
           - 3.9
         build:
           - nightly
-          - stable
 
     steps:
       - uses: actions/checkout@v2

@@ -4,19 +4,20 @@
 # License: MIT license
 # ============================================================================
 
-import asyncio
-import time
-import msgpack
-import subprocess
-import sys
-import typing
 from abc import ABC, abstractmethod
 from functools import partial
 from pathlib import Path
+from pynvim import Nvim
 from queue import Queue
+import asyncio
+import msgpack
+import subprocess
+import sys
+import time
+import typing
 
 from denite.aprocess import Process
-from denite.util import error_tb, error, Nvim, UserContext, Candidates
+from denite.util import error_tb, error, UserContext, Candidates
 
 
 class _Parent(ABC):

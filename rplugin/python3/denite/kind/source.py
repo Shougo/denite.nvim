@@ -4,8 +4,10 @@
 # License: MIT license
 # ============================================================================
 
+from pynvim import Nvim
+
 from denite.base.kind import Base
-from denite.util import Nvim, UserContext
+from denite.util import UserContext
 
 
 class Kind(Base):
@@ -19,5 +21,5 @@ class Kind(Base):
     def action_start(self, context: UserContext) -> None:
         context['sources_queue'].append([{
             'name': x['action__source'][0],
-            'args': x['action__source'][1:]
+            'args': x['action__source'][1:],
         } for x in context['targets']])

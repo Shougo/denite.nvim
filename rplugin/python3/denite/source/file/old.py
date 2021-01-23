@@ -4,9 +4,11 @@
 # License: MIT license
 # ============================================================================
 
+from pynvim import Nvim
+
 from denite.kind.file import Kind as File
 from denite.base.source import Base
-from denite.util import expand, Nvim, UserContext, Candidates
+from denite.util import expand, UserContext, Candidates
 
 
 class Source(Base):

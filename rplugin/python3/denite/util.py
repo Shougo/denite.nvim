@@ -4,10 +4,12 @@
 # License: MIT license
 # ============================================================================
 
-from pathlib import Path
-from sys import executable, base_exec_prefix
-from os.path import expandvars
+from glob import glob
 from os import sep, walk
+from os.path import expandvars
+from pathlib import Path
+from pynvim import Nvim
+from sys import executable, base_exec_prefix
 import importlib.util
 import inspect
 import re
@@ -15,15 +17,6 @@ import shutil
 import sys
 import traceback
 import typing
-
-from glob import glob
-
-if importlib.util.find_spec('pynvim'):
-    from pynvim import Nvim
-    from pynvim.api import Buffer
-else:
-    from neovim import Nvim
-    from neovim.api import Buffer  # noqa
 
 UserContext = typing.Dict[str, typing.Any]
 Candidate = typing.Dict[str, typing.Any]

@@ -4,8 +4,10 @@
 # License: MIT license
 # ============================================================================
 
+from pynvim import Nvim
+
 from denite.base.filter import Base
-from denite.util import Nvim, UserContext, Candidates, truncate
+from denite.util import UserContext, Candidates, truncate
 
 
 class Filter(Base):

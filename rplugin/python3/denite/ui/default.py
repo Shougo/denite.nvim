@@ -4,11 +4,12 @@
 # License: MIT license
 # ============================================================================
 
+from pynvim import Nvim
 import re
 import typing
 
 from denite.util import echo, error, clearmatch, regex_convert_py_vim
-from denite.util import Nvim, UserContext, Candidates, Candidate
+from denite.util import UserContext, Candidates, Candidate
 from denite.parent import SyncParent
 
 
@@ -71,13 +72,15 @@ class Default(object):
         return self._result
 
     def do_action(self, action_name: str,
-                  command: str = '', is_manual: bool = False) -> None:
-        if is_manual:
-            candidates = self._get_selected_candidates()
-        elif self._get_cursor_candidate():
-            candidates = [self._get_cursor_candidate()]
-        else:
-            candidates = []
+                  command: str = '', is_manual: bool = False,
+                  candidates: Candidates = []) -> None:
+        if not candidates:
+            if is_manual:
+                candidates = self._get_selected_candidates()
+            elif self._get_cursor_candidate():
+                candidates = [self._get_cursor_candidate()]
+            else:
+                candidates = []
 
         if not self._denite or not candidates or not action_name:
             return
@@ -93,6 +96,8 @@ class Default(object):
         is_quit = action['is_quit'] or post_action == 'quit'
         if is_quit:
             self.quit()
+
+        self._context['next_actions'] = []
 
         self._denite.do_action(self._context, action_name, candidates)
         self._result = candidates
@@ -125,8 +130,6 @@ class Default(object):
             self._context['quick_move'] = ''
             self._start_sources_queue(self._context)
 
-        return
-
     def redraw(self, is_force: bool = True) -> None:
         self._context['is_redraw'] = is_force
         if is_force:
@@ -142,7 +145,9 @@ class Default(object):
             self._denite.on_close(self._context)
         self._quit_buffer()
         self._result = []
-        return
+
+    def debug(self, expr: typing.Any) -> None:
+        error(self._vim, expr)
 
     def _restart(self) -> None:
         self._context['input'] = ''
@@ -780,7 +785,7 @@ class Default(object):
         if self._vim.call('winnr', '$') == 1:
             self._vim.command('buffer #')
         else:
-            self._vim.command('close!')
+            self._vim.command('silent! close!')
 
     def _quit_buffer(self) -> None:
         self._cleanup()

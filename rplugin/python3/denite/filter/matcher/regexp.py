@@ -4,10 +4,11 @@
 # License: MIT license
 # ============================================================================
 
+from pynvim import Nvim
 import re
 
 from denite.base.filter import Base
-from denite.util import convert2regex_pattern, Nvim, UserContext, Candidates
+from denite.util import convert2regex_pattern, UserContext, Candidates
 
 
 class Filter(Base):

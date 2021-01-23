@@ -4,10 +4,11 @@
 # License: MIT license
 # ============================================================================
 
+from pynvim import Nvim
 import re
 
 from denite.base.source import Base
-from denite.util import relpath, Nvim, UserContext, Candidates
+from denite.util import relpath, UserContext, Candidates
 
 JUMP_HIGHLIGHT_SYNTAX = [
     {'name': 'File',     'link': 'Constant',   're': r'file: .*'},

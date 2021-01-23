@@ -4,9 +4,9 @@
 # License: MIT license
 # ============================================================================
 
-# For backward compatibility
+from pynvim import Nvim
+
 from denite.base.filter import Base as _Base
-from denite.util import Nvim
 
 
 class Base(_Base):

@@ -6,12 +6,13 @@
 
 from os import sep
 from pathlib import Path
+from pynvim import Nvim
 import shlex
 import typing
 
 from denite import util, process
 from denite.base.source import Base
-from denite.util import Nvim, UserContext, Candidates, Candidate, truncate
+from denite.util import UserContext, Candidates, Candidate, truncate
 
 
 GREP_HEADER_SYNTAX = (

@@ -5,9 +5,10 @@
 # ============================================================================
 
 from pathlib import Path
+import copy
 import typing
 
-from denite.util import debug, clear_cmdline
+from denite.util import debug
 from denite.ui.default import Default
 
 Params = typing.List[str]
@@ -50,15 +51,21 @@ def _choose_action(denite: Default, params: Params) -> typing.Any:
 
     action_names = denite._denite.get_action_names(
         denite._context, candidates)
-    denite._vim.vars['denite#_actions'] = action_names
-    clear_cmdline(denite._vim)
-    action = str(denite._vim.call('denite#util#input',
-                                  'Action: ',
-                                  '',
-                                  'customlist,denite#helper#complete_actions'))
-    if action == '':
-        return
-    return denite.do_action(action, is_manual=True)
+    context = copy.copy(denite._context)
+    context['buffer_name'] = denite._context['buffer_name'] + '@'
+
+    # Quit current denite
+    denite.quit()
+
+    # New denite for choose action
+    denite._vim.call('denite#start', [{
+            'name': '_action',
+            'args': [
+                action_names,
+                denite._context['buffer_name'],
+                candidates
+            ],
+    }], context)
 
 
 def _do_action(denite: Default, params: Params) -> typing.Any:
@@ -190,7 +197,13 @@ def _quick_move(denite: Default, params: Params) -> typing.Any:
 
 
 def _quit(denite: Default, params: Params) -> typing.Any:
-    return denite.quit()
+    if denite._context['sources_queue']:
+        # Restore the sources
+        denite._context['input'] = ''
+        denite._context['quick_move'] = ''
+        denite._start_sources_queue(denite._context)
+    else:
+        denite.quit()
 
 
 def _redraw(denite: Default, params: Params) -> typing.Any:

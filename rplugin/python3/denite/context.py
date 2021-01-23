@@ -4,10 +4,9 @@
 # License: MIT license
 # ============================================================================
 
-import typing
 from pathlib import PurePath
-
-from denite.util import Nvim
+from pynvim import Nvim
+import typing
 
 UserContext = typing.Dict[str, typing.Any]
 

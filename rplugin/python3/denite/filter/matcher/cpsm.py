@@ -5,11 +5,12 @@
 # ============================================================================
 
 from pathlib import Path
+from pynvim import Nvim
 import sys
 
 from denite.base.filter import Base
 from denite.util import globruntime, convert2fuzzy_pattern
-from denite.util import Nvim, UserContext, Candidates
+from denite.util import UserContext, Candidates
 
 
 class Filter(Base):

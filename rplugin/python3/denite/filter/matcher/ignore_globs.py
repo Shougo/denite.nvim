@@ -4,13 +4,14 @@
 # License: MIT license
 # ============================================================================
 
+from fnmatch import translate
 from os import sep
 from pathlib import Path
-from fnmatch import translate
+from pynvim import Nvim
 from re import search
 
 from denite.base.filter import Base
-from denite.util import Nvim, UserContext, Candidates
+from denite.util import UserContext, Candidates
 
 
 class Filter(Base):

@@ -5,9 +5,10 @@
 # ============================================================================
 
 from os import path
+from pynvim import Nvim
 
 from denite.base.source import Base
-from denite.util import globruntime, Nvim, UserContext, Candidates
+from denite.util import globruntime, UserContext, Candidates
 
 
 class Source(Base):

@@ -1,15 +1,15 @@
-
 # ============================================================================
 # FILE: mark.py
 # AUTHOR: amikai (as23041248@gmail.com)
 # License: MIT license
 # ============================================================================
 
+from pynvim import Nvim
 import typing
 
 from denite.base.source import Base
 from denite.kind.file import Kind as File
-from denite.util import Nvim, UserContext, Candidates, Candidate
+from denite.util import UserContext, Candidates, Candidate
 
 
 MARK_HIGHLIGHT_SYNTAX = [
