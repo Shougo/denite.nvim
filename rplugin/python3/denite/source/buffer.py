@@ -4,14 +4,15 @@
 # License: MIT license
 # ============================================================================
 
+from pathlib import Path
+from pynvim import Nvim
+from pynvim.api import Buffer
+from sys import maxsize
+from time import localtime, strftime, time
 import typing
 
-from pathlib import Path
-from time import localtime, strftime, time
-from sys import maxsize
-
 from denite.base.source import Base
-from denite.util import Nvim, UserContext, Candidates, Buffer
+from denite.util import UserContext, Candidates
 
 BUFFER_HIGHLIGHT_SYNTAX = [
     {'name': 'Name',     'link': 'Function',  're': r'[^/ \[\]]\+\s'},

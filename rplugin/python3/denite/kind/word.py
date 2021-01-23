@@ -4,8 +4,9 @@
 # License: MIT license
 # ============================================================================
 
+from pynvim import Nvim
+
 from denite.base.kind import Base
-from denite.util import Nvim
 
 
 class Kind(Base):

@@ -6,9 +6,10 @@
 
 import typing
 from abc import ABC, abstractmethod
+from pynvim import Nvim
 
 import denite.util
-from denite.util import Nvim, UserContext, Candidates
+from denite.util import UserContext, Candidates
 
 
 class Base(ABC):

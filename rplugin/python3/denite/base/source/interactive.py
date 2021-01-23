@@ -4,10 +4,11 @@
 # License: MIT license
 # ============================================================================
 
+from pynvim import Nvim
 import typing
 
 from denite.base.source import Base
-from denite.util import Nvim, UserContext, expand, split_input
+from denite.util import UserContext, expand, split_input
 
 
 class Source(Base):

@@ -4,13 +4,13 @@
 # License: MIT license
 # ============================================================================
 
-import typing
-
 from abc import abstractmethod
 from copy import copy
+from pynvim import Nvim
+import typing
 
 from denite.base.kind import Base
-from denite.util import Nvim, UserContext, Candidate
+from denite.util import UserContext, Candidate
 
 Fallback = typing.Callable[[UserContext], None]
 

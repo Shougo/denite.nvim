@@ -5,9 +5,10 @@
 # ============================================================================
 
 from pathlib import Path
+from pynvim import Nvim
 
 from denite.base.filter import Base
-from denite.util import relpath, Nvim, UserContext, Candidates
+from denite.util import relpath, UserContext, Candidates
 
 
 class Filter(Base):

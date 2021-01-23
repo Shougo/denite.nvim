@@ -4,11 +4,12 @@
 # License: MIT license
 # ============================================================================
 
-import sys
 from pathlib import Path
+from pynvim import Nvim
+import sys
 
 from denite.base.filter import Base
-from denite.util import Nvim, UserContext, Candidates, convert2fuzzy_pattern
+from denite.util import UserContext, Candidates, convert2fuzzy_pattern
 
 
 class Filter(Base):

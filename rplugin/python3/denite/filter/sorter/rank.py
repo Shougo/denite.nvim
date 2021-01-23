@@ -9,11 +9,12 @@
 # License: MIT license
 # ============================================================================
 
+from pynvim import Nvim
 import string
 import typing
 
 from denite.base.filter import Base
-from denite.util import split_input, Nvim, UserContext, Candidates
+from denite.util import split_input, UserContext, Candidates
 
 
 class Filter(Base):

@@ -4,12 +4,13 @@
 # License: MIT license
 # ============================================================================
 
-import typing
 from abc import ABC, abstractmethod
-import denite.util
-from denite.util import Nvim, UserContext, Candidates
+from pynvim import Nvim
+import typing
 
 from denite.base.kind import Base as Kind
+from denite.util import UserContext, Candidates
+import denite.util
 
 
 class Base(ABC):

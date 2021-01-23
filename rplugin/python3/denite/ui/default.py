@@ -4,11 +4,12 @@
 # License: MIT license
 # ============================================================================
 
+from pynvim import Nvim
 import re
 import typing
 
 from denite.util import echo, error, clearmatch, regex_convert_py_vim
-from denite.util import Nvim, UserContext, Candidates, Candidate
+from denite.util import UserContext, Candidates, Candidate
 from denite.parent import SyncParent
 
 

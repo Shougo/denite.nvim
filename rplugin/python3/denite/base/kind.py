@@ -4,10 +4,11 @@
 # License: MIT license
 # ============================================================================
 
+from pynvim import Nvim
 import typing
 
 import denite.util
-from denite.util import Nvim, UserContext
+from denite.util import UserContext
 
 
 class Base(object):

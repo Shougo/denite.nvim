@@ -4,8 +4,10 @@
 # License: MIT license
 # ============================================================================
 
+from pynvim import Nvim
+
 from denite.base.source import Base
-from denite.util import abspath, Nvim, UserContext, Candidates
+from denite.util import abspath, UserContext, Candidates
 
 LINE_NUMBER_SYNTAX = (
     'syntax match deniteSource_lineNumber '

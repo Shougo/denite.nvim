@@ -4,8 +4,10 @@
 # License: MIT license
 # ============================================================================
 
+from pynvim import Nvim
+
 from denite.base.source import Base
-from denite.util import Nvim, UserContext, Candidates
+from denite.util import UserContext, Candidates
 
 
 class Source(Base):

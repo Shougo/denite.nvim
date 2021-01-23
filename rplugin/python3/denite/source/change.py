@@ -4,10 +4,11 @@
 # License: MIT license
 # ============================================================================
 
+from pynvim import Nvim
 import typing
 
 from denite.base.source import Base
-from denite.util import Nvim, UserContext, Candidates
+from denite.util import UserContext, Candidates
 
 CHANGE_HIGHLIGHT_SYNTAX = [
     {'name': 'Text', 'link': 'Function', 're': r'\v(\d+\s+\d+\s+\d+\s+)\zs.*'},

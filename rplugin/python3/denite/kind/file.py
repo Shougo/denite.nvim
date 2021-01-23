@@ -5,11 +5,12 @@
 # ============================================================================
 
 from pathlib import Path
+from pynvim import Nvim
 import re
 import typing
 
 from denite.kind.openable import Kind as Openable
-from denite.util import Nvim, UserContext, Candidate
+from denite.util import UserContext, Candidate
 from denite import util
 
 

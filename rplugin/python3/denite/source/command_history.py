@@ -4,12 +4,13 @@
 # License: MIT license
 # ============================================================================
 
+from pynvim import Nvim
 import re
 import typing
 
 from denite.base.source import Base
 from denite.kind.command import Kind as Command
-from denite.util import Nvim, UserContext, Candidates
+from denite.util import UserContext, Candidates
 
 
 class Source(Base):

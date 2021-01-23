@@ -5,8 +5,10 @@
 # License: MIT license
 # ============================================================================
 
+from pynvim import Nvim
+
 from denite.base.kind import Base
-from denite.util import Nvim, UserContext
+from denite.util import UserContext
 
 
 class Kind(Base):

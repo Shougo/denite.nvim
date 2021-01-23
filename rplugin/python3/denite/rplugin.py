@@ -4,10 +4,10 @@
 # License: MIT license
 # ============================================================================
 
+from pynvim import Nvim
 import typing
 
 from denite.context import Context
-from denite.util import Nvim
 
 Args = typing.List[typing.Any]
 
