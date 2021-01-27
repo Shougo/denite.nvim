@@ -103,7 +103,10 @@ class Kind(Openable):
         if self.vim.call('has', 'nvim'):
             self.vim.call('termopen', ['bat', path])
         else:
-            self.vim.call('term_start', ['bat', path], {'curwin': True})
+            self.vim.call('term_start', ['bat', path], {
+                'curwin': True,
+                'term_kill': 'kill',
+            })
 
         self._add_previewed_buffer(self.vim.call('bufnr', '%'))
         self._previewed_winid = self.vim.call('win_getid')
