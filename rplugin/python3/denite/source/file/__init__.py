@@ -4,6 +4,7 @@
 # License: MIT license
 # ============================================================================
 
+from os import sep
 from pathlib import Path
 from pynvim import Nvim
 import glob
@@ -60,9 +61,9 @@ class Source(Base):
                 f = re.sub(r'\n', r'\\n', f)
                 f_path = Path(f)
                 abbr = (str(f_path.relative_to(path))
-                        if fullpath != path and f.startswith(path + '/')
+                        if fullpath != path and f.startswith(path + sep)
                         else str(f_path.resolve())) + (
-                            '/' if f_path.is_dir() else '')
+                            sep if f_path.is_dir() else '')
                 candidates.append({
                     'word': f,
                     'abbr': abbr,
