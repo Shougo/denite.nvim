@@ -152,7 +152,7 @@ def expand(path: str) -> str:
 
 
 def abspath(vim: Nvim, path: str) -> str:
-    return str(Path(vim.call('getcwd')).joinpath(expand(path)).resolve())
+    return str(Path(vim.call('getcwd')).joinpath(path))
 
 
 def relpath(vim: Nvim, path: str) -> str:
