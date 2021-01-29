@@ -128,6 +128,8 @@ class Default(object):
         if is_manual and self._context['sources_queue']:
             self._context['input'] = ''
             self._context['quick_move'] = ''
+            # Note: Resume must be disabled
+            self._context['resume'] = False
             self._start_sources_queue(self._context)
 
     def redraw(self, is_force: bool = True) -> None:
