@@ -5,7 +5,7 @@
 # ============================================================================
 
 from glob import glob
-from os import sep, walk
+from os import access, sep, walk, R_OK
 from os.path import expandvars
 from pathlib import Path
 from pynvim import Nvim
@@ -110,6 +110,16 @@ def load_external_module(base: str, module: str) -> None:
     sys.path.insert(0, str(module_dir))
 
 
+def readable(path: Path) -> bool:
+    try:
+        if access(str(path), R_OK) and path.stat():
+            return True
+        else:
+            return False
+    except Exception:
+        return False
+
+
 def split_input(text: str) -> typing.List[str]:
     return [x for x in re.split(r'\s+', text) if x != ''] if text else ['']
 
@@ -151,8 +161,13 @@ def expand(path: str) -> str:
     return expandvars(path)
 
 
-def abspath(vim: Nvim, path: str) -> str:
-    return str(Path(vim.call('getcwd')).joinpath(path))
+def abspath(vim: Nvim, pathstr: str) -> str:
+    path = Path(expand(pathstr))
+    if not path.is_absolute():
+        path = Path(vim.call('getcwd')).joinpath(pathstr)
+    if readable(path):
+        path = path.resolve()
+    return str(path)
 
 
 def relpath(vim: Nvim, path: str) -> str:
