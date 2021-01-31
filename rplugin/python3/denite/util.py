@@ -112,11 +112,11 @@ def load_external_module(base: str, module: str) -> None:
 
 def readable(path: Path) -> bool:
     try:
-        if access(str(path), R_OK) and path.stat():
+        if access(str(path), R_OK) and path.resolve():
             return True
         else:
             return False
-    except (Exception, OSError):
+    except Exception:
         return False
 
 
@@ -275,9 +275,11 @@ def import_rplugins(name: str, context: UserContext, source: str,
 
 def parse_tagline(line: str, tagpath: str) -> typing.Dict[str, typing.Any]:
     elem = line.split("\t")
-    file_path = Path(elem[1]).resolve()
+    file_path = Path(elem[1])
     if not file_path.exists():
-        file_path = Path(tagpath).parent.joinpath(elem[1]).resolve()
+        file_path = Path(tagpath).parent.joinpath(elem[1])
+    if readable(file_path):
+        file_path = file_path.resolve()
     info = {
         'name': elem[0],
         'file': str(file_path),

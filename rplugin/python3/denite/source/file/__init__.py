@@ -62,8 +62,7 @@ class Source(Base):
                 f_path = Path(f)
                 abbr = (str(f_path.relative_to(path))
                         if fullpath != path and f.startswith(path + sep)
-                        else str(f_path.resolve())) + (
-                            sep if f_path.is_dir() else '')
+                        else (fullpath + sep if f_path.is_dir() else ''))
                 candidates.append({
                     'word': f,
                     'abbr': abbr,
