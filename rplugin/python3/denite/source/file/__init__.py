@@ -53,7 +53,7 @@ class Source(Base):
             file_path = Path(filename)
             glb = str(file_path if file_path.is_dir() else file_path.parent)
             # Note: Path('../.').name convert to ".."
-            hidden = re.match(r'.([^.]|$)', str(self.vim.call(
+            hidden = re.match(r'\.([^.]|$)', str(self.vim.call(
                 'fnamemodify', context['input'], ':t')))
             glb += '/.*' if hidden else '/*'
             for f in glob.glob(glb):
