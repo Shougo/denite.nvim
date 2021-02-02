@@ -273,7 +273,8 @@ EXAMPLES						*denite-examples*
 	      \   'venv/', 'images/', '*.min.*', 'img/', 'fonts/'])
 
 	" Custom action
-	" Note: lambda function is not supported in Vim8.
+	" Note: denite#custom#action() with lambda parameter is only available
+	"       in NeoVim; not supported in Vim8.
 	call denite#custom#action('file', 'test',
 	      \ {context -> execute('let g:foo = 1')})
 	call denite#custom#action('file', 'test2',
