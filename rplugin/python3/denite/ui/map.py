@@ -105,9 +105,6 @@ def _filter_async(denite: Default, params: Params) -> typing.Any:
 
     denite._update_candidates()
 
-    # Enable timer
-    denite._vim.call('denite#filter#_start_filter_timer')
-
 
 def _move_up_path(denite: Default, params: Params) -> typing.Any:
     denite._context['path'] = str(Path(denite._context['path']).parent)

@@ -42,8 +42,10 @@ function! denite#filter#_open(context, parent, entire_len, is_async) abort
 
   augroup denite-filter
     autocmd!
-    autocmd InsertEnter <buffer> call denite#filter#_start_filter_timer()
-    autocmd InsertLeave <buffer> call denite#filter#_stop_filter_timer()
+    autocmd InsertEnter,TextChangedI,TextChangedP <buffer>
+          \ call denite#filter#_start_filter_timer()
+    autocmd InsertLeave <buffer>
+          \ call denite#filter#_stop_filter_timer()
     autocmd InsertLeave <buffer> call s:update()
   augroup END
 

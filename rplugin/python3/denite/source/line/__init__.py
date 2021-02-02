@@ -5,6 +5,7 @@
 # ============================================================================
 
 from pynvim import Nvim
+import typing
 
 from denite.base.source import Base
 from denite.util import abspath, UserContext, Candidates
@@ -25,6 +26,8 @@ class Source(Base):
         self.kind = 'file'
         self.matchers = ['matcher/regexp']
         self.sorters = []
+
+        self._buflines: typing.Dict[int, typing.List[str]] = {}
 
     def on_init(self, context: UserContext) -> None:
         context['__linenr'] = self.vim.current.window.cursor[0]
@@ -55,20 +58,23 @@ class Source(Base):
         self.vim.command(LINE_NUMBER_HIGHLIGHT)
 
     def gather_candidates(self, context: UserContext) -> Candidates:
+        context['is_interactive'] = True
+        if not context['input']:
+            return []
+
         linenr = context['__linenr']
         candidates: Candidates = []
         for bufnr in context['__bufnrs']:
             lines = [{
                 'word': x,
-                'abbr': (context['__fmt'] % (i + 1, x)),
+                'abbr': context['__fmt'] % (i + 1, x),
                 'action__path': abspath(self.vim,
                                         self.vim.current.buffer.name),
                 'action__bufnr': bufnr,
                 'action__col': 0,
-                'action__line': (i + 1),
+                'action__line': i + 1,
                 'action__text': x,
-            } for [i, x] in enumerate(
-                self.vim.call('getbufline', bufnr, 1, '$'))]
+            } for [i, x] in enumerate(self._getbufline(bufnr))]
             if context['__emptiness'] == 'noempty':
                 lines = list(filter(lambda c: c['word'] != '', lines))
             if context['__direction'] == 'all':
@@ -79,3 +85,9 @@ class Source(Base):
             else:
                 candidates += lines[linenr-1:] + lines[:linenr-1]
         return candidates
+
+    def _getbufline(self, bufnr: int) -> typing.List[str]:
+        if bufnr not in self._buflines:
+            self._buflines[bufnr] = self.vim.call(
+                'getbufline', bufnr, 1, '$')
+        return self._buflines[bufnr]

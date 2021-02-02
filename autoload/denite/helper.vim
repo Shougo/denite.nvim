@@ -299,7 +299,7 @@ function! denite#helper#_start_update_candidates_timer(bufnr) abort
         \ {'repeat': -1})
 endfunction
 function! denite#helper#_start_update_buffer_timer(bufnr) abort
-  return timer_start(50,
+  return timer_start(20,
         \ {-> denite#_update_map('update_buffer', a:bufnr, v:false)},
         \ {'repeat': -1})
 endfunction

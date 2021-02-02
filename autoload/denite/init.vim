@@ -107,7 +107,7 @@ function! denite#init#_user_options() abort
         \ 'empty': v:true,
         \ 'expand': v:false,
         \ 'filter_split_direction': 'botright',
-        \ 'filter_updatetime': 100,
+        \ 'filter_updatetime': 30,
         \ 'floating_preview': v:false,
         \ 'highlight_filter_background': 'NormalFloat',
         \ 'highlight_matched_range': 'Underlined',

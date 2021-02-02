@@ -467,6 +467,8 @@ class Default(object):
 
         if self._is_async:
             self._start_timer('update_candidates')
+        else:
+            self._stop_timer('update_candidates')
 
         updated = (self._displayed_texts != prev_displayed_texts or
                    self._matched_pattern != prev_matched_pattern or
