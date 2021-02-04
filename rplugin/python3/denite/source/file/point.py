@@ -40,7 +40,7 @@ class Source(Base):
             }]
 
         cfile = context['__cfile']
-        cpath = Path(cfile)
+        cpath = Path(abspath(self.vim, cfile))
         if match('[./]+$', cfile):
             return []
         if cpath.exists() and cpath.is_file():
