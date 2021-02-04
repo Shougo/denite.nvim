@@ -79,7 +79,7 @@ function! denite#helper#preview_file(context, filename) abort
     endif
   else
     if a:filename ==# ''
-      silent rightbelow new
+      silent aboveleft new
     else
       call denite#util#execute_path('silent aboveleft pedit!', a:filename)
 
