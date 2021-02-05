@@ -433,6 +433,10 @@ Below mappings are only available in denite filter buffer.
 		Delete the back word.
 		Note: If the input line is empty, quit the filter buffer.
 
+			*denite-map-i_<Plug>(denite_filter_clear_backward)*
+<Plug>(denite_filter_clear_backward)
+		Clear the text before cursor.
+
 				*denite-map-<Plug>(denite_filter_quit)*
 				*denite-map-i_<Plug>(denite_filter_quit)*
 <Plug>(denite_filter_quit)
@@ -460,6 +464,7 @@ Insert mode default mappings.
 --------		-----------------------------
 <BS>			<Plug>(denite_filter_backspace)
 <C-h>			<Plug>(denite_filter_backspace)
+<C-u>			<Plug>(denite_filter_clear_backward)
 <CR>			<Plug>(denite_filter_update)
 
 ------------------------------------------------------------------------------
