@@ -431,11 +431,12 @@ Below mappings are only available in denite filter buffer.
 				*denite-map-i_<Plug>(denite_filter_backspace)*
 <Plug>(denite_filter_backspace)
 		Delete the back word.
+		Note: If the input line is empty, quit the filter buffer.
 
 				*denite-map-<Plug>(denite_filter_quit)*
 				*denite-map-i_<Plug>(denite_filter_quit)*
 <Plug>(denite_filter_quit)
-		Quit filter buffer.
+		Quit both filter buffer and denite buffer.
 
 				*denite-map-<Plug>(denite_filter_update)*
 				*denite-map-i_<Plug>(denite_filter_update)*

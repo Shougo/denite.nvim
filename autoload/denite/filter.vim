@@ -83,7 +83,7 @@ function! s:init_buffer() abort
   inoremap <buffer><silent> <Plug>(denite_filter_quit)
         \ <ESC>:<C-u>call <SID>quit(v:true)<CR>
   inoremap <buffer><silent><expr> <Plug>(denite_filter_backspace)
-        \ col('.') == 1 ? "a\<BS>" : "\<BS>"
+        \ col('.') == 1 ? "\<ESC>:call \<SID>quit(v:false)\<CR>" : "\<BS>"
   inoremap <buffer><silent> <Plug>(denite_filter_space)
         \ <ESC>:call <SID>filter_async()<CR>a<Space>
 
