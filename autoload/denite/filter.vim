@@ -46,7 +46,7 @@ function! denite#filter#_open(context, parent, entire_len, is_async) abort
           \ call denite#filter#_start_filter_timer()
     autocmd InsertLeave <buffer>
           \ call denite#filter#_stop_filter_timer()
-    autocmd InsertLeave <buffer> call s:update()
+    autocmd TextChanged,InsertLeave <buffer> call s:update()
   augroup END
 
   call cursor(line('$'), 0)
