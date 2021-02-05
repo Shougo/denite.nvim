@@ -230,6 +230,10 @@ function! s:quit(force_quit) abort
 
   call denite#filter#_move_to_parent(v:false)
 
+  if a:force_quit
+    call denite#call_map('quit')
+  endif
+
   call denite#filter#_stop_filter_timer()
 
   if win_id2win(g:denite#_filter_winid) <= 0
