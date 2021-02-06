@@ -157,7 +157,10 @@ def parse_jump_line(path_head: str, line: str) -> typing.List[str]:
 
 def expand(path: str) -> str:
     if path.startswith('~'):
-        path = str(Path(path).expanduser())
+        try:
+            path = str(Path(path).expanduser())
+        except RuntimeError:
+            pass
     return expandvars(path)
 
 
