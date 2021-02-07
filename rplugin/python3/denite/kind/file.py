@@ -100,10 +100,17 @@ class Kind(Openable):
         else:
             path = target['action__path'].replace('/./', '/')
 
+        bat_cmd = ['bat', '-n', path]
+        line = int(target.get('action__line', 0))
+        if line:
+            start_line = max(0, line - int(context['preview_height'] / 2))
+            bat_cmd.extend(['-r', '{}:'.format(start_line),
+                            '--highlight-line', line])
+
         if self.vim.call('has', 'nvim'):
-            self.vim.call('termopen', ['bat', path])
+            self.vim.call('termopen', bat_cmd)
         else:
-            self.vim.call('term_start', ['bat', path], {
+            self.vim.call('term_start', bat_cmd, {
                 'curwin': True,
                 'term_kill': 'kill',
             })
