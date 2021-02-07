@@ -2242,6 +2242,14 @@ Q: I want to enable matched highlight in buffer.
 
 A: |denite-option-match-highlight|
 
+Q: I want to grep for loaded buffers like unite.vim's "$buffers" arguments.
+
+A: >
+	nnoremap <silent> <C-g> :call denite#start([{'name': 'grep', 'args':
+	      \ map(filter(range(1, bufnr('$')),
+	      \ 'buflisted(v:val) && filereadable(bufname(v:val))'),
+	      \ 'bufname(v:val)')}])<CR>
+
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
 
