@@ -179,7 +179,7 @@ class Default(object):
                context: UserContext) -> None:
         from denite.ui.map import do_map
 
-        self._vim.command('silent! autocmd! denite')
+        self._vim.command('silent! autocmd! denite <buffer>')
 
         if re.search(r'\[Command Line\]$', self._vim.current.buffer.name):
             # Ignore command line window.

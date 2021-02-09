@@ -21,6 +21,11 @@ function! denite#init#_initialize() abort
     autocmd!
   augroup END
 
+  if !has('nvim')
+    autocmd denite BufEnter,VimEnter,BufWinEnter,BufWritePost *
+          \ call denite#helper#_add_oldfiles(expand('<amatch>'))
+  endif
+
   if !has('python3')
     call denite#util#print_error(
           \ 'denite.nvim does not work with this version.')

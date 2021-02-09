@@ -20,7 +20,7 @@ class Source(Base):
         self.kind = Kind(vim)
 
     def on_init(self, context: UserContext) -> None:
-        # rviminfo! is broken in Vim8
+        # Note: rviminfo! is broken in Vim8
         if self.vim.call('has', 'nvim'):
             self.vim.command('wviminfo | rviminfo!')
 

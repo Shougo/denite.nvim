@@ -236,6 +236,9 @@ endfunction
 function! denite#helper#_set_oldfiles(oldfiles) abort
   let v:oldfiles = a:oldfiles
 endfunction
+function! denite#helper#_add_oldfiles(filename) abort
+  call insert(v:oldfiles, fnamemodify(a:filename, ':p'))
+endfunction
 function! denite#helper#_get_oldfiles() abort
   return filter(copy(v:oldfiles),
         \ 'filereadable(fnamemodify(v:val, ":p")) || buflisted(v:val)')
