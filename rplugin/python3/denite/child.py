@@ -19,6 +19,7 @@ from denite.util import (
     import_rplugins, expand, split_input, abspath)
 from denite.util import UserContext, Candidates, Candidate
 from denite.base.source import Base as Source
+from denite.base.kind import Base as Kind
 
 Action = typing.Dict[str, typing.Any]
 
@@ -458,6 +459,11 @@ class Child(object):
             if not source.syntax_name:
                 source.syntax_name = syntax_name
 
+            # Set the source kind attributes.
+            if isinstance(source.kind, Kind):
+                self._set_custom_attribute(
+                    'kind', source.kind, 'default_action')
+
             if source.name in self._custom['alias_source']:
                 # Load alias
                 for alias in self._custom['alias_source'][source.name]:
@@ -511,8 +517,8 @@ class Child(object):
             str(Path(x.path).resolve())
             for x in self._kinds.values()
         ])
-        for Kind, path, module_path in rplugins:
-            kind = Kind(self._vim)
+        for KindClass, path, module_path in rplugins:
+            kind = KindClass(self._vim)
             # NOTE:
             # Previously, kind and filter but source uses
             # module_path as name so modules which does not

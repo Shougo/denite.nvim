@@ -2253,6 +2253,11 @@ A: >
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
 
+2021.02.05
+* Quit both filter buffer and denite buffer when |<Plug>(denite_filter_quit)|.
+* Change |<Plug>(denite_filter_backspace)| behavior.  When the line is empty,
+  close filter window.
+
 2021.01.22
 * "choose_action" uses denite UI instead
 

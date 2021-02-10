@@ -30,6 +30,8 @@ class Source(Base):
         self._buflines: typing.Dict[int, typing.List[str]] = {}
 
     def on_init(self, context: UserContext) -> None:
+        self._buflines = {}
+
         context['__linenr'] = self.vim.current.window.cursor[0]
         context['__bufnrs'] = [self.vim.current.buffer.number]
         context['__direction'] = 'all'
