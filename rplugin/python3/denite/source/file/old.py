@@ -20,8 +20,9 @@ class Source(Base):
         self.kind = Kind(vim)
 
     def on_init(self, context: UserContext) -> None:
-        # Note: rviminfo! is broken in Vim8
-        if self.vim.call('has', 'nvim'):
+        # Note: rviminfo! is broken in Vim8 before 8.2.2494
+        if self.vim.call('has', 'nvim') or self.vim.call(
+                'has', 'patch-8.2.2494'):
             self.vim.command('wviminfo | rviminfo!')
 
     def gather_candidates(self, context: UserContext) -> Candidates:

@@ -25,11 +25,3 @@ command! -nargs=+ -range -bar -complete=customlist,denite#helper#complete
       \ DeniteProjectDir
       \ call denite#helper#call_denite('DeniteProjectDir',
       \                                <q-args>, <line1>, <line2>)
-
-if !has('nvim')
-  augroup denite
-    autocmd!
-    autocmd BufEnter,VimEnter,BufWinEnter,BufWritePost *
-          \ call denite#helper#_add_oldfiles(expand('<amatch>'))
-  augroup END
-endif
