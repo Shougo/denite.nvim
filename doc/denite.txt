@@ -2250,6 +2250,10 @@ A: >
 	      \ 'buflisted(v:val) && filereadable(bufname(v:val))'),
 	      \ 'bufname(v:val)')}])<CR>
 
+Q: I want to switch from the filter window into the denite window.
+
+A: You must use |<Plug>(denite_filter_update)| for it.
+
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
 
