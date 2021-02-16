@@ -38,7 +38,7 @@ class Source(Base):
                         root + sep + candidate.split("\t")[1]
                     ),
                     'action__pattern': (
-                        candidate.split("\t")[2].rstrip('\n')[1:]
+                        r'\V' + candidate.split("\t")[2].rstrip('\n')[1:]
                     ),
                 }, ins)))
         return candidates

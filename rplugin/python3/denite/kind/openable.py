@@ -115,8 +115,9 @@ class Kind(Base):
         except Exception:
             pass
 
-        # Open folds
+        # Open folds and centering
         self.vim.command('normal! zv')
+        self.vim.command('normal! zz')
 
     def _is_current_buffer_empty(self) -> bool:
         buffer = self.vim.current.buffer
