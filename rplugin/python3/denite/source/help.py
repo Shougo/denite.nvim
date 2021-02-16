@@ -10,7 +10,8 @@ import re
 from denite.base.source import Base
 from denite.kind.command import Kind as Command
 
-from denite.util import globruntime, clearmatch, UserContext, Candidates
+from denite.util import (
+        globruntime, clearmatch, UserContext, Candidates, Candidate)
 
 
 class Source(Base):
@@ -43,6 +44,7 @@ class Kind(Command):
         super().__init__(vim)
         self.vim = vim
         self.name = 'help'
+        self._previewed_target: Candidate = {}
 
     def action_preview(self, context: UserContext) -> None:
         target = context['targets'][0]
