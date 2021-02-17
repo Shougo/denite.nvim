@@ -9,9 +9,6 @@ from pathlib import Path
 from pynvim import Nvim
 
 from denite.base.source import Base
-from denite.kind.command import Kind as Command
-from denite.kind.file import Kind as File
-
 from denite.util import globruntime, UserContext, Candidates
 
 
@@ -21,7 +18,7 @@ class Source(Base):
         super().__init__(vim)
         self.vim = vim
         self.name = 'help'
-        self.kind = Kind(vim)
+        self.kind = 'file'
 
     def gather_candidates(self, context: UserContext) -> Candidates:
         candidates: Candidates = []
@@ -31,9 +28,6 @@ class Source(Base):
                 root = str(Path(f).parent)
                 extend(list(map(lambda candidate: {
                     'word': candidate.split("\t", 1)[0],
-                    'action__command': (
-                        'silent help ' + candidate.split("\t", 1)[0]
-                    ),
                     'action__path': (
                         root + sep + candidate.split("\t")[1]
                     ),
@@ -42,11 +36,3 @@ class Source(Base):
                     ),
                 }, ins)))
         return candidates
-
-
-class Kind(File, Command):
-    def __init__(self, vim: Nvim) -> None:
-        super().__init__(vim)
-        self.vim = vim
-        self.name = 'help'
-        self.default_action = 'execute'
