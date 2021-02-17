@@ -60,6 +60,9 @@ class Source(Base):
         self.vim.command(LINE_NUMBER_HIGHLIGHT)
 
     def gather_candidates(self, context: UserContext) -> Candidates:
+        if context['is_redraw']:
+            self._buflines = {}
+
         context['is_interactive'] = True
         if not context['input']:
             return []
