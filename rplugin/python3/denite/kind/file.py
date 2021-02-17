@@ -69,7 +69,7 @@ class Kind(Openable):
         if not listed:
             self._add_previewed_buffer(self.vim.call('bufnr', '%'))
         self._jump(context, target)
-        self._highlight(context, int(target.get('action__line', 0)))
+        self._highlight(context, target)
 
         self.vim.call('win_gotoid', prev_id)
         self._previewed_target = target
@@ -135,7 +135,7 @@ class Kind(Openable):
         prev_id = self.vim.call('win_getid')
         self.vim.call('win_gotoid', context['prev_winid'])
         self._jump(context, target)
-        self._highlight(context, int(target.get('action__line', 0)))
+        self._highlight(context, target)
         self.vim.call('win_gotoid', prev_id)
 
     def action_quickfix(self, context: UserContext) -> None:
@@ -194,10 +194,16 @@ class Kind(Openable):
             self._remove_previewed_buffer(bufnr)
             self._jump(context, target)
 
-    def _highlight(self, context: UserContext, line: int) -> None:
+    def _highlight(self, context: UserContext, target: Candidate) -> None:
         util.clearmatch(self.vim)
-        self.vim.current.window.vars['denite_match_id'] = self.vim.call(
-            'matchaddpos', context['highlight_preview_line'], [line])
+        if 'action__pattern' in target:
+            self.vim.current.window.vars['denite_match_id'] = self.vim.call(
+                'matchadd', context['highlight_preview_line'],
+                target['action__pattern'])
+        else:
+            line = int(target.get('action__line', 0))
+            self.vim.current.window.vars['denite_match_id'] = self.vim.call(
+                'matchaddpos', context['highlight_preview_line'], [line])
 
     def _get_preview_window(self) -> bool:
         return bool(self._vim.call('denite#helper#_get_preview_window'))
