@@ -80,11 +80,20 @@ class Kind(Openable):
         if not self.vim.call('executable', 'bat'):
             return
 
+        if (self._previewed_target == target and
+                context['auto_action'] == 'preview_bat'):
+            return
+
         prev_id = self.vim.call('win_getid')
 
         if self._previewed_winid:
             self.vim.call('win_gotoid', self._previewed_winid)
             if self.vim.call('win_getid') != prev_id:
+                # in Neovim close! deletes terminal buffer if 'nohidden'
+                if (self.vim.call('has', 'nvim') and
+                        not self.vim.options['hidden']):
+                    self._remove_previewed_buffer(
+                            self.vim.call('bufnr', '%'))
                 self.vim.command('close!')
             self.vim.call('win_gotoid', prev_id)
             self._previewed_winid = 0
