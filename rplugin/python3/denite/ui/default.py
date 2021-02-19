@@ -774,7 +774,11 @@ class Default(object):
         # Clear previewed buffers
         prev_bufnr = self._vim.call('bufnr', '%')
         for bufnr in self._vim.vars['denite#_previewed_buffers'].keys():
-            self._vim.command('silent bdelete! ' + str(bufnr))
+            # don't close nolisted and shown buffer
+            if self._vim.call('win_findbuf', int(bufnr)):
+                self._vim.call('setbufvar', int(bufnr), '&buflisted', 0)
+            else:
+                self._vim.command('silent bdelete! ' + str(bufnr))
         self._vim.vars['denite#_previewed_buffers'] = {}
         if self._vim.call('bufnr', '%') != prev_bufnr:
             # Restore buffer
