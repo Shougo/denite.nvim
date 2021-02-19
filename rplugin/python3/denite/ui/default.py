@@ -265,6 +265,7 @@ class Default(object):
         self._bufvars['denite_statusline'] = {}
 
         self._vim.vars['denite#_previewed_buffers'] = {}
+        self._vim.vars['denite#_previewing_bufnr'] = -1
 
         self._save_window_options = {}
         window_options = {
@@ -775,11 +776,13 @@ class Default(object):
         prev_bufnr = self._vim.call('bufnr', '%')
         for bufnr in [
                 x for x in self._vim.vars['denite#_previewed_buffers'].keys()
-                if not self._vim.call('win_findbuf', int(x))
+                if (int(x) == self._vim.vars['denite#_previewing_bufnr'] or
+                    not self._vim.call('win_findbuf', int(x)))
         ]:
             # Note: Don't close shown buffer
             self._vim.command('silent bdelete! ' + str(bufnr))
         self._vim.vars['denite#_previewed_buffers'] = {}
+        self._vim.vars['denite#_previewing_bufnr'] = -1
         if self._vim.call('bufnr', '%') != prev_bufnr:
             # Restore buffer
             self._vim.command('buffer ' + str(prev_bufnr))

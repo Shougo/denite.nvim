@@ -81,6 +81,7 @@ endfunction
 function! s:initialize_variables() abort
   let g:denite#_filter_winid = -1
   let g:denite#_previewed_buffers = {}
+  let g:denite#_previewing_bufnr = -1
   let g:denite#_candidates = []
   let g:denite#_ret = {}
   let g:denite#_async_ret = {}

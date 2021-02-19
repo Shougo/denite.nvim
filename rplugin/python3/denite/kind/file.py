@@ -101,6 +101,7 @@ class Kind(Openable):
                     self._remove_previewed_buffer(
                             self.vim.call('bufnr', '%'))
                 self.vim.command('close!')
+                self.vim.vars['denite#_previewing_bufnr'] = -1
             self.vim.call('win_gotoid', prev_id)
             self._previewed_winid = 0
 
@@ -130,8 +131,10 @@ class Kind(Openable):
                 'term_kill': 'kill',
             })
 
-        self._add_previewed_buffer(self.vim.call('bufnr', '%'))
+        bufnr = self.vim.call('bufnr', '%')
+        self._add_previewed_buffer(bufnr)
         self._previewed_winid = self.vim.call('win_getid')
+        self._vim.vars['denite#_previewing_bufnr'] = bufnr
 
         self.vim.call('win_gotoid', prev_id)
         self._previewed_target = target
