@@ -48,9 +48,14 @@ class Kind(Openable):
     def action_preview(self, context: UserContext) -> None:
         target = context['targets'][0]
 
-        if (context['auto_action'] != 'preview' and
-                self._get_preview_window() and
+        if (self._previewed_target == target and
+                context['auto_action'] == 'preview'):
+            # Skip if auto_action
+            return
+
+        if (self._get_preview_window() and
                 self._previewed_target == target):
+            # Close the window only
             self.vim.command('pclose!')
             return
 
@@ -82,16 +87,17 @@ class Kind(Openable):
 
         if (self._previewed_target == target and
                 context['auto_action'] == 'preview_bat'):
+            # Skip if auto_action
             return
 
         prev_id = self.vim.call('win_getid')
+        is_nvim = self.vim.call('has', 'nvim')
 
         if self._previewed_winid:
             self.vim.call('win_gotoid', self._previewed_winid)
             if self.vim.call('win_getid') != prev_id:
-                # in Neovim close! deletes terminal buffer if 'nohidden'
-                if (self.vim.call('has', 'nvim') and
-                        not self.vim.options['hidden']):
+                # in Neovim :close! deletes terminal buffer if 'nohidden'
+                if is_nvim and not self.vim.options['hidden']:
                     self._remove_previewed_buffer(
                             self.vim.call('bufnr', '%'))
                 self.vim.command('close!')
@@ -116,7 +122,7 @@ class Kind(Openable):
             bat_cmd.extend(['-r', '{}:'.format(start_line),
                             '--highlight-line', line])
 
-        if self.vim.call('has', 'nvim'):
+        if is_nvim:
             self.vim.call('termopen', bat_cmd)
         else:
             self.vim.call('term_start', bat_cmd, {

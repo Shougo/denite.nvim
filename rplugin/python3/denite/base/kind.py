@@ -17,7 +17,9 @@ class Base(object):
         self.vim = vim
         self.name = 'base'
         self.default_action = 'echo'
-        self.persist_actions: typing.List[str] = ['echo', 'preview']
+        self.persist_actions: typing.List[str] = [
+            'echo', 'preview', 'preview_bat'
+        ]
         self.redraw_actions: typing.List[str] = []
 
     def debug(self, expr: str) -> None:
@@ -60,6 +62,9 @@ class Base(object):
                               if x.find('action_') == 0]
 
     def action_preview(self, context: UserContext) -> None:
+        pass
+
+    def action_preview_bat(self, context: UserContext) -> None:
         pass
 
     def action_defx(self, context: UserContext) -> None:
