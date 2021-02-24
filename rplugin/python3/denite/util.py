@@ -159,7 +159,7 @@ def expand(path: str) -> str:
     if path.startswith('~'):
         try:
             path = str(Path(path).expanduser())
-        except RuntimeError:
+        except Exception:
             pass
     return expandvars(path)
 
