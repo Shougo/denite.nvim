@@ -96,11 +96,7 @@ class Kind(Openable):
         if self._previewed_winid:
             self.vim.call('win_gotoid', self._previewed_winid)
             if self.vim.call('win_getid') != prev_id:
-                # in Neovim :close! deletes terminal buffer if 'nohidden'
-                if is_nvim and not self.vim.options['hidden']:
-                    self._remove_previewed_buffer(
-                            self.vim.call('bufnr', '%'))
-                self.vim.command('close!')
+                self.vim.command('bdelete! ' + self.vim.call('bufnr', '%'))
                 self.vim.vars['denite#_previewing_bufnr'] = -1
             self.vim.call('win_gotoid', prev_id)
             self._previewed_winid = 0
@@ -132,7 +128,6 @@ class Kind(Openable):
             })
 
         bufnr = self.vim.call('bufnr', '%')
-        self._add_previewed_buffer(bufnr)
         self._previewed_winid = self.vim.call('win_getid')
         self._vim.vars['denite#_previewing_bufnr'] = bufnr
 

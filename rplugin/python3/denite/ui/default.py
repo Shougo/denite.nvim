@@ -772,12 +772,15 @@ class Default(object):
         if not self._context['has_preview_window']:
             self._vim.command('pclose!')
 
+        bat_bufnr = self._vim.vars['denite#_previewing_bufnr']
+        if bat_bufnr != -1:
+            self._vim.command('bdelete! ' + bat_bufnr)
+
         # Clear previewed buffers
         prev_bufnr = self._vim.call('bufnr', '%')
         for bufnr in [
                 x for x in self._vim.vars['denite#_previewed_buffers'].keys()
-                if (int(x) == self._vim.vars['denite#_previewing_bufnr'] or
-                    not self._vim.call('win_findbuf', int(x)))
+                if not self._vim.call('win_findbuf', int(x))
         ]:
             # Note: Don't close shown buffer
             self._vim.command('silent bdelete! ' + str(bufnr))
