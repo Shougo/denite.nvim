@@ -774,7 +774,7 @@ class Default(object):
 
         bat_bufnr = self._vim.vars['denite#_previewing_bufnr']
         if bat_bufnr != -1:
-            self._vim.command('bdelete! ' + bat_bufnr)
+            self._vim.command('bdelete! ' + str(bat_bufnr))
 
         # Clear previewed buffers
         prev_bufnr = self._vim.call('bufnr', '%')

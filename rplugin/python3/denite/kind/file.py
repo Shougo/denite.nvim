@@ -96,7 +96,8 @@ class Kind(Openable):
         if self._previewed_winid:
             self.vim.call('win_gotoid', self._previewed_winid)
             if self.vim.call('win_getid') != prev_id:
-                self.vim.command('bdelete! ' + self.vim.call('bufnr', '%'))
+                self.vim.command('bdelete! ' +
+                                 str(self.vim.call('bufnr', '%')))
                 self.vim.vars['denite#_previewing_bufnr'] = -1
             self.vim.call('win_gotoid', prev_id)
             self._previewed_winid = 0
