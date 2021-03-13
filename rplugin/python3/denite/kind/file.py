@@ -84,11 +84,6 @@ class Kind(Openable):
         if not self.vim.call('executable', 'bat'):
             return
 
-        if (self._previewed_target == target and
-                context['auto_action'] == 'preview_bat'):
-            # Skip if auto_action
-            return
-
         if 'action__bufnr' in target:
             path = self.vim.call('bufname', target['action__bufnr'])
         else:
