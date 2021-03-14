@@ -21,6 +21,7 @@ class Base(object):
             'echo', 'preview', 'preview_bat'
         ]
         self.redraw_actions: typing.List[str] = []
+
         self._previewed_target: typing.Dict[str, Candidate] = {}
         self._previewed_winid: int = 0
 
@@ -77,8 +78,8 @@ class Base(object):
                       [x.get('action__path', x['word']) for x
                        in context['targets']], {})
 
-    def preview_terminal(self, context: UserContext, cmd: typing.List[str],
-                         action_name: str) -> None:
+    def preview_terminal(self, context: UserContext,
+                         cmd: typing.List[str], action_name: str) -> None:
         target = context['targets'][0]
 
         if (self._previewed_target == target and
