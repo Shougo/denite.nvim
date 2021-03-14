@@ -24,7 +24,6 @@ class Kind(Openable):
         self.default_action = 'open'
         self.persist_actions += ['highlight', 'preview_bat']
         self._previewed_target: typing.Dict[str, Candidate] = {}
-        self._previewed_winid: int = 0
 
     def action_open(self, context: UserContext) -> None:
         self._open(context, 'edit')
@@ -85,29 +84,6 @@ class Kind(Openable):
         if not self.vim.call('executable', 'bat'):
             return
 
-        if (self._previewed_target == target and
-                context['auto_action'] == 'preview_bat'):
-            # Skip if auto_action
-            return
-
-        prev_id = self.vim.call('win_getid')
-        is_nvim = self.vim.call('has', 'nvim')
-
-        if self._previewed_winid:
-            self.vim.call('win_gotoid', self._previewed_winid)
-            if self.vim.call('win_getid') != prev_id:
-                self.vim.command('bdelete! ' +
-                                 str(self.vim.call('bufnr', '%')))
-                self.vim.vars['denite#_previewing_bufnr'] = -1
-            self.vim.call('win_gotoid', prev_id)
-            self._previewed_winid = 0
-
-            if self._previewed_target == target:
-                # Close the window only
-                return
-
-        self.vim.call('denite#helper#preview_file', context, '')
-
         if 'action__bufnr' in target:
             path = self.vim.call('bufname', target['action__bufnr'])
         else:
@@ -120,20 +96,7 @@ class Kind(Openable):
             bat_cmd.extend(['-r', '{}:'.format(start_line),
                             '--highlight-line', line])
 
-        if is_nvim:
-            self.vim.call('termopen', bat_cmd)
-        else:
-            self.vim.call('term_start', bat_cmd, {
-                'curwin': True,
-                'term_kill': 'kill',
-            })
-
-        bufnr = self.vim.call('bufnr', '%')
-        self._previewed_winid = self.vim.call('win_getid')
-        self._vim.vars['denite#_previewing_bufnr'] = bufnr
-
-        self.vim.call('win_gotoid', prev_id)
-        self._previewed_target = target
+        self.preview_terminal(context, bat_cmd, 'preview_bat')
 
     def action_highlight(self, context: UserContext) -> None:
         target = context['targets'][0]

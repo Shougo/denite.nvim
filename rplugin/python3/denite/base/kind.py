@@ -8,7 +8,7 @@ from pynvim import Nvim
 import typing
 
 import denite.util
-from denite.util import UserContext
+from denite.util import UserContext, Candidate
 
 
 class Base(object):
@@ -21,6 +21,8 @@ class Base(object):
             'echo', 'preview', 'preview_bat'
         ]
         self.redraw_actions: typing.List[str] = []
+        self._previewed_target: typing.Dict[str, Candidate] = {}
+        self._previewed_winid: int = 0
 
     def debug(self, expr: str) -> None:
         denite.util.debug(self.vim, expr)
@@ -74,6 +76,48 @@ class Base(object):
         self.vim.call('defx#start_candidates',
                       [x.get('action__path', x['word']) for x
                        in context['targets']], {})
+
+    def preview_terminal(self, context: UserContext, cmd: typing.List[str],
+                         action_name: str) -> None:
+        target = context['targets'][0]
+
+        if (self._previewed_target == target and
+                context['auto_action'] == action_name):
+            # Skip if auto_action
+            return
+
+        prev_id = self.vim.call('win_getid')
+        is_nvim = self.vim.call('has', 'nvim')
+
+        if self._previewed_winid:
+            self.vim.call('win_gotoid', self._previewed_winid)
+            if self.vim.call('win_getid') != prev_id:
+                self.vim.command('bdelete! ' +
+                                 str(self.vim.call('bufnr', '%')))
+                self.vim.vars['denite#_previewing_bufnr'] = -1
+            self.vim.call('win_gotoid', prev_id)
+            self._previewed_winid = 0
+
+            if self._previewed_target == target:
+                # Close the window only
+                return
+
+        self.vim.call('denite#helper#preview_file', context, '')
+
+        if is_nvim:
+            self.vim.call('termopen', cmd)
+        else:
+            self.vim.call('term_start', cmd, {
+                'curwin': True,
+                'term_kill': 'kill',
+            })
+
+        bufnr = self.vim.call('bufnr', '%')
+        self._previewed_winid = self.vim.call('win_getid')
+        self.vim.vars['denite#_previewing_bufnr'] = bufnr
+
+        self.vim.call('win_gotoid', prev_id)
+        self._previewed_target = target
 
 
 class Kind(Base):
