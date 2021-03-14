@@ -550,13 +550,12 @@ class Default(object):
         buffer[:] = self._displayed_texts
         buffer.options['modifiable'] = False
 
+        is_changed = self._previous_text != self._context['input']
+
         self._previous_text = self._context['input']
 
         self._resize_buffer(is_current_buffer)
 
-        is_changed = (self._context['reversed'] or
-                      (is_current_buffer and
-                       self._previous_text != self._context['input']))
         if self._updated and is_changed:
             if not is_current_buffer:
                 save_winid = self._vim.call('win_getid')
