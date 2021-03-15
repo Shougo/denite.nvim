@@ -19,7 +19,7 @@ class Source(Base):
         self.vars = {
             'grep_command': ['grep'],
             'grep_default_opts': ['-inH'],
-            'grep_pattern_opt': ['-e'],
+            'grep_pattern_opt': ['-E'],
             'grep_separator': ['--'],
             'grep_final_opts': [],
         }
