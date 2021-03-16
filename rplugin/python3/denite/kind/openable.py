@@ -112,6 +112,10 @@ class Kind(Base):
                         self.vim.call('cursor', [0, pos + 1])
             if col > 0:
                 self.vim.call('cursor', [0, col])
+            elif context['input']:
+                # Search input
+                self.vim.call('cursor', [line, 1])
+                self.vim.call('search', context['input'], 'W', line)
         except Exception:
             pass
 
