@@ -179,8 +179,6 @@ class Default(object):
                context: UserContext) -> None:
         from denite.ui.map import do_map
 
-        self._vim.command('silent! autocmd! denite <buffer>')
-
         if re.search(r'\[Command Line\]$', self._vim.current.buffer.name):
             # Ignore command line window.
             return
@@ -330,6 +328,8 @@ class Default(object):
         if not self._vim.call('has', 'nvim'):
             # In Vim8, FileType autocmd is not fired after set filetype option.
             self._vim.command('silent doautocmd FileType denite')
+
+        self._vim.command('silent! autocmd! denite CursorMoved <buffer>')
 
         if self._context['auto_action']:
             self._vim.command('autocmd denite '
