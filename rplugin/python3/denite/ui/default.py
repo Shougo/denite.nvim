@@ -768,12 +768,8 @@ class Default(object):
 
         # Note: Close filter window before preview window
         self._vim.call('denite#filter#_close_filter_window')
-        if not self._context['has_preview_window']:
-            self._vim.command('pclose!')
 
-        bat_bufnr = self._vim.vars['denite#_previewing_bufnr']
-        if bat_bufnr != -1:
-            self._vim.command('bdelete! ' + str(bat_bufnr))
+        self._close_previewing_window()
 
         # Clear previewed buffers
         prev_bufnr = self._vim.call('bufnr', '%')
@@ -793,6 +789,15 @@ class Default(object):
         if self._floating or self._filter_floating:
             self._vim.options['titlestring'] = self._titlestring
             self._vim.options['ruler'] = self._ruler
+
+    def _close_previewing_window(self) -> None:
+        if not self._context['has_preview_window']:
+            self._vim.command('pclose!')
+
+        bat_bufnr = self._vim.vars['denite#_previewing_bufnr']
+        if bat_bufnr != -1:
+            self._vim.command('bdelete! ' + str(bat_bufnr))
+            self._vim.vars['denite#_previewing_bufnr'] = -1
 
     def _close_current_window(self) -> None:
         if self._vim.call('winnr', '$') == 1:
