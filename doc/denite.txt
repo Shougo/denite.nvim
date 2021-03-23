@@ -412,6 +412,12 @@ restore_sources
 		Move back to the previous sources.
 		Note: It does not restore the cursor position.
 
+						*denite-map-toggle_auto_action*
+toggle_auto_action:{action}
+		Change |denite-option-auto-action| to {action}.
+		If |denite-option-auto-action| is {action}, it will be disabled.
+		If {action} is empty, all auto actions are disabled.
+
 						*denite-map-toggle_select*
 toggle_select
 		Toggle cursor candidate select.

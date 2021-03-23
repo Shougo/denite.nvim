@@ -228,6 +228,26 @@ def _restore_sources(denite: Default, params: Params) -> typing.Any:
     denite._start_sources_queue(denite._context)
 
 
+def _toggle_auto_action(denite: Default, params: Params) -> None:
+    name = params[0] if params else ''
+    context = denite._context
+
+    denite._vim.command('silent! autocmd! denite CursorMoved <buffer>')
+    denite._close_previewing_window()
+
+    if context['auto_action'] != name:
+        context['auto_action'] = name
+    else:
+        context['auto_action'] = ''
+
+    _auto_action(denite, params)
+
+    if denite._context['auto_action']:
+        denite._vim.command('autocmd denite '
+                            'CursorMoved <buffer> '
+                            'call denite#call_map("auto_action")')
+
+
 def _toggle_matchers(denite: Default, params: Params) -> typing.Any:
     matchers = ''.join(params)
     context = denite._context
@@ -293,6 +313,7 @@ MAPPINGS: typing.Dict[str, Action] = {
     'redraw': _redraw,
     'restart': _restart,
     'restore_sources': _restore_sources,
+    'toggle_auto_action': _toggle_auto_action,
     'toggle_matchers': _toggle_matchers,
     'toggle_select': _toggle_select,
     'toggle_select_all': _toggle_select_all,
