@@ -159,8 +159,15 @@ class Source(Base):
                 continue
             path = result[0]
             for searching_path in context['__paths']:
-                if (path != searching_path and
+                if (path == searching_path and
+                        not Path(searching_path).is_dir() and
+                        path.startswith(context['path'] + sep)):
+                    # relative to context path
+                    path = str(Path(path).relative_to(context['path']))
+                    break
+                elif (path != searching_path and
                         path.startswith(searching_path + sep)):
+                    # relative to searching_path
                     path = str(Path(path).relative_to(
                         Path(searching_path).parent))
                     break
