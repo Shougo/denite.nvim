@@ -159,9 +159,11 @@ class Source(Base):
                 continue
             path = result[0]
             for searching_path in context['__paths']:
-                if (result[0] != searching_path and
-                        result[0].startswith(searching_path + sep)):
-                    path = str(Path(result[0]).relative_to(searching_path))
+                if (path != searching_path and
+                        path.startswith(searching_path + sep)):
+                    path = str(Path(path).relative_to(
+                        Path(searching_path).parent))
+                    break
             truncated = truncate(self.vim, path, self.vars['max_path_length'])
             candidates.append(_candidate(result, truncated))
         return candidates
