@@ -347,9 +347,7 @@ class Child(object):
 
             candidates = self._filter_source_candidates(ctx, source)
 
-            partial = candidates[: source.max_candidates]
-
-            for c in partial:
+            for c in candidates:
                 c['source_name'] = source.name
                 c['source_index'] = source.index
 
@@ -357,12 +355,12 @@ class Child(object):
                 self._filters[x].convert_pattern(ctx['input'])
                 for x in source.matchers if self._filters[x]))
 
-            status = self._get_source_status(ctx, source,
-                                             ctx['all_candidates'], partial)
+            status = self._get_source_status(
+                ctx, source, ctx['all_candidates'], candidates)
             # Free memory
             ctx['candidates'] = []
 
-            yield status, partial, patterns, len(ctx['all_candidates'])
+            yield status, candidates, patterns, len(ctx['all_candidates'])
 
     def _filter_source_candidates(self, ctx: UserContext,
                                   source: Source) -> Candidates:
@@ -370,20 +368,27 @@ class Child(object):
         entire = ctx['all_candidates']
         ctx['candidates'] = entire
 
+        # Matchers
+        matchers = [
+            self._filters[x] for x in
+            (ctx['matchers'].split(',') if ctx['matchers']
+             else source.matchers) if x in self._filters]
         for i in range(0, len(entire), 1000):
             ctx['candidates'] = entire[i:i+1000]
-            matchers = [self._filters[x] for x in
-                        (ctx['matchers'].split(',') if ctx['matchers']
-                            else source.matchers)
-                        if x in self._filters]
             self._match_candidates(ctx, matchers)
             partial += ctx['candidates']
             if len(partial) >= source.max_candidates:
                 break
 
-        ctx['candidates'] = partial
-        for f in [self._filters[x]
-                  for x in source.sorters + source.converters
+        # Sorters
+        for f in [self._filters[x] for x in source.sorters
+                  if x in self._filters]:
+            ctx['candidates'] = f.filter(ctx)
+
+        ctx['candidates'] = partial[: source.max_candidates]
+
+        # Converters
+        for f in [self._filters[x] for x in source.converters
                   if x in self._filters]:
             ctx['candidates'] = f.filter(ctx)
 
