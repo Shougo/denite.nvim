@@ -180,7 +180,7 @@ def relpath(vim: Nvim, path: str) -> str:
 def convert2fuzzy_pattern(text: str) -> str:
     def esc(string: str) -> str:
         # Escape string for convert2fuzzy_pattern.
-        p = re.sub(r'([a-zA-Z0-9_-])(?!$)', r'\1[^\1]{-}', string)
+        p = re.sub(r'([a-zA-Z0-9_-])(?!$)', r'\1[^\1 \t]{-}', string)
         p = re.sub(r'/(?!$)', r'/[^/]*', p)
         return p
     return '|'.join([esc(x) for x in split_input(text)])

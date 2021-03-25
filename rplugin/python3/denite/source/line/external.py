@@ -38,7 +38,6 @@ class Source(Base):
 
         self.name = 'line/external'
         self.kind = 'file'
-        self.matchers = ['matcher/regexp']
         self.sorters = []
 
     def on_init(self, context: UserContext) -> None:

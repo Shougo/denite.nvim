@@ -1590,11 +1590,12 @@ matcher/ignore_globs
                  'tags', 'tags-*'
 		]
 <
-		)
 						*denite-filter-matcher/regexp*
 matcher/regexp
 		A matcher which filters the candidates with user given
 		regular expression.
+		Note: The matcher is very slow than other matchers.
+
 					*denite-filter-matcher/substring*
 matcher/substring
 		A matcher which filters the candidates using simple substring
@@ -2262,6 +2263,11 @@ A: You must use |<Plug>(denite_filter_update)| for it.
 
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
+
+2021.03.25
+* |denite-filter-matcher/regexp| is very slow.  It is disabled in the default
+  sources.
+* Change fuzzy regex behavior to improve the performance.
 
 2021.02.05
 * Quit both filter buffer and denite buffer when |<Plug>(denite_filter_quit)|.

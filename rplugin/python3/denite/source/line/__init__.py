@@ -24,7 +24,6 @@ class Source(Base):
 
         self.name = 'line'
         self.kind = 'file'
-        self.matchers = ['matcher/regexp']
         self.sorters = []
 
         self._buflines: typing.Dict[int, typing.List[str]] = {}

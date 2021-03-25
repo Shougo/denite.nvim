@@ -68,7 +68,6 @@ class Source(Base):
             'recursive_opts': ['-r'],
             'separator': ['--'],
         }
-        self.matchers = ['matcher/ignore_globs', 'matcher/regexp']
         self.is_volatile = True
 
     def on_init(self, context: UserContext) -> None:

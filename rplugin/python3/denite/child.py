@@ -11,7 +11,6 @@ import copy
 import msgpack
 import re
 import sys
-import time
 import typing
 
 from denite.util import (
@@ -142,7 +141,6 @@ class Child(object):
             source.context['is_interactive'] = False
             source.context['all_candidates'] = []
             source.context['candidates'] = []
-            source.context['prev_time'] = time.time()
             source.index = index
 
             # Set the source attributes.
@@ -329,12 +327,10 @@ class Child(object):
                 ctx['ignorecase'] = re.search(r'[A-Z]', ctx['input']) is None
             ctx['async_timeout'] = 0.03
             prev_input = ctx['prev_input']
-            if prev_input != ctx['input']:
-                ctx['prev_time'] = time.time()
-                if ctx['is_interactive']:
-                    ctx['event'] = 'interactive'
-                    ctx['all_candidates'] = self._gather_source_candidates(
-                        ctx, source)
+            if prev_input != ctx['input'] and ctx['is_interactive']:
+                ctx['event'] = 'interactive'
+                ctx['all_candidates'] = self._gather_source_candidates(
+                    ctx, source)
             ctx['prev_input'] = ctx['input']
             if ctx['is_async']:
                 ctx['event'] = 'async'
@@ -396,7 +392,7 @@ class Child(object):
 
     def _gather_source_candidates(self, context: UserContext,
                                   source: Source) -> Candidates:
-        max_len = context['max_candidate_width'] * 2
+        max_len = int(context['max_candidate_width'] * 1.2)
         candidates = source.gather_candidates(context)
         for candidate in [x for x in candidates if len(x['word']) > max_len]:
             candidate['word'] = candidate['word'][: max_len]
