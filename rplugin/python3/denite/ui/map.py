@@ -53,6 +53,7 @@ def _choose_action(denite: Default, params: Params) -> typing.Any:
         denite._context, candidates)
     context = copy.copy(denite._context)
     context['buffer_name'] = denite._context['buffer_name'] + '@'
+    context['input'] = ''
 
     # Quit current denite
     denite.quit()
