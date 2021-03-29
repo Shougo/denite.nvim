@@ -376,12 +376,14 @@ class Child(object):
             if len(partial) >= source.max_candidates:
                 break
 
+        ctx['candidates'] = partial
+
         # Sorters
         for f in [self._filters[x] for x in source.sorters
                   if x in self._filters]:
             ctx['candidates'] = f.filter(ctx)
 
-        ctx['candidates'] = partial[: source.max_candidates]
+        ctx['candidates'] = ctx['candidates'][: source.max_candidates]
 
         # Converters
         for f in [self._filters[x] for x in source.converters
