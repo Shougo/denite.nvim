@@ -85,13 +85,13 @@ class Default(object):
         if not self._denite or not candidates or not action_name:
             return
 
+        before_action_tab = self._vim.call('tabpagenr')
+
         self._prev_action = action_name
         action = self._denite.get_action(
             self._context, action_name, candidates)
         if not action:
             return
-
-        winid = self._vim.call('win_getid')
 
         post_action = self._context['post_action']
 
@@ -106,8 +106,11 @@ class Default(object):
         if command != '':
             self._vim.command(command)
 
+        after_action_winid = self._vim.call('win_getid')
+
         if is_quit and (post_action == 'open' or post_action == 'jump'):
             # Re-open denite buffer
+            self._vim.command(f'{before_action_tab}tabnext')
 
             prev_cursor = self._cursor
             cursor_candidate = self._get_cursor_candidate()
@@ -123,9 +126,10 @@ class Default(object):
             # Disable quit flag
             is_quit = False
 
-            # Jump to the before window
+            # Jump to the after action window
             if post_action == 'jump':
-                self._vim.call('win_gotoid', winid)
+                self.debug(after_action_winid)
+                self._vim.call('win_gotoid', after_action_winid)
 
         if not is_quit and is_manual:
             self._selected_candidates = []
