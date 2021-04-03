@@ -104,8 +104,9 @@ class Default(object):
         if command != '':
             self._vim.command(command)
 
-        if is_quit and post_action == 'open':
+        if is_quit and (post_action == 'open' or post_action == 'jump'):
             # Re-open denite buffer
+            winid = self._vim.call('win_getid')
 
             prev_cursor = self._cursor
             cursor_candidate = self._get_cursor_candidate()
@@ -120,6 +121,10 @@ class Default(object):
 
             # Disable quit flag
             is_quit = False
+
+            # Jump to the before window
+            if post_action == 'jump':
+                self._vim.call('win_gotoid', winid)
 
         if not is_quit and is_manual:
             self._selected_candidates = []

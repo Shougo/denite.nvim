@@ -841,8 +841,9 @@ OPTIONS							*denite-options*
 -post-action={action}
 		Specify the action after action.
 
-		"quit": quit the denite buffer.
+		"jump": open the denite buffer and jump to the file.
 		"open": open the denite buffer.
+		"quit": quit the denite buffer.
 		Otherwise: nothing.
 
 		Default: "none"
