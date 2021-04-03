@@ -91,6 +91,8 @@ class Default(object):
         if not action:
             return
 
+        winid = self._vim.call('win_getid')
+
         post_action = self._context['post_action']
 
         is_quit = action['is_quit'] or post_action == 'quit'
@@ -106,7 +108,6 @@ class Default(object):
 
         if is_quit and (post_action == 'open' or post_action == 'jump'):
             # Re-open denite buffer
-            winid = self._vim.call('win_getid')
 
             prev_cursor = self._cursor
             cursor_candidate = self._get_cursor_candidate()
