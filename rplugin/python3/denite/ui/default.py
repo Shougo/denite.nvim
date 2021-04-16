@@ -932,15 +932,20 @@ class Default(object):
     def _split_floating(self, split: str) -> None:
         # Use floating window
         if split == 'floating':
+            args = {
+                'relative': 'editor',
+                'border': 'shadow',
+                'row': self._context['winrow'],
+                'col': self._context['wincol'],
+                'width': self._context['winwidth'],
+                'height': self._context['winheight'],
+            }
+            if self._context['floating_border'] and self._vim.call(
+                    'has', 'nvim-0.5'):
+                args['border'] = self._context['floating_border']
             self._vim.call(
                 'nvim_open_win',
-                self._vim.call('bufnr', '%'), True, {
-                    'relative': 'editor',
-                    'row': self._context['winrow'],
-                    'col': self._context['wincol'],
-                    'width': self._context['winwidth'],
-                    'height': self._context['winheight'],
-                })
+                self._vim.call('bufnr', '%'), True, args)
         elif split == 'floating_relative_cursor':
             opened_pos = (self._vim.call('nvim_win_get_position', 0)[0] +
                           self._vim.call('winline') - 1)

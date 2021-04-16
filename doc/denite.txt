@@ -743,6 +743,15 @@ OPTIONS							*denite-options*
 
 		Default: 30
 
+					*denite-option-floating-border*
+-floating-border={type}
+		Specify the floating window border.
+
+		Note: To use it, you need to use neovim
+		0.5.0+(|nvim_open_win()|).
+
+		Default: ""
+
 					*denite-option-floating-preview*
 -floating-preview
 		Open the preview window in floating window when

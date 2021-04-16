@@ -111,36 +111,52 @@ function! s:new_filter_buffer(context) abort
     else
       let on_start_filter = v:false
     endif
+    let floating_border = a:context['floating_border'] !=# ''
+          \ && has('nvim-0.5')
     let winrow = a:context['winrow']
     let wincol = a:context['wincol']
     if a:context['split'] ==# 'floating'
-      call nvim_open_win(bufnr('%'), v:true, {
+      let args = {
             \ 'relative': 'editor',
-            \ 'row': winrow == 1 ? 0 : row + winheight(0),
+            \ 'row': winrow == 1 ? 0 : row + winheight(0) +
+            \        (floating_border ? 1 : 0),
             \ 'col': wincol,
             \ 'width': a:context['winwidth'],
             \ 'height': 1,
-            \})
+            \}
+      if floating_border
+        let args['border'] = a:context['floating_border']
+      endif
+      call nvim_open_win(bufnr('%'), v:true, args)
     elseif a:context['split'] ==# 'floating_relative_cursor'
           \ || a:context['split'] ==# 'floating_relative_window'
       " cursor position cannot be gotten from this function.
       " so instead estimating it from floating buffer position.
-        call nvim_open_win(bufnr('%'), v:true, {
+      let args = {
             \ 'relative': 'editor',
-            \ 'row': on_start_filter ? row : row + winheight(0),
+            \ 'row': on_start_filter ? row : row + winheight(0) +
+            \        (floating_border ? 1 : 0),
             \ 'col': on_start_filter ? nvim_win_get_config(0)['col']
-              \ : win_screenpos(0)[1] - 1,
+            \ : win_screenpos(0)[1] - 1,
             \ 'width': winwidth(0),
             \ 'height': 1,
-            \})
+            \}
+      if floating_border
+        let args['border'] = a:context['floating_border']
+      endif
+      call nvim_open_win(bufnr('%'), v:true, args)
     elseif a:context['filter_split_direction'] ==# 'floating'
-      call nvim_open_win(bufnr('%'), v:true, {
+      let args = {
             \ 'relative': 'editor',
             \ 'row': row + winheight(0) + 1,
             \ 'col': win_screenpos(0)[1] - 1,
             \ 'width': winwidth(0),
             \ 'height': 1,
-            \})
+            \}
+      if floating_border
+        let args['border'] = a:context['floating_border']
+      endif
+      call nvim_open_win(bufnr('%'), v:true, args)
     endif
     if exists('*bufadd')
       let bufnr = bufadd('denite-filter')
