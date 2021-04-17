@@ -940,7 +940,7 @@ class Default(object):
                 'width': self._context['winwidth'],
                 'height': self._context['winheight'],
             }
-            if self._context['floating_border'] and self._vim.call(
+            if self._context['floating_border'] != '' and self._vim.call(
                     'has', 'nvim-0.5'):
                 args['border'] = self._context['floating_border']
             self._vim.call(
