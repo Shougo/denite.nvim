@@ -8,7 +8,7 @@ import denite.util as util
 
 def test_convert2fuzzy_pattern():
     assert util.convert2fuzzy_pattern('abc') == 'a[^a \t]{-}b[^b \t]{-}c'
-    assert util.convert2fuzzy_pattern('a/c') == 'a[^a \t]{-}/[^/ \t]*c'
+    assert util.convert2fuzzy_pattern('a/c') == 'a[^a \t]{-}/[^/]*c'
 
 
 def test_convert2regex_pattern():
