@@ -128,7 +128,6 @@ class Default(object):
 
             # Jump to the after action window
             if post_action == 'jump':
-                self.debug(after_action_winid)
                 self._vim.call('win_gotoid', after_action_winid)
 
         if not is_quit and is_manual:
