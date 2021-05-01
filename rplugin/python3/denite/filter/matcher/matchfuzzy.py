@@ -26,7 +26,7 @@ class Filter(Base):
 
         return list(self.vim.call(
                         'matchfuzzy', context['candidates'],
-                        context['complete_str'], {'key': 'word'}
+                        context['input'], {'key': 'word'}
                 ))
 
     def convert_pattern(self, input_str: str) -> str:
