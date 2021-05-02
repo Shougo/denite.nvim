@@ -267,7 +267,8 @@ endfunction
 
 function! denite#util#check_floating(context) abort
   return (a:context['split'] ==# 'floating' ||
-        \ a:context['split'] ==# 'floating_relative' ||
+        \ a:context['split'] ==# 'floating_relative_cursor' ||
+        \ a:context['split'] ==# 'floating_relative_window' ||
         \ a:context['filter_split_direction'] ==# 'floating')
         \ && exists('*nvim_open_win')
 endfunction
