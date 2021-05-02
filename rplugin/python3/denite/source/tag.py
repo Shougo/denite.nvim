@@ -96,6 +96,7 @@ class Source(Base):
             tagfiles = self.vim.call('tagfiles')
         return [
             x
-            for x in self.vim.call('map', tagfiles, 'fnamemodify(v:val, ":p")')
+            for x in self.vim.call('map', tagfiles,
+                                   'fnamemodify(v:val, ":p")')
             if Path(x).exists()
         ]

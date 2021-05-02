@@ -12,20 +12,22 @@ function! denite#helper#complete(arglead, cmdline, cursorpos) abort
   elseif a:arglead =~# '^-'
     " Option names completion.
     let bool_options = keys(filter(copy(denite#init#_user_options()),
-          \ 'type(v:val) == type(v:true) || type(v:val) == type(v:false)'))
-    let _ += map(copy(bool_options), "'-' . tr(v:val, '_', '-')")
+          \ { _, val -> type(val) == v:t_bool }))
+    let _ += map(copy(bool_options), { _, val -> '-' . tr(val, '_', '-') })
     let string_options = keys(filter(copy(denite#init#_user_options()),
-          \ 'type(v:val) != type(v:true) && type(v:val) != type(v:false)'))
-    let _ += map(copy(string_options), "'-' . tr(v:val, '_', '-') . '='")
+          \ { _, val -> type(val) != v:t_bool }))
+    let _ += map(copy(string_options),
+          \ { _, val -> '-' . tr(val, '_', '-') . '=' })
 
     " Add "-no-" option names completion.
-    let _ += map(copy(bool_options), "'-no-' . tr(v:val, '_', '-')")
+    let _ += map(copy(bool_options),
+          \ { _, val -> '-no-' . tr(val, '_', '-') })
   else
     " Source name completion.
     let _ += denite#helper#_get_available_sources()
   endif
 
-  return uniq(sort(filter(_, 'stridx(v:val, a:arglead) == 0')))
+  return uniq(sort(filter(_, { _, val -> stridx(val, a:arglead) == 0 })))
 endfunction
 
 function! denite#helper#call_denite(command, args, line1, line2) abort
@@ -115,7 +117,8 @@ function! denite#helper#preview_file(context, filename) abort
 endfunction
 
 function! denite#helper#options() abort
-  return map(keys(denite#init#_user_options()), "tr(v:val, '_', '-')")
+  return map(keys(denite#init#_user_options()),
+        \ { _, val -> tr(val, '_', '-') })
 endfunction
 
 function! denite#helper#_parse_options_args(cmdline) abort
@@ -167,7 +170,7 @@ function! s:parse_options(cmdline) abort
   " Note: convert number options to string to check types
   let defalt_options = map(extend(copy(denite#init#_user_options()),
         \ denite#init#_deprecated_options()),
-        \ 'type(v:val) == v:t_number ? string(v:val) : v:val')
+        \ { _, val -> type(val) == v:t_number ? string(val) : val })
 
   for s in split(cmdline, s:re_unquoted_match('\%(\\\@<!\s\)\+'))
     let arg = substitute(s, '\\\( \)', '\1', 'g')
@@ -237,8 +240,8 @@ function! denite#helper#_set_oldfiles(oldfiles) abort
   let v:oldfiles = a:oldfiles
 endfunction
 function! denite#helper#_get_oldfiles() abort
-  return filter(copy(v:oldfiles),
-        \ 'filereadable(fnamemodify(v:val, ":p")) || buflisted(v:val)')
+  return filter(copy(v:oldfiles), { _, val ->
+        \ filereadable(fnamemodify(val, ":p")) || buflisted(val) })
 endfunction
 
 
@@ -248,9 +251,8 @@ function! denite#helper#_get_available_sources() abort
   endif
   let s:source_names = map(
         \ globpath(&runtimepath, 'rplugin/python3/denite/source/**/*.py', 1, 1),
-        \ 's:_get_source_name(v:val)',
-        \)
-  return filter(s:source_names, "v:val !=# ''")
+        \ { _, val -> s:_get_source_name(val) })
+  return filter(s:source_names, { _, val -> val !=# '' })
 endfunction
 function! denite#helper#_set_available_sources(source_names) abort
   " Called from rplugin/python3/denite/denite.py#load_sources
@@ -289,7 +291,7 @@ function! denite#helper#_get_preview_window() abort
   endif
 
   return len(filter(range(1, winnr('$')),
-        \ "getwinvar(v:val, '&previewwindow') ==# 1"))
+        \ { _, val -> getwinvar(val, '&previewwindow') ==# 1 }))
 endfunction
 
 

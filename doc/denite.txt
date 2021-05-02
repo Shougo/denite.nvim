@@ -2264,8 +2264,8 @@ Q: I want to grep for loaded buffers like unite.vim's "$buffers" arguments.
 A: >
 	nnoremap <silent> <C-g> :call denite#start([{'name': 'grep', 'args':
 	      \ map(filter(range(1, bufnr('$')),
-	      \ 'buflisted(v:val) && filereadable(bufname(v:val))'),
-	      \ 'bufname(v:val)')}])<CR>
+	      \ { _, val -> buflisted(val) && filereadable(bufname(val)) }),
+	      \ { _, val -> bufname(val) })}])<CR>
 
 Q: I want to switch from the filter window into the denite window.
 

@@ -150,7 +150,7 @@ function! s:expand(path) abort
 endfunction
 
 function! denite#util#alternate_buffer() abort
-  if len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) <= 1
+  if len(filter(range(1, bufnr('$')), { _, val -> buflisted(val) })) <= 1
     enew
     return
   endif
@@ -182,7 +182,7 @@ function! denite#util#delete_buffer(command, bufnr) abort
     return
   endif
 
-  let buffers = filter(range(1, bufnr('$')), 'buflisted(v:val)')
+  let buffers = filter(range(1, bufnr('$')), { _, val -> buflisted(val) })
   if len(buffers) == 1 && bufname(buffers[0]) ==# ''
     " Noname buffer only
     return
