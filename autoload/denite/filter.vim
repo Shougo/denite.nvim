@@ -112,7 +112,7 @@ function! s:new_filter_buffer(context) abort
 
 endfunction
 
-function s:new_floating_filter_buffer(context) abort
+function! s:new_floating_filter_buffer(context) abort
   let row = win_screenpos(win_getid())[0] - 1
   " Note: win_screenpos() == [1, 1] if start_filter
   if row <= 0

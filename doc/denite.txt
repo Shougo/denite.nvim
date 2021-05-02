@@ -2274,6 +2274,10 @@ A: You must use |<Plug>(denite_filter_update)| for it.
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
 
+2021.05.01
+* "floating_relative" option is replaced to "floating_relative_cursor" and
+  "floating_relative_window".
+
 2021.03.25
 * |denite-filter-matcher/regexp| is very slow.  It is disabled in the default
   sources.
