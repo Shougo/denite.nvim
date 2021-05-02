@@ -1007,7 +1007,8 @@ OPTIONS							*denite-options*
 -winheight={window-height}
 		Set the height of the Denite window if |denite-option-split|
 		is "horizontal".
-		if |denite-option-split| is "floating" or "floating_relative",
+		if |denite-option-split| is "floating" or
+		"floating_relative_cursor" or "floating_relative_window",
 		set the height of the floating window.
 		If auto-resize is set, |denite-option-winheight| is the
 		maximum size of the window.
@@ -1026,7 +1027,8 @@ OPTIONS							*denite-options*
 -winwidth={window-width}
 		Set the width of the Denite window if |denite-option-split|
 		is "vertical".
-		if |denite-option-split| is "floating" or "floating_relative",
+		if |denite-option-split| is "floating" or
+		"floating_relative_cursor" or "floating_relative_window",
 		set the width of the floating window.
 
 		Default: &columns / 2
