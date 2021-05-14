@@ -842,9 +842,10 @@ OPTIONS							*denite-options*
 		Default: 20000
 
 							*denite-option-path*
--path={input-text}
+-path={path}
 		Specify an initial narrowing path.
-		Default: ""
+
+		Default: |getcwd()|
 
 						*denite-option-post-action*
 -post-action={action}
@@ -909,6 +910,11 @@ OPTIONS							*denite-options*
 -refresh
 		Refresh the candidates when |denite-option-resume| is true.
 		Default: false
+
+							*denite-option-relpath*
+-relpath={path}
+		Specify an relative path from |denite-option-path|.
+		Default: ""
 
 							*denite-option-resume*
 -resume

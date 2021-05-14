@@ -132,6 +132,7 @@ function! denite#init#_user_options() abort
         \ 'prompt': '',
         \ 'quick_move': '',
         \ 'refresh': v:false,
+        \ 'relpath': '',
         \ 'resume': v:false,
         \ 'reversed': v:false,
         \ 'root_markers': '',
