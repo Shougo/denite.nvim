@@ -11,6 +11,12 @@ def test_convert2fuzzy_pattern():
     assert util.convert2fuzzy_pattern('a/c') == 'a[^a \t]{-}/[^/]*c'
 
 
+def test_split_input():
+    assert util.split_input('abc def') == ['abc', 'def']
+    assert util.split_input('') == ['']
+    assert util.split_input('abc\ def') == ['abc def']
+
+
 def test_convert2regex_pattern():
     assert util.convert2regex_pattern('def') == 'def'
     assert util.convert2regex_pattern('foo bar') == 'foo|bar'

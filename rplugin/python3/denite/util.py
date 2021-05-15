@@ -121,7 +121,8 @@ def readable(path: Path) -> bool:
 
 
 def split_input(text: str) -> typing.List[str]:
-    return [x for x in re.split(r'\s+', text) if x != ''] if text else ['']
+    return [re.sub(r'\\(?=\s)', '', x) for x in
+            re.split(r'(?<!\\)\s+', text) if x != ''] if text else ['']
 
 
 def path2dir(path: str) -> str:
