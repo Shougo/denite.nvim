@@ -122,8 +122,12 @@ function! s:new_floating_filter_buffer(context) abort
     let on_start_filter = v:false
   endif
   let floating_border = a:context['floating_border'] !=# '' && has('nvim-0.5')
+  let floating_zindex = a:context['floating_zindex'] > 0 && has('nvim-0.5')
   let winrow = a:context['winrow']
   let wincol = a:context['wincol']
+  let floating_relative = a:context['split'] ==# 'floating_relative_cursor'
+        \ || a:context['split'] ==# 'floating_relative_window'
+  let floating_absolute = a:context['filter_split_direction'] ==# 'floating'
   if a:context['split'] ==# 'floating'
     let args = {
           \ 'relative': 'editor',
@@ -137,33 +141,35 @@ function! s:new_floating_filter_buffer(context) abort
       let args['border'] = a:context['floating_border']
     endif
     call nvim_open_win(bufnr('%'), v:true, args)
-  elseif a:context['split'] ==# 'floating_relative_cursor'
-        \ || a:context['split'] ==# 'floating_relative_window'
-    " cursor position cannot be gotten from this function.
-    " so instead estimating it from floating buffer position.
-    let args = {
-          \ 'relative': 'editor',
-          \ 'row': on_start_filter ? row : row + winheight(0) +
-          \        (floating_border ? 1 : 0),
-          \ 'col': on_start_filter ? nvim_win_get_config(0)['col']
-          \ : win_screenpos(0)[1] - 1,
-          \ 'width': winwidth(0),
-          \ 'height': 1,
-          \}
+  elseif floating_relative || floating_absolute
+
+    if floating_relative
+      " cursor position cannot be gotten from this function.
+      " so instead estimating it from floating buffer position.
+      let args = {
+            \ 'relative': 'editor',
+            \ 'row': on_start_filter ? row : row + winheight(0) +
+            \        (floating_border ? 1 : 0),
+            \ 'col': on_start_filter ? nvim_win_get_config(0)['col']
+            \ : win_screenpos(0)[1] - 1,
+            \ 'width': winwidth(0),
+            \ 'height': 1,
+            \}
+    else
+      let args = {
+            \ 'relative': 'editor',
+            \ 'row': row + winheight(0) + 1,
+            \ 'col': win_screenpos(0)[1] - 1,
+            \ 'width': winwidth(0),
+            \ 'height': 1,
+            \}
+    endif
+
     if floating_border
       let args['border'] = a:context['floating_border']
     endif
-    call nvim_open_win(bufnr('%'), v:true, args)
-  elseif a:context['filter_split_direction'] ==# 'floating'
-    let args = {
-          \ 'relative': 'editor',
-          \ 'row': row + winheight(0) + 1,
-          \ 'col': win_screenpos(0)[1] - 1,
-          \ 'width': winwidth(0),
-          \ 'height': 1,
-          \}
-    if floating_border
-      let args['border'] = a:context['floating_border']
+    if floating_zindex
+      let args['zindex'] = a:context['floating_zindex']
     endif
     call nvim_open_win(bufnr('%'), v:true, args)
   endif

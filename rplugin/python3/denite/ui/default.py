@@ -938,12 +938,6 @@ class Default(object):
                 'width': self._context['winwidth'],
                 'height': self._context['winheight'],
             }
-            if self._context['floating_border'] and self._vim.call(
-                    'has', 'nvim-0.5'):
-                args['border'] = self._context['floating_border']
-            self._vim.call(
-                'nvim_open_win',
-                self._vim.call('bufnr', '%'), True, args)
         elif split == 'floating_relative_cursor':
             opened_pos = (self._vim.call('nvim_win_get_position', 0)[0] +
                           self._vim.call('winline') - 1)
@@ -962,23 +956,29 @@ class Default(object):
                 anchor = 'NW'
                 row = 1
                 self._context['filter_winrow'] = row + height + opened_pos
-            self._vim.call(
-                'nvim_open_win',
-                self._vim.call('bufnr', '%'), True, {
+            args = {
                     'relative': 'cursor',
                     'row': row,
                     'col': 0,
                     'width': width,
                     'height': height,
                     'anchor': anchor,
-                })
+                }
         elif split == 'floating_relative_window':
-            self._vim.call(
-                'nvim_open_win',
-                self._vim.call('bufnr', '%'), True, {
+            args = {
                     'relative': 'win',
                     'row': self._context['winrow'],
                     'col': self._context['wincol'],
                     'width': self._context['winwidth'],
                     'height': self._context['winheight'],
-                })
+                }
+
+        if self._context['floating_border'] and self._vim.call(
+                'has', 'nvim-0.5'):
+            args['border'] = self._context['floating_border']
+        if self._context['floating_zindex'] > 0 and self._vim.call(
+                'has', 'nvim-0.5'):
+            args['zindex'] = self._context['floating_zindex']
+        self._vim.call(
+            'nvim_open_win',
+            self._vim.call('bufnr', '%'), True, args)

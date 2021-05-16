@@ -743,6 +743,15 @@ OPTIONS							*denite-options*
 
 		Default: 30
 
+					*denite-option-filter-zindex*
+-filter-zindex={index}
+		Specify the filter floating window zindex.
+
+		Note: To use it, you need to use neovim
+		0.5.0+(|nvim_open_win()|).
+
+		Default: 0(Disabled)
+
 					*denite-option-floating-border*
 -floating-border={type}
 		Specify the floating window border.
@@ -762,6 +771,15 @@ OPTIONS							*denite-options*
 		'previewpopup' instead.
 
 		Default: false
+
+					*denite-option-floating-zindex*
+-floating-zindex={index}
+		Specify the floating window zindex.
+
+		Note: To use it, you need to use neovim
+		0.5.0+(|nvim_open_win()|).
+
+		Default: 0(Disabled)
 
                             *denite-option-highlight-filter-background*
 -highlight-filter-background
