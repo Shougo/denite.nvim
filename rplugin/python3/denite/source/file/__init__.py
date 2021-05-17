@@ -56,9 +56,11 @@ class Source(Base):
             hidden = re.match(r'\.([^.]|$)', str(self.vim.call(
                 'fnamemodify', context['input'], ':t')))
             glb += '/.*' if hidden else '/*'
+            glb = re.sub(r'//', r'/', glb)
             for f in glob.glob(glb):
-                fullpath = abspath(self.vim, f)
                 f = re.sub(r'\n', r'\\n', f)
+
+                fullpath = abspath(self.vim, f)
                 f_path = Path(f)
                 abbr = (str(f_path.relative_to(path))
                         if fullpath != path and f.startswith(path + sep)
