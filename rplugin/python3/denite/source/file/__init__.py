@@ -24,7 +24,6 @@ class Source(Base):
         self.matchers = [
             'converter/expand_input',
             'matcher/fuzzy',
-            'matcher/hide_hidden_files',
         ]
         self.is_volatile = True
 
@@ -32,9 +31,9 @@ class Source(Base):
         context['is_interactive'] = True
         candidates = []
 
-        new = context['args'][0] if context['args'] else ''
-        if new and new != 'new':
-            self.error_message(context, f'invalid argument: "{new}"')
+        arg = context['args'][0] if context['args'] else ''
+        if arg and arg != 'new' and arg != 'hidden':
+            self.error_message(context, f'invalid argument: "{arg}"')
 
         path = (context['args'][1] if len(context['args']) > 1
                 else context['path'])
@@ -43,7 +42,7 @@ class Source(Base):
         inp = Path(expand(context['input']))
         filename = (str(inp) if inp.is_absolute()
                     else str(Path(path).joinpath(inp)))
-        if new == 'new':
+        if arg == 'new':
             candidates.append({
                 'word': filename,
                 'abbr': '[new] ' + filename,
@@ -53,8 +52,9 @@ class Source(Base):
             file_path = Path(filename)
             glb = str(file_path if file_path.is_dir() else file_path.parent)
             # Note: Path('../.').name convert to ".."
-            hidden = re.match(r'\.([^.]|$)', str(self.vim.call(
-                'fnamemodify', context['input'], ':t')))
+            hidden = arg == 'hidden' or re.match(
+                r'\.([^.]|$)', str(self.vim.call(
+                    'fnamemodify', context['input'], ':t')))
             glb += '/.*' if hidden else '/*'
             glb = re.sub(r'//', r'/', glb)
             for f in glob.glob(glb):

@@ -1129,6 +1129,7 @@ file
 
 		Source args:
 			0. if it is "new", file source create the file.
+			   if it is "hidden", hidden files are displayed.
 			1. the search directory
 
 						*denite-source-file/old*
