@@ -42,6 +42,13 @@ function! denite#do_action(context, action_name, targets) abort
   return denite#util#rpcrequest('_denite_do_action', args, v:false)
 endfunction
 
+function! denite#do_targets(action_name, candidates, ...) abort
+  let context = denite#init#_user_options()
+  call extend(context, get(a:000, 0, {}))
+  let args = [context, a:action_name, denite#util#convert2list(a:candidates)]
+  return denite#util#rpcrequest('_denite_do_targets', args, v:false)
+endfunction
+
 function! denite#do_map(name, ...) abort
   let args = denite#util#convert2list(get(a:000, 0, []))
   let esc = (mode() ==# 'i' ? "\<C-o>" : '')

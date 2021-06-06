@@ -248,7 +248,7 @@ class Child(object):
         if not action:
             return True
 
-        for target in targets:
+        for target in [x for x in targets if 'source_index' in x]:
             source = self._current_sources[int(target['source_index'])]
             target['source_context'] = {
                 k: v for k, v in
@@ -287,10 +287,12 @@ class Child(object):
         sources = set()
         for target in targets:
             k = self._get_kind(context, target)
-            source = self._current_sources[int(target['source_index'])]
+            source = (self._current_sources[int(target['source_index'])]
+                      if 'source_index' in target else None)
             if k:
                 kinds.add(k)
-            sources.add(source)
+            if source:
+                sources.add(source)
         if len(kinds) != 1:
             if len(kinds) > 1:
                 self.error('Multiple kinds are detected')
@@ -561,24 +563,26 @@ class Child(object):
         if not kind:
             return {}
 
-        source = self._current_sources[int(target['source_index'])]
+        source = (self._current_sources[int(target['source_index'])]
+                  if 'source_index' in target else None)
 
         if action_name == 'default':
             action_name = context['default_action']
-            if action_name == 'default':
+            if action_name == 'default' and source:
                 action_name = source.default_action
             if action_name == 'default':
                 action_name = kind.default_action
 
         # Custom action
         custom_actions = self._get_custom_actions(kind.name)
-        custom_actions.update(
-            self._get_custom_actions('source/' + source.name))
+        if source:
+            custom_actions.update(
+                self._get_custom_actions('source/' + source.name))
         if action_name in custom_actions:
             attrs = {
                 'name': action_name,
                 'kind': kind.name,
-                'source': source.name,
+                'source': source.name if source else '',
                 'func': None,
                 'is_quit': True,
                 'is_redraw': False,
@@ -594,7 +598,7 @@ class Child(object):
         return {
             'name': action_name,
             'kind': kind.name,
-            'source': source.name,
+            'source': source.name if source else '',
             'func': getattr(kind, action_attr),
             'is_quit': (action_name not in kind.persist_actions),
             'is_redraw': (action_name in kind.redraw_actions),

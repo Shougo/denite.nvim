@@ -602,6 +602,17 @@ denite#do_map({map-name}[, {args}])			*denite#do_map()*
 		  nnoremap <silent><buffer><expr> <C-c>
 		  \ denite#do_map('quit')
 		endfunction
+<
+							*denite#do_targets()*
+denite#do_targets({action-name}, {targets}, [{context}])
+		Runs an action {action-name} against {candidates} without
+		denite buffer. >
+
+		" Execute "open" action as targets
+		:call denite#do_targets('open', {
+		    \ 'action__path': '/home/shougo/work/test.c',
+		    \ 'kind': 'file'
+		    \})
 
 denite#get_status({name})				*denite#get_status()*
 		Returns the {name} part of the status string.  It is useful to

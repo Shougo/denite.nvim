@@ -8,6 +8,7 @@ from pynvim import Nvim
 import typing
 
 from denite.context import Context
+from denite.parent import SyncParent
 
 Args = typing.List[typing.Any]
 
@@ -42,6 +43,21 @@ class Rplugin:
             ui = self.get_ui(args[0]['buffer_name'])
             ui._cursor = self._vim.call('line', '.')
             return ui._denite.do_action(args[0], args[1], args[2])
+        except Exception:
+            import traceback
+            import denite.util
+            for line in traceback.format_exc().splitlines():
+                denite.util.error(self._vim, line)
+            denite.util.error(self._vim,
+                              'Please execute :messages command.')
+
+    def do_targets(self, args: Args) -> typing.Any:
+        try:
+            dnt = SyncParent(self._vim)
+            context = Context(self._vim).get(args[0])
+            dnt.start(context)
+            dnt.on_init(context)
+            return dnt.do_action(context, args[1], args[2])
         except Exception:
             import traceback
             import denite.util

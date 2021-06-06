@@ -45,6 +45,7 @@ class Context(object):
             context['path'] = str(PurePath(context['path']).joinpath(
                 context['relpath']))
 
+        context['sources'] = []
         context['filter_winrow'] = int(context['winrow'])
         context['max_candidate_width'] = int(context['max_candidate_width'])
         context['prev_winid'] = int(context['prev_winid'])

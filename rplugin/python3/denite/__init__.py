@@ -37,6 +37,10 @@ if hasattr(vim, 'plugin'):
         def do_action(self, args: Args) -> typing.Any:
             return self._rplugin.do_action(args)
 
+        @vim.rpc_export('_denite_do_targets', sync=True)  # type: ignore
+        def do_targets(self, args: Args) -> typing.Any:
+            return self._rplugin.do_targets(args)
+
         @vim.rpc_export('_denite_do_map', sync=True)  # type: ignore
         def do_map(self, args: Args) -> typing.Any:
             return self._rplugin.do_map(args)
@@ -57,6 +61,9 @@ if find_spec('yarp'):
 
     def _denite_do_action(args: Args) -> typing.Any:
         return global_denite.do_action(args)
+
+    def _denite_do_targets(args: Args) -> typing.Any:
+        return global_denite.do_targets(args)
 
     def _denite_do_map(args: Args) -> typing.Any:
         return global_denite.do_map(args)
