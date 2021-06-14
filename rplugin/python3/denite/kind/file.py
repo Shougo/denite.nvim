@@ -102,8 +102,10 @@ class Kind(Openable):
         target = context['targets'][0]
         if 'action__bufnr' in target:
             bufnr = target['action__bufnr']
-        else:
+        elif self.vim.call('bufexists', target['action__path']):
             bufnr = self.vim.call('bufnr', target['action__path'])
+        else:
+            bufnr = -1
 
         if not (self.vim.call('win_id2win', context['prev_winid']) and
                 context['prev_winid'] in self.vim.call('win_findbuf', bufnr)):
@@ -160,7 +162,8 @@ class Kind(Openable):
                 if path.startswith(cwd):
                     path = str(Path(path).relative_to(cwd))
 
-                bufnr = self.vim.call('bufnr', match_path)
+                bufnr = (self.vim.call('bufnr', match_path)
+                         if self.vim.call('bufexists', match_path) else -1)
                 if (command == 'edit' and bufnr > 0 and
                         self.vim.call('buflisted', bufnr)):
                     self.vim.command('buffer' + str(bufnr))
