@@ -9,7 +9,7 @@ from pynvim import Nvim
 from re import sub, match
 
 from denite.base.source import Base
-from denite.util import parse_jump_line, abspath
+from denite.util import parse_jump_line, abspath, safe_call
 from denite.util import UserContext, Candidates
 
 
@@ -23,7 +23,8 @@ class Source(Base):
 
     def on_init(self, context: UserContext) -> None:
         context['__line'] = self.vim.call('getline', '.')
-        context['__cfile'] = self.vim.call('expand', '<cfile>')
+        context['__cfile'] = safe_call(lambda: self.vim.call(
+            'expand', '<cfile>'), '')
 
     def gather_candidates(self, context: UserContext) -> Candidates:
         result = parse_jump_line(

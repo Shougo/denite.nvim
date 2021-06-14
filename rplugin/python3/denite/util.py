@@ -366,3 +366,14 @@ def get_python_exe() -> str:
 
     # return sys.executable anyway. This may not work on windows
     return executable
+
+
+def safe_call(fn: typing.Callable[..., typing.Any],
+              fallback: typing.Optional[bool] = None) -> typing.Any:
+    """
+    Ignore Exception when calling {fn}
+    """
+    try:
+        return fn()
+    except Exception:
+        return fallback
