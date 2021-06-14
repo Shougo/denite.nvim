@@ -369,7 +369,7 @@ def get_python_exe() -> str:
 
 
 def safe_call(fn: typing.Callable[..., typing.Any],
-              fallback: typing.Optional[bool] = None) -> typing.Any:
+              fallback: typing.Any = None) -> typing.Any:
     """
     Ignore Exception when calling {fn}
     """
