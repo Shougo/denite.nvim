@@ -21,8 +21,7 @@ class Filter(Base):
 
     def on_init(self, context: UserContext) -> None:
         # rviminfo! is broken in Vim8
-        if self.vim.call('has', 'nvim'):
-            self.vim.command('wviminfo | rviminfo!')
+        self.vim.command('wviminfo | rviminfo!')
 
     def filter(self, context: UserContext) -> Candidates:
         oldfiles = {expand(x): i for i, x in
