@@ -20,8 +20,10 @@ class Filter(Base):
         self.description = 'sort candidates by v:oldfiles'
 
     def on_init(self, context: UserContext) -> None:
-        # rviminfo! is broken in Vim8
-        self.vim.command('wviminfo | rviminfo!')
+        # rviminfo! is broken in older than Vim 8.2.2494
+        if self.vim.call('has', 'nvim') or self.vim.call(
+                'has', 'patch-8.2.2494'):
+            self.vim.command('wviminfo | rviminfo!')
 
     def filter(self, context: UserContext) -> Candidates:
         oldfiles = {expand(x): i for i, x in
