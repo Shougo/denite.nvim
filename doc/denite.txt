@@ -1,6 +1,6 @@
 *denite.txt*	Dark powered asynchronous unite all interfaces for NeoVim/Vim.
 
-Version: 3.3
+Version: 3.4
 Author:  Shougo <Shougo.Matsu at gmail.com>
 License: MIT license
 

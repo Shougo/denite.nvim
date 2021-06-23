@@ -3,10 +3,17 @@ denite.nvim
 
 [![Build Status](https://travis-ci.org/Shougo/denite.nvim.svg?branch=master)](https://travis-ci.org/Shougo/denite.nvim)
 
-Please read [help](doc/denite.txt) for details.
+
+**Note**: Active development on denite.nvim has stopped. The only future
+changes will be bug fixes.
+
+Please see [ddu.vim](https://github.com/Shougo/deoppet.vim).
+
 
 Note: Denite.nvim does not define any of default mappings.  You need to define
 them.
+
+Please read [help](doc/denite.txt) for details.
 
 
 ## About
