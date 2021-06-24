@@ -269,6 +269,8 @@ def import_rplugins(name: str, context: UserContext, source: str,
     for path, module_path in find_rplugins(context, source, loaded_paths):
         module_name = 'denite.%s.%s' % (source, module_path)
         spec = importlib.util.spec_from_file_location(module_name, path)
+        if not spec:
+            continue
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)  # type: ignore
         if (not hasattr(module, name) or
