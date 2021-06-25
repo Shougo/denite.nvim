@@ -7,7 +7,7 @@ denite.nvim
 **Note**: Active development on denite.nvim has stopped. The only future
 changes will be bug fixes.
 
-Please see [ddu.vim](https://github.com/Shougo/deoppet.vim).
+Please see [ddu.vim](https://github.com/Shougo/ddu.vim).
 
 
 Note: Denite.nvim does not define any of default mappings.  You need to define
