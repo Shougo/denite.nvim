@@ -140,9 +140,9 @@ def parse_jump_line(path_head: str, line: str) -> typing.List[str]:
     if not m or not m.group(2) or not m.group(5):
         return []
 
-    if re.search(r':\d+$', m.group(2)):
+    if re.search(r'^\d+$', m.group(5)):
         # Use column pattern
-        m = re.search(r'^(.*?):(\d+):(\d+):(.*)$', line)
+        m = re.search(r'^(file://)?(.*?):(\d+):(\d+)()$', line)
 
     [_, path, linenr, col, text] = m.groups()  # type: ignore
 
