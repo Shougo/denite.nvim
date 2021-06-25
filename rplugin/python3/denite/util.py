@@ -136,15 +136,15 @@ def path2project(vim: Nvim, path: str,
 
 
 def parse_jump_line(path_head: str, line: str) -> typing.List[str]:
-    m = re.search(r'^(.*?):(\d+)(?::(\d+))?:(.*)$', line)
-    if not m or not m.group(1) or not m.group(4):
+    m = re.search(r'^(file://)?(.*?):(\d+)(?::(\d+))?:(.*)$', line)
+    if not m or not m.group(2) or not m.group(5):
         return []
 
-    if re.search(r':\d+$', m.group(1)):
+    if re.search(r':\d+$', m.group(2)):
         # Use column pattern
         m = re.search(r'^(.*?):(\d+):(\d+):(.*)$', line)
 
-    [path, linenr, col, text] = m.groups()  # type: ignore
+    [_, path, linenr, col, text] = m.groups()  # type: ignore
 
     if not linenr:
         linenr = '1'

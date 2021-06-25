@@ -37,6 +37,8 @@ def test_parse_jump_line():
         '', 'file:3:4:text') == ['file', '3', '4', 'text']
     assert util.parse_jump_line(
         '', 'C:/file:3:4:text') == ['C:/file', '3', '4', 'text']
+    assert util.parse_jump_line(
+        '', 'file:///file:3:text') == ['/file', '3', '0', 'text']
 
 def test_parse_tag_line():
     assert util.parse_tagline(

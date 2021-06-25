@@ -29,6 +29,9 @@ class Source(Base):
     def gather_candidates(self, context: UserContext) -> Candidates:
         result = parse_jump_line(
             self.vim.call('getcwd'), context['__line'])
+        if not result or not Path(result[0]).is_file():
+            result = parse_jump_line(
+                self.vim.call('getcwd'), context['__cfile'])
         if result and Path(result[0]).is_file():
             return [{
                 'word': '{}: {}{}: {}'.format(
