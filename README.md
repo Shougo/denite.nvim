@@ -1,9 +1,6 @@
 denite.nvim
 ===========
 
-[![Build Status](https://travis-ci.org/Shougo/denite.nvim.svg?branch=master)](https://travis-ci.org/Shougo/denite.nvim)
-
-
 **Note**: Active development on denite.nvim has stopped. The only future
 changes will be bug fixes.
 
