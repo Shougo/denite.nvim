@@ -26,10 +26,10 @@ class Kind(Openable):
         self._previewed_target: typing.Dict[str, Candidate] = {}
 
     def action_open(self, context: UserContext) -> None:
-        self._open(context, 'edit')
+        self._open(context, 'silent edit')
 
     def action_drop(self, context: UserContext) -> None:
-        self._open(context, 'drop')
+        self._open(context, 'silent drop')
 
     def action_new(self, context: UserContext) -> None:
         path = str(self.vim.call('denite#util#input',
