@@ -109,7 +109,6 @@ function! s:new_filter_buffer(context) abort
     let g:denite#_filter_winid = win_getid()
     let g:denite#_filter_bufnr = bufnr('%')
   endif
-
 endfunction
 
 function! s:new_floating_filter_buffer(context) abort
@@ -211,6 +210,7 @@ function! s:filter_async() abort
 
   if &filetype !=# 'denite-filter'
         \ || input ==# g:denite#_filter_prev_input
+        \ || getchar(1) != 0
     return
   endif
 
