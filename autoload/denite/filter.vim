@@ -210,7 +210,6 @@ function! s:filter_async() abort
 
   if &filetype !=# 'denite-filter'
         \ || input ==# g:denite#_filter_prev_input
-        \ || getchar(1) != 0
     return
   endif
 
