@@ -412,10 +412,11 @@ restore_sources
 		Move back to the previous sources.
 		Note: It does not restore the cursor position.
 
-						*denite-map-toggle_auto_action*
+					*denite-map-toggle_auto_action*
 toggle_auto_action:{action}
 		Change |denite-option-auto-action| to {action}.
-		If |denite-option-auto-action| is {action}, it will be disabled.
+		If |denite-option-auto-action| is {action}, it will be
+		disabled.
 		If {action} is empty, all auto actions are disabled.
 
 						*denite-map-toggle_select*
@@ -844,7 +845,7 @@ OPTIONS							*denite-options*
 		Specify an initial narrowing text.
 		Default: ""
 
-						*denite-option-match-highlight*
+					*denite-option-match-highlight*
 -match-highlight
 		Highlight matched chars.
 		Note: Vim 8.1.1084+ is needed for it.
@@ -940,7 +941,7 @@ OPTIONS							*denite-options*
 		Refresh the candidates when |denite-option-resume| is true.
 		Default: false
 
-							*denite-option-relpath*
+						*denite-option-relpath*
 -relpath={path}
 		Specify an relative path from |denite-option-path|.
 		Default: ""
@@ -1409,7 +1410,7 @@ spell		Gather spell suggestions.
 						*denite-source-tag*
 tag		Gather results of |tagfiles()|.
 		Note: If the args 0 is "include", it will gather the results
-		of |neoinclude| plugin.
+		of neoinclude plugin.
 		https://github.com/Shougo/neoinclude.vim
 
 
@@ -1649,7 +1650,7 @@ matcher/substring
 		A matcher which filters the candidates using simple substring
 		matching.
 
-						*denite-filter-sorter/oldfiles*
+					*denite-filter-sorter/oldfiles*
 sorter/oldfiles
 		Use |v:oldfiles| for sorting.
 		Note: The candidates must contain "action__path" key.
@@ -2029,7 +2030,7 @@ So you can change the color by |hl-CursorLine| highlight. >
 
 Q: I want to use unite source in denite.
 
-A: You can use |unite-denite-source-unite| for it. >
+A: You can use unite source for it. >
 	Denite unite:file
 Note: unite installation is needed.
 
@@ -2307,7 +2308,7 @@ A: >
 
 Q: I want to switch from the filter window into the denite window.
 
-A: You must use |<Plug>(denite_filter_update)| for it.
+A: You must use |denite-map-<Plug>(denite_filter_update)| for it.
 
 ==============================================================================
 COMPATIBILITY						*denite-compatibility*
@@ -2322,9 +2323,10 @@ COMPATIBILITY						*denite-compatibility*
 * Change fuzzy regex behavior to improve the performance.
 
 2021.02.05
-* Quit both filter buffer and denite buffer when |<Plug>(denite_filter_quit)|.
-* Change |<Plug>(denite_filter_backspace)| behavior.  When the line is empty,
-  close filter window.
+* Quit both filter buffer and denite buffer when
+* |denite-map-<Plug>(denite_filter_quit)|.  Change
+* |denite-map-i_<Plug>(denite_filter_backspace)| behavior.  When the line is
+  empty, close filter window.
 
 2021.01.22
 * "choose_action" uses denite UI instead
