@@ -127,11 +127,12 @@ function! s:new_floating_filter_buffer(context) abort
   let floating_relative = a:context['split'] ==# 'floating_relative_cursor'
         \ || a:context['split'] ==# 'floating_relative_window'
   let floating_absolute = a:context['filter_split_direction'] ==# 'floating'
+  let bordered_row = row + winheight(0) + (floating_border ? 1 : 0)
+
   if a:context['split'] ==# 'floating'
     let args = {
           \ 'relative': 'editor',
-          \ 'row': winrow == 1 ? 0 : row + winheight(0) +
-          \        (floating_border ? 1 : 0),
+          \ 'row': winrow == 1 ? 0 : bordered_row,
           \ 'col': wincol,
           \ 'width': a:context['winwidth'],
           \ 'height': 1,
@@ -141,14 +142,12 @@ function! s:new_floating_filter_buffer(context) abort
     endif
     call nvim_open_win(bufnr('%'), v:true, args)
   elseif floating_relative || floating_absolute
-
     if floating_relative
       " cursor position cannot be gotten from this function.
       " so instead estimating it from floating buffer position.
       let args = {
             \ 'relative': 'editor',
-            \ 'row': on_start_filter ? row : row + winheight(0) +
-            \        (floating_border ? 1 : 0),
+            \ 'row': on_start_filter ? row : bordered_row,
             \ 'col': on_start_filter ? nvim_win_get_config(0)['col']
             \ : win_screenpos(0)[1] - 1,
             \ 'width': winwidth(0),
@@ -157,7 +156,7 @@ function! s:new_floating_filter_buffer(context) abort
     else
       let args = {
             \ 'relative': 'editor',
-            \ 'row': row + winheight(0) + 1,
+            \ 'row': bordered_row,
             \ 'col': win_screenpos(0)[1] - 1,
             \ 'width': winwidth(0),
             \ 'height': 1,
