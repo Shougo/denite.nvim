@@ -196,9 +196,16 @@ class Default(object):
         if resume:
             # Skip the initialization
 
-            update = ('immediately', 'immediately_1',
-                      'cursor_pos', 'prev_winid',
-                      'start_filter', 'quick_move')
+            # Note: some options can be updated for resume
+            update = (
+                'cursor_pos',
+                'do',
+                'immediately',
+                'immediately_1',
+                'prev_winid',
+                'quick_move',
+                'start_filter',
+            )
             for key in update:
                 self._context[key] = context[key]
 
@@ -762,10 +769,11 @@ class Default(object):
 
     def _do_command(self, command: str) -> None:
         self._init_cursor()
-        cursor = 1
+        cursor = 0
         while cursor < len(self._candidates):
             self.do_action('default', command)
             self._move_to_next_line()
+            cursor += 1
         self._quit_buffer()
 
     def _cleanup(self) -> None:
