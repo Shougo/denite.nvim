@@ -81,7 +81,11 @@ class Process(object):
                 or not self._queue_out.empty()):
             return (outs, [])
 
-        _, errs = self._proc.communicate(timeout=timeout)
+        try:
+            _, errs = self._proc.communicate(timeout=timeout)
+        except subprocess.TimeoutExpired:
+            return ([], [])
+
         errs = errs.decode(self._context['encoding'],
                            errors='replace').splitlines()
         self._eof = True

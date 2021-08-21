@@ -115,7 +115,7 @@ class Child(object):
             ctx['input'] = context['input']
             ctx['prev_input'] = context['input']
             ctx['event'] = 'gather'
-            ctx['async_timeout'] = 0.01
+            ctx['async_timeout'] = 1.0 if context['is_windows'] else 0.01
             ctx['path'] = abspath(self._vim, context['path'])
 
             candidates = self._gather_source_candidates(
@@ -327,7 +327,7 @@ class Child(object):
                 ctx['input'] = expand(ctx['input'])
             if context['smartcase']:
                 ctx['ignorecase'] = re.search(r'[A-Z]', ctx['input']) is None
-            ctx['async_timeout'] = 0.03
+            ctx['async_timeout'] = 1.0 if context['is_windows'] else 0.03
             prev_input = ctx['prev_input']
             if prev_input != ctx['input'] and ctx['is_interactive']:
                 ctx['event'] = 'interactive'
