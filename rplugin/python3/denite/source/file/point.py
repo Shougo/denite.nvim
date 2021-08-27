@@ -29,30 +29,33 @@ class Source(Base):
     def gather_candidates(self, context: UserContext) -> Candidates:
         result = parse_jump_line(
             self.vim.call('getcwd'), context['__line'])
-        if not result or not Path(result[0]).is_file():
-            result = parse_jump_line(
-                self.vim.call('getcwd'), context['__cfile'])
-        if result and Path(result[0]).is_file():
-            return [{
-                'word': '{}: {}{}: {}'.format(
-                    result[0], result[1],
-                    (':' + result[2] if result[2] != '0' else ''),
-                    result[3]),
-                'action__path': result[0],
-                'action__line': result[1],
-                'action__col': result[2],
-            }]
+        try:
+            if not result or not Path(result[0]).is_file():
+                result = parse_jump_line(
+                    self.vim.call('getcwd'), context['__cfile'])
+            if result and Path(result[0]).is_file():
+                return [{
+                    'word': '{}: {}{}: {}'.format(
+                        result[0], result[1],
+                        (':' + result[2] if result[2] != '0' else ''),
+                        result[3]),
+                    'action__path': result[0],
+                    'action__line': result[1],
+                    'action__col': result[2],
+                }]
 
-        cfile = context['__cfile']
-        cpath = Path(abspath(self.vim, cfile))
-        if match('[./]+$', cfile):
-            return []
-        if cpath.exists() and cpath.is_file():
-            return [{'word': cfile,
-                     'action__path': abspath(self.vim, cfile)}]
-        if _checkhost(cfile) or match(
-                r'https?://(127\.0\.0\.1|localhost)[:/]', cfile):
-            return [{'word': cfile, 'action__path': cfile}]
+            cfile = context['__cfile']
+            cpath = Path(abspath(self.vim, cfile))
+            if match('[./]+$', cfile):
+                return []
+            if cpath.exists() and cpath.is_file():
+                return [{'word': cfile,
+                         'action__path': abspath(self.vim, cfile)}]
+            if _checkhost(cfile) or match(
+                    r'https?://(127\.0\.0\.1|localhost)[:/]', cfile):
+                return [{'word': cfile, 'action__path': cfile}]
+        except OSError:
+            pass
         return []
 
 
