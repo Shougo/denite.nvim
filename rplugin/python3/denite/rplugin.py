@@ -88,7 +88,7 @@ class Rplugin:
                 # Resume the previous buffer
                 self.resume(buffer_name[:-1])
 
-            if ui._context['next_actions']:
+            if 'next_actions' in ui._context and ui._context['next_actions']:
                 actions = ui._context['next_actions']
                 ui._context['next_actions'] = []
 
