@@ -19,7 +19,7 @@ class Source(Base):
         super().__init__(vim)
 
         self.name = 'command'
-        self.kind = Kind(vim)
+        self.kind = 'command'
 
     def gather_candidates(self, context: UserContext) -> Candidates:
         context['is_interactive'] = True
@@ -48,14 +48,3 @@ class Source(Base):
                 'action__histadd': True,
             }]
         return candidates
-
-
-class Kind(Command):
-
-    def __init__(self, vim: Nvim) -> None:
-        super().__init__(vim)
-
-        self.name = 'command'
-
-    def action_edit(self, context: UserContext) -> None:
-        return super().action_execute(context)

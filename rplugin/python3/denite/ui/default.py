@@ -760,9 +760,10 @@ class Default(object):
         candidate = self._get_cursor_candidate()
         if not candidate:
             return
-        echo(self._vim, 'Normal', '[{}/{}] {}'.format(
-            self._cursor, len(self._candidates),
-            candidate.get('abbr', candidate['word'])))
+        if self._candidates and self._context['immediately']:
+            echo(self._vim, 'Normal', '[{}/{}] {}'.format(
+                self._cursor, len(self._candidates),
+                candidate.get('abbr', candidate['word'])))
         if goto:
             # Move to the previous window
             self._vim.command('wincmd p')

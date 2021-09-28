@@ -25,7 +25,7 @@ class Kind(Base):
 
     def action_edit(self, context: UserContext) -> None:
         target = context['targets'][0]
-        self.vim.call('feedkeys', f":{target['action__command']}")
+        self.vim.call('feedkeys', f":{target['action__command']}", 'n')
 
     def _execute(self, context: UserContext,
                  command: str, histadd: bool) -> None:
