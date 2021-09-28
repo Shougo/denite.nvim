@@ -8,13 +8,7 @@ function! denite#initialize() abort
   return denite#init#_initialize()
 endfunction
 function! denite#start(sources, ...) abort
-  call inputsave()
-  try
-    let user_context = get(a:000, 0, {})
-    return s:start(a:sources, user_context)
-  finally
-    call inputrestore()
-  endtry
+  return s:start(a:sources, get(a:000, 0, {}))
 endfunction
 
 " Statusline functions
