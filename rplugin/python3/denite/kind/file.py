@@ -160,7 +160,11 @@ class Kind(Openable):
                     continue
                 cwd = self.vim.call('getcwd')
                 if path.startswith(cwd):
-                    path = str(Path(path).relative_to(cwd))
+                    # Note: The convertion may be failed
+                    try:
+                        path = str(Path(path).relative_to(cwd))
+                    except ValueError:
+                        pass
 
                 bufnr = (self.vim.call('bufnr', match_path)
                          if self.vim.call('bufexists', match_path) else -1)
