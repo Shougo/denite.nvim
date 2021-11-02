@@ -234,12 +234,12 @@ def find_rplugins(context: UserContext, source: str,
     """
     base = str(Path('rplugin').joinpath('python3', 'denite', source))
     for runtime in context.get('runtimepath', '').split(','):
-        rtp_expanded = [runtime]
+        rtp_expanded = [Path(runtime)]
         if '*' in runtime:
             # Handle wildcard in runtimepath
             rtp_base, rtp_wildcard = runtime.split('*', 1)
             rtp_wildcard = '*' + rtp_wildcard
-            rtp_expanded = Path(rtp_base).glob(rtp_wildcard)
+            rtp_expanded = [x for x in Path(rtp_base).glob(rtp_wildcard)]
 
         for rtp in rtp_expanded:
             root = Path(rtp).joinpath(base)
