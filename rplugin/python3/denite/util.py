@@ -234,24 +234,32 @@ def find_rplugins(context: UserContext, source: str,
     """
     base = str(Path('rplugin').joinpath('python3', 'denite', source))
     for runtime in context.get('runtimepath', '').split(','):
-        root = Path(runtime).joinpath(base)
-        for r, _, fs in walk(str(root)):
-            for f in fs:
-                path = str(Path(r).joinpath(f))
-                if not path.endswith('.py') or path in loaded_paths:
-                    continue
-                # Remove ext
-                module_path = str(Path(path).relative_to(root))[: -3]
-                if module_path == '__init__':
-                    # __init__.py in {root} does not have implementation
-                    # so skip
-                    continue
-                if Path(module_path).name == '__init__':
-                    # 'foo/__init__.py' should be loaded as a module 'foo'
-                    module_path = str(Path(module_path).parent)
-                # Convert IO path to module path
-                module_str = module_path.replace(sep, '.')
-                yield (path, module_str)
+        rtp_expanded = [runtime]
+        if '*' in runtime:
+            # Handle wildcard in runtimepath
+            rtp_base, rtp_wildcard = runtime.split('*', 1)
+            rtp_wildcard = '*' + rtp_wildcard
+            rtp_expanded = Path(rtp_base).glob(rtp_wildcard)
+
+        for rtp in rtp_expanded:
+            root = Path(rtp).joinpath(base)
+            for r, _, fs in walk(str(root)):
+                for f in fs:
+                    path = str(Path(r).joinpath(f))
+                    if not path.endswith('.py') or path in loaded_paths:
+                        continue
+                    # Remove ext
+                    module_path = str(Path(path).relative_to(root))[: -3]
+                    if module_path == '__init__':
+                        # __init__.py in {root} does not have implementation
+                        # so skip
+                        continue
+                    if Path(module_path).name == '__init__':
+                        # 'foo/__init__.py' should be loaded as a module 'foo'
+                        module_path = str(Path(module_path).parent)
+                    # Convert IO path to module path
+                    module_str = module_path.replace(sep, '.')
+                    yield (path, module_str)
 
 
 def import_rplugins(name: str, context: UserContext, source: str,
