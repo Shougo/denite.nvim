@@ -6,6 +6,17 @@
 
 let s:is_windows = has('win32') || has('win64')
 
+function! s:check_wsl() abort
+  if has('nvim')
+    return has('wsl')
+  endif
+  if has('unix') && executable('uname')
+    return match(system('uname -r'), "\\cMicrosoft") >= 0
+  endif
+endfunction
+
+let s:is_wsl = s:check_wsl()
+
 function! denite#util#set_default(var, val, ...)  abort
   if !exists(a:var) || type({a:var}) != type(a:val)
     let alternate_var = get(a:000, 0, '')
@@ -118,6 +129,12 @@ function! denite#util#open(filename) abort
     " Mac OS.
     call system(printf('%s %s &', 'open',
           \ shellescape(filename)))
+  elseif s:is_wsl && executable('cmd.exe')
+    " WSL and not installed any open commands
+
+    " Open the same way as Windows.
+    " I don't know why, but the method using execute requires redraw <C-l> after execution in vim.
+    call system(printf('cmd.exe /c start rundll32 url.dll,FileProtocolHandler %s',escape(filename, '#%')))
   else
     " Give up.
     throw 'Not supported.'
