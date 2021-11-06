@@ -13,6 +13,7 @@ function! s:check_wsl() abort
   if has('unix') && executable('uname')
     return match(system('uname -r'), "\\cMicrosoft") >= 0
   endif
+  return v:false
 endfunction
 
 let s:is_wsl = s:check_wsl()
