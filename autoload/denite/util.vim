@@ -16,8 +16,6 @@ function! s:check_wsl() abort
   return v:false
 endfunction
 
-let s:is_wsl = s:check_wsl()
-
 function! denite#util#set_default(var, val, ...)  abort
   if !exists(a:var) || type({a:var}) != type(a:val)
     let alternate_var = get(a:000, 0, '')
@@ -88,11 +86,11 @@ endfunction
 function! denite#util#open(filename) abort
   let filename = fnamemodify(a:filename, ':p')
 
-  let s:is_unix = has('unix')
-  let s:is_cygwin = has('win32unix')
-  let s:is_mac = !s:is_windows && !s:is_cygwin
+  let is_cygwin = has('win32unix')
+  let is_mac = !s:is_windows && !is_cygwin
         \ && (has('mac') || has('macunix') || has('gui_macvim') ||
         \   (!isdirectory('/proc') && executable('sw_vers')))
+  let is_wsl = s:check_wsl()
 
   " Detect desktop environment.
   if s:is_windows
@@ -103,7 +101,7 @@ function! denite#util#open(filename) abort
           \ '!start rundll32 url.dll,FileProtocolHandler %s',
           \ escape(filename, '#%'),
           \)
-  elseif s:is_cygwin
+  elseif is_cygwin
     " Cygwin.
     call system(printf('%s %s', 'cygstart',
           \ shellescape(filename)))
@@ -126,16 +124,19 @@ function! denite#util#open(filename) abort
     " Xfce.
     call system(printf('%s %s &', 'exo-open',
           \ shellescape(filename)))
-  elseif s:is_mac && executable('open')
+  elseif is_mac && executable('open')
     " Mac OS.
     call system(printf('%s %s &', 'open',
           \ shellescape(filename)))
-  elseif s:is_wsl && executable('cmd.exe')
+  elseif is_wsl && executable('cmd.exe')
     " WSL and not installed any open commands
 
     " Open the same way as Windows.
-    " I don't know why, but the method using execute requires redraw <C-l> after execution in vim.
-    call system(printf('cmd.exe /c start rundll32 url.dll,FileProtocolHandler %s',escape(filename, '#%')))
+    " I don't know why, but the method using execute requires redraw <C-l>
+    " after execution in vim.
+    call system(printf('cmd.exe /c start rundll32 %s %s',
+          \ 'url.dll,FileProtocolHandler',
+          \ escape(filename, '#%')))
   else
     " Give up.
     throw 'Not supported.'
