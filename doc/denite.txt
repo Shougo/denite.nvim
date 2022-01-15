@@ -1863,7 +1863,7 @@ syntax_name		(String)		(Optional)
 ------------------------------------------------------------------------------
 CANDIDATE ATTRIBUTES			*denite-candidate-attributes*
 
-					*denite-candidate-attribute-name*
+					*denite-candidate-attribute-word*
 word		(String)			(Required)
 		The word of a candidate. It is used for matching inputs.
 
