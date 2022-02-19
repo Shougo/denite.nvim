@@ -47,6 +47,8 @@ function! denite#filter#_open(context, parent, entire_len, is_async) abort
     autocmd InsertLeave <buffer>
           \ call denite#filter#_stop_filter_timer()
     autocmd TextChanged,InsertLeave <buffer> call s:update()
+    autocmd VimLeavePre *
+          \ call denite#filter#_stop_filter_timer()
   augroup END
 
   call cursor(line('$'), 0)

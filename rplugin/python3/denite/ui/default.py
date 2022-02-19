@@ -50,7 +50,6 @@ class Default(object):
         self._floating = False
         self._filter_floating = False
         self._updated = False
-        self._timers: typing.Dict[str, int] = {}
         self._matched_range_id = -1
         self._matched_char_id = -1
         self._check_matchdelete = bool(self._vim.call(
@@ -466,10 +465,6 @@ class Default(object):
         if not self._denite:
             return False
 
-        # Disable timer until finished
-        # Note: overwrapped update_candidates breaks candidates
-        self._stop_timer('update_candidates')
-
         [self._is_async, pattern, statuses, self._entire_len,
          self._candidates] = self._denite.filter_candidates(self._context)
 
@@ -484,8 +479,6 @@ class Default(object):
 
         if self._is_async:
             self._start_timer('update_candidates')
-        else:
-            self._stop_timer('update_candidates')
 
         updated = (self._displayed_texts != prev_displayed_texts or
                    self._matched_pattern != prev_matched_pattern or
@@ -589,7 +582,6 @@ class Default(object):
                 self.do_action(self._context['auto_action'])
 
         self._updated = False
-        self._stop_timer('update_buffer')
 
     def _update_status(self) -> None:
         inpt = ''
@@ -778,9 +770,6 @@ class Default(object):
         self._quit_buffer()
 
     def _cleanup(self) -> None:
-        self._stop_timer('update_candidates')
-        self._stop_timer('update_buffer')
-
         if self._vim.current.buffer.number == self._bufnr:
             self._cursor = self._vim.call('line', '.')
 
@@ -917,25 +906,12 @@ class Default(object):
         self._cursor = len(self._candidates)
 
     def _start_timer(self, key: str) -> None:
-        if key in self._timers:
-            return
-
         if key == 'update_candidates':
-            self._timers[key] = self._vim.call(
-                'denite#helper#_start_update_candidates_timer', self._bufnr)
+            self._vim.call('denite#helper#_start_update_candidates_timer',
+                           self._bufnr)
         elif key == 'update_buffer':
-            self._timers[key] = self._vim.call(
-                'denite#helper#_start_update_buffer_timer', self._bufnr)
-
-    def _stop_timer(self, key: str) -> None:
-        if key not in self._timers:
-            return
-
-        self._vim.call('timer_stop', self._timers[key])
-
-        # Note: After timer_stop is called, self._timers may be removed
-        if key in self._timers:
-            self._timers.pop(key)
+            self._vim.call('denite#helper#_start_update_buffer_timer',
+                           self._bufnr)
 
     def _split_floating(self, split: str) -> None:
         # Use floating window
