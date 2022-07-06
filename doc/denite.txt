@@ -2063,7 +2063,7 @@ A: >
 	:Denite -resume -cursor-pos=+1 -immediately
 	:Denite -resume -cursor-pos=-1 -immediately
 
-Q: ":UniteNext"/":UniteDo" like commands are available?
+Q: ":UniteDo" like commands are available?
 
 A: >
 
