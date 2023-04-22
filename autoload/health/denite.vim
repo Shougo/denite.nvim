@@ -31,10 +31,18 @@ function! s:check_required_msgpack() abort
 endfunction
 
 function! health#denite#check() abort
-  call health#report_start('denite.nvim')
+  call s:report_start('denite.nvim')
 
   call s:check_required_python()
   call s:check_required_msgpack()
+endfunction
+
+function! s:report_start(report) abort
+  if has('nvim-0.10')
+    call v:lua.vim.health.start(a:report)
+  else
+    call health#report_start(a:report)
+  endif
 endfunction
 
 function! s:report_ok(report) abort
