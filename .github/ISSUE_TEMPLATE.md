@@ -14,7 +14,7 @@
 
  * Vim/neovim version:
 
- * `:checkhealth` or `:CheckHealth` result(neovim only):
+ * `:checkhealth` result(neovim only):
 
 ## Provide a minimal init.vim with less than 50 lines (Required!)
 
