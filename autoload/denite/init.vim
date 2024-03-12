@@ -71,9 +71,9 @@ function! denite#init#_initialize() abort
       endif
     else
       call denite#util#print_error(
-          \ 'denite failed to load. '
-          \ .'Try the :UpdateRemotePlugins command and restart Neovim. '
-          \ .'See also :checkhealth.')
+            \ 'denite failed to load. '
+            \ .'Try the :UpdateRemotePlugins command and restart Neovim. '
+            \ .'See also :checkhealth and :messages output.')
     endif
     return 1
   endtry
